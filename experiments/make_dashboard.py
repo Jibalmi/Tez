@@ -35,8 +35,8 @@ def main():
     S = J("results/h2h/summary.json", {})
     out = Path("docs/figures"); out.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.titleweight": "bold", "axes.titlesize": 10})
-    fig = plt.figure(figsize=(22, 30))
-    gs = fig.add_gridspec(6, 4, hspace=0.55, wspace=0.35)
+    fig = plt.figure(figsize=(22, 35))
+    gs = fig.add_gridspec(7, 4, hspace=0.6, wspace=0.35)
     fig.suptitle("Tez — every measurement, one page.  Zero-shot frozen Gemma 4 12B Q8_0 · one forward pass · RTX 5080 laptop (16 GB)\n"
                  "Laya checkpoints ran on the SAME rows and GPU; Jev figures are third-party published, never measured here.",
                  fontsize=15, fontweight="bold", y=0.995)
@@ -242,43 +242,21 @@ def main():
         ax.set_xticks(range(len(ms2))); ax.set_xticklabels(["Tez", "laya base", "laya-td"][: len(ms2)], fontsize=7)
     ax.set_title("R · Teacher-distribution match (soft acc ↑, Brier ↓)")
 
-    # ---------------------------------------------------------------- D2: few-shot in prefix + JevBench tiers (overlay on panel D / new axes)
-    JV = J("results/jevbench_tez_gemma4-12b-q8_0.json"); FS = J("results/h2h/rows_typed_decisions_tez-fewshot4-all.summary.json")
-    if JV or FS:
-        ax = fig.add_axes([0.52, 0.968, 0.30, 0.02])  # inset just under the suptitle
-        ax.axis("off")
-        txt = ""
-        if FS: txt += "typed-decisions, 4 examples in the cached prefix: %.3f (Jev 0.727)" % FS["accuracy"] + chr(10)
-        if JV:
-            Sm = JV["summary"]; txt += "JevBench public: " + " · ".join("%s %.3f / intel %.0f" % (t, v["accuracy"], v["intelligence"]) for t, v in Sm.items())
-        ax.text(0, 1, txt, fontsize=8, va="top", family="monospace")
-    # ---------------------------------------------------------------- HP: hidden-state probe (replaces the headline text panel's left half)
-    HP = J("results/hidden_probe_qwen35-4b.json")
-    if HP:
-        axp = fig.add_subplot(gs[5, 3]); axp.set_position([0.735, 0.04, 0.115, 0.10])
-        HP12 = J("results/hidden_probe_server_gemma4-12b-q8_0.json")
-        names = ["4B letter" + chr(10) + "logits", "4B probe" + chr(10) + "L-1", "4B probe" + chr(10) + "L-4", "4B probe" + chr(10) + "L-8", "4B probe" + chr(10) + "L-12", "12B probe" + chr(10) + "final (server)"]
-        vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"], HP12["logreg_acc"] if HP12 else 0]
-        axp.bar(range(6), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4 + ["#0B5F5E"])
-        for i, v in enumerate(vals): axp.text(i, v + .01, f"{v:.3f}", ha="center", fontsize=6)
-        axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(5.4, .77, "laya-td 0.766", fontsize=5.5, ha="right", color=COL["laya-td"])
-        axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(5.4, .70, "Jev 0.727", fontsize=5.5, ha="right", color="grey")
-        axp.set_xticks(range(6)); axp.set_xticklabels(names, fontsize=5); axp.set_ylim(0, .9); axp.set_title("S · Probes on frozen hidden states (typed-decisions)", fontsize=8)
     # ---------------------------------------------------------------- T/U: probe layer curve + data efficiency
     SW = J("results/hidden_probe_sweep_qwen35-4b.json")
     if SW:
-        axt = fig.add_axes([0.735, 0.155, 0.115, 0.075])
+        axt = fig.add_subplot(gs[6, 1])
         ls = sorted(int(k) for k in SW["layer_sweep"]); axt.plot(ls, [SW["layer_sweep"][str(l)]["acc"] for l in ls], "-o", color=COL["tez"], ms=3)
         axt.axhline(SW["letter_logits"]["acc"], ls=":", color=COL["laya-en"], lw=.8); axt.text(0, SW["letter_logits"]["acc"] + .01, "4B letter logits", fontsize=5.5, color=COL["laya-en"])
         axt.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axt.text(0, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
-        axt.set_xlabel("layer (of 32)", fontsize=6); axt.set_ylabel("probe acc", fontsize=6); axt.tick_params(labelsize=5.5); axt.set_ylim(.4, .85)
-        axt.set_title("T - Probe accuracy by layer, Qwen3.5-4B", fontsize=7)
-        axu = fig.add_axes([0.87, 0.155, 0.115, 0.075])
+        axt.set_xlabel("layer (of 32)"); axt.set_ylabel("probe accuracy"); axt.tick_params(labelsize=7); axt.set_ylim(.4, .85)
+        axt.set_title("T · Probe accuracy by layer, Qwen3.5-4B")
+        axu = fig.add_subplot(gs[6, 2])
         de = SW["data_efficiency"]; xs = sorted(int(k) for k in de); axu.errorbar(xs, [de[str(x)]["mean"] for x in xs], yerr=[de[str(x)]["std"] for x in xs], fmt="-o", color=COL["tez"], ms=3, capsize=2)
         axu.axhline(0.727, ls=":", color="grey", lw=.8); axu.text(10, .73, "Jev 0.727", fontsize=5.5, color="grey")
         axu.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axu.text(10, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
-        axu.set_xscale("log"); axu.set_xlabel("labelled rows per question", fontsize=6); axu.tick_params(labelsize=5.5); axu.set_ylim(.6, .85)
-        axu.set_title("U - Probe data efficiency (layer 26)", fontsize=7)
+        axu.set_xscale("log"); axu.set_xlabel("labelled rows per question"); axu.tick_params(labelsize=7); axu.set_ylim(.6, .85)
+        axu.set_title("U · Probe data efficiency (layer 26)")
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"
@@ -288,7 +266,8 @@ def main():
            "SemIf authored144          0.943  (SemIf 4B 0.813)\n"
            "voice: per streamed word   30 ms compute · 1 harmful action / 198\n"
            "order flip @ 20 options    0.07  (Laya 0.15–0.20 · Jev 0.13)\n"
-           "conformal 90% coverage     act on 52% @ 0.853 accuracy\n\n"
+           "conformal 90% coverage     act on 52% @ 0.853 accuracy\n"
+           "probe on frozen 4B (L26)  0.794 · 50 rows/question 0.741\n\n"
            "Where others win: Laya on tasks in its training mix\n(AG News, NLI) and on single-question latency;\nJev on Banking77 (0.870).")
     ax.text(0, 1, txt, va="top", fontsize=9, family="monospace")
 
