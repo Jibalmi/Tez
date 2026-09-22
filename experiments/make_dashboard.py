@@ -252,6 +252,22 @@ def main():
         if JV:
             Sm = JV["summary"]; txt += "JevBench public: " + " · ".join("%s %.3f / intel %.0f" % (t, v["accuracy"], v["intelligence"]) for t, v in Sm.items())
         ax.text(0, 1, txt, fontsize=8, va="top", family="monospace")
+    # ---------------------------------------------------------------- HP: hidden-state probe (replaces the headline text panel's left half)
+    HP = J("results/hidden_probe_qwen35-4b.json")
+    if HP:
+        axp = fig.add_subplot(gs[5, 3]); axp.set_position([0.735, 0.04, 0.115, 0.10])
+        names = ["4B letter
+logits", "probe
+L-1", "probe
+L-4", "probe
+L-8", "probe
+L-12"]
+        vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"]]
+        axp.bar(range(5), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4)
+        for i, v in enumerate(vals): axp.text(i, v + .01, f"{v:.3f}", ha="center", fontsize=6)
+        axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(4.4, .77, "laya-td 0.766", fontsize=5.5, ha="right", color=COL["laya-td"])
+        axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(4.4, .70, "Jev 0.727", fontsize=5.5, ha="right", color="grey")
+        axp.set_xticks(range(5)); axp.set_xticklabels(names, fontsize=5.5); axp.set_ylim(0, .9); axp.set_title("S · Probe on frozen Qwen3.5-4B hidden states (typed-decisions)", fontsize=8)
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"
