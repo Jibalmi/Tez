@@ -46,8 +46,15 @@ def main():
     ap.add_argument("--limit", type=int, default=500)
     ap.add_argument("--server", default="http://127.0.0.1:8091")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--jev-tier", default="", help="score a JevBench public tier (original|easy|hard) instead of typed-decisions")
     args = ap.parse_args()
-    cases = bh.build_task("typed_decisions", 0)
+    if args.jev_tier:
+        _s = importlib.util.spec_from_file_location("bj", ROOT / "experiments" / "bench_jevbench.py"); bj = importlib.util.module_from_spec(_s); _s.loader.exec_module(bj)  # type: ignore[union-attr]
+        cases = bj.load_tier(args.jev_tier)
+        for c in cases:
+            c["workflow"] = c["family"]
+    else:
+        cases = bh.build_task("typed_decisions", 0)
     # deterministic subset spread across workflows
     cases = [c for i, c in enumerate(cases) if i % max(1, len(cases) // args.limit) == 0][: args.limit]
     recs = []

@@ -1,0 +1,2560 @@
+{
+ "summary": {
+  "hard": {
+   "n": 111,
+   "accuracy": 0.7027027027027027,
+   "chance": 0.3361861861861862,
+   "intelligence": 55.213752544673156,
+   "ece15": 0.2511306947602192,
+   "nll": 1.4925702311612883,
+   "median_s": 0.4562423999996099,
+   "speed_score": 86.81608713742598,
+   "by_family": {
+    "adversarial": 0.8333333333333334,
+    "ambiguous": 0.8571428571428571,
+    "judge_hard": 0.7647058823529411,
+    "long_policy": 0.7894736842105263,
+    "multi_hop": 0.7777777777777778,
+    "probability": 0.7,
+    "routing_hard": 1.0,
+    "temporal_numeric": 0.13333333333333333,
+    "tradeoff": 0.6666666666666666,
+    "trap": 0.875
+   }
+  }
+ },
+ "rows": [
+  {
+   "id": "hard-opus-a-long_policy-01",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-01",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 5,
+   "probabilities": [
+    7.624968589539724e-06,
+    5.9509966605407564e-06,
+    0.0012895814680740966,
+    0.9986494847596505,
+    4.735780702514849e-05
+   ],
+   "logits": [
+    -11.784119606018066,
+    -12.031989097595215,
+    -6.653474807739258,
+    -0.0013886791421100497,
+    -9.957816123962402
+   ],
+   "pred": 3,
+   "s": 1.8633426999995208,
+   "prompt_n": 3930
+  },
+  {
+   "id": "hard-opus-a-long_policy-04",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-04",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 5,
+   "probabilities": [
+    0.00010034634413154359,
+    0.008342445763809,
+    0.9890748733593144,
+    0.002472116186646476,
+    1.0218346098547178e-05
+   ],
+   "logits": [
+    -9.206914901733398,
+    -4.786430835723877,
+    -0.01101723127067089,
+    -6.002712726593018,
+    -11.491357803344727
+   ],
+   "pred": 2,
+   "s": 1.370716800000082,
+   "prompt_n": 2594
+  },
+  {
+   "id": "hard-opus-a-long_policy-08",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-08",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.001002993611440878,
+    0.9986620472311725,
+    0.00031502677706158076,
+    1.9932380325224e-05
+   ],
+   "logits": [
+    -6.904773712158203,
+    -0.001346421311609447,
+    -8.062860488891602,
+    -10.823172569274902
+   ],
+   "pred": 1,
+   "s": 1.246436299999914,
+   "prompt_n": 2341
+  },
+  {
+   "id": "hard-opus-a-long_policy-09",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-09",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    0.00019057377368169085,
+    0.0032878335108285973,
+    0.9963283557470176,
+    0.00019323696847209286
+   ],
+   "logits": [
+    -8.565518379211426,
+    -5.717573642730713,
+    -0.0037256055511534214,
+    -8.551640510559082
+   ],
+   "pred": 2,
+   "s": 1.3761631999996098,
+   "prompt_n": 2496
+  },
+  {
+   "id": "hard-opus-a-long_policy-11",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-11",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.004165685649696486,
+    0.9958343143503036
+   ],
+   "logits": [
+    -5.480888843536377,
+    -0.004188834689557552
+   ],
+   "pred": 1,
+   "s": 1.3004315999996834,
+   "prompt_n": 2328
+  },
+  {
+   "id": "hard-opus-a-long_policy-13",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-13",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.052278375662570924,
+    0.947721624337429
+   ],
+   "logits": [
+    -2.9513065814971924,
+    -0.053828585892915726
+   ],
+   "pred": 1,
+   "s": 1.4248035999999047,
+   "prompt_n": 2375
+  },
+  {
+   "id": "hard-opus-a-long_policy-17",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-17",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 5,
+   "probabilities": [
+    0.00019063838161499958,
+    0.003289534739230286,
+    0.2472403120560349,
+    8.001554727696177e-05,
+    0.7491994992758428
+   ],
+   "logits": [
+    -8.565155029296875,
+    -5.717031955718994,
+    -1.3974173069000244,
+    -9.43331241607666,
+    -0.2887727916240692
+   ],
+   "pred": 4,
+   "s": 1.3915941999994175,
+   "prompt_n": 2410
+  },
+  {
+   "id": "hard-opus-a-long_policy-19",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-a-long_policy-19",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9816569629765121,
+    0.01834303702348783
+   ],
+   "logits": [
+    -0.01862410642206669,
+    -3.9986159801483154
+   ],
+   "pred": 0,
+   "s": 1.2541994000002887,
+   "prompt_n": 2274
+  },
+  {
+   "id": "hard-opus-a-probability-03",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-a-probability-03",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.15096910236038866,
+    0.8490308976396113
+   ],
+   "logits": [
+    -1.8907642364501953,
+    -0.16374385356903076
+   ],
+   "pred": 1,
+   "s": 0.4026360999996541,
+   "prompt_n": 414
+  },
+  {
+   "id": "hard-opus-a-probability-04",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-a-probability-04",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    4.665012330510888e-06,
+    0.00025767265962068514,
+    0.9997376623280488
+   ],
+   "logits": [
+    -12.275444984436035,
+    -8.263845443725586,
+    -0.00028727605240419507
+   ],
+   "pred": 2,
+   "s": 0.6279740999998467,
+   "prompt_n": 1079
+  },
+  {
+   "id": "hard-opus-a-probability-07",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-a-probability-07",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    0.0004978200612604973,
+    0.9994816665091726,
+    2.0513429566992364e-05
+   ],
+   "logits": [
+    -7.605306148529053,
+    -0.0005527473986148834,
+    -10.794465065002441
+   ],
+   "pred": 1,
+   "s": 0.7338635000005524,
+   "prompt_n": 1167
+  },
+  {
+   "id": "hard-opus-a-probability-08",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-a-probability-08",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.2109145147492661,
+    0.789085485250734
+   ],
+   "logits": [
+    -1.5566473007202148,
+    -0.23722554743289948
+   ],
+   "pred": 1,
+   "s": 0.3310775999998441,
+   "prompt_n": 377
+  },
+  {
+   "id": "hard-opus-a-temporal_numeric-03",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-a-temporal_numeric-03",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.9911775326894431,
+    0.008822467310556838
+   ],
+   "logits": [
+    -0.008954382501542568,
+    -4.730546474456787
+   ],
+   "pred": 0,
+   "s": 0.3016224000002694,
+   "prompt_n": 476
+  },
+  {
+   "id": "hard-opus-a-temporal_numeric-06",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-a-temporal_numeric-06",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9994937580924875,
+    0.0005062419075125427
+   ],
+   "logits": [
+    -0.000516190193593502,
+    -7.588505744934082
+   ],
+   "pred": 0,
+   "s": 0.32157700000061595,
+   "prompt_n": 497
+  },
+  {
+   "id": "hard-opus-a-temporal_numeric-07",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-a-temporal_numeric-07",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 5,
+   "probabilities": [
+    0.010753342044070663,
+    0.5261303181941396,
+    0.19345582850114992,
+    0.14571648645811958,
+    0.12394402480252027
+   ],
+   "logits": [
+    -4.53351354598999,
+    -0.6431812047958374,
+    -1.6436809301376343,
+    -1.9270672798156738,
+    -2.088900089263916
+   ],
+   "pred": 1,
+   "s": 0.811100500000066,
+   "prompt_n": 1289
+  },
+  {
+   "id": "hard-opus-a-temporal_numeric-09",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-a-temporal_numeric-09",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.019670076181180017,
+    0.9803299238188199
+   ],
+   "logits": [
+    -3.9286653995513916,
+    -0.019874732941389084
+   ],
+   "pred": 1,
+   "s": 0.4562423999996099,
+   "prompt_n": 504
+  },
+  {
+   "id": "hard-opus-a-temporal_numeric-12",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-a-temporal_numeric-12",
+   "qtype": "score",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.029496272729878016,
+    0.4774232534256586,
+    0.4783347635065597,
+    0.014745710337903709
+   ],
+   "logits": [
+    -3.52362060546875,
+    -0.7394810914993286,
+    -0.7375736832618713,
+    -4.21693229675293
+   ],
+   "pred": 2,
+   "s": 0.44903729999987263,
+   "prompt_n": 578
+  },
+  {
+   "id": "hard-opus-b-ambiguous-02",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-02",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    4.10260767909013e-06,
+    0.9999046140558036,
+    9.128333651712608e-05
+   ],
+   "logits": [
+    -12.403888702392578,
+    -9.63257480179891e-05,
+    -9.301543235778809
+   ],
+   "pred": 1,
+   "s": 0.4046244999999544,
+   "prompt_n": 531
+  },
+  {
+   "id": "hard-opus-b-ambiguous-03",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-03",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    0.9695579231845429,
+    0.03037389448111595,
+    6.818233434106199e-05
+   ],
+   "logits": [
+    -0.03092039003968239,
+    -3.4941771030426025,
+    -9.593330383300781
+   ],
+   "pred": 0,
+   "s": 0.2984075999993365,
+   "prompt_n": 475
+  },
+  {
+   "id": "hard-opus-b-ambiguous-07",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-07",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 3,
+   "probabilities": [
+    0.9971269433883015,
+    0.0025345037723220327,
+    0.0003385528393763819
+   ],
+   "logits": [
+    -0.0028896317817270756,
+    -5.97776985168457,
+    -7.990842819213867
+   ],
+   "pred": 0,
+   "s": 0.2763740999998845,
+   "prompt_n": 465
+  },
+  {
+   "id": "hard-opus-b-ambiguous-09",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-09",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 3,
+   "probabilities": [
+    0.9986888881054667,
+    0.0011877587884045282,
+    0.00012335310612867332
+   ],
+   "logits": [
+    -0.0013168776640668511,
+    -6.735692024230957,
+    -9.00046443939209
+   ],
+   "pred": 0,
+   "s": 0.4501388999997289,
+   "prompt_n": 626
+  },
+  {
+   "id": "hard-opus-b-ambiguous-10",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-10",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 3,
+   "probabilities": [
+    0.9982956421503321,
+    0.0015098463803781825,
+    0.00019451146928971296
+   ],
+   "logits": [
+    -0.0021318255458027124,
+    -6.49617338180542,
+    -8.545445442199707
+   ],
+   "pred": 0,
+   "s": 0.33524839999972755,
+   "prompt_n": 447
+  },
+  {
+   "id": "hard-opus-b-ambiguous-11",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-11",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 3,
+   "probabilities": [
+    1.5985118671985926e-06,
+    2.56410914866385e-06,
+    0.9999958373789841
+   ],
+   "logits": [
+    -13.34643840789795,
+    -12.873900413513184,
+    -5.1260126383567695e-06
+   ],
+   "pred": 2,
+   "s": 0.2928333999998358,
+   "prompt_n": 441
+  },
+  {
+   "id": "hard-opus-b-ambiguous-13",
+   "tier": "hard",
+   "family": "ambiguous",
+   "group": "hard-opus-b-ambiguous-13",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 4,
+   "probabilities": [
+    0.9999999661249797,
+    1.613468535687241e-08,
+    1.3215598121173347e-08,
+    4.524736886824381e-09
+   ],
+   "logits": [
+    -5.960466182841628e-07,
+    -17.94229507446289,
+    -18.141868591308594,
+    -19.213706970214844
+   ],
+   "pred": 0,
+   "s": 0.3766016999998101,
+   "prompt_n": 598
+  },
+  {
+   "id": "hard-opus-b-multi_hop-03",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-opus-b-multi_hop-03",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    0.0065216470794847116,
+    0.18568042360145393,
+    0.8066635513536525,
+    0.0011343779654088178
+   ],
+   "logits": [
+    -5.032653331756592,
+    -1.683753252029419,
+    -0.21487362682819366,
+    -6.78169584274292
+   ],
+   "pred": 2,
+   "s": 1.9405014999993,
+   "prompt_n": 2936
+  },
+  {
+   "id": "hard-opus-b-multi_hop-04",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-opus-b-multi_hop-04",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 6,
+   "probabilities": [
+    0.025336422748366637,
+    0.005657254479244742,
+    0.017184493315894365,
+    0.2214240015458266,
+    0.7297852002483813,
+    0.0006126276622862607
+   ],
+   "logits": [
+    -4.1072564125061035,
+    -5.606560707092285,
+    -4.495491981506348,
+    -1.9394199848175049,
+    -0.7467491626739502,
+    -7.829497337341309
+   ],
+   "pred": 4,
+   "s": 1.6401559000005363,
+   "prompt_n": 2410
+  },
+  {
+   "id": "hard-opus-b-multi_hop-05",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-opus-b-multi_hop-05",
+   "qtype": "score",
+   "gold": 2,
+   "k": 5,
+   "probabilities": [
+    0.00022778628747788625,
+    0.12141224707403749,
+    0.622324418234067,
+    0.23609826686387755,
+    0.01993728154054002
+   ],
+   "logits": [
+    -8.387118339538574,
+    -2.108579158782959,
+    -0.47430938482284546,
+    -1.4435228109359741,
+    -3.915179491043091
+   ],
+   "pred": 2,
+   "s": 1.7810434000002715,
+   "prompt_n": 2548
+  },
+  {
+   "id": "hard-opus-b-multi_hop-07",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-opus-b-multi_hop-07",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 6,
+   "probabilities": [
+    0.0018753609631337884,
+    0.022795629783119997,
+    0.08969758051578992,
+    0.5744590231220402,
+    0.3071862107655813,
+    0.003986194850334709
+   ],
+   "logits": [
+    -6.287978172302246,
+    -3.790210485458374,
+    -2.420335531234741,
+    -0.5633505582809448,
+    -1.189325213432312,
+    -5.533942222595215
+   ],
+   "pred": 3,
+   "s": 1.95232119999946,
+   "prompt_n": 2685
+  },
+  {
+   "id": "hard-opus-b-multi_hop-08",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-opus-b-multi_hop-08",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9995380844257874,
+    0.00046191557421268307
+   ],
+   "logits": [
+    -0.00048601513844914734,
+    -7.680152416229248
+   ],
+   "pred": 0,
+   "s": 1.7075440000007802,
+   "prompt_n": 2362
+  },
+  {
+   "id": "hard-opus-b-probability-01",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-b-probability-01",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    0.00022638751222378358,
+    0.999762005945788,
+    1.1606541988193214e-05
+   ],
+   "logits": [
+    -8.393293380737305,
+    -0.0002690319379325956,
+    -11.363972663879395
+   ],
+   "pred": 1,
+   "s": 1.422906900000271,
+   "prompt_n": 1967
+  },
+  {
+   "id": "hard-opus-b-probability-02",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-b-probability-02",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 3,
+   "probabilities": [
+    0.0075689965698144445,
+    0.9911044319258986,
+    0.0013265715042871426
+   ],
+   "logits": [
+    -4.884022235870361,
+    -0.009262831881642342,
+    -6.625484943389893
+   ],
+   "pred": 1,
+   "s": 0.42889949999971577,
+   "prompt_n": 479
+  },
+  {
+   "id": "hard-opus-b-probability-03",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-b-probability-03",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.005292698647421262,
+    0.9947073013525788
+   ],
+   "logits": [
+    -5.241454601287842,
+    -0.00533433398231864
+   ],
+   "pred": 1,
+   "s": 0.8671313999993799,
+   "prompt_n": 1165
+  },
+  {
+   "id": "hard-opus-b-probability-04",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-b-probability-04",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 3,
+   "probabilities": [
+    0.017892979801483168,
+    6.349173734171696e-05,
+    0.982043528461175
+   ],
+   "logits": [
+    -4.023349285125732,
+    -9.664603233337402,
+    -0.018122097477316856
+   ],
+   "pred": 2,
+   "s": 0.47344470000007277,
+   "prompt_n": 571
+  },
+  {
+   "id": "hard-opus-b-probability-06",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-b-probability-06",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 3,
+   "probabilities": [
+    0.0002135401416927572,
+    0.0001538702803788916,
+    0.9996325895779283
+   ],
+   "logits": [
+    -8.45170783996582,
+    -8.779422760009766,
+    -0.00038959222729317844
+   ],
+   "pred": 2,
+   "s": 0.6559327000004487,
+   "prompt_n": 969
+  },
+  {
+   "id": "hard-opus-b-tradeoff-01",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-01",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 5,
+   "probabilities": [
+    0.9999965207255401,
+    1.2610268461732467e-06,
+    1.7466198735337895e-06,
+    3.8475030533330354e-07,
+    8.687743472683596e-08
+   ],
+   "logits": [
+    -4.0531240301788785e-06,
+    -13.583584785461426,
+    -13.257828712463379,
+    -14.770671844482422,
+    -16.25876808166504
+   ],
+   "pred": 0,
+   "s": 0.6606252999999924,
+   "prompt_n": 833
+  },
+  {
+   "id": "hard-opus-b-tradeoff-03",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-03",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.0005293499245277772,
+    0.9968231034162173,
+    0.0003561083147313325,
+    0.0022914383445238108
+   ],
+   "logits": [
+    -7.543885707855225,
+    -0.003206799738109112,
+    -7.940300464630127,
+    -6.0786004066467285
+   ],
+   "pred": 1,
+   "s": 0.460783900000024,
+   "prompt_n": 738
+  },
+  {
+   "id": "hard-opus-b-tradeoff-06",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-06",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.06901463424785931,
+    0.9309853657521406
+   ],
+   "logits": [
+    -2.673443078994751,
+    -0.07151809334754944
+   ],
+   "pred": 1,
+   "s": 0.559195599999839,
+   "prompt_n": 776
+  },
+  {
+   "id": "hard-opus-b-tradeoff-07",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-07",
+   "qtype": "choice",
+   "gold": 4,
+   "k": 5,
+   "probabilities": [
+    0.00010558409741844081,
+    0.0011166052138646993,
+    0.27537591111653514,
+    0.04068331467779619,
+    0.6827185848943855
+   ],
+   "logits": [
+    -9.15632152557373,
+    -6.797780990600586,
+    -1.289936900138855,
+    -3.202255964279175,
+    -0.38199126720428467
+   ],
+   "pred": 4,
+   "s": 0.5032866999999897,
+   "prompt_n": 716
+  },
+  {
+   "id": "hard-opus-b-tradeoff-08",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-08",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.996170077037784,
+    0.0038299229622159314
+   ],
+   "logits": [
+    -0.0038752444088459015,
+    -5.564948558807373
+   ],
+   "pred": 0,
+   "s": 0.4242394000002605,
+   "prompt_n": 593
+  },
+  {
+   "id": "hard-opus-b-tradeoff-12",
+   "tier": "hard",
+   "family": "tradeoff",
+   "group": "hard-opus-b-tradeoff-12",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    5.490174246050921e-05,
+    0.9999419651888055,
+    2.1258947586284257e-06,
+    6.135353864391583e-07,
+    3.936385888654996e-07
+   ],
+   "logits": [
+    -9.809966087341309,
+    -5.865269122296013e-05,
+    -13.061318397521973,
+    -14.304028511047363,
+    -14.747833251953125
+   ],
+   "pred": 1,
+   "s": 0.4182498999998643,
+   "prompt_n": 581
+  },
+  {
+   "id": "hard-opus-c-long_policy-02",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-02",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 5,
+   "probabilities": [
+    1.6795858046814845e-05,
+    0.00013759218419921347,
+    0.9997806701930205,
+    4.027430401742981e-05,
+    2.4667460715838726e-05
+   ],
+   "logits": [
+    -10.994406700134277,
+    -8.891244888305664,
+    -0.0002478072128724307,
+    -10.11982536315918,
+    -10.610054016113281
+   ],
+   "pred": 2,
+   "s": 2.480309099999431,
+   "prompt_n": 3563
+  },
+  {
+   "id": "hard-opus-c-long_policy-03",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-03",
+   "qtype": "choice",
+   "gold": 4,
+   "k": 6,
+   "probabilities": [
+    0.01770792310642805,
+    0.030864116138330327,
+    0.20607552328804374,
+    0.08062369762257873,
+    0.6355180763025792,
+    0.029210663542040032
+   ],
+   "logits": [
+    -5.651215553283691,
+    -5.095633506774902,
+    -3.1969850063323975,
+    -4.135435104370117,
+    -2.070787191390991,
+    -5.150693893432617
+   ],
+   "pred": 4,
+   "s": 2.540447999999742,
+   "prompt_n": 3438
+  },
+  {
+   "id": "hard-opus-c-long_policy-04",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-04",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    8.895648158635296e-05,
+    0.9999110435184136
+   ],
+   "logits": [
+    -9.32736587524414,
+    -9.155692532658577e-05
+   ],
+   "pred": 1,
+   "s": 2.4356472999998005,
+   "prompt_n": 3220
+  },
+  {
+   "id": "hard-opus-c-long_policy-05",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-05",
+   "qtype": "score",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.08501140178579326,
+    0.8570696577513838,
+    0.057600969503169674,
+    0.000317970959653308
+   ],
+   "logits": [
+    -2.4651036262512207,
+    -0.15436981618404388,
+    -2.8543496131896973,
+    -8.05368423461914
+   ],
+   "pred": 1,
+   "s": 2.4494457999999213,
+   "prompt_n": 3288
+  },
+  {
+   "id": "hard-opus-c-long_policy-08",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-08",
+   "qtype": "score",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.0001721606145498804,
+    0.11487638621380927,
+    0.8845898730189451,
+    0.00036158015269575
+   ],
+   "logits": [
+    -8.66800594329834,
+    -2.1648218631744385,
+    -0.12355439364910126,
+    -7.925950050354004
+   ],
+   "pred": 2,
+   "s": 2.440638399999443,
+   "prompt_n": 3281
+  },
+  {
+   "id": "hard-opus-c-long_policy-10",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-10",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    9.301059058280744e-05,
+    0.9998136364926608,
+    8.089590096511269e-05,
+    1.2457015791450564e-05
+   ],
+   "logits": [
+    -9.28281307220459,
+    -0.00020225901971571147,
+    -9.42236328125,
+    -11.293242454528809
+   ],
+   "pred": 1,
+   "s": 2.7693717000001925,
+   "prompt_n": 3592
+  },
+  {
+   "id": "hard-opus-c-long_policy-11",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-opus-c-long_policy-11",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.960557824266819,
+    0.03944217573318084
+   ],
+   "logits": [
+    -0.04045315831899643,
+    -3.2331316471099854
+   ],
+   "pred": 0,
+   "s": 2.5779363999999987,
+   "prompt_n": 3313
+  },
+  {
+   "id": "hard-opus-c-probability-03",
+   "tier": "hard",
+   "family": "probability",
+   "group": "hard-opus-c-probability-03",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 3,
+   "probabilities": [
+    0.8512871788067942,
+    0.04955983144213247,
+    0.0991529897510733
+   ],
+   "logits": [
+    -0.16762249171733856,
+    -3.0111913681030273,
+    -2.3177080154418945
+   ],
+   "pred": 0,
+   "s": 0.5517447000001994,
+   "prompt_n": 535
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-02",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-02",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.9994149709362904,
+    0.0005850290637097399
+   ],
+   "logits": [
+    -0.0005957470275461674,
+    -7.443859577178955
+   ],
+   "pred": 0,
+   "s": 0.7234885000007125,
+   "prompt_n": 914
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-03",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-03",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 5,
+   "probabilities": [
+    0.004218082486152182,
+    0.10159001036064368,
+    0.847876526908743,
+    0.04614220188493772,
+    0.00017317835952325035
+   ],
+   "logits": [
+    -5.468404769897461,
+    -2.2868402004241943,
+    -0.16505038738250732,
+    -3.0760574340820312,
+    -8.661218643188477
+   ],
+   "pred": 2,
+   "s": 0.7332918000001882,
+   "prompt_n": 847
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-04",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-04",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 5,
+   "probabilities": [
+    0.007119069717318874,
+    0.07145072712982373,
+    0.8976166615757573,
+    0.016847736025476675,
+    0.006965805551623367
+   ],
+   "logits": [
+    -8.662832260131836,
+    -6.356601238250732,
+    -3.825866222381592,
+    -7.801393032073975,
+    -8.684596061706543
+   ],
+   "pred": 2,
+   "s": 0.6933971999997084,
+   "prompt_n": 752
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-06",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-06",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 6,
+   "probabilities": [
+    0.007480075115510283,
+    0.8366606035128156,
+    0.02361979979852945,
+    0.004118133671225498,
+    0.12706499251005704,
+    0.0010563953918620857
+   ],
+   "logits": [
+    -5.027243614196777,
+    -0.31006795167922974,
+    -3.877401113510132,
+    -5.624086380004883,
+    -2.1947877407073975,
+    -6.984623908996582
+   ],
+   "pred": 1,
+   "s": 0.7900173999996696,
+   "prompt_n": 962
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-08",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-08",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    0.006859853356628565,
+    0.15763643755017892,
+    0.6890978974734472,
+    0.1348137732058265,
+    0.01159203841391876
+   ],
+   "logits": [
+    -5.106010437011719,
+    -1.9714051485061646,
+    -0.4963131546974182,
+    -2.1278021335601807,
+    -4.581377983093262
+   ],
+   "pred": 2,
+   "s": 0.7971926999998686,
+   "prompt_n": 944
+  },
+  {
+   "id": "hard-opus-c-temporal_numeric-12",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-opus-c-temporal_numeric-12",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 3,
+   "probabilities": [
+    0.008743532098339961,
+    0.9176200817229817,
+    0.07363638617867838
+   ],
+   "logits": [
+    -4.739473342895508,
+    -0.08600413054227829,
+    -2.6086483001708984
+   ],
+   "pred": 1,
+   "s": 0.6950945999997202,
+   "prompt_n": 809
+  },
+  {
+   "id": "hard-sol-a-adversarial-01",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-01",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    4.57953086421724e-08,
+    0.9999988358366855,
+    7.117075660656063e-07,
+    4.0666043985478305e-07
+   ],
+   "logits": [
+    -16.899084091186523,
+    -1.0728841743912199e-06,
+    -14.155598640441895,
+    -14.715287208557129
+   ],
+   "pred": 1,
+   "s": 0.3595619000006991,
+   "prompt_n": 281
+  },
+  {
+   "id": "hard-sol-a-adversarial-06",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-06",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999985506875844,
+    1.449312415577935e-06
+   ],
+   "logits": [
+    -1.9073504518019035e-06,
+    -13.444421768188477
+   ],
+   "pred": 0,
+   "s": 0.24129420000008395,
+   "prompt_n": 230
+  },
+  {
+   "id": "hard-sol-a-adversarial-07",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-07",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 4,
+   "probabilities": [
+    0.9999700184783137,
+    2.756214931802396e-05,
+    1.7745779300109512e-06,
+    6.447944383085103e-07
+   ],
+   "logits": [
+    -3.302151890238747e-05,
+    -10.499070167541504,
+    -13.241950988769531,
+    -14.254337310791016
+   ],
+   "pred": 0,
+   "s": 0.2538403999997172,
+   "prompt_n": 287
+  },
+  {
+   "id": "hard-sol-a-adversarial-08",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-08",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    3.7695674460596555e-05,
+    0.9999623043255393
+   ],
+   "logits": [
+    -10.185966491699219,
+    -3.898219802067615e-05
+   ],
+   "pred": 1,
+   "s": 0.19378929999948014,
+   "prompt_n": 209
+  },
+  {
+   "id": "hard-sol-a-adversarial-09",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-09",
+   "qtype": "score",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    1.6306386022401723e-05,
+    0.8163484969578563,
+    0.18357362271437738,
+    6.15739417439768e-05
+   ],
+   "logits": [
+    -11.023958206176758,
+    -0.2029183954000473,
+    -1.6951439380645752,
+    -9.695276260375977
+   ],
+   "pred": 1,
+   "s": 0.20102649999989808,
+   "prompt_n": 222
+  },
+  {
+   "id": "hard-sol-a-adversarial-11",
+   "tier": "hard",
+   "family": "adversarial",
+   "group": "hard-sol-a-adversarial-11",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 4,
+   "probabilities": [
+    0.9999970003132583,
+    2.828849383870194e-06,
+    1.2783161620139282e-07,
+    4.300574172135865e-08
+   ],
+   "logits": [
+    -3.933914285880746e-06,
+    -12.775641441345215,
+    -15.872552871704102,
+    -16.961933135986328
+   ],
+   "pred": 0,
+   "s": 0.23315240000010817,
+   "prompt_n": 289
+  },
+  {
+   "id": "hard-sol-a-multi_hop-01",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-01",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.00017320248068130142,
+    0.9998127744078185,
+    1.198012614561565e-05,
+    2.0429853545676287e-06
+   ],
+   "logits": [
+    -8.661116600036621,
+    -0.00025460385950282216,
+    -11.332328796386719,
+    -13.101165771484375
+   ],
+   "pred": 1,
+   "s": 1.5991563999996288,
+   "prompt_n": 2372
+  },
+  {
+   "id": "hard-sol-a-multi_hop-02",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-02",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    0.0007987879187357549,
+    0.9954693543047283,
+    0.0035871095141807377,
+    0.00014474826235516124
+   ],
+   "logits": [
+    -7.132636070251465,
+    -0.004761929623782635,
+    -5.630629539489746,
+    -8.84073543548584
+   ],
+   "pred": 1,
+   "s": 1.7327149000002464,
+   "prompt_n": 2365
+  },
+  {
+   "id": "hard-sol-a-multi_hop-05",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-05",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    0.003118319796002395,
+    0.0038478798032346596,
+    0.0004343781304274318,
+    0.9925994222703355
+   ],
+   "logits": [
+    -5.770519733428955,
+    -5.560291767120361,
+    -7.741653919219971,
+    -0.0074868821538984776
+   ],
+   "pred": 3,
+   "s": 1.7465204000000085,
+   "prompt_n": 2305
+  },
+  {
+   "id": "hard-sol-a-multi_hop-07",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-07",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    0.000298735476715644,
+    0.00027249765443935705,
+    0.9986526065507461,
+    0.0007761603180991082
+   ],
+   "logits": [
+    -8.115978240966797,
+    -8.207906723022461,
+    -0.001374473562464118,
+    -7.161177635192871
+   ],
+   "pred": 2,
+   "s": 1.6695952999998553,
+   "prompt_n": 2301
+  },
+  {
+   "id": "hard-sol-a-multi_hop-08",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-08",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    0.0018019854454819335,
+    0.0005579192969582562,
+    0.006677563172600141,
+    0.9909625320849597
+   ],
+   "logits": [
+    -6.3189873695373535,
+    -7.491417407989502,
+    -5.0091233253479,
+    -0.009199726395308971
+   ],
+   "pred": 3,
+   "s": 1.6832772000007026,
+   "prompt_n": 2261
+  },
+  {
+   "id": "hard-sol-a-multi_hop-09",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-09",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    7.834898139667561e-05,
+    0.9995199629184081,
+    2.0475659855337074e-05,
+    0.00038121244034001816
+   ],
+   "logits": [
+    -9.454428672790527,
+    -0.0005712351994588971,
+    -10.796364784240723,
+    -7.872244834899902
+   ],
+   "pred": 1,
+   "s": 1.6826271999998426,
+   "prompt_n": 2268
+  },
+  {
+   "id": "hard-sol-a-multi_hop-10",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-10",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    0.032312579214493556,
+    6.670619746544903e-05,
+    0.9635690160147657,
+    0.004051698573275335
+   ],
+   "logits": [
+    -3.4323089122772217,
+    -9.615222930908203,
+    -0.037121400237083435,
+    -5.508629322052002
+   ],
+   "pred": 2,
+   "s": 1.7733967999993183,
+   "prompt_n": 2311
+  },
+  {
+   "id": "hard-sol-a-multi_hop-12",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-a-multi_hop-12",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    6.697382048772016e-05,
+    0.0006577107267437912,
+    0.0049291297813054,
+    0.9943461856714632
+   ],
+   "logits": [
+    -9.611323356628418,
+    -7.326859951019287,
+    -5.312707424163818,
+    -0.0057844603434205055
+   ],
+   "pred": 3,
+   "s": 1.682293099999697,
+   "prompt_n": 2284
+  },
+  {
+   "id": "hard-sol-a-trap-02",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-02",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.999998830446419,
+    1.1695535810002737e-06
+   ],
+   "logits": [
+    -1.5497220147153712e-06,
+    -13.658888816833496
+   ],
+   "pred": 0,
+   "s": 0.3992015000003448,
+   "prompt_n": 278
+  },
+  {
+   "id": "hard-sol-a-trap-04",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-04",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999989727532709,
+    1.0272467290801118e-06
+   ],
+   "logits": [
+    -1.1920935776288388e-06,
+    -13.788628578186035
+   ],
+   "pred": 0,
+   "s": 0.187741200000346,
+   "prompt_n": 185
+  },
+  {
+   "id": "hard-sol-a-trap-05",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-05",
+   "qtype": "score",
+   "gold": 0,
+   "k": 4,
+   "probabilities": [
+    0.00025621588249621484,
+    0.001001508864510654,
+    0.9980855949679869,
+    0.0006566802850063433
+   ],
+   "logits": [
+    -8.26950454711914,
+    -6.906261920928955,
+    -0.0019306091126054525,
+    -7.328327655792236
+   ],
+   "pred": 2,
+   "s": 0.2983905999999479,
+   "prompt_n": 332
+  },
+  {
+   "id": "hard-sol-a-trap-06",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-06",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    1.5995634888686602e-07,
+    0.9999996655230674,
+    1.1033499050289051e-07,
+    6.418559325788206e-08
+   ],
+   "logits": [
+    -15.648365020751953,
+    -4.768372718899627e-07,
+    -16.019744873046875,
+    -16.561487197875977
+   ],
+   "pred": 1,
+   "s": 0.29975369999920076,
+   "prompt_n": 342
+  },
+  {
+   "id": "hard-sol-a-trap-08",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-08",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    2.3352780092377638e-08,
+    0.9999999025902565,
+    5.996406358202957e-08,
+    1.4092899678723732e-08
+   ],
+   "logits": [
+    -17.57254981994629,
+    -1.1920930376163597e-07,
+    -16.629520416259766,
+    -18.077594757080078
+   ],
+   "pred": 1,
+   "s": 0.24859079999987443,
+   "prompt_n": 263
+  },
+  {
+   "id": "hard-sol-a-trap-10",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-10",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    9.269559270210897e-07,
+    1.2560308148443968e-05,
+    0.9999586241155164,
+    2.7888620408182088e-05
+   ],
+   "logits": [
+    -13.891363143920898,
+    -11.284972190856934,
+    -4.470448402571492e-05,
+    -10.487295150756836
+   ],
+   "pred": 2,
+   "s": 0.24808420000044862,
+   "prompt_n": 200
+  },
+  {
+   "id": "hard-sol-a-trap-13",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-13",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999996956587314,
+    3.0434126862939474e-07
+   ],
+   "logits": [
+    -5.960466182841628e-07,
+    -15.00511646270752
+   ],
+   "pred": 0,
+   "s": 0.19687879999946745,
+   "prompt_n": 196
+  },
+  {
+   "id": "hard-sol-a-trap-15",
+   "tier": "hard",
+   "family": "trap",
+   "group": "hard-sol-a-trap-15",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9998986416502414,
+    0.00010135834975860648
+   ],
+   "logits": [
+    -0.00010765178012661636,
+    -9.196854591369629
+   ],
+   "pred": 0,
+   "s": 0.30969120000008843,
+   "prompt_n": 296
+  },
+  {
+   "id": "hard-sol-b-judge_hard-01",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-01",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    4.336146275731691e-07,
+    0.9999995663853725
+   ],
+   "logits": [
+    -14.65110969543457,
+    -4.768372718899627e-07
+   ],
+   "pred": 1,
+   "s": 0.2541464999994787,
+   "prompt_n": 277
+  },
+  {
+   "id": "hard-sol-b-judge_hard-02",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-02",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    1.0232750567652351e-06,
+    0.9999989767249432
+   ],
+   "logits": [
+    -13.792502403259277,
+    -1.1920935776288388e-06
+   ],
+   "pred": 1,
+   "s": 0.1838103999998566,
+   "prompt_n": 130
+  },
+  {
+   "id": "hard-sol-b-judge_hard-05",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-05",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.0006538355148987455,
+    0.9993461644851013
+   ],
+   "logits": [
+    -7.332658290863037,
+    -0.0006575958104804158
+   ],
+   "pred": 1,
+   "s": 0.1869659000003594,
+   "prompt_n": 161
+  },
+  {
+   "id": "hard-sol-b-judge_hard-08",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-08",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    1.3954633543038493e-05,
+    0.999986045366457
+   ],
+   "logits": [
+    -11.179699897766113,
+    -1.4901272152201273e-05
+   ],
+   "pred": 1,
+   "s": 0.1683672999997725,
+   "prompt_n": 131
+  },
+  {
+   "id": "hard-sol-b-judge_hard-10",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-10",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.0002913810814780044,
+    0.9997086189185221
+   ],
+   "logits": [
+    -8.140887260437012,
+    -0.000300094805425033
+   ],
+   "pred": 1,
+   "s": 0.1626806000003853,
+   "prompt_n": 152
+  },
+  {
+   "id": "hard-sol-b-judge_hard-14",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-14",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999635972373567,
+    3.6402762643215406e-05
+   ],
+   "logits": [
+    -4.1485694964649156e-05,
+    -10.220870971679688
+   ],
+   "pred": 0,
+   "s": 0.17996230000062496,
+   "prompt_n": 172
+  },
+  {
+   "id": "hard-sol-b-judge_hard-15",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-15",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    8.390958170805907e-07,
+    0.999999160904183
+   ],
+   "logits": [
+    -13.990941047668457,
+    -9.536747711536009e-07
+   ],
+   "pred": 1,
+   "s": 0.19681039999977656,
+   "prompt_n": 122
+  },
+  {
+   "id": "hard-sol-b-judge_hard-18",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-b-judge_hard-18",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999791586653473,
+    2.084133465286743e-05
+   ],
+   "logits": [
+    -3.3975225960602984e-05,
+    -10.778585433959961
+   ],
+   "pred": 0,
+   "s": 0.10651059999963763,
+   "prompt_n": 94
+  },
+  {
+   "id": "hard-sol-b-long_policy-01",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-sol-b-long_policy-01",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    6.529328944539001e-06,
+    3.319825185531715e-05,
+    4.946591093606216e-05,
+    0.999910806508264
+   ],
+   "logits": [
+    -11.939224243164062,
+    -10.313031196594238,
+    -9.914244651794434,
+    -0.00010705567547120154
+   ],
+   "pred": 3,
+   "s": 1.9157672999999704,
+   "prompt_n": 2707
+  },
+  {
+   "id": "hard-sol-b-long_policy-02",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-sol-b-long_policy-02",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    5.61506899854167e-05,
+    0.00027274198015800745,
+    0.017742803322249805,
+    0.9819283040076068
+   ],
+   "logits": [
+    -9.787484169006348,
+    -8.20699691772461,
+    -4.031787872314453,
+    -0.01824956387281418
+   ],
+   "pred": 3,
+   "s": 1.9013590000004115,
+   "prompt_n": 2547
+  },
+  {
+   "id": "hard-sol-b-long_policy-05",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-sol-b-long_policy-05",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    3.987721677767224e-06,
+    0.9735051749144821,
+    0.02644492922687703,
+    4.5908136963171085e-05
+   ],
+   "logits": [
+    -12.432302474975586,
+    -0.02686411514878273,
+    -3.6327028274536133,
+    -9.988880157470703
+   ],
+   "pred": 1,
+   "s": 1.8896737000004578,
+   "prompt_n": 2493
+  },
+  {
+   "id": "hard-sol-b-long_policy-06",
+   "tier": "hard",
+   "family": "long_policy",
+   "group": "hard-sol-b-long_policy-06",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.0008954375393851133,
+    0.2661400592262196,
+    0.015373853301019242,
+    0.7175906499333761
+   ],
+   "logits": [
+    -7.022364616394043,
+    -1.3278990983963013,
+    -4.179253578186035,
+    -0.3360225260257721
+   ],
+   "pred": 3,
+   "s": 1.9648334999992585,
+   "prompt_n": 2572
+  },
+  {
+   "id": "hard-sol-b-routing_hard-01",
+   "tier": "hard",
+   "family": "routing_hard",
+   "group": "hard-sol-b-routing_hard-01",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    5.363110244721208e-08,
+    0.9999997640706598,
+    1.5120056672589823e-07,
+    1.2184969755531917e-08,
+    1.8912701121813015e-08
+   ],
+   "logits": [
+    -16.74113655090332,
+    -1.1920930376163597e-07,
+    -15.704658508300781,
+    -18.22306251525879,
+    -17.783432006835938
+   ],
+   "pred": 1,
+   "s": 0.3960395999993125,
+   "prompt_n": 300
+  },
+  {
+   "id": "hard-sol-b-routing_hard-02",
+   "tier": "hard",
+   "family": "routing_hard",
+   "group": "hard-sol-b-routing_hard-02",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    7.58416989152147e-09,
+    0.9999998923494338,
+    2.354922953412409e-08,
+    6.35704314150592e-08,
+    1.2946735459925318e-08
+   ],
+   "logits": [
+    -18.697202682495117,
+    -1.1920930376163597e-07,
+    -17.564172744750977,
+    -16.571117401123047,
+    -18.16242218017578
+   ],
+   "pred": 1,
+   "s": 0.29803090000041266,
+   "prompt_n": 269
+  },
+  {
+   "id": "hard-sol-b-routing_hard-03",
+   "tier": "hard",
+   "family": "routing_hard",
+   "group": "hard-sol-b-routing_hard-03",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    1.2700027140902956e-08,
+    0.9999998994297897,
+    3.5828307780341236e-08,
+    7.505438938449055e-09,
+    4.453643651677942e-08
+   ],
+   "logits": [
+    -18.18166160583496,
+    0.0,
+    -17.144527435302734,
+    -18.707637786865234,
+    -16.926958084106445
+   ],
+   "pred": 1,
+   "s": 0.2647428000000218,
+   "prompt_n": 268
+  },
+  {
+   "id": "hard-sol-b-routing_hard-07",
+   "tier": "hard",
+   "family": "routing_hard",
+   "group": "hard-sol-b-routing_hard-07",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    3.0891051450531867e-07,
+    0.9999988374767758,
+    5.742560432860684e-07,
+    1.78957003126903e-07,
+    1.0039966331016545e-07
+   ],
+   "logits": [
+    -14.990214347839355,
+    -1.3113030945532955e-06,
+    -14.370190620422363,
+    -15.536120414733887,
+    -16.114107131958008
+   ],
+   "pred": 1,
+   "s": 0.2323948000002929,
+   "prompt_n": 246
+  },
+  {
+   "id": "hard-sol-b-routing_hard-09",
+   "tier": "hard",
+   "family": "routing_hard",
+   "group": "hard-sol-b-routing_hard-09",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 5,
+   "probabilities": [
+    7.095394181321117e-08,
+    0.9999996922868845,
+    1.422698893739647e-07,
+    3.2930379284541657e-08,
+    6.15589050250796e-08
+   ],
+   "logits": [
+    -16.46123504638672,
+    -4.768372718899627e-07,
+    -15.76554012298584,
+    -17.228870391845703,
+    -16.603271484375
+   ],
+   "pred": 1,
+   "s": 0.3107010999992781,
+   "prompt_n": 262
+  },
+  {
+   "id": "hard-sol-b-temporal_numeric-01",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-sol-b-temporal_numeric-01",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    0.0005123259480088407,
+    0.9902968416748714,
+    0.009020011782301416,
+    0.00017082059481835692
+   ],
+   "logits": [
+    -7.576599597930908,
+    -0.009800620377063751,
+    -4.708359718322754,
+    -8.674946784973145
+   ],
+   "pred": 1,
+   "s": 0.2825536000000284,
+   "prompt_n": 279
+  },
+  {
+   "id": "hard-sol-b-temporal_numeric-02",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-sol-b-temporal_numeric-02",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    0.013137572683684763,
+    0.9499919991124517,
+    0.03570801520906106,
+    0.001162412994802282
+   ],
+   "logits": [
+    -4.351217269897461,
+    -0.07023997604846954,
+    -3.351318359375,
+    -6.776195526123047
+   ],
+   "pred": 1,
+   "s": 0.25220569999964937,
+   "prompt_n": 264
+  },
+  {
+   "id": "hard-sol-b-temporal_numeric-03",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-sol-b-temporal_numeric-03",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.09020114288278089,
+    0.579690668036501,
+    0.29247863410597646,
+    0.03762955497474165
+   ],
+   "logits": [
+    -2.8306210041046143,
+    -0.9701684713363647,
+    -1.6542714834213257,
+    -3.7048733234405518
+   ],
+   "pred": 1,
+   "s": 0.23656759999994392,
+   "prompt_n": 197
+  },
+  {
+   "id": "hard-sol-b-temporal_numeric-04",
+   "tier": "hard",
+   "family": "temporal_numeric",
+   "group": "hard-sol-b-temporal_numeric-04",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 3,
+   "probabilities": [
+    0.002343758417463747,
+    0.15275303790675876,
+    0.8449032036757774
+   ],
+   "logits": [
+    -6.056684970855713,
+    -1.8796182870864868,
+    -0.16921870410442352
+   ],
+   "pred": 2,
+   "s": 0.21886069999982283,
+   "prompt_n": 206
+  },
+  {
+   "id": "hard-sol-c-judge_hard-03",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-03",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999991480769715,
+    8.519230283819764e-07
+   ],
+   "logits": [
+    -1.1920935776288388e-06,
+    -13.975769996643066
+   ],
+   "pred": 0,
+   "s": 0.3584928000000218,
+   "prompt_n": 406
+  },
+  {
+   "id": "hard-sol-c-judge_hard-05",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-05",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    9.724157505307703e-05,
+    0.9999027584249469
+   ],
+   "logits": [
+    -9.238313674926758,
+    -9.871016663964838e-05
+   ],
+   "pred": 1,
+   "s": 0.3159690000002229,
+   "prompt_n": 262
+  },
+  {
+   "id": "hard-sol-c-judge_hard-07",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-07",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9770029712911085,
+    0.022997028708891636
+   ],
+   "logits": [
+    -0.02337655797600746,
+    -3.772501230239868
+   ],
+   "pred": 0,
+   "s": 0.2315797000001112,
+   "prompt_n": 232
+  },
+  {
+   "id": "hard-sol-c-judge_hard-08",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-08",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999788966036941,
+    2.11033963060084e-05
+   ],
+   "logits": [
+    -2.4438202672172338e-05,
+    -10.766079902648926
+   ],
+   "pred": 0,
+   "s": 0.22198049999951763,
+   "prompt_n": 231
+  },
+  {
+   "id": "hard-sol-c-judge_hard-09",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-09",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.003058823752120114,
+    0.9969411762478799
+   ],
+   "logits": [
+    -5.78973388671875,
+    -0.0030725665856152773
+   ],
+   "pred": 1,
+   "s": 0.23800260000007256,
+   "prompt_n": 257
+  },
+  {
+   "id": "hard-sol-c-judge_hard-10",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-10",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.00012448209699565126,
+    0.9998755179030044
+   ],
+   "logits": [
+    -8.991350173950195,
+    -0.00012601216440089047
+   ],
+   "pred": 1,
+   "s": 0.2464784999992844,
+   "prompt_n": 281
+  },
+  {
+   "id": "hard-sol-c-judge_hard-11",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-11",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.9999993515709128,
+    6.484290872171108e-07
+   ],
+   "logits": [
+    -9.536747711536009e-07,
+    -14.248713493347168
+   ],
+   "pred": 0,
+   "s": 0.2611646999994264,
+   "prompt_n": 264
+  },
+  {
+   "id": "hard-sol-c-judge_hard-13",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-13",
+   "qtype": "noul",
+   "gold": 0,
+   "k": 2,
+   "probabilities": [
+    0.250878367163003,
+    0.7491216328369971
+   ],
+   "logits": [
+    -1.3828665018081665,
+    -0.2889333665370941
+   ],
+   "pred": 1,
+   "s": 0.2341487000003326,
+   "prompt_n": 248
+  },
+  {
+   "id": "hard-sol-c-judge_hard-15",
+   "tier": "hard",
+   "family": "judge_hard",
+   "group": "hard-sol-c-judge_hard-15",
+   "qtype": "noul",
+   "gold": 1,
+   "k": 2,
+   "probabilities": [
+    0.0011099262648438385,
+    0.9988900737351561
+   ],
+   "logits": [
+    -6.803466320037842,
+    -0.0011151687940582633
+   ],
+   "pred": 1,
+   "s": 0.18163770000046497,
+   "prompt_n": 199
+  },
+  {
+   "id": "hard-sol-c-multi_hop-07",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-c-multi_hop-07",
+   "qtype": "choice",
+   "gold": 3,
+   "k": 4,
+   "probabilities": [
+    3.087615404892983e-06,
+    9.408230783580814e-05,
+    4.6293677420339406e-05,
+    0.999856536399339
+   ],
+   "logits": [
+    -12.688116073608398,
+    -9.271345138549805,
+    -9.980509757995605,
+    -0.00014806889521423727
+   ],
+   "pred": 3,
+   "s": 1.7875233999993725,
+   "prompt_n": 2562
+  },
+  {
+   "id": "hard-sol-c-multi_hop-09",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-c-multi_hop-09",
+   "qtype": "choice",
+   "gold": 0,
+   "k": 4,
+   "probabilities": [
+    0.9999865489307178,
+    1.0617446966291261e-05,
+    1.8749148257407332e-06,
+    9.587074902077896e-07
+   ],
+   "logits": [
+    -2.8252999982214533e-05,
+    -11.45302677154541,
+    -13.186962127685547,
+    -13.857694625854492
+   ],
+   "pred": 0,
+   "s": 1.93821939999998,
+   "prompt_n": 2598
+  },
+  {
+   "id": "hard-sol-c-multi_hop-11",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-c-multi_hop-11",
+   "qtype": "choice",
+   "gold": 2,
+   "k": 4,
+   "probabilities": [
+    1.687381500199946e-05,
+    0.00023777439955558914,
+    0.999656175414192,
+    8.91763712502834e-05
+   ],
+   "logits": [
+    -10.989757537841797,
+    -8.344198226928711,
+    -0.0003538757737260312,
+    -9.324904441833496
+   ],
+   "pred": 2,
+   "s": 1.9567200000001321,
+   "prompt_n": 2653
+  },
+  {
+   "id": "hard-sol-c-multi_hop-12",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-c-multi_hop-12",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    0.009682300548570002,
+    0.9670681180589855,
+    0.020309460271373266,
+    0.0029401211210711956
+   ],
+   "logits": [
+    -4.637655258178711,
+    -0.03368585556745529,
+    -3.8968679904937744,
+    -5.829504013061523
+   ],
+   "pred": 1,
+   "s": 0.5630295000000842,
+   "prompt_n": 526
+  },
+  {
+   "id": "hard-sol-c-multi_hop-13",
+   "tier": "hard",
+   "family": "multi_hop",
+   "group": "hard-sol-c-multi_hop-13",
+   "qtype": "choice",
+   "gold": 1,
+   "k": 4,
+   "probabilities": [
+    8.604527599701203e-08,
+    0.9999997526741341,
+    1.4047061559872277e-07,
+    2.080997418002616e-08
+   ],
+   "logits": [
+    -16.26839256286621,
+    -5.960466182841628e-07,
+    -15.778267860412598,
+    -17.687833786010742
+   ],
+   "pred": 1,
+   "s": 1.89033500000005,
+   "prompt_n": 2621
+  }
+ ]
+}

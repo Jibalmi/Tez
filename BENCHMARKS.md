@@ -89,6 +89,7 @@ Tez's per-decision time on these tasks is dominated by evaluating the **state** 
 | Qwen3.5-4B BF16 (SemIf's model, in-process) | 0.813 (0.755–0.865) | — | 0.427 | 0.248 | — | 224 ms |
 | Qwen3.5-4B + 6-permutation batch | **0.912** | — | — | — | — | 321 ms |
 | Qwen3-4B BF16 (in-process) / + 6-perm | 0.740 / 0.832 | — | — | — | — | 75 / 204 ms |
+| Qwen3.5-9B Q8_0 (llama.cpp, `qwen3` template) | 0.912 (0.863–0.955) | 0.868 | — | — | 3 (8 %) | 92 ms |
 | Gemma 3 4B Q4_K_M | 0.646 (0.570–0.728) | 0.729 | 3.433 → 0.696 | 0.661 → 0.397 | 13 (36 %) | 40 ms |
 | Llama 3.2 3B Q4_K_M | 0.358 (0.319–0.399) ≈ chance | 0.496 | 1.673 → 1.043 | 0.827 → 0.627 | 10 (28 %) | 25 ms |
 | *SemIf published: Qwen3.5-4B / EXL3 27B* | *0.813 / 0.958* | *0.766 / —* | | | | |
@@ -98,6 +99,19 @@ Paired McNemar on the same 144 rows: 12B Q8 vs Qwen3.5-4B p = 5e-5; 12B vs Qwen3
 **Calibration recipes (Gemma 4 12B Q8, 144 rows, OOF temperature):** raw NLL 0.478 / Brier 0.094 / ECE 0.047 · temperature 0.193 / 0.083 / 0.027 · 6-permutation mean 0.281 / 0.083 / 0.038 (best error-detection AUROC 0.933) · **6-perm + temperature 0.158 / 0.075 / 0.037** · Zhao contextual calibration accuracy **0.951 → 0.778** (harmful: empty evidence legitimately selects "insufficient"; the 3-placeholder average does not rescue it). Letter prior A/B/C = 0.331/0.336/0.333 (PriDe is a no-op). Three Q8 runs byte-identical.
 
 ---
+
+### Backbone check: Qwen3.5-9B Q8_0 vs Gemma 4 12B Q8_0 (same rows, same harness)
+
+| task | Qwen3.5-9B | **Gemma 4 12B** |
+|---|---:|---:|
+| SemIf authored144 / perturbations | 0.912 / 0.868 (8 % reversal flips) | **0.943 / 0.992** (0 %) |
+| typed-decisions (2,000) / soft acc | 0.622 / 0.498 | **0.704 / 0.575** |
+| MASSIVE en / ja / ar / km | 0.88 / 0.87 / 0.70 / 0.69 | **0.90 / 0.93 / 0.87 / 0.79** |
+| Banking77 / SST-5 / BoolQ / prompt-injections | 0.642 / 0.430 / 0.812 / 0.621 | **0.713 / 0.512 / 0.850 / 0.759** |
+| order flip, MASSIVE-en / ja | 0.09 / 0.19 | **0.07 / —** |
+| JevBench public original / easy (intelligence) | 94.0 / 100 | see §5 |
+
+The 9B saves ~3 GB and nothing else; the 12B stays the backbone.
 
 ## 3. Voice → instant action (220 commands, 16 actions)
 

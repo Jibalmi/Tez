@@ -714,7 +714,7 @@ Retrieval-narrowed labels & embed labels + demos, top-$k$ then decide; 2309.1095
 State-as-prefix layout & many questions on one state share the KV; RadixAttention 2312.07104, Hydragen 2402.05099 & 5--10$\times$ per question & exact; layout only \\
 Depth pruning + probe & remove 20--30 \% of layers, recalibrate; ShortGPT 2403.03853, 2604.24938 & 1.25--1.4$\times$ prefill & GGUF surgery \\
 Early exit with a KL gate & entropy-gated exit at 60--80 \% depth; SimExit 2507.17618, UAT 2509.23666, tuned lens 2303.08112 & 1.15--1.4$\times$ & needs in-process \\
-Alternative backbones & Gemma 4 26B-A4B QAT-Q4 (82.6 MMLU-Pro at 4B active), Qwen3.5-9B Q8 & +3--5 pts at equal latency & Qwen3.5-9B running \\
+Alternative backbones & Gemma 4 26B-A4B QAT-Q4 (82.6 MMLU-Pro at 4B active), Qwen3.5-9B Q8 & +3--5 pts at equal latency & \textbf{Qwen3.5-9B measured}: SemIf 0.912 (0.863--0.955), perturbations 0.868 with 8\% reversal flips, typed-decisions 0.622, 92\,ms --- below the 12B on every axis except VRAM; 26B-A4B not yet \\
 Open-teacher distillation & proper-scoring-rule LoRA from frozen Qwen3.8-27B soft labels (reflex, JevBench \#5) & calibration 72 $\to$ 80+ & later; never Jev \\
 \bottomrule
 \end{tabularx}
