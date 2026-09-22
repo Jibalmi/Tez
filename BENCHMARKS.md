@@ -20,8 +20,8 @@ Every number here was measured on one machine (RTX 5080 Laptop 16 GB, llama.cpp 
 | prompt-injections (116, noul, held out) | **0.759** | 0.672 | 0.569 | 0.647 | — |
 | MASSIVE intent, English (100, 20 options) | **0.900** | 0.830 | 0.710 | 0.820 | — |
 | XNLI, English (100) | 0.730 | 0.900 | 0.860 | **0.920** | — |
-| typed-decisions (400 cases, 2,000 decisions) | **0.704** | 0.362 | 0.352 | 0.766 † | 0.727 |
-| … soft accuracy vs teacher distribution | **0.575** | 0.331 | 0.328 | 0.471 | 0.580 |
+| typed-decisions (400 cases, 2,000 decisions) | **0.704** (4-shot in cached prefix: **0.725**) | 0.362 | 0.352 | 0.766 † | 0.727 |
+| … soft accuracy vs teacher distribution | **0.575** (4-shot **0.583**) | 0.331 | 0.328 | 0.471 | 0.580 |
 | … Brier vs teacher distribution | 0.355 | 0.316 | 0.463 | **0.061** | 0.148 |
 | … score MAE | 0.482 | 0.694 | 0.761 | **0.242** | 0.391 |
 
@@ -140,6 +140,28 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 ---
 
-## 5. Audit trail
+## 4b. Ablations on the 12B (typed-decisions unless stated)
+
+| lever | result |
+|---|---:|
+| 4 worked examples of the same question in the cached prefix (train split, no training) | 0.704 → **0.725** (p = 0.053), soft 0.583, ECE-refit 0.038 |
+| thinking budget before the readout, 32 / 128 tokens (s1-style seeded thought) | 0.687 → 0.657 (n = 300, p = 0.12) / 0.753 → 0.753 (n = 150); 2.0 s / 4.3 s per decision — **null/negative** |
+| answer symbols: digits / lowercase / uppercase letters (SemIf rows) | 0.947 / 0.943 / 0.943 — **no effect at 12B** |
+| ordinal expected-value readout instead of argmax (SST-5, score questions) | no change for Tez; hurts Laya-td — **null** |
+| Batch Calibration (out-of-fold) | NLL down on 30/33 sets; accuracy ±1–4 pts task-dependent |
+| conformal sets (90 % coverage) | act on 52 % of decisions at 0.853 accuracy |
+| 4B → 12B cascade | 0.854 @ 117 ms vs 12B alone 0.951 @ 110 ms — **negative** |
+
+## 5. JevBench public tiers (leaderboard formulas, `experiments/bench_jevbench.py`)
+
+| tier (n) | Gemma 4 12B Q8: accuracy / intelligence / ECE / median s | Qwen3.5-9B Q8 |
+|---|---:|---:|
+| original (72) | see results/jevbench_tez_gemma4-12b-q8_0.json | 0.958 / 94.0 / 0.069 / 0.12 s |
+| easy (48) | see results/jevbench_tez_gemma4-12b-q8_0.json | 1.000 / 100 / 0.011 / 0.13 s |
+| hard (111; states up to 3.9k tokens, 8k ctx) | **0.703 / 55.2 / 0.251 / 0.46 s** (temporal_numeric 0.13, routing_hard 1.0, trap 0.88, ambiguous 0.86, adversarial 0.83) | — |
+
+The leaderboard's headline uses a held-out tier; these public tiers are indicative only. Its intelligence axis weights hard 30 %, easy 14 %, standard 28 %, judge 28 %.
+
+## 6. Audit trail
 
 The first draft's balanced accuracy was keyed on gold *position* instead of option *id* (inflated by 1–3 points; all numbers here are corrected), and its "~110 ms floor / no prefix reuse" was the sliding-window cache (fixed with `--swa-full`). Runs that hit the wrong model are quarantined under `results/INVALID_wrongmodel_*`. Every run writes a manifest with data SHA-256, model path and settings.
