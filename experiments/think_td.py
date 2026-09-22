@@ -28,7 +28,11 @@ def think_then_read(server, prompt_wo_tail, budget, k):
     tokens (stop at the channel close), then close it and read the letter."""
     import importlib.util as _iu
     _s = _iu.spec_from_file_location("backend", ROOT / "experiments" / "backend.py"); be = _iu.module_from_spec(_s); _s.loader.exec_module(be)  # type: ignore[union-attr]
-    open_ch = f"{prompt_wo_tail}<turn|>\n<|turn>model\n<|channel>thought\n"
+    # The System-One instruction makes the model close the thought channel immediately (1 token);
+    # invite a short think and seed the channel (s1-style budget forcing), then stop at the close.
+    prompt_wo_tail = prompt_wo_tail.replace("Answer with the letter only.", "Think briefly in your thought channel first, then answer with the letter only.")
+    seed = "Let me check the input against the options. "
+    open_ch = f"{prompt_wo_tail}<turn|>\n<|turn>model\n<|channel>thought\n{seed}"
     t0 = time.perf_counter()
     thought, n_gen = be.generate(open_ch, budget, ["<channel|>"])
     final = open_ch + thought + "<channel|>"

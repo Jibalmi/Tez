@@ -43,7 +43,7 @@ def score_letters(prompt: str, k: int, n_probs: int = 200, backend: str | None =
         return p, z, d.get("timings", {}).get("prompt_n")
     if backend == "ollama":
         body = {"model": OLLAMA_MODEL, "prompt": prompt, "raw": True, "stream": False, "keep_alive": "60m",
-                "options": {"num_predict": 1, "temperature": 0}, "logprobs": True, "top_logprobs": 20}
+                "options": {"num_predict": 1, "temperature": 0, "num_ctx": int(os.environ.get("TEZ_OLLAMA_CTX", "8192"))}, "logprobs": True, "top_logprobs": 20}
         d = SESSION.post(f"{OLLAMA}/api/generate", json=body, timeout=600).json()
         p, z, _ = _from_tops(d["logprobs"][0]["top_logprobs"], k)
         return p, z, d.get("prompt_eval_count")
