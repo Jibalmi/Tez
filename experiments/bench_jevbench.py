@@ -38,10 +38,13 @@ def load_tier(name):
     rows = [json.loads(l) for l in (ROOT / "data" / "jevbench" / f"{name}.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
     cases = []
     for r in rows:
-        labels = parse(r["labels"]); q = parse(r["question"])
+        labels = [str(x) for x in parse(r["labels"])]; q = parse(r["question"])
+        expected = str(r["expected"])   # score items carry an int gold
         crit = q.get("criteria") or {}
         qtype = q.get("type") or ("noul" if set(labels) <= {"no", "yes", "false", "true"} else "choice")
-        if qtype == "noul" or set(labels) == {"no", "yes"}:
+        if qtype == "score" and isinstance(crit, list):
+            opts = [(lab, crit[i] if i < len(crit) else lab) for i, lab in enumerate(labels)]
+        elif qtype == "noul" or set(labels) == {"no", "yes"}:
             # keep the item's own label order; map criteria false/true onto no/yes
             opts = []
             for lab in labels:
@@ -51,7 +54,7 @@ def load_tier(name):
             opts = [(lab, crit.get(lab) if isinstance(crit, dict) else "") for lab in labels]
             opts = [(k, d if isinstance(d, str) else json.dumps(d)) for k, d in opts]
         cases.append(dict(id=r["id"], task=f"jevbench:{name}", lang="en", state=r["state"], qtype="noul" if qtype == "noul" else qtype,
-                          instructions=q.get("instructions", ""), options=opts, gold=labels.index(r["expected"]), family=r.get("family"), group=r.get("group")))
+                          instructions=q.get("instructions", ""), options=opts, gold=labels.index(expected), family=r.get("family"), group=r.get("group")))
     return cases
 
 
