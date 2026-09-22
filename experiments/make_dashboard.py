@@ -247,10 +247,9 @@ def main():
         ax = fig.add_axes([0.63, 0.905, 0.10, 0.06])  # small inset top-right, above panel B
         ax.axis("off")
         txt = ""
-        if FS: txt += f"typed-decisions, 4 examples in the cached prefix: {FS['accuracy']:.3f} (Jev 0.727)
-"
+        if FS: txt += "typed-decisions, 4 examples in the cached prefix: %.3f (Jev 0.727)" % FS["accuracy"] + chr(10)
         if JV:
-            Sm = JV["summary"]; txt += "JevBench public: " + " · ".join(f"{t} {v['accuracy']:.3f} / intel {v['intelligence']:.0f}" for t, v in Sm.items())
+            Sm = JV["summary"]; txt += "JevBench public: " + " · ".join("%s %.3f / intel %.0f" % (t, v["accuracy"], v["intelligence"]) for t, v in Sm.items())
         ax.text(0, 1, txt, fontsize=8, va="top", family="monospace")
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
