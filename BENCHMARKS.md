@@ -146,6 +146,7 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 |---|---:|
 | 4 worked examples of the same question in the cached prefix (train split, no training) | 0.704 → **0.725** (p = 0.053), soft 0.583, ECE-refit 0.038 |
 | thinking budget before the readout, 32 / 128 tokens (s1-style seeded thought) | 0.687 → 0.657 (n = 300, p = 0.12) / 0.753 → 0.753 (n = 150); 2.0 s / 4.3 s per decision — **null/negative** |
+| thinking budget 64 tokens on the JevBench hard tier (111) | 0.703 → 0.658 (p = 0.27); temporal_numeric 0.13 → 0.27, long_policy 0.79 → 0.58; 2.6 s per decision — **negative** |
 | answer symbols: digits / lowercase / uppercase letters (SemIf rows) | 0.947 / 0.943 / 0.943 — **no effect at 12B** |
 | ordinal expected-value readout instead of argmax (SST-5, score questions) | no change for Tez; hurts Laya-td — **null** |
 | Batch Calibration (out-of-fold) | NLL down on 30/33 sets; accuracy ±1–4 pts task-dependent |
