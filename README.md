@@ -10,6 +10,10 @@ published technique rather than on Jev's outputs (which its terms forbid).
 > no library API yet.** Read [`docs/REPORT.md`](docs/REPORT.md) first — it was audited before
 > release and §3.7 lists what the first draft got wrong.
 
+![Tez dashboard — every measurement on one page](docs/figures/tez_dashboard.png)
+
+Full tables: [`BENCHMARKS.md`](BENCHMARKS.md). Individual figures: `docs/figures/`.
+
 ## What we measured
 
 Frozen models, zero training, SemIf's exact prompt and public fixtures (144 three-option decisions),
