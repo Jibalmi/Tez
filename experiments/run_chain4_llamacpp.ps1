@@ -12,16 +12,18 @@ function Start-Server($model, $ctx, $extra) {
   foreach ($i in 1..90) { Start-Sleep 2; try { if ((Invoke-RestMethod http://127.0.0.1:8091/health -TimeoutSec 3).status -eq 'ok') { return $true } } catch {} }
   return $false
 }
-# --- Gemma 4 12B Q8 (already up at -c 2048 --swa-full)
-python experiments/think_td.py --budget 32 --limit 300 --out results/h2h/rows_typed_decisions_tez-think32.jsonl *> "$log\think32.log"
-python experiments/think_td.py --budget 128 --limit 150 --out results/h2h/rows_typed_decisions_tez-think128.jsonl *> "$log\think128.log"
+# --- Gemma 4 12B Q8
+try { $h = (Invoke-RestMethod http://127.0.0.1:8091/health -TimeoutSec 3).status } catch { $h = "down" }
+if ($h -ne "ok") { if (-not (Start-Server $gemma 2048 "--swa-full")) { "gemma start failed" | Out-File "$log\gemma_failed.txt"; exit 1 } }
+if (-not (Test-Path "results/h2h/rows_typed_decisions_tez-think32.summary.json")) { python experiments/think_td.py --budget 32 --limit 300 --out results/h2h/rows_typed_decisions_tez-think32.jsonl *> "$log\think32.log" }
+if (-not (Test-Path "results/h2h/rows_typed_decisions_tez-think128.summary.json")) { python experiments/think_td.py --budget 128 --limit 150 --out results/h2h/rows_typed_decisions_tez-think128.jsonl *> "$log\think128.log" }
 $env:TEZ_SYMBOLS = "123456789"; $env:TEZ_SYMBOL_WORD = "number"
-python experiments/run_direct.py --data data/semif/authored144.jsonl --out results/authored144_gemma4-12b-q8_0_digits.jsonl --tag digits *> "$log\digits.log"
+if (-not (Test-Path "results/authored144_gemma4-12b-q8_0_digits.manifest.json")) { python experiments/run_direct.py --data data/semif/authored144.jsonl --out results/authored144_gemma4-12b-q8_0_digits.jsonl --tag digits *> "$log\digits.log" }
 $env:TEZ_SYMBOLS = "abcdefghijklmnop"; $env:TEZ_SYMBOL_WORD = "lowercase letter"
-python experiments/run_direct.py --data data/semif/authored144.jsonl --out results/authored144_gemma4-12b-q8_0_lower.jsonl --tag lower *> "$log\lower.log"
+if (-not (Test-Path "results/authored144_gemma4-12b-q8_0_lower.manifest.json")) { python experiments/run_direct.py --data data/semif/authored144.jsonl --out results/authored144_gemma4-12b-q8_0_lower.jsonl --tag lower *> "$log\lower.log" }
 Remove-Item Env:TEZ_SYMBOLS; Remove-Item Env:TEZ_SYMBOL_WORD
-python experiments/fewshot_td.py --k 4 --out results/h2h/rows_typed_decisions_tez-fewshot4-all.jsonl *> "$log\fewshot_all.log"
-python experiments/bench_jevbench.py --tiers original,easy --out results/jevbench_tez_gemma4-12b-q8_0_short.json *> "$log\jev12b_short.log"
+if (-not (Test-Path "results/h2h/rows_typed_decisions_tez-fewshot4-all.summary.json")) { python experiments/fewshot_td.py --k 4 --out results/h2h/rows_typed_decisions_tez-fewshot4-all.jsonl *> "$log\fewshot_all.log" }
+if (-not (Test-Path "results/jevbench_tez_gemma4-12b-q8_0_short.json")) { python experiments/bench_jevbench.py --tiers original,easy --out results/jevbench_tez_gemma4-12b-q8_0_short.json *> "$log\jev12b_short.log" }
 # --- Qwen3.5-9B Q8 backbone
 if (Start-Server $qwen 4096 "") {
   $env:TEZ_TEMPLATE = "qwen3"
