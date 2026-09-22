@@ -26,14 +26,13 @@ bh = importlib.util.module_from_spec(spec); spec.loader.exec_module(bh)  # type:
 def think_then_read(server, prompt_wo_tail, budget, k):
     """prompt_wo_tail ends with the user turn; we open the thought channel, generate up to `budget`
     tokens (stop at the channel close), then close it and read the letter."""
+    import importlib.util as _iu
+    _s = _iu.spec_from_file_location("backend", ROOT / "experiments" / "backend.py"); be = _iu.module_from_spec(_s); _s.loader.exec_module(be)  # type: ignore[union-attr]
     open_ch = f"{prompt_wo_tail}<turn|>\n<|turn>model\n<|channel>thought\n"
-    body = {"prompt": open_ch, "n_predict": budget, "temperature": 0, "cache_prompt": True, "stop": ["<channel|>"]}
     t0 = time.perf_counter()
-    d = bh.SESSION.post(f"{server}/completion", json=body, timeout=600).json()
-    thought = d["content"]
-    n_gen = d.get("tokens_predicted", 0)
+    thought, n_gen = be.generate(open_ch, budget, ["<channel|>"])
     final = open_ch + thought + "<channel|>"
-    p, z, pn = bh.tez_score_letters(server, final, k)
+    p, z, pn = be.score_letters(final, k)
     return p, z, thought, n_gen, (time.perf_counter() - t0) * 1000
 
 

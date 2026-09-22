@@ -38,6 +38,11 @@ def load_semif_core():
 
 
 core = load_semif_core()
+if os.environ.get("TEZ_SYMBOLS"):
+    # verbalizer ablation: replace the A..P answer symbols (e.g. "123456789" or "abcdefghij");
+    # SemIf's instruction says "uppercase letter" -- reword it so the prompt stays consistent
+    core.LETTERS = os.environ["TEZ_SYMBOLS"]
+    core.DIRECT_SYSTEM = core.DIRECT_SYSTEM.replace("uppercase letter", os.environ.get("TEZ_SYMBOL_WORD", "label"))
 LETTERS = core.LETTERS
 
 
