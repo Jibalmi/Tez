@@ -241,6 +241,17 @@ def main():
         ax.set_xticks(range(len(ms2))); ax.set_xticklabels(["Tez", "laya base", "laya-td"][: len(ms2)], fontsize=7)
     ax.set_title("R · Teacher-distribution match (soft acc ↑, Brier ↓)")
 
+    # ---------------------------------------------------------------- D2: few-shot in prefix + JevBench tiers (overlay on panel D / new axes)
+    JV = J("results/jevbench_tez_gemma4-12b-q8_0.json"); FS = J("results/h2h/rows_typed_decisions_tez-fewshot4-all.summary.json")
+    if JV or FS:
+        ax = fig.add_axes([0.63, 0.905, 0.10, 0.06])  # small inset top-right, above panel B
+        ax.axis("off")
+        txt = ""
+        if FS: txt += f"typed-decisions, 4 examples in the cached prefix: {FS['accuracy']:.3f} (Jev 0.727)
+"
+        if JV:
+            Sm = JV["summary"]; txt += "JevBench public: " + " · ".join(f"{t} {v['accuracy']:.3f} / intel {v['intelligence']:.0f}" for t, v in Sm.items())
+        ax.text(0, 1, txt, fontsize=8, va="top", family="monospace")
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"
