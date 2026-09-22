@@ -1,0 +1,33 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "n_train": 6000,
+  "n_test": 2000,
+  "letter_logits": {
+    "accuracy": 0.4895,
+    "nll": 1.1758143607246052
+  },
+  "layer-1": {
+    "logreg_acc": 0.772,
+    "logreg_nll": 0.6484803320334478,
+    "centroid_acc": 0.696,
+    "n": 2000
+  },
+  "layer-4": {
+    "logreg_acc": 0.7905,
+    "logreg_nll": 0.5204314842108916,
+    "centroid_acc": 0.699,
+    "n": 2000
+  },
+  "layer-8": {
+    "logreg_acc": 0.792,
+    "logreg_nll": 0.5134138879366583,
+    "centroid_acc": 0.699,
+    "n": 2000
+  },
+  "layer-12": {
+    "logreg_acc": 0.794,
+    "logreg_nll": 0.5091074321842456,
+    "centroid_acc": 0.7145,
+    "n": 2000
+  }
+}

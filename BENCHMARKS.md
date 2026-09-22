@@ -153,6 +153,18 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 | conformal sets (90 % coverage) | act on 52 % of decisions at 0.853 accuracy |
 | 4B → 12B cascade | 0.854 @ 117 ms vs 12B alone 0.951 @ 110 ms — **negative** |
 
+### Hidden-state probe (Hidden Calibration, `experiments/hidden_probe.py`) — frozen Qwen3.5-4B, typed-decisions
+
+| readout | test accuracy (2,000) | NLL |
+|---|---:|---:|
+| letter logits (the model's own one-pass answer) | 0.490 | 1.18 |
+| logreg probe on final hidden state (layer −1) | 0.772 | 0.65 |
+| logreg probe, layer −4 / −8 | 0.791 / 0.792 | 0.52 / 0.51 |
+| **logreg probe, layer −12** | **0.794** | **0.51** |
+| nearest-centroid, layer −12 | 0.715 | — |
+
+One probe per question schema, fitted on the 6,000 train decisions (same data access as laya-typed-decisions, 0.766). Above Jev's 0.727 and our 12B's 0.704 / 0.725, from a 4B with untouched weights, reading 12 layers below the top.
+
 ## 5. JevBench public tiers (leaderboard formulas, `experiments/bench_jevbench.py`)
 
 | tier (n) | Gemma 4 12B Q8: accuracy / intelligence / ECE / median s | Qwen3.5-9B Q8 |

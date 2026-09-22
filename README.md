@@ -51,6 +51,7 @@ checkpoints and Tez on byte-identical rows, same GPU, Laya's own datasets and pr
 | task | **Tez (zero-shot)** | laya | laya-multilingual | laya-typed-decisions | Jev (published) |
 |---|---:|---:|---:|---:|---:|
 | typed-decisions, 2,000 decisions (zero-shot / 4 examples in the cached prefix) | **0.704 / 0.725** | 0.362 | 0.352 | 0.766 (fine-tuned on its train split) | 0.727 |
+| typed-decisions, linear probe on the frozen **Qwen3.5-4B**'s hidden state (per-question logreg on the train split; no LLM training) | **0.794** (4B letter readout alone: 0.490) | | | 0.766 | 0.727 |
 | … soft accuracy vs teacher distribution | **0.575 / 0.583** | 0.331 | 0.328 | 0.471 | 0.580 |
 | Banking77 (77 options) | **0.713** | 0.395 | 0.357 | 0.388 | 0.870 |
 | MASSIVE intent, macro over 11 languages | **0.885** | 0.354 | 0.524 | 0.345 | — |
