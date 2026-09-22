@@ -264,6 +264,21 @@ def main():
         axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(5.4, .77, "laya-td 0.766", fontsize=5.5, ha="right", color=COL["laya-td"])
         axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(5.4, .70, "Jev 0.727", fontsize=5.5, ha="right", color="grey")
         axp.set_xticks(range(6)); axp.set_xticklabels(names, fontsize=5); axp.set_ylim(0, .9); axp.set_title("S · Probes on frozen hidden states (typed-decisions)", fontsize=8)
+    # ---------------------------------------------------------------- T/U: probe layer curve + data efficiency
+    SW = J("results/hidden_probe_sweep_qwen35-4b.json")
+    if SW:
+        axt = fig.add_axes([0.735, 0.155, 0.115, 0.075])
+        ls = sorted(int(k) for k in SW["layer_sweep"]); axt.plot(ls, [SW["layer_sweep"][str(l)]["acc"] for l in ls], "-o", color=COL["tez"], ms=3)
+        axt.axhline(SW["letter_logits"]["acc"], ls=":", color=COL["laya-en"], lw=.8); axt.text(0, SW["letter_logits"]["acc"] + .01, "4B letter logits", fontsize=5.5, color=COL["laya-en"])
+        axt.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axt.text(0, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
+        axt.set_xlabel("layer (of 32)", fontsize=6); axt.set_ylabel("probe acc", fontsize=6); axt.tick_params(labelsize=5.5); axt.set_ylim(.4, .85)
+        axt.set_title("T - Probe accuracy by layer, Qwen3.5-4B", fontsize=7)
+        axu = fig.add_axes([0.87, 0.155, 0.115, 0.075])
+        de = SW["data_efficiency"]; xs = sorted(int(k) for k in de); axu.errorbar(xs, [de[str(x)]["mean"] for x in xs], yerr=[de[str(x)]["std"] for x in xs], fmt="-o", color=COL["tez"], ms=3, capsize=2)
+        axu.axhline(0.727, ls=":", color="grey", lw=.8); axu.text(10, .73, "Jev 0.727", fontsize=5.5, color="grey")
+        axu.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axu.text(10, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
+        axu.set_xscale("log"); axu.set_xlabel("labelled rows per question", fontsize=6); axu.tick_params(labelsize=5.5); axu.set_ylim(.6, .85)
+        axu.set_title("U - Probe data efficiency (layer 26)", fontsize=7)
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"
