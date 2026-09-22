@@ -242,6 +242,17 @@ def main():
         ax.set_xticks(range(len(ms2))); ax.set_xticklabels(["Tez", "laya base", "laya-td"][: len(ms2)], fontsize=7)
     ax.set_title("R · Teacher-distribution match (soft acc ↑, Brier ↓)")
 
+    # ---------------------------------------------------------------- S: hidden-state probes
+    HP = J("results/hidden_probe_qwen35-4b.json"); HP12 = J("results/hidden_probe_server_gemma4-12b-q8_0.json")
+    if HP:
+        axp = fig.add_subplot(gs[6, 0])
+        names = ["4B letter" + chr(10) + "logits", "4B probe" + chr(10) + "L-1", "4B probe" + chr(10) + "L-4", "4B probe" + chr(10) + "L-8", "4B probe" + chr(10) + "L-12", "12B probe" + chr(10) + "final (server)"]
+        vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"], HP12["logreg_acc"] if HP12 else 0]
+        axp.bar(range(6), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4 + ["#0B5F5E"])
+        for i, v in enumerate(vals): axp.text(i, v + .01, f"{v:.3f}", ha="center", fontsize=7)
+        axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(5.4, .775, "laya-td 0.766", fontsize=6.5, ha="right", color=COL["laya-td"])
+        axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(5.4, .70, "Jev 0.727", fontsize=6.5, ha="right", color="grey")
+        axp.set_xticks(range(6)); axp.set_xticklabels(names, fontsize=7); axp.set_ylim(0, .9); axp.set_title("S · Probes on frozen hidden states (typed-decisions)")
     # ---------------------------------------------------------------- T/U: probe layer curve + data efficiency
     SW = J("results/hidden_probe_sweep_qwen35-4b.json")
     if SW:
