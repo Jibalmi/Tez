@@ -256,13 +256,14 @@ def main():
     HP = J("results/hidden_probe_qwen35-4b.json")
     if HP:
         axp = fig.add_subplot(gs[5, 3]); axp.set_position([0.735, 0.04, 0.115, 0.10])
-        names = ["4B letter" + chr(10) + "logits", "probe" + chr(10) + "L-1", "probe" + chr(10) + "L-4", "probe" + chr(10) + "L-8", "probe" + chr(10) + "L-12"]
-        vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"]]
-        axp.bar(range(5), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4)
+        HP12 = J("results/hidden_probe_server_gemma4-12b-q8_0.json")
+        names = ["4B letter" + chr(10) + "logits", "4B probe" + chr(10) + "L-1", "4B probe" + chr(10) + "L-4", "4B probe" + chr(10) + "L-8", "4B probe" + chr(10) + "L-12", "12B probe" + chr(10) + "final (server)"]
+        vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"], HP12["logreg_acc"] if HP12 else 0]
+        axp.bar(range(6), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4 + ["#0B5F5E"])
         for i, v in enumerate(vals): axp.text(i, v + .01, f"{v:.3f}", ha="center", fontsize=6)
-        axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(4.4, .77, "laya-td 0.766", fontsize=5.5, ha="right", color=COL["laya-td"])
-        axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(4.4, .70, "Jev 0.727", fontsize=5.5, ha="right", color="grey")
-        axp.set_xticks(range(5)); axp.set_xticklabels(names, fontsize=5.5); axp.set_ylim(0, .9); axp.set_title("S · Probe on frozen Qwen3.5-4B hidden states (typed-decisions)", fontsize=8)
+        axp.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axp.text(5.4, .77, "laya-td 0.766", fontsize=5.5, ha="right", color=COL["laya-td"])
+        axp.axhline(0.727, ls=":", color="grey", lw=.8); axp.text(5.4, .70, "Jev 0.727", fontsize=5.5, ha="right", color="grey")
+        axp.set_xticks(range(6)); axp.set_xticklabels(names, fontsize=5); axp.set_ylim(0, .9); axp.set_title("S · Probes on frozen hidden states (typed-decisions)", fontsize=8)
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"
