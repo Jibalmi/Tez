@@ -68,6 +68,13 @@ Laya wins where it was trained (AG News, NLI) and on single-question latency.
 
 Findings worth knowing before you build anything like this:
 
+- **The frozen model knows more than its letter logits say.** A per-question linear probe on the frozen
+  Qwen3.5-4B's hidden state (12 layers below the top) scores **0.794** on typed-decisions — above Laya's
+  fine-tuned 0.766 and Jev's 0.727 — from a model whose own one-pass letter readout gets 0.49. Minutes of
+  logistic regression, no LLM training, and the top third of the network can be skipped.
+- **Worked examples in the cached prefix are free accuracy** (+2 pts on 2,000 decisions, +5 on schema-specific
+  questions); thinking budgets before the readout, ordinal expected-value readouts and digit/lowercase answer
+  symbols are null or negative at 12B.
 - **Symbol-logit decisions are scale-gated.** A 3B model is at chance with 28 % order sensitivity
   and no calibration trick recovers it; a 4B sits at 0.646 with a third of decisions flipping under
   option reversal. Screen the backbone for symbol binding first.
