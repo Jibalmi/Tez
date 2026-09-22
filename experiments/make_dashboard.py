@@ -256,12 +256,7 @@ def main():
     HP = J("results/hidden_probe_qwen35-4b.json")
     if HP:
         axp = fig.add_subplot(gs[5, 3]); axp.set_position([0.735, 0.04, 0.115, 0.10])
-        names = ["4B letter
-logits", "probe
-L-1", "probe
-L-4", "probe
-L-8", "probe
-L-12"]
+        names = ["4B letter" + chr(10) + "logits", "probe" + chr(10) + "L-1", "probe" + chr(10) + "L-4", "probe" + chr(10) + "L-8", "probe" + chr(10) + "L-12"]
         vals = [HP["letter_logits"]["accuracy"], HP["layer-1"]["logreg_acc"], HP["layer-4"]["logreg_acc"], HP["layer-8"]["logreg_acc"], HP["layer-12"]["logreg_acc"]]
         axp.bar(range(5), vals, color=[COL["laya-en"]] + [COL["tez"]] * 4)
         for i, v in enumerate(vals): axp.text(i, v + .01, f"{v:.3f}", ha="center", fontsize=6)
