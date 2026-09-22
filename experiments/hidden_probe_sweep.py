@@ -29,11 +29,43 @@ def softmax(z):
     z = np.asarray(z, float); e = np.exp(z - z.max()); return e / e.sum()
 
 
-def extract(model_id, train, test, cache):
+def find_layers(model):
+    """The decoder's layer stack, wherever the architecture keeps it (model.layers / language_model.layers)."""
+    import torch.nn as nn
+    best = None
+    for name, mod in model.named_modules():
+        if isinstance(mod, nn.ModuleList) and name.endswith("layers") and (best is None or len(mod) > len(best[1])):
+            best = (name, mod)
+    return best
+
+
+def extract(model_id, train, test, cache, load_4bit=False, truncate=0):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(model_id)
-    model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch.bfloat16, device_map="cuda", attn_implementation="sdpa").eval()
+    kw = dict(device_map="cuda", attn_implementation="sdpa")
+    if load_4bit:   # 12B-class backbones on a 16 GB GPU: NF4 weights, bf16 compute (bitsandbytes)
+        from transformers import BitsAndBytesConfig
+        kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+    else:
+        kw["dtype"] = torch.bfloat16
+    try:
+        model = AutoModelForCausalLM.from_pretrained(model_id, **kw).eval()
+    except Exception as e:  # noqa: BLE001  (multimodal wrappers such as Gemma 4 unified)
+        print("AutoModelForCausalLM failed:", str(e)[:200], "- trying AutoModelForImageTextToText", flush=True)
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(model_id, **kw).eval()
+    if truncate:   # keep the first N decoder layers only: lower hidden states are unchanged, the logits become meaningless
+        name, layers = find_layers(model)
+        import torch.nn as nn
+        parent = model.get_submodule(name.rsplit(".", 1)[0]) if "." in name else model
+        setattr(parent, name.rsplit(".", 1)[-1], nn.ModuleList(list(layers)[:truncate]))
+        for cfg in (getattr(model, "config", None), getattr(getattr(model, "config", None), "text_config", None)):
+            if cfg is not None and hasattr(cfg, "num_hidden_layers"):
+                cfg.num_hidden_layers = truncate
+            if cfg is not None and hasattr(cfg, "layer_types") and cfg.layer_types:
+                cfg.layer_types = list(cfg.layer_types)[:truncate]
+        print(f"truncated {name} to {truncate} layers", flush=True)
     slot_ids = [tok.encode(L, add_special_tokens=False)[0] for L in hp.LETTERS]
     out = {}
     for tag, cases in (("train", train), ("test", test)):
@@ -48,6 +80,8 @@ def extract(model_id, train, test, cache):
                     text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
                 ids = tok(text, return_tensors="pt", add_special_tokens=False).input_ids[:, -6000:].to("cuda")
                 o = model(input_ids=ids, output_hidden_states=True, use_cache=False)
+                if not isinstance(o.hidden_states, (tuple, list)):
+                    raise SystemExit("no hidden_states from this architecture")
                 hs = torch.stack([h[0, -1] for h in o.hidden_states]).to(torch.float16).cpu().numpy()  # [L+1, d]
                 if H is None:
                     H = np.zeros((len(cases),) + hs.shape, dtype=np.float16)
@@ -66,6 +100,8 @@ def main():
     ap.add_argument("--tag", default="qwen35-4b")
     ap.add_argument("--out", required=True)
     ap.add_argument("--offline", action="store_true", help="use the cached features only")
+    ap.add_argument("--load-4bit", action="store_true", help="NF4 weights via bitsandbytes (12B on 16 GB)")
+    ap.add_argument("--truncate", type=int, default=0, help="keep only the first N decoder layers (features below N are exact; letter logits invalid)")
     args = ap.parse_args()
     from sklearn.linear_model import LogisticRegression
     train = hp.load_split("train"); test = hp.load_split("test")
@@ -75,7 +111,7 @@ def main():
     else:
         if args.offline:
             raise SystemExit("no cache")
-        F = extract(args.model, train, test, cache)
+        F = extract(args.model, train, test, cache, load_4bit=args.load_4bit, truncate=args.truncate)
     Htr, Hte, Ztr, Zte = F["H_train"].astype(np.float32), F["H_test"].astype(np.float32), F["Z_train"], F["Z_test"]
     gtr = np.array([c["gold"] for c in train]); gte = np.array([c["gold"] for c in test])
     qk_tr = [c["qkey"] for c in train]; qk_te = [c["qkey"] for c in test]
@@ -107,7 +143,8 @@ def main():
         r = dict(acc=acc / n, nll=nll / n, n=n)
         return (r, probs) if return_probs else r
 
-    res = {"model": args.model, "n_layers": int(nL), "letter_logits": {}}
+    res = {"model": args.model, "n_layers": int(nL), "letter_logits": {}, "truncated": int(args.truncate), "load_4bit": bool(args.load_4bit),
+           "letter_logits_valid": not bool(args.truncate)}
     # letter baseline
     ok = 0; nl = 0.0
     for i, c in enumerate(test):

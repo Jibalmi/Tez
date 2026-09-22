@@ -35,8 +35,8 @@ def main():
     S = J("results/h2h/summary.json", {})
     out = Path("docs/figures"); out.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.titleweight": "bold", "axes.titlesize": 10})
-    fig = plt.figure(figsize=(22, 35))
-    gs = fig.add_gridspec(7, 4, hspace=0.6, wspace=0.35)
+    fig = plt.figure(figsize=(22, 40))
+    gs = fig.add_gridspec(8, 4, hspace=0.6, wspace=0.35)
     fig.suptitle("Tez — every measurement, one page.  Zero-shot frozen Gemma 4 12B Q8_0 · one forward pass · RTX 5080 laptop (16 GB)\n"
                  "Laya checkpoints ran on the SAME rows and GPU; Jev figures are third-party published, never measured here.",
                  fontsize=15, fontweight="bold", y=0.995)
@@ -268,6 +268,51 @@ def main():
         axu.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axu.text(10, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
         axu.set_xscale("log"); axu.set_xlabel("labelled rows per question"); axu.tick_params(labelsize=7); axu.set_ylim(.6, .85)
         axu.set_title("U · Probe data efficiency (layer 26)")
+    # ---------------------------------------------------------------- V: early exit — probe accuracy vs depth vs speed-up
+    EE = J("results/early_exit_qwen35-4b.json"); SW = J("results/hidden_probe_sweep_qwen35-4b.json")
+    if EE and SW:
+        axv = fig.add_subplot(gs[7, 0])
+        ls = sorted(int(k) for k in SW["layer_sweep"]); axv.plot(ls, [SW["layer_sweep"][str(l)]["acc"] for l in ls], "-o", color=COL["tez"], ms=3, label="probe accuracy (left)")
+        axv.set_ylim(.4, .85); axv.set_xlabel("layers kept (of 32)"); axv.set_ylabel("probe accuracy", color=COL["tez"])
+        ax2 = axv.twinx(); ds = sorted(int(k.split("_")[1]) for k in EE if k.startswith("depth_"))
+        ax2.plot(ds, [EE[f"depth_{d}"]["speedup"] for d in ds], "s--", color=COL["laya-ml"], ms=4, label="prefill speed-up (right)")
+        for d in ds: ax2.text(d, EE[f"depth_{d}"]["speedup"] + .03, f"{EE[f'depth_{d}']['speedup']:.2f}x", ha="center", fontsize=7, color=COL["laya-ml"])
+        ax2.set_ylim(.9, 2.2); ax2.set_ylabel("speed-up vs full depth", color=COL["laya-ml"])
+        axv.axvspan(20, 28, color=COL["tez"], alpha=.08); axv.text(24, .43, "plateau", ha="center", fontsize=7, color=COL["tez"])
+        axv.set_title("V · Early readout: probe accuracy vs prefill speed-up (4B)")
+    # ---------------------------------------------------------------- W: retrieval-narrowed Banking77
+    RN = J("results/retrieval_narrow_banking77_minilm.json")
+    if RN:
+        axw = fig.add_subplot(gs[7, 1])
+        ks = sorted(int(k) for k in RN["recall_at"]); axw.plot(ks, [RN["recall_at"][str(k)] for k in ks], "-", color=COL["grey"], label="shortlist recall@k (MiniLM)")
+        runs = sorted(((v["k"], v["acc"], v["ms_p50"]) for v in RN["runs"].values()), key=lambda t: t[0])
+        axw.plot([r[0] for r in runs], [r[1] for r in runs], "-o", color=COL["tez"], ms=5, label="Tez on the shortlist, 1 pass")
+        for k, a, ms in runs: axw.text(k, a - .035, f"{a:.3f}\n{ms:.0f} ms", ha="center", fontsize=6.5)
+        if RN.get("tournament_ref_acc"): axw.axhline(RN["tournament_ref_acc"], ls="--", color=COL["tez"], lw=.8); axw.text(1.5, RN["tournament_ref_acc"] + .01, f"chunked tournament {RN['tournament_ref_acc']:.3f} (5 passes)", fontsize=6.5, color=COL["tez"])
+        axw.axhline(RN["retrieval_only_acc"], ls=":", color=COL["grey"], lw=.8); axw.text(24, RN["retrieval_only_acc"] - .03, f"retrieval only {RN['retrieval_only_acc']:.3f}", fontsize=6.5, color="grey", ha="right")
+        axw.axhline(0.870, ls=":", color=COL["jev"], lw=.8); axw.text(26, .875, "Jev 0.870", fontsize=6.5, ha="right", color=COL["jev"])
+        axw.set_xlim(1, 26); axw.set_ylim(.3, 1.0); axw.set_xlabel("shortlist size k"); axw.set_ylabel("accuracy / recall"); axw.legend(fontsize=6.5, loc="lower right")
+        axw.set_title("W · Banking77: embed-then-decide vs the tournament")
+    # ---------------------------------------------------------------- X: task probes on the frozen 4B vs its letter readout and Laya
+    TP = J("results/hidden_probe_tasks_qwen35-4b.json")
+    if TP:
+        axx = fig.add_subplot(gs[7, 2]); tasks = list(TP); x = np.arange(len(tasks)); w = .2
+        best = [max(v["acc"] for k, v in TP[t].items() if k.startswith("probe_layer")) for t in tasks]
+        letter = [TP[t].get("letter_acc", np.nan) for t in tasks]
+        tez12 = [S.get(t, {}).get("tez", {}).get("accuracy", np.nan) for t in tasks]
+        ltd = [S.get(t, {}).get("laya-td", {}).get("accuracy", np.nan) for t in tasks]
+        axx.bar(x - 1.5 * w, letter, w, color=COL["laya-en"], label="4B letter readout"); axx.bar(x - .5 * w, best, w, color=COL["tez"], label="4B probe (best layer)")
+        axx.bar(x + .5 * w, tez12, w, color="#0B5F5E", label="12B letter readout"); axx.bar(x + 1.5 * w, ltd, w, color=COL["laya-td"], label="laya-td (fine-tuned)")
+        for i, v in enumerate(best): axx.text(i - .5 * w, v + .01, f"{v:.2f}", ha="center", fontsize=6.5)
+        axx.set_xticks(x); axx.set_xticklabels(tasks, fontsize=7); axx.set_ylim(0, 1.05); axx.legend(fontsize=6.5, loc="lower left"); axx.set_title("X · One probe per task (2,000 labelled rows) vs zero-shot readouts")
+    # ---------------------------------------------------------------- Y: option elimination
+    OE = J("results/option_elimination_gemma4-12b-q8_0.json")
+    if OE:
+        axy = fig.add_subplot(gs[7, 3]); tasks = list(OE); rules = list(OE[tasks[0]]["summary"]); x = np.arange(len(tasks)); w = .8 / len(rules)
+        cols = [COL["tez"], "#7FB8B7", "#4A7FB5", COL["laya-ml"], COL["laya-td"]]
+        for j, r in enumerate(rules):
+            axy.bar(x + (j - (len(rules) - 1) / 2) * w, [OE[t]["summary"][r]["acc"] for t in tasks], w, color=cols[j % len(cols)], label=r)
+        axy.set_xticks(x); axy.set_xticklabels(tasks, fontsize=7); axy.set_ylim(0, 1.05); axy.legend(fontsize=6.5, loc="lower left"); axy.set_title("Y · Option elimination: single pass vs eliminate-then-rescore")
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"

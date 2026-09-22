@@ -166,6 +166,18 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 **Full layer sweep (Qwen3.5-4B, 33 layers, `hidden_probe_sweep.py`):** 0.483 (layer 0) · 0.574 (12) · 0.661 (14) · 0.737 (16) · 0.777 (18) · **0.790–0.793 (20–28, best 26)** · 0.787 (30) · 0.772 (32). **Data efficiency at layer 26 (rows per question, 3 seeds):** 10 → 0.669 · 25 → 0.707 · 50 → 0.741 · 100 → 0.760 · 200 → 0.788 · all 300 → 0.793. **Ensemble** probe ⊕ letter logits (w = 0.25): 0.799. **Conformal on the probe, 90 % coverage:** act on 66.6 % at 0.884 accuracy (12B letters: 52 % @ 0.853; laya-td: 63 % @ 0.876).
 
+**Early readout (`early_exit_bench.py`, Qwen3.5-4B truncated to its first N layers, 200 typed-decisions prompts, 227 tokens mean, eager PyTorch bf16, CUDA-synchronised):**
+
+| layers kept | prefill p50 | speed-up | probe accuracy at that layer |
+|---|---|---|---|
+| 32 (full) | 387 ms | 1.00× | 0.772 (final) |
+| 28 | 351 ms | 1.10× | 0.787 |
+| 24 | 296 ms | 1.30× | 0.793 |
+| 20 | 250 ms | 1.54× | 0.790 |
+| 16 | 200 ms | 1.94× | 0.737 |
+
+Reading the decision at layer 20–24 keeps the probe's full accuracy and removes a third to a half of the prefill. Absolute ms are the eager PyTorch path (the GGUF server does the same prompt in ~30 ms); the ratios are what transfer.
+
 One probe per question schema, fitted on the 6,000 train decisions (same data access as laya-typed-decisions, 0.766). Above Jev's 0.727 and our 12B's 0.704 / 0.725, from a 4B with untouched weights, reading 12 layers below the top.
 
 ## 5. JevBench public tiers (leaderboard formulas, `experiments/bench_jevbench.py`)

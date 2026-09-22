@@ -63,7 +63,15 @@ def train_cases(task, n, seed=7):
 def feats(model, tok, cases, layers, slot_ids):
     H = {L: [] for L in layers}; Z = []
     for c in cases:
-        msgs = [{"role": "user", "content": bh.tez_prompt(c, c["options"]).split("<|turn>user\n", 1)[1].rsplit(bh.TAIL, 1)[0]}]
+        if len(c["options"]) <= 26:
+            content = bh.tez_prompt(c, c["options"]).split("<|turn>user\n", 1)[1].rsplit(bh.TAIL, 1)[0]
+        else:   # wider than the alphabet (Banking77, MASSIVE full space): number the options; the probe reads the state, not a symbol
+            head = ("You are a decision engine. Read the question and the options, then look at the input and answer "
+                    "with the number of the best option. Answer with the number only.")
+            opts = "Options:\n" + "\n".join(f"{i + 1}. {k}: {d}" if d and d != k else f"{i + 1}. {k}" for i, (k, d) in enumerate(c["options"]))
+            st = json.dumps(c["state"], ensure_ascii=False)
+            content = f"{head}\n\nQuestion ({c['qtype']}): {c['instructions']}\n\n{opts}\n\nInput:\n{st}"
+        msgs = [{"role": "user", "content": content}]
         try:
             text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
         except TypeError:
