@@ -88,7 +88,8 @@ def main():
     # ---------------------------------------------------------------- D: typed-decisions
     ax = fig.add_subplot(gs[2, 0])
     T = S.get("typed_decisions", {})
-    bars = [("Tez\nzero-shot", T.get("tez", {}).get("accuracy"), COL["tez"]), ("laya base\nzero-shot", T.get("laya-en", {}).get("accuracy"), COL["laya-en"]),
+    FS0 = J("results/h2h/rows_typed_decisions_tez-fewshot4-all.summary.json")
+    bars = [("Tez\nzero-shot", T.get("tez", {}).get("accuracy"), COL["tez"]), ("Tez\n4-shot prefix", FS0["accuracy"] if FS0 else None, "#0B5F5E"), ("laya base\nzero-shot", T.get("laya-en", {}).get("accuracy"), COL["laya-en"]),
             ("laya-td\nfine-tuned", T.get("laya-td", {}).get("accuracy"), COL["laya-td"]), ("Jev\npublished", 0.727, COL["jev"]), ("teacher\nceiling", 0.735, "#DDDDDD"), ("majority", 0.461, "#EEEEEE"), ("random", 0.318, "#F5F5F5")]
     bars = [b for b in bars if b[1] is not None]
     for i, (n, v, c) in enumerate(bars):
@@ -244,7 +245,7 @@ def main():
     # ---------------------------------------------------------------- D2: few-shot in prefix + JevBench tiers (overlay on panel D / new axes)
     JV = J("results/jevbench_tez_gemma4-12b-q8_0.json"); FS = J("results/h2h/rows_typed_decisions_tez-fewshot4-all.summary.json")
     if JV or FS:
-        ax = fig.add_axes([0.63, 0.905, 0.10, 0.06])  # small inset top-right, above panel B
+        ax = fig.add_axes([0.52, 0.968, 0.30, 0.02])  # inset just under the suptitle
         ax.axis("off")
         txt = ""
         if FS: txt += "typed-decisions, 4 examples in the cached prefix: %.3f (Jev 0.727)" % FS["accuracy"] + chr(10)
