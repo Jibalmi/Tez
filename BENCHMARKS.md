@@ -156,11 +156,11 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) â
 
 | tier (n) | Gemma 4 12B Q8: accuracy / intelligence / ECE / median s | Qwen3.5-9B Q8 |
 |---|---:|---:|
-| original (72) | see results/jevbench_tez_gemma4-12b-q8_0.json | 0.958 / 94.0 / 0.069 / 0.12 s |
-| easy (48) | see results/jevbench_tez_gemma4-12b-q8_0.json | 1.000 / 100 / 0.011 / 0.13 s |
+| original (72) | **0.944 / 91.9 / 0.053 / 0.05 s** (paraphrase-pair consistency 0.944) | 0.958 / 94.0 / 0.069 / 0.12 s |
+| easy (48) | **1.000 / 100 / 0.000 / 0.06 s** | 1.000 / 100 / 0.011 / 0.13 s |
 | hard (111; states up to 3.9k tokens, 8k ctx) | **0.703 / 55.2 / 0.251 / 0.46 s** (temporal_numeric 0.13, routing_hard 1.0, trap 0.88, ambiguous 0.86, adversarial 0.83) | â€” |
 
-The leaderboard's headline uses a held-out tier; these public tiers are indicative only. Its intelligence axis weights hard 30 %, easy 14 %, standard 28 %, judge 28 %.
+Weighted over the three public tiers with the leaderboard's weights (hard 30 %, easy 14 %, standard 28 %; no judge tier available), Tez's intelligence is **78.2**. The leaderboard's headline uses a held-out tier plus a judge tier (Jev 85.7, SemIf 79.0, Laya 45.8), so these public numbers are indicative only. The hard tier's one collapsed family is `temporal_numeric` (2/15): date and quantity arithmetic that a single forward pass cannot do.
 
 ## 6. Audit trail
 
