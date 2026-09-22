@@ -70,6 +70,9 @@ def render_prompt(messages: list[dict], template: str) -> str:
     if template == "gemma3":
         # Gemma 3 has no system role and no thinking; system text folds into the user turn.
         return f"<start_of_turn>user\n{folded}<end_of_turn>\n<start_of_turn>model\n"
+    if template == "qwen3":
+        # Qwen3 / Qwen3.5 chat format with thinking disabled: empty <think> block, letter at the next position.
+        return f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     if template == "llama3":
         return (
             "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
@@ -211,7 +214,7 @@ def main() -> None:
     ap.add_argument("--cf-text", default="N/A", help="placeholder for --content-free: N/A | [MASK] | '' (Zhao et al. average all three)")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--tag", default="")
-    ap.add_argument("--template", default="gemma4", choices=["gemma4", "gemma4sys", "gemma3", "llama3"])
+    ap.add_argument("--template", default="gemma4", choices=["gemma4", "gemma4sys", "gemma3", "llama3", "qwen3"])
     args = ap.parse_args()
 
     data_path = Path(args.data)

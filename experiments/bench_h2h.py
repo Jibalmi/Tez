@@ -165,7 +165,11 @@ def tez_prompt(case, options):
     q = f"Question ({case['qtype']}): {case['instructions']}"
     opts = "Options:\n" + "\n".join(f"{LETTERS[i]}. {k}: {d}" if d and d != k else f"{LETTERS[i]}. {k}" for i, (k, d) in enumerate(options))
     st = json.dumps(case["state"], ensure_ascii=False) if not isinstance(case["state"], str) else case["state"]
-    return f"<|turn>user\n{head}\n\n{q}\n\n{opts}\n\nInput:\n{st}{TAIL}"
+    user = f"{head}\n\n{q}\n\n{opts}\n\nInput:\n{st}"
+    tmpl = os.environ.get("TEZ_TEMPLATE", "gemma4")
+    if tmpl == "qwen3":   # Qwen3 / Qwen3.5 chat format, thinking disabled (empty think block), letter read at the next position
+        return f"<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    return f"<|turn>user\n{user}{TAIL}"
 
 
 def tez_score_letters(server, prompt, k, n_probs=200):
