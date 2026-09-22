@@ -162,6 +162,7 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 | logreg probe, layer −4 / −8 | 0.791 / 0.792 | 0.52 / 0.51 |
 | **logreg probe, layer −12** | **0.794** | **0.51** |
 | nearest-centroid, layer −12 | 0.715 | — |
+| Gemma 4 12B Q8, final-layer last-token state via llama-server `--embeddings --pooling last` (L2-normalised), logreg / centroid | 0.735 / 0.724 | 0.67 |
 
 One probe per question schema, fitted on the 6,000 train decisions (same data access as laya-typed-decisions, 0.766). Above Jev's 0.727 and our 12B's 0.704 / 0.725, from a 4B with untouched weights, reading 12 layers below the top.
 

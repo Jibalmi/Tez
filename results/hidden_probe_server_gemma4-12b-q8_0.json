@@ -1,0 +1,90 @@
+{
+  "n_train": 6000,
+  "n_test": 2000,
+  "dim": 3840,
+  "logreg_acc": 0.735,
+  "logreg_nll": 0.6708825728647339,
+  "centroid_acc": 0.7235,
+  "per_question": {
+    "agent_trace_observability/action": {
+      "n": 100,
+      "logreg_acc": 0.6
+    },
+    "agent_trace_observability/needs_review": {
+      "n": 100,
+      "logreg_acc": 0.78
+    },
+    "agent_trace_observability/outcome": {
+      "n": 100,
+      "logreg_acc": 0.58
+    },
+    "agent_trace_observability/risk": {
+      "n": 100,
+      "logreg_acc": 0.64
+    },
+    "agent_trace_observability/urgency": {
+      "n": 100,
+      "logreg_acc": 0.51
+    },
+    "customer_service/action": {
+      "n": 100,
+      "logreg_acc": 0.61
+    },
+    "customer_service/category": {
+      "n": 100,
+      "logreg_acc": 0.95
+    },
+    "customer_service/churn_risk": {
+      "n": 100,
+      "logreg_acc": 0.89
+    },
+    "customer_service/needs_human": {
+      "n": 100,
+      "logreg_acc": 0.71
+    },
+    "customer_service/urgency": {
+      "n": 100,
+      "logreg_acc": 0.81
+    },
+    "invoice_processing/discrepancy_severity": {
+      "n": 100,
+      "logreg_acc": 0.8
+    },
+    "invoice_processing/disposition": {
+      "n": 100,
+      "logreg_acc": 0.71
+    },
+    "invoice_processing/duplicate": {
+      "n": 100,
+      "logreg_acc": 0.89
+    },
+    "invoice_processing/matches_order": {
+      "n": 100,
+      "logreg_acc": 0.96
+    },
+    "invoice_processing/urgency": {
+      "n": 100,
+      "logreg_acc": 0.71
+    },
+    "security_incidents/credential_compromise": {
+      "n": 100,
+      "logreg_acc": 0.71
+    },
+    "security_incidents/disposition": {
+      "n": 100,
+      "logreg_acc": 0.71
+    },
+    "security_incidents/severity": {
+      "n": 100,
+      "logreg_acc": 0.69
+    },
+    "security_incidents/true_positive": {
+      "n": 100,
+      "logreg_acc": 0.86
+    },
+    "security_incidents/urgency": {
+      "n": 100,
+      "logreg_acc": 0.58
+    }
+  }
+}

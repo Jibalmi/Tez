@@ -15,3 +15,8 @@ docs/paper/build*.log
 # scratch
 *.tmp
 INVALID_*
+
+# feature caches (large binaries)
+*.npy
+*.npz
+results/probe_cache_*
