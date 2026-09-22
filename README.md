@@ -103,7 +103,17 @@ experiments/voice_demo.py        live loop: --text / --wav / --mic → ASR parti
 experiments/bench_h2h.py         Laya's public benchmarks (AG News, Emotion, Banking77, SST-5, BoolQ, prompt-injections,
                                  MASSIVE ×11 languages, XNLI ×10, typed-decisions) — same rows through Tez and the Laya checkpoints
 experiments/make_h2h_plots.py    the comparison figures (docs/figures/)
+experiments/make_dashboard.py    the all-in-one dashboard (docs/figures/tez_dashboard.png)
 experiments/run_h2h_all.ps1      detached runner for the whole head-to-head chain
+experiments/bench_jevbench.py    JevBench public tiers (data/jevbench/) with the leaderboard's intelligence/speed formulas
+experiments/conformal_td.py      Mondrian split-conformal act/escalate sets on typed-decisions
+experiments/batch_calibration.py Batch Calibration (Zhou 2023) applied offline, out-of-fold
+experiments/cascade_analysis.py  small→large cascade (negative result)
+experiments/fewshot_td.py        k worked examples in the cached prefix (zero training)
+experiments/think_td.py          "System 1.5": a seeded thinking budget before the readout
+experiments/backend.py           llama-server / Ollama backends (TEZ_BACKEND, TEZ_TEMPLATE, TEZ_OLLAMA_MODEL)
+docs/research/*-survey.md        commissioned literature surveys: speed, accuracy, models & landscape
+BENCHMARKS.md                    every number, consolidated
 experiments/probe_gemma.py       template / tokenizer / logit probe for a GGUF
 data/semif/                      SemIf's MIT fixtures and core.py (prompt construction), vendored
 data/voice/                      16 intents, 220 labelled commands (styles, slots, commit word), synthesised wavs

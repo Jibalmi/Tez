@@ -686,6 +686,39 @@ typed-decisions (2,000 decisions) & \textbf{0.704}$^{\dagger}$ & 0.362 & 0.352 &
 
 \paragraph{What Tez does that Laya does not.} Zero-shot strength on unseen schemas (an editable option set needs no retraining); one model for every language and script; large option sets by decomposition; a measured harm-rate streaming policy; permutation-disagreement as an uncertainty signal that does not rely on the model's own confidence; the constant-first prompt layout with verified KV reuse; and an audit trail (every number in this report has a manifest, a CI or a paired test). What Laya does that Tez does not, and that the roadmap should take from it: a shipped, pip-installable runtime with typed primitives and presets, the proper-scoring-rule fine-tuning recipe with a Kaggle notebook, and a multilingual benchmark over 51 languages rather than our eleven. Fine-tuning a decoder backbone on own-traffic data with the same proper-scoring objective is the obvious next experiment; it was not attempted here, so every Tez number above is a floor.
 
+% ================================================================ 8c
+\section{Research programme: what the literature says to try next}
+\label{sec:programme}
+
+Three commissioned literature surveys (verified arXiv and Hub ids; full text in \code{docs/research/}) were reduced to the following ranked programme. Items already measured in this report are marked.
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{L{34mm} X L{30mm} L{26mm}}
+\toprule
+Lever & Mechanism and source & Expected gain here & Status \\
+\midrule
+Few-shot in the cached prefix & worked examples of the same question before the options; AdapShot 2605.03644, many-shot ICL 2404.11018 & +5 pts on schema-specific questions & \textbf{measured}: 0.615 $\to$ 0.665 \\
+Batch Calibration & subtract the batch-mean log-probability per option; 2309.17249 & NLL, +1--4 pts on NLI & \textbf{measured} \\
+Conformal act/escalate & Mondrian split conformal on $1-p$; 2107.07511, MCQ conformal 2508.05544 & coverage guarantee & \textbf{measured} \\
+Thinking budget (System 1.5) & seed the thought channel, stop at $N$ tokens; s1 budget forcing 2501.19393 & accuracy vs $N\times$25 ms & running \\
+Verbalizer choice & digits / lowercase / label words instead of \code{A..P}; PET 2001.07676, ABCD 2602.17445 & $\pm$1--3 pts, calibration & running \\
+Hidden-state probe & linear head on the answer-position hidden state; Hidden Calibration 2406.16535, LinC 2401.12406, judge probes 2512.22245 & +20--50 \% relative in the paper; typed-decisions 0.70 $\to$ 0.75+ & script ready (\code{hidden\_probe.py}) \\
+Order-invariant attention & options as a set via position ids; RoToR 2502.08662, PINE 2407.01100 & 6-permutation gain at 1$\times$ cost & custom attention; not yet \\
+Option elimination & drop options below the mean log-prob and re-score; PoE 2310.15575, 2501.15175 & +2--5 pts on 20--77 options & cheap; not yet \\
+Retrieval-narrowed labels & embed labels + demos, top-$k$ then decide; 2309.10954, RAC 2501.12332 & Banking77 0.71 $\to$ 0.80+ & needs an index \\
+State-as-prefix layout & many questions on one state share the KV; RadixAttention 2312.07104, Hydragen 2402.05099 & 5--10$\times$ per question & exact; layout only \\
+Depth pruning + probe & remove 20--30 \% of layers, recalibrate; ShortGPT 2403.03853, 2604.24938 & 1.25--1.4$\times$ prefill & GGUF surgery \\
+Early exit with a KL gate & entropy-gated exit at 60--80 \% depth; SimExit 2507.17618, UAT 2509.23666, tuned lens 2303.08112 & 1.15--1.4$\times$ & needs in-process \\
+Alternative backbones & Gemma 4 26B-A4B QAT-Q4 (82.6 MMLU-Pro at 4B active), Qwen3.5-9B Q8 & +3--5 pts at equal latency & Qwen3.5-9B running \\
+Open-teacher distillation & proper-scoring-rule LoRA from frozen Qwen3.8-27B soft labels (reflex, JevBench \#5) & calibration 72 $\to$ 80+ & later; never Jev \\
+\bottomrule
+\end{tabularx}
+\caption{The programme, ranked by expected gain per unit of engineering, from the three surveys.}
+\end{table}
+
+\paragraph{Where Tez sits on JevBench.} The independent JevBench v1.3 leaderboard (534 held-out decisions, 41 systems) has Jev at 74.4, SemIf at 73.1, djev (diffusion readout) at 73.0, a 12B-Q8 GGUF server at 71.2, and every encoder-head system --- including Laya at 54.4 --- collapsing on its hard tier. The 72/48/111 public items are scored with the leaderboard's own formulas in \code{experiments/bench\_jevbench.py} (running); the calibration axis, where every open decoder trails Jev by 10+ points, is the one the conformal and Batch-Calibration layers above are aimed at.
+
 % ================================================================ 9
 \section{The open landscape and what would make this the best open one}
 \label{sec:landscape}

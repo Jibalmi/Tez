@@ -23,6 +23,23 @@ OLLAMA = os.environ.get("TEZ_OLLAMA", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.environ.get("TEZ_OLLAMA_MODEL", "gemma4:12b-it-q8_0")
 
 
+def _post(url, body, retries=4, wait=15):
+    """Ollama returns {"error": ...} (HTTP 200 or 5xx) while it is busy loading/creating a model;
+    retry with a pause instead of crashing a long chain."""
+    import time
+    last = None
+    for i in range(retries):
+        try:
+            d = SESSION.post(url, json=body, timeout=900).json()
+            if "error" not in d:
+                return d
+            last = d["error"]
+        except Exception as exc:  # noqa: BLE001
+            last = str(exc)
+        time.sleep(wait * (i + 1))
+    raise RuntimeError(f"backend error after {retries} tries: {last}")
+
+
 def _from_tops(tops, k):
     lp = {}
     for t in tops:
@@ -38,13 +55,13 @@ def score_letters(prompt: str, k: int, n_probs: int = 200, backend: str | None =
     backend = backend or BACKEND
     if backend == "llamacpp":
         body = {"prompt": prompt, "n_predict": 1, "n_probs": n_probs, "temperature": 0, "cache_prompt": True, "samplers": []}
-        d = SESSION.post(f"{LLAMACPP}/completion", json=body, timeout=300).json()
+        d = _post(f"{LLAMACPP}/completion", body)
         p, z, _ = _from_tops(d["completion_probabilities"][0]["top_logprobs"], k)
         return p, z, d.get("timings", {}).get("prompt_n")
     if backend == "ollama":
         body = {"model": OLLAMA_MODEL, "prompt": prompt, "raw": True, "stream": False, "keep_alive": "60m",
                 "options": {"num_predict": 1, "temperature": 0, "num_ctx": int(os.environ.get("TEZ_OLLAMA_CTX", "8192"))}, "logprobs": True, "top_logprobs": 20}
-        d = SESSION.post(f"{OLLAMA}/api/generate", json=body, timeout=600).json()
+        d = _post(f"{OLLAMA}/api/generate", body)
         p, z, _ = _from_tops(d["logprobs"][0]["top_logprobs"], k)
         return p, z, d.get("prompt_eval_count")
     raise ValueError(backend)
@@ -54,8 +71,8 @@ def generate(prompt: str, n_predict: int, stop: list[str], backend: str | None =
     """Greedy generation (for the thinking-budget experiment). Returns (text, n_tokens)."""
     backend = backend or BACKEND
     if backend == "llamacpp":
-        d = SESSION.post(f"{LLAMACPP}/completion", json={"prompt": prompt, "n_predict": n_predict, "temperature": 0, "cache_prompt": True, "stop": stop}, timeout=600).json()
+        d = _post(f"{LLAMACPP}/completion", {"prompt": prompt, "n_predict": n_predict, "temperature": 0, "cache_prompt": True, "stop": stop})
         return d["content"], d.get("tokens_predicted", 0)
-    d = SESSION.post(f"{OLLAMA}/api/generate", json={"model": OLLAMA_MODEL, "prompt": prompt, "raw": True, "stream": False, "keep_alive": "60m",
-                                                    "options": {"num_predict": n_predict, "temperature": 0, "stop": stop}}, timeout=600).json()
+    d = _post(f"{OLLAMA}/api/generate", {"model": OLLAMA_MODEL, "prompt": prompt, "raw": True, "stream": False, "keep_alive": "60m",
+                                          "options": {"num_predict": n_predict, "temperature": 0, "stop": stop, "num_ctx": int(os.environ.get("TEZ_OLLAMA_CTX", "8192"))}})
     return d["response"], d.get("eval_count", 0)
