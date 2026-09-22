@@ -1,0 +1,71 @@
+{
+  "file": "results/authored144_gemma4-12b-q4km.jsonl",
+  "n": 144,
+  "overall": {
+    "n": 144,
+    "accuracy": 0.9305555555555556,
+    "balanced_accuracy": 0.9502134187008137,
+    "macro_f1": 0.9327152860689446
+  },
+  "mean_family_balanced_accuracy": 0.9180672268907563,
+  "mfba_ci95": [
+    0.8708994708994707,
+    0.958132045088567
+  ],
+  "families": {
+    "candidate_selection": {
+      "n": 48,
+      "accuracy": 0.8958333333333334,
+      "balanced_accuracy": 0.869281045751634,
+      "macro_f1": 0.8796296296296297
+    },
+    "evidence_interpretation": {
+      "n": 48,
+      "accuracy": 0.9583333333333334,
+      "balanced_accuracy": 0.9563492063492064,
+      "macro_f1": 0.9565438317426652
+    },
+    "rule_application": {
+      "n": 48,
+      "accuracy": 0.9375,
+      "balanced_accuracy": 0.9285714285714285,
+      "macro_f1": 0.9312638580931264
+    }
+  },
+  "proper": {
+    "nll": 0.5493624511637254,
+    "brier": 0.12971465728984052,
+    "mean_confidence": 0.9968167692733856,
+    "accuracy": 0.9305555555555556
+  },
+  "ece": {
+    "ece": 0.06626121371783013,
+    "bins": 15,
+    "reliability": [
+      {
+        "bin": 9,
+        "n": 1,
+        "confidence": 0.631,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 14,
+        "n": 143,
+        "confidence": 0.999,
+        "accuracy": 0.937
+      }
+    ]
+  },
+  "leakage": {
+    "missing_letter_rows": 0,
+    "top1_not_slot_rows": 0,
+    "top1_non_slot_tokens": []
+  },
+  "latency": {
+    "prompt_ms_p50": 99.777,
+    "prompt_ms_p95": 111.869,
+    "http_ms_p50": 154.91169999586418,
+    "http_ms_p95": 179.78530000254977,
+    "mean_prompt_tokens": 142.41666666666666
+  }
+}

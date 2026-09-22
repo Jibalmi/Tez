@@ -1,0 +1,17 @@
+# engines, weights, caches
+tools/
+*.gguf
+*.safetensors
+__pycache__/
+*.pyc
+.cache/
+# LaTeX build products
+docs/paper/*.aux
+docs/paper/*.log
+docs/paper/*.out
+docs/paper/*.toc
+docs/paper/page*.png
+docs/paper/build*.log
+# scratch
+*.tmp
+INVALID_*

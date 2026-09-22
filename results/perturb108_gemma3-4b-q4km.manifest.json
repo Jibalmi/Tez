@@ -1,0 +1,23 @@
+{
+  "tag": "gemma3-4b-q4km",
+  "data": "data\\semif\\perturbations108.jsonl",
+  "data_sha256": "1dd7ccf80518d0e34886478ca23982aa726e9daccd343b9e95cedaf6b569bec4",
+  "rows": 108,
+  "server": "http://127.0.0.1:8091",
+  "model_path": "c:/Users/migue/OneDrive/Desktop/Personal/AILABS/onepass/tools/models/gemma-3-4b-it-Q4_K_M.gguf",
+  "model_alias": "c:/Users/migue/OneDrive/Desktop/Personal/AILABS/onepass/tools/models/gemma-3-4b-it-Q4_K_M.gguf",
+  "n_ctx": 4096,
+  "n_probs": 200,
+  "cache_prompt": false,
+  "template": "gemma3",
+  "reverse": false,
+  "content_free": false,
+  "prompt_version": "semif direct-options-v1 rendered into gemma4 template (thinking off)",
+  "wall_seconds": 9.00172480000765,
+  "decisions_per_second": 11.997700707303139,
+  "prompt_ms_median": 43.1565,
+  "prompt_ms_p95": 48.646,
+  "missing_letter_rows": 0,
+  "top1_not_slot_rows": 0,
+  "timestamp": "2026-09-22T12:02:12"
+}

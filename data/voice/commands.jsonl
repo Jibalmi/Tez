@@ -1,0 +1,220 @@
+{"id": "v001", "text": "open notes", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v002", "text": "open the notes app", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v003", "text": "open notepad", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v004", "text": "launch notes", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v005", "text": "start the notepad app", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v006", "text": "open up notes please", "intent": "open_notes", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v007", "text": "could you pull up my notes", "intent": "open_notes", "slots": {}, "style": "paraphrase", "commit_word": 6}
+{"id": "v008", "text": "bring up notepad for me", "intent": "open_notes", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v009", "text": "i need to jot something down", "intent": "open_notes", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v010", "text": "get my notes up on screen", "intent": "open_notes", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v011", "text": "er open the uh notes thing", "intent": "open_notes", "slots": {}, "style": "noisy", "commit_word": 5}
+{"id": "v012", "text": "open open note pad", "intent": "open_notes", "slots": {}, "style": "noisy", "commit_word": 4}
+{"id": "v013", "text": "open notes and type hello world", "intent": "open_notes", "slots": {"text": "hello world"}, "style": "compound", "commit_word": 2, "then": "type_text"}
+{"id": "v014", "text": "open notes and type buy milk eggs and bread", "intent": "open_notes", "slots": {"text": "buy milk eggs and bread"}, "style": "compound", "commit_word": 2, "then": "type_text"}
+{"id": "v015", "text": "open notepad and write dentist appointment friday at ten", "intent": "open_notes", "slots": {"text": "dentist appointment friday at ten"}, "style": "compound", "commit_word": 2, "then": "type_text"}
+{"id": "v016", "text": "open the notes app and type call mum tonight", "intent": "open_notes", "slots": {"text": "call mum tonight"}, "style": "compound", "commit_word": 3, "then": "type_text"}
+{"id": "v017", "text": "open notes then type meeting moved to thursday", "intent": "open_notes", "slots": {"text": "meeting moved to thursday"}, "style": "compound", "commit_word": 2, "then": "type_text"}
+{"id": "v018", "text": "launch notepad and type pick up dry cleaning", "intent": "open_notes", "slots": {"text": "pick up dry cleaning"}, "style": "compound", "commit_word": 2, "then": "type_text"}
+{"id": "v019", "text": "type hello", "intent": "type_text", "slots": {"text": "hello"}, "style": "canonical", "commit_word": 1}
+{"id": "v020", "text": "type meet me at the station at six", "intent": "type_text", "slots": {"text": "meet me at the station at six"}, "style": "canonical", "commit_word": 1}
+{"id": "v021", "text": "type remember to water the plants", "intent": "type_text", "slots": {"text": "remember to water the plants"}, "style": "canonical", "commit_word": 1}
+{"id": "v022", "text": "type the quick brown fox jumps over the lazy dog", "intent": "type_text", "slots": {"text": "the quick brown fox jumps over the lazy dog"}, "style": "canonical", "commit_word": 1}
+{"id": "v023", "text": "type gym at seven tomorrow morning", "intent": "type_text", "slots": {"text": "gym at seven tomorrow morning"}, "style": "canonical", "commit_word": 1}
+{"id": "v024", "text": "type thanks for the help see you monday", "intent": "type_text", "slots": {"text": "thanks for the help see you monday"}, "style": "canonical", "commit_word": 1}
+{"id": "v025", "text": "type shopping list apples bananas oat milk", "intent": "type_text", "slots": {"text": "shopping list apples bananas oat milk"}, "style": "canonical", "commit_word": 1}
+{"id": "v026", "text": "type running ten minutes late sorry", "intent": "type_text", "slots": {"text": "running ten minutes late sorry"}, "style": "canonical", "commit_word": 1}
+{"id": "v027", "text": "type happy birthday hope you have a great day", "intent": "type_text", "slots": {"text": "happy birthday hope you have a great day"}, "style": "canonical", "commit_word": 1}
+{"id": "v028", "text": "write down car service booked for tuesday", "intent": "type_text", "slots": {"text": "car service booked for tuesday"}, "style": "paraphrase", "commit_word": 2}
+{"id": "v029", "text": "dictate this dinner with sarah at eight", "intent": "type_text", "slots": {"text": "dinner with sarah at eight"}, "style": "paraphrase", "commit_word": 1}
+{"id": "v030", "text": "put in the text flight lands at nine forty", "intent": "type_text", "slots": {"text": "flight lands at nine forty"}, "style": "paraphrase", "commit_word": 4}
+{"id": "v031", "text": "um type uh meet at three thirty", "intent": "type_text", "slots": {"text": "meet at three thirty"}, "style": "noisy", "commit_word": 2}
+{"id": "v032", "text": "type type call the plumber about the leak", "intent": "type_text", "slots": {"text": "call the plumber about the leak"}, "style": "noisy", "commit_word": 1}
+{"id": "v033", "text": "tie pick up the kids at four", "intent": "type_text", "slots": {"text": "pick up the kids at four"}, "style": "noisy", "commit_word": 2}
+{"id": "v034", "text": "type in that i'll be home by eight", "intent": "type_text", "slots": {"text": "i'll be home by eight"}, "style": "noisy", "commit_word": 1}
+{"id": "v035", "text": "open youtube", "intent": "open_youtube", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v036", "text": "launch youtube", "intent": "open_youtube", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v037", "text": "open the youtube app", "intent": "open_youtube", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v038", "text": "take me to youtube", "intent": "open_youtube", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v039", "text": "can you get youtube up", "intent": "open_youtube", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v040", "text": "open you tube", "intent": "open_youtube", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v041", "text": "uh could you um open youtube", "intent": "open_youtube", "slots": {}, "style": "noisy", "commit_word": 6}
+{"id": "v042", "text": "open youtube and play never gonna give you up", "intent": "open_youtube", "slots": {"query": "never gonna give you up"}, "style": "compound", "commit_word": 2, "then": "play_youtube"}
+{"id": "v043", "text": "open youtube and play lofi beats", "intent": "open_youtube", "slots": {"query": "lofi beats"}, "style": "compound", "commit_word": 2, "then": "play_youtube"}
+{"id": "v044", "text": "open youtube and search for how to tie a tie", "intent": "open_youtube", "slots": {"query": "how to tie a tie"}, "style": "compound", "commit_word": 2, "then": "play_youtube"}
+{"id": "v045", "text": "open youtube then play the latest mkbhd video", "intent": "open_youtube", "slots": {"query": "the latest mkbhd video"}, "style": "compound", "commit_word": 2, "then": "play_youtube"}
+{"id": "v046", "text": "play lofi hip hop radio on youtube", "intent": "play_youtube", "slots": {"query": "lofi hip hop radio"}, "style": "canonical", "commit_word": 7}
+{"id": "v047", "text": "search youtube for how to fold a fitted sheet", "intent": "play_youtube", "slots": {"query": "how to fold a fitted sheet"}, "style": "canonical", "commit_word": 2}
+{"id": "v048", "text": "play the mkbhd iphone review on youtube", "intent": "play_youtube", "slots": {"query": "the mkbhd iphone review"}, "style": "canonical", "commit_word": 7}
+{"id": "v049", "text": "on youtube play the lord of the rings trailer", "intent": "play_youtube", "slots": {"query": "the lord of the rings trailer"}, "style": "canonical", "commit_word": 3}
+{"id": "v050", "text": "youtube search bob ross painting", "intent": "play_youtube", "slots": {"query": "bob ross painting"}, "style": "canonical", "commit_word": 2}
+{"id": "v051", "text": "play the bbc news live stream on youtube", "intent": "play_youtube", "slots": {"query": "the bbc news live stream"}, "style": "canonical", "commit_word": 8}
+{"id": "v052", "text": "find a video of cats falling asleep", "intent": "play_youtube", "slots": {"query": "cats falling asleep"}, "style": "canonical", "commit_word": 3}
+{"id": "v053", "text": "play veritasium's latest video", "intent": "play_youtube", "slots": {"query": "veritasium's latest video"}, "style": "canonical", "commit_word": 4}
+{"id": "v054", "text": "put on rain sounds for sleeping on youtube", "intent": "play_youtube", "slots": {"query": "rain sounds for sleeping"}, "style": "paraphrase", "commit_word": 8}
+{"id": "v055", "text": "chuck on that gordon ramsay scrambled eggs video", "intent": "play_youtube", "slots": {"query": "gordon ramsay scrambled eggs"}, "style": "paraphrase", "commit_word": 8}
+{"id": "v056", "text": "let's watch the new marvel trailer", "intent": "play_youtube", "slots": {"query": "the new marvel trailer"}, "style": "paraphrase", "commit_word": 2}
+{"id": "v057", "text": "show me videos of golden retriever puppies", "intent": "play_youtube", "slots": {"query": "golden retriever puppies"}, "style": "paraphrase", "commit_word": 3}
+{"id": "v058", "text": "um play uh the joe rogan podcast on youtube", "intent": "play_youtube", "slots": {"query": "the joe rogan podcast"}, "style": "noisy", "commit_word": 9}
+{"id": "v059", "text": "you tube play a video of how to change a tyre", "intent": "play_youtube", "slots": {"query": "how to change a tyre"}, "style": "noisy", "commit_word": 3}
+{"id": "v060", "text": "play play the champions league highlights on youtube", "intent": "play_youtube", "slots": {"query": "the champions league highlights"}, "style": "noisy", "commit_word": 8}
+{"id": "v061", "text": "play the daily show", "intent": "play_youtube", "slots": {"query": "the daily show"}, "style": "ambiguous", "commit_word": 4, "alt": "play_spotify"}
+{"id": "v062", "text": "put on the lex fridman interview with elon", "intent": "play_youtube", "slots": {"query": "the lex fridman interview with elon"}, "style": "ambiguous", "commit_word": 6, "alt": "play_spotify"}
+{"id": "v063", "text": "open spotify", "intent": "open_spotify", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v064", "text": "launch spotify", "intent": "open_spotify", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v065", "text": "open the spotify app", "intent": "open_spotify", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v066", "text": "fire up spotify", "intent": "open_spotify", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v067", "text": "can you bring spotify up", "intent": "open_spotify", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v068", "text": "open spot if i", "intent": "open_spotify", "slots": {}, "style": "noisy", "commit_word": 4}
+{"id": "v069", "text": "open spotify and play my liked songs", "intent": "open_spotify", "slots": {}, "style": "compound", "commit_word": 2, "then": "play_liked_songs"}
+{"id": "v070", "text": "open spotify and put on my saved tracks", "intent": "open_spotify", "slots": {}, "style": "compound", "commit_word": 2, "then": "play_liked_songs"}
+{"id": "v071", "text": "open spotify and play blinding lights", "intent": "open_spotify", "slots": {"query": "blinding lights"}, "style": "compound", "commit_word": 2, "then": "play_spotify"}
+{"id": "v072", "text": "open spotify then play some fleetwood mac", "intent": "open_spotify", "slots": {"query": "fleetwood mac"}, "style": "compound", "commit_word": 2, "then": "play_spotify"}
+{"id": "v073", "text": "launch spotify and play my running playlist", "intent": "open_spotify", "slots": {"query": "my running playlist"}, "style": "compound", "commit_word": 2, "then": "play_spotify"}
+{"id": "v074", "text": "play my liked songs", "intent": "play_liked_songs", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v075", "text": "play liked songs on spotify", "intent": "play_liked_songs", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v076", "text": "play my saved tracks on spotify", "intent": "play_liked_songs", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v077", "text": "start my liked songs playlist", "intent": "play_liked_songs", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v078", "text": "chuck on my liked songs", "intent": "play_liked_songs", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v079", "text": "put on the songs i've liked", "intent": "play_liked_songs", "slots": {}, "style": "paraphrase", "commit_word": 6}
+{"id": "v080", "text": "shuffle my favourites on spotify", "intent": "play_liked_songs", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v081", "text": "play the stuff i've hearted", "intent": "play_liked_songs", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "v082", "text": "play liked song", "intent": "play_liked_songs", "slots": {}, "style": "noisy", "commit_word": 2}
+{"id": "v083", "text": "play like songs", "intent": "play_liked_songs", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v084", "text": "er spotify um my liked songs", "intent": "play_liked_songs", "slots": {}, "style": "noisy", "commit_word": 5}
+{"id": "v085", "text": "play my music", "intent": "play_liked_songs", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "play_spotify"}
+{"id": "v086", "text": "play bohemian rhapsody on spotify", "intent": "play_spotify", "slots": {"query": "bohemian rhapsody"}, "style": "canonical", "commit_word": 5}
+{"id": "v087", "text": "play taylor swift on spotify", "intent": "play_spotify", "slots": {"query": "taylor swift"}, "style": "canonical", "commit_word": 5}
+{"id": "v088", "text": "spotify play the beatles", "intent": "play_spotify", "slots": {"query": "the beatles"}, "style": "canonical", "commit_word": 2}
+{"id": "v089", "text": "play my workout playlist on spotify", "intent": "play_spotify", "slots": {"query": "my workout playlist"}, "style": "canonical", "commit_word": 4}
+{"id": "v090", "text": "play hotel california by the eagles on spotify", "intent": "play_spotify", "slots": {"query": "hotel california by the eagles"}, "style": "canonical", "commit_word": 8}
+{"id": "v091", "text": "on spotify play daft punk", "intent": "play_spotify", "slots": {"query": "daft punk"}, "style": "canonical", "commit_word": 3}
+{"id": "v092", "text": "play the album rumours on spotify", "intent": "play_spotify", "slots": {"query": "the album rumours"}, "style": "canonical", "commit_word": 3}
+{"id": "v093", "text": "put on some kendrick lamar on spotify", "intent": "play_spotify", "slots": {"query": "kendrick lamar"}, "style": "paraphrase", "commit_word": 7}
+{"id": "v094", "text": "what's that band from earlier put it on", "intent": "play_spotify", "slots": {"query": "that band from earlier"}, "style": "paraphrase", "commit_word": 8}
+{"id": "v095", "text": "i wanna hear some arctic monkeys", "intent": "play_spotify", "slots": {"query": "arctic monkeys"}, "style": "paraphrase", "commit_word": 3}
+{"id": "v096", "text": "stick on the chill vibes playlist", "intent": "play_spotify", "slots": {"query": "the chill vibes playlist"}, "style": "paraphrase", "commit_word": 6}
+{"id": "v097", "text": "play uh bohemian rhapsody by queen on spotify", "intent": "play_spotify", "slots": {"query": "bohemian rhapsody by queen"}, "style": "noisy", "commit_word": 8}
+{"id": "v098", "text": "play play adele on spotify", "intent": "play_spotify", "slots": {"query": "adele"}, "style": "noisy", "commit_word": 5}
+{"id": "v099", "text": "spotify play cold play", "intent": "play_spotify", "slots": {"query": "cold play"}, "style": "noisy", "commit_word": 2}
+{"id": "v100", "text": "play something", "intent": "play_spotify", "slots": {}, "style": "ambiguous", "commit_word": 2, "alt": "play_youtube"}
+{"id": "v101", "text": "play some music", "intent": "play_spotify", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "play_liked_songs"}
+{"id": "v102", "text": "put on the weeknd", "intent": "play_spotify", "slots": {"query": "the weeknd"}, "style": "ambiguous", "commit_word": 4, "alt": "play_youtube"}
+{"id": "v103", "text": "pause the music", "intent": "pause_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v104", "text": "pause playback", "intent": "pause_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v105", "text": "stop the video", "intent": "pause_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v106", "text": "pause spotify", "intent": "pause_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v107", "text": "hold on a sec pause that", "intent": "pause_media", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "v108", "text": "shut up for a minute", "intent": "pause_media", "slots": {}, "style": "paraphrase", "commit_word": 2}
+{"id": "v109", "text": "hang on stop the song", "intent": "pause_media", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v110", "text": "hold the music i've got a call", "intent": "pause_media", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v111", "text": "paws the music", "intent": "pause_media", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v112", "text": "pause the music and close spotify", "intent": "pause_media", "slots": {"app": "spotify"}, "style": "compound", "commit_word": 1, "then": "close_app"}
+{"id": "v113", "text": "stop that", "intent": "pause_media", "slots": {}, "style": "ambiguous", "commit_word": 2, "alt": "close_app"}
+{"id": "v114", "text": "resume playback", "intent": "resume_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v115", "text": "resume the music", "intent": "resume_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v116", "text": "continue playing", "intent": "resume_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v117", "text": "unpause the song", "intent": "resume_media", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v118", "text": "okay carry on", "intent": "resume_media", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v119", "text": "keep playing that", "intent": "resume_media", "slots": {}, "style": "paraphrase", "commit_word": 2}
+{"id": "v120", "text": "put it back on", "intent": "resume_media", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v121", "text": "alright you can start the music again", "intent": "resume_media", "slots": {}, "style": "paraphrase", "commit_word": 7}
+{"id": "v122", "text": "uh resume um playing that", "intent": "resume_media", "slots": {}, "style": "noisy", "commit_word": 2}
+{"id": "v123", "text": "continue continue the song", "intent": "resume_media", "slots": {}, "style": "noisy", "commit_word": 1}
+{"id": "v124", "text": "next track", "intent": "next_track", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v125", "text": "skip this song", "intent": "next_track", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v126", "text": "next song please", "intent": "next_track", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v127", "text": "skip to the next track", "intent": "next_track", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v128", "text": "skip this one", "intent": "next_track", "slots": {}, "style": "paraphrase", "commit_word": 1}
+{"id": "v129", "text": "i don't like this one go to the next", "intent": "next_track", "slots": {}, "style": "paraphrase", "commit_word": 9}
+{"id": "v130", "text": "what else have you got play the next one", "intent": "next_track", "slots": {}, "style": "paraphrase", "commit_word": 8}
+{"id": "v131", "text": "move on to the following song", "intent": "next_track", "slots": {}, "style": "paraphrase", "commit_word": 2}
+{"id": "v132", "text": "next next song on spotify", "intent": "next_track", "slots": {}, "style": "noisy", "commit_word": 1}
+{"id": "v133", "text": "skip this track and turn it up", "intent": "next_track", "slots": {}, "style": "compound", "commit_word": 1, "then": "volume_up"}
+{"id": "v134", "text": "change the song", "intent": "next_track", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "play_spotify"}
+{"id": "v135", "text": "volume up", "intent": "volume_up", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v136", "text": "turn the volume up", "intent": "volume_up", "slots": {}, "style": "canonical", "commit_word": 4}
+{"id": "v137", "text": "increase the volume", "intent": "volume_up", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v138", "text": "turn it up", "intent": "volume_up", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v139", "text": "make it louder", "intent": "volume_up", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v140", "text": "crank it up a bit", "intent": "volume_up", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v141", "text": "i can't hear it", "intent": "volume_up", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v142", "text": "louder please", "intent": "volume_up", "slots": {}, "style": "paraphrase", "commit_word": 1}
+{"id": "v143", "text": "pump up the volume", "intent": "volume_up", "slots": {}, "style": "paraphrase", "commit_word": 2}
+{"id": "v144", "text": "uh volume up a um touch", "intent": "volume_up", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v145", "text": "turn up turn up the volume", "intent": "volume_up", "slots": {}, "style": "noisy", "commit_word": 2}
+{"id": "v146", "text": "volume down", "intent": "volume_down", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v147", "text": "turn the volume down", "intent": "volume_down", "slots": {}, "style": "canonical", "commit_word": 4}
+{"id": "v148", "text": "lower the volume", "intent": "volume_down", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v149", "text": "turn it down", "intent": "volume_down", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v150", "text": "crank it down a bit", "intent": "volume_down", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v151", "text": "that's too loud", "intent": "volume_down", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v152", "text": "quieter please", "intent": "volume_down", "slots": {}, "style": "paraphrase", "commit_word": 1}
+{"id": "v153", "text": "bring it down a notch", "intent": "volume_down", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v154", "text": "term it down", "intent": "volume_down", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v155", "text": "turn turn down the volume", "intent": "volume_down", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "v156", "text": "turn it down and pause it", "intent": "volume_down", "slots": {}, "style": "compound", "commit_word": 3, "then": "pause_media"}
+{"id": "v157", "text": "open the browser", "intent": "open_browser", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v158", "text": "open chrome", "intent": "open_browser", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "v159", "text": "launch the web browser", "intent": "open_browser", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "v160", "text": "get me online", "intent": "open_browser", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v161", "text": "pull up a browser window", "intent": "open_browser", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "v162", "text": "uh open the browse er", "intent": "open_browser", "slots": {}, "style": "noisy", "commit_word": 4}
+{"id": "v163", "text": "open the browser and search for cheap flights to lisbon", "intent": "open_browser", "slots": {"query": "cheap flights to lisbon"}, "style": "compound", "commit_word": 3, "then": "search_web"}
+{"id": "v164", "text": "open chrome and google best pizza near me", "intent": "open_browser", "slots": {"query": "best pizza near me"}, "style": "compound", "commit_word": 2, "then": "search_web"}
+{"id": "v165", "text": "open the browser and look up the weather in london", "intent": "open_browser", "slots": {"query": "the weather in london"}, "style": "compound", "commit_word": 3, "then": "search_web"}
+{"id": "v166", "text": "launch chrome then search how tall is the eiffel tower", "intent": "open_browser", "slots": {"query": "how tall is the eiffel tower"}, "style": "compound", "commit_word": 2, "then": "search_web"}
+{"id": "v167", "text": "open the internet", "intent": "open_browser", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "search_web"}
+{"id": "v168", "text": "search for the best laptops under a thousand pounds", "intent": "search_web", "slots": {"query": "the best laptops under a thousand pounds"}, "style": "canonical", "commit_word": 2}
+{"id": "v169", "text": "google how many ounces in a cup", "intent": "search_web", "slots": {"query": "how many ounces in a cup"}, "style": "canonical", "commit_word": 1}
+{"id": "v170", "text": "search the web for vegan lasagne recipe", "intent": "search_web", "slots": {"query": "vegan lasagne recipe"}, "style": "canonical", "commit_word": 3}
+{"id": "v171", "text": "look up the capital of mongolia", "intent": "search_web", "slots": {"query": "the capital of mongolia"}, "style": "canonical", "commit_word": 2}
+{"id": "v172", "text": "google nearest petrol station", "intent": "search_web", "slots": {"query": "nearest petrol station"}, "style": "canonical", "commit_word": 1}
+{"id": "v173", "text": "search for train times to manchester", "intent": "search_web", "slots": {"query": "train times to manchester"}, "style": "canonical", "commit_word": 2}
+{"id": "v174", "text": "web search python list comprehension", "intent": "search_web", "slots": {"query": "python list comprehension"}, "style": "canonical", "commit_word": 2}
+{"id": "v175", "text": "look up who won the world cup in twenty eighteen", "intent": "search_web", "slots": {"query": "who won the world cup in twenty eighteen"}, "style": "canonical", "commit_word": 2}
+{"id": "v176", "text": "find out when the next full moon is", "intent": "search_web", "slots": {"query": "when the next full moon is"}, "style": "paraphrase", "commit_word": 2}
+{"id": "v177", "text": "can you check what time boots closes", "intent": "search_web", "slots": {"query": "what time boots closes"}, "style": "paraphrase", "commit_word": 3}
+{"id": "v178", "text": "i need directions to heathrow", "intent": "search_web", "slots": {"query": "directions to heathrow"}, "style": "paraphrase", "commit_word": 3}
+{"id": "v179", "text": "have a look online for petrichor meaning", "intent": "search_web", "slots": {"query": "petrichor meaning"}, "style": "paraphrase", "commit_word": 4}
+{"id": "v180", "text": "hunt down a recipe for banana bread", "intent": "search_web", "slots": {"query": "a recipe for banana bread"}, "style": "paraphrase", "commit_word": 2}
+{"id": "v181", "text": "um google uh cheap hotels in paris", "intent": "search_web", "slots": {"query": "cheap hotels in paris"}, "style": "noisy", "commit_word": 2}
+{"id": "v182", "text": "search search for used bikes near me", "intent": "search_web", "slots": {"query": "used bikes near me"}, "style": "noisy", "commit_word": 3}
+{"id": "v183", "text": "look up look up the exchange rate for euros", "intent": "search_web", "slots": {"query": "the exchange rate for euros"}, "style": "noisy", "commit_word": 2}
+{"id": "v184", "text": "search for lofi beats", "intent": "search_web", "slots": {"query": "lofi beats"}, "style": "ambiguous", "commit_word": 2, "alt": "play_youtube"}
+{"id": "v185", "text": "close the app", "intent": "close_app", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v186", "text": "close spotify", "intent": "close_app", "slots": {"app": "spotify"}, "style": "canonical", "commit_word": 1}
+{"id": "v187", "text": "close notes", "intent": "close_app", "slots": {"app": "notes"}, "style": "canonical", "commit_word": 1}
+{"id": "v188", "text": "quit chrome", "intent": "close_app", "slots": {"app": "chrome"}, "style": "canonical", "commit_word": 1}
+{"id": "v189", "text": "close this window", "intent": "close_app", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "v190", "text": "close youtube", "intent": "close_app", "slots": {"app": "youtube"}, "style": "canonical", "commit_word": 1}
+{"id": "v191", "text": "get rid of this window", "intent": "close_app", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "v192", "text": "shut youtube down", "intent": "close_app", "slots": {"app": "youtube"}, "style": "paraphrase", "commit_word": 2}
+{"id": "v193", "text": "i'm done with notes close it", "intent": "close_app", "slots": {"app": "notes"}, "style": "paraphrase", "commit_word": 5}
+{"id": "v194", "text": "kill the browser", "intent": "close_app", "slots": {"app": "browser"}, "style": "paraphrase", "commit_word": 1}
+{"id": "v195", "text": "close close the notepad app", "intent": "close_app", "slots": {"app": "notepad"}, "style": "noisy", "commit_word": 1}
+{"id": "v196", "text": "um close uh the browser", "intent": "close_app", "slots": {"app": "browser"}, "style": "noisy", "commit_word": 2}
+{"id": "v197", "text": "clothes the notepad", "intent": "close_app", "slots": {"app": "notepad"}, "style": "noisy", "commit_word": 3}
+{"id": "v198", "text": "shut it down", "intent": "close_app", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "pause_media"}
+{"id": "v199", "text": "what's the weather like today", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v200", "text": "send an email to bob", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v201", "text": "set a timer for ten minutes", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v202", "text": "i love spotify", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v203", "text": "how are you doing today", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v204", "text": "tell me a joke", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v205", "text": "what time is it", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v206", "text": "remind me to call the dentist", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v207", "text": "youtube is so full of ads these days", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v208", "text": "text sarah that i'm on my way", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v209", "text": "who wrote the song yesterday", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v210", "text": "turn off the lights", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v211", "text": "never mind forget it", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v212", "text": "thanks that's all", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v213", "text": "what's the capital of peru", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v214", "text": "book me a table for two tonight", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v215", "text": "my notes are such a mess lately", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v216", "text": "can you hear me", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v217", "text": "order more coffee pods from amazon", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v218", "text": "the volume on this laptop has always been bad", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v219", "text": "what's your name", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "v220", "text": "take a screenshot", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}

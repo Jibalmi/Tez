@@ -1,0 +1,22 @@
+{
+  "tag": "gemma4-12b-q4km-cf",
+  "data": "data\\semif\\authored144.jsonl",
+  "data_sha256": "8162d1c73f925af64453f1ec05ef36d583b3815bf698e60f0d454bd11537e079",
+  "rows": 144,
+  "server": "http://127.0.0.1:8091",
+  "model_path": "C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+  "model_alias": "C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+  "n_ctx": 4096,
+  "n_probs": 200,
+  "cache_prompt": false,
+  "reverse": false,
+  "content_free": true,
+  "prompt_version": "semif direct-options-v1 rendered into gemma4 template (thinking off)",
+  "wall_seconds": 20.949462900010985,
+  "decisions_per_second": 6.8736845754610965,
+  "prompt_ms_median": 88.0675,
+  "prompt_ms_p95": 105.146,
+  "missing_letter_rows": 0,
+  "top1_not_slot_rows": 0,
+  "timestamp": "2026-09-22T11:31:58"
+}

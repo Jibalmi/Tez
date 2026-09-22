@@ -1,0 +1,13 @@
+{
+  "tag": "gemma4-12b-q8_0",
+  "model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "n_ctx": 2048,
+  "variant": "final",
+  "order": "first",
+  "cache": true,
+  "n_probs": 200,
+  "rows": 220,
+  "data_sha256": "6dfba8d2de653e6010f682703400ef9444976ffc9bb8b18d6be1b6fe7a99a1c5",
+  "prompt_example_sha256": "34f96e69b50f3349f48183cf4e74784f0b053c796bb55c754257a9c7c6b7ee98",
+  "timestamp": "2026-09-22T13:19:27"
+}

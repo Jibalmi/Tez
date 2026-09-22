@@ -1,0 +1,121 @@
+{
+  "file": "results/perturb108_gemma3-4b-q4km.jsonl",
+  "n": 108,
+  "overall": {
+    "n": 108,
+    "accuracy": 0.6851851851851852,
+    "balanced_accuracy": 0.7287477954144621,
+    "macro_f1": 0.7296992135701813
+  },
+  "mean_family_balanced_accuracy": 0.7287477954144621,
+  "mfba_ci95": [
+    0.6296296296296297,
+    0.8055555555555557
+  ],
+  "families": {
+    "candidate_selection": {
+      "n": 36,
+      "accuracy": 0.8611111111111112,
+      "balanced_accuracy": 0.8714285714285714,
+      "macro_f1": 0.8875103391232424
+    },
+    "evidence_interpretation": {
+      "n": 36,
+      "accuracy": 0.6666666666666666,
+      "balanced_accuracy": 0.7777777777777778,
+      "macro_f1": 0.6904761904761905
+    },
+    "rule_application": {
+      "n": 36,
+      "accuracy": 0.5277777777777778,
+      "balanced_accuracy": 0.537037037037037,
+      "macro_f1": 0.6111111111111112
+    }
+  },
+  "proper": {
+    "nll": 3.064393381245514,
+    "brier": 0.6055263603468602,
+    "mean_confidence": 0.9906993649520807,
+    "accuracy": 0.6851851851851852
+  },
+  "ece": {
+    "ece": 0.3055141797668954,
+    "bins": 15,
+    "reliability": [
+      {
+        "bin": 7,
+        "n": 1,
+        "confidence": 0.525,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 10,
+        "n": 1,
+        "confidence": 0.702,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 13,
+        "n": 3,
+        "confidence": 0.929,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 14,
+        "n": 103,
+        "confidence": 1.0,
+        "accuracy": 0.718
+      }
+    ]
+  },
+  "leakage": {
+    "missing_letter_rows": 0,
+    "top1_not_slot_rows": 0,
+    "top1_non_slot_tokens": []
+  },
+  "latency": {
+    "prompt_ms_p50": 43.118,
+    "prompt_ms_p95": 48.646,
+    "http_ms_p50": 81.79910000762902,
+    "http_ms_p95": 101.95140000723768,
+    "mean_prompt_tokens": 156.24074074074073
+  },
+  "stability": {
+    "option_reversal": {
+      "n": 36,
+      "flips": 13,
+      "flip_rate": 0.3611111111111111,
+      "flip_rate_ci95": [
+        0.2247538679218132,
+        0.5242521960916802
+      ],
+      "mean_tv_distance": 0.34699662500478334,
+      "acc_base": 0.6666666666666666,
+      "acc_pert": 0.7222222222222222
+    },
+    "criterion_wrapper": {
+      "n": 36,
+      "flips": 8,
+      "flip_rate": 0.2222222222222222,
+      "flip_rate_ci95": [
+        0.11716192974839595,
+        0.38085019827859085
+      ],
+      "mean_tv_distance": 0.2219315032782507,
+      "acc_base": 0.6666666666666666,
+      "acc_pert": 0.6944444444444444
+    },
+    "irrelevant_context": {
+      "n": 36,
+      "flips": 7,
+      "flip_rate": 0.19444444444444445,
+      "flip_rate_ci95": [
+        0.09752972019453349,
+        0.350283620635152
+      ],
+      "mean_tv_distance": 0.20519339276003765,
+      "acc_base": 0.6666666666666666,
+      "acc_pert": 0.6388888888888888
+    }
+  }
+}

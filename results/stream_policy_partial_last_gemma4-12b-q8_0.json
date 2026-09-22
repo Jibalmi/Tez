@@ -1,0 +1,76 @@
+{
+  "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+  },
+  "actionable": 198,
+  "harmful_rate": 0.005050505050505051,
+  "harmful": 1,
+  "final_action_consistent_rate": 0.9797979797979798,
+  "mean_first_action_word": 3.8666666666666667,
+  "first_action_at_or_before_human": 0.5,
+  "mean_actions_per_utterance": 1.3181818181818181,
+  "oos_rows": 22,
+  "oos_false_actions": 4,
+  "oos_false_action_rate": 0.18181818181818182,
+  "oos_false_detail": [
+    [
+      "v207",
+      [
+        [
+          1,
+          "open_youtube"
+        ]
+      ]
+    ],
+    [
+      "v208",
+      [
+        [
+          7,
+          "type_text"
+        ]
+      ]
+    ],
+    [
+      "v215",
+      [
+        [
+          2,
+          "open_notes"
+        ]
+      ]
+    ],
+    [
+      "v217",
+      [
+        [
+          5,
+          "open_browser"
+        ],
+        [
+          6,
+          "search_web"
+        ]
+      ]
+    ]
+  ],
+  "harmful_detail": [
+    {
+      "id": "v197",
+      "style": "noisy",
+      "seq": [
+        [
+          3,
+          "open_notes"
+        ]
+      ],
+      "accepted": [
+        "close_app"
+      ],
+      "text": "clothes the notepad"
+    }
+  ]
+}

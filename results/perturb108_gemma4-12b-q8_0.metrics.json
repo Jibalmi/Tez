@@ -1,0 +1,109 @@
+{
+  "file": "results/perturb108_gemma4-12b-q8_0.jsonl",
+  "n": 108,
+  "overall": {
+    "n": 108,
+    "accuracy": 0.9907407407407407,
+    "balanced_accuracy": 0.9920634920634921,
+    "macro_f1": 0.990558615263572
+  },
+  "mean_family_balanced_accuracy": 0.9920634920634921,
+  "mfba_ci95": [
+    0.9722222222222223,
+    1.0
+  ],
+  "families": {
+    "candidate_selection": {
+      "n": 36,
+      "accuracy": 0.9722222222222222,
+      "balanced_accuracy": 0.9761904761904762,
+      "macro_f1": 0.971675845790716
+    },
+    "evidence_interpretation": {
+      "n": 36,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "rule_application": {
+      "n": 36,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "macro_f1": 1.0
+    }
+  },
+  "proper": {
+    "nll": 0.03966740917444142,
+    "brier": 0.01922627845091589,
+    "mean_confidence": 0.9971819203866237,
+    "accuracy": 0.9907407407407407
+  },
+  "ece": {
+    "ece": 0.011555969442968498,
+    "bins": 15,
+    "reliability": [
+      {
+        "bin": 10,
+        "n": 1,
+        "confidence": 0.724,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 14,
+        "n": 107,
+        "confidence": 1.0,
+        "accuracy": 0.991
+      }
+    ]
+  },
+  "leakage": {
+    "missing_letter_rows": 0,
+    "top1_not_slot_rows": 0,
+    "top1_non_slot_tokens": []
+  },
+  "latency": {
+    "prompt_ms_p50": 115.489,
+    "prompt_ms_p95": 124.905,
+    "http_ms_p50": 188.391200004844,
+    "http_ms_p95": 215.43300000485033,
+    "mean_prompt_tokens": 160.24074074074073
+  },
+  "stability": {
+    "option_reversal": {
+      "n": 36,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "flip_rate_ci95": [
+        0.0,
+        0.09642183044857634
+      ],
+      "mean_tv_distance": 0.0022303798952695453,
+      "acc_base": 1.0,
+      "acc_pert": 1.0
+    },
+    "criterion_wrapper": {
+      "n": 36,
+      "flips": 1,
+      "flip_rate": 0.027777777777777776,
+      "flip_rate_ci95": [
+        0.004920280295569679,
+        0.141700337350308
+      ],
+      "mean_tv_distance": 0.02513965037185597,
+      "acc_base": 1.0,
+      "acc_pert": 0.9722222222222222
+    },
+    "irrelevant_context": {
+      "n": 36,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "flip_rate_ci95": [
+        0.0,
+        0.09642183044857634
+      ],
+      "mean_tv_distance": 0.0055281348740113785,
+      "acc_base": 1.0,
+      "acc_pert": 1.0
+    }
+  }
+}

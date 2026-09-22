@@ -1,0 +1,20 @@
+{
+  "intents": [
+    {"id": "open_notes", "description": "Open the notes or notepad application."},
+    {"id": "type_text", "description": "Type the dictated text into the app that is currently in focus."},
+    {"id": "open_youtube", "description": "Open YouTube without playing anything in particular."},
+    {"id": "play_youtube", "description": "Search for and play a specific video, channel or topic on YouTube."},
+    {"id": "open_spotify", "description": "Open Spotify without playing anything in particular."},
+    {"id": "play_liked_songs", "description": "Play the user's own liked or saved songs collection on Spotify."},
+    {"id": "play_spotify", "description": "Play a specific song, artist, album or playlist on Spotify."},
+    {"id": "pause_media", "description": "Pause or stop whatever is currently playing."},
+    {"id": "resume_media", "description": "Resume or continue playback that was paused."},
+    {"id": "next_track", "description": "Skip to the next track or video."},
+    {"id": "volume_up", "description": "Make the sound louder by increasing the volume."},
+    {"id": "volume_down", "description": "Make the sound quieter by decreasing the volume."},
+    {"id": "open_browser", "description": "Open the web browser without searching for anything."},
+    {"id": "search_web", "description": "Search the web or look something up online for the user."},
+    {"id": "close_app", "description": "Close the current window or a named application."},
+    {"id": "none", "description": "Out of scope: chit-chat, a question, or a request for something the assistant cannot do."}
+  ]
+}

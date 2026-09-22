@@ -1,0 +1,77 @@
+{
+  "file": "results/authored144_sys_gemma4-12b-q8_0.jsonl",
+  "n": 144,
+  "overall": {
+    "n": 144,
+    "accuracy": 0.9444444444444444,
+    "balanced_accuracy": 0.9597505668934241,
+    "macro_f1": 0.9474162547263857
+  },
+  "mean_family_balanced_accuracy": 0.9378306878306879,
+  "mfba_ci95": [
+    0.8944444444444445,
+    0.9758088127653345
+  ],
+  "families": {
+    "candidate_selection": {
+      "n": 48,
+      "accuracy": 0.9583333333333334,
+      "balanced_accuracy": 0.9444444444444445,
+      "macro_f1": 0.9511784511784511
+    },
+    "evidence_interpretation": {
+      "n": 48,
+      "accuracy": 0.9583333333333334,
+      "balanced_accuracy": 0.9563492063492064,
+      "macro_f1": 0.9533394527493662
+    },
+    "rule_application": {
+      "n": 48,
+      "accuracy": 0.9166666666666666,
+      "balanced_accuracy": 0.9126984126984127,
+      "macro_f1": 0.9138146167557931
+    }
+  },
+  "proper": {
+    "nll": 0.4969914360032439,
+    "brier": 0.10928625928183827,
+    "mean_confidence": 0.9977551856712525,
+    "accuracy": 0.9444444444444444
+  },
+  "ece": {
+    "ece": 0.056424039485124776,
+    "bins": 15,
+    "reliability": [
+      {
+        "bin": 12,
+        "n": 1,
+        "confidence": 0.843,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 13,
+        "n": 1,
+        "confidence": 0.933,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 14,
+        "n": 142,
+        "confidence": 0.999,
+        "accuracy": 0.944
+      }
+    ]
+  },
+  "leakage": {
+    "missing_letter_rows": 0,
+    "top1_not_slot_rows": 0,
+    "top1_non_slot_tokens": []
+  },
+  "latency": {
+    "prompt_ms_p50": 114.469,
+    "prompt_ms_p95": 123.518,
+    "http_ms_p50": 173.7888999923598,
+    "http_ms_p95": 200.62400000460912,
+    "mean_prompt_tokens": 146.41666666666666
+  }
+}

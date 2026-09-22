@@ -1,0 +1,793 @@
+% Tez — research-style write-up. Build: xelatex tez-paper.tex (twice)
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,top=24mm,bottom=24mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{Georgia}
+\setmonofont{Consolas}[Scale=0.86]
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array,multirow,tabularx}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,fit,backgrounds,decorations.pathreplacing,shadows.blur}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[hidelinks]{hyperref}
+\usepackage{float}
+\usepackage{abstract}
+\usepackage{titlesec}
+
+% ---------------------------------------------------------------- palette
+\definecolor{ink}{HTML}{1F2A37}
+\definecolor{navy}{HTML}{1F3A5F}
+\definecolor{teal}{HTML}{0E7C7B}
+\definecolor{gold}{HTML}{C9A227}
+\definecolor{coral}{HTML}{D1495B}
+\definecolor{mist}{HTML}{EEF2F6}
+\definecolor{slate}{HTML}{5B6B7C}
+\definecolor{leaf}{HTML}{3C8D5A}
+\definecolor{sky}{HTML}{4A7FB5}
+\definecolor{sand}{HTML}{F7F1E3}
+
+\titleformat{\section}{\Large\bfseries\color{navy}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries\color{navy}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{ink}}{\thesubsubsection}{0.6em}{}
+\captionsetup{font=small,labelfont={bf,color=navy},width=0.92\textwidth}
+\setlist{nosep,leftmargin=1.4em}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\parskip}{3pt}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\hl}[1]{\textcolor{coral}{\textbf{#1}}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ---------------------------------------------------------------- tikz styles
+\tikzset{
+  box/.style={draw=navy,fill=white,rounded corners=2pt,line width=0.7pt,align=center,inner sep=5pt,font=\small},
+  boxk/.style={box,fill=mist},
+  boxt/.style={box,draw=teal,fill=teal!8},
+  boxg/.style={box,draw=gold!80!black,fill=gold!12},
+  boxc/.style={box,draw=coral,fill=coral!8},
+  boxl/.style={box,draw=leaf,fill=leaf!10},
+  arr/.style={-{Stealth[length=2.2mm]},line width=0.8pt,color=slate},
+  arrn/.style={-{Stealth[length=2.2mm]},line width=0.8pt,color=navy},
+  lbl/.style={font=\scriptsize\color{slate},align=center},
+  head/.style={font=\small\bfseries\color{navy}},
+  tok/.style={draw=navy!60,fill=white,minimum width=5.5mm,minimum height=5.5mm,inner sep=0pt,font=\scriptsize},
+  tokc/.style={tok,fill=teal!25},
+  toke/.style={tok,fill=coral!25},
+}
+
+\begin{document}
+
+% ================================================================ title
+\begin{center}
+{\LARGE\bfseries\color{navy} Tez: an open, local ``System One'' decision layer}\\[4pt]
+{\large\color{ink} Typed decisions with calibrated confidence from a single forward pass ---\\ how the technique works, how it compares with Jev, and what it measures on a laptop}\\[10pt]
+{\normalsize Miguel Villax}\\[2pt]
+{\small\color{slate} September 2026 \quad$\cdot$\quad code, data and results: \code{github.com/AILABS-WORK/Tez}}
+\end{center}
+\vspace{4pt}
+
+\begin{abstract}
+\noindent
+A ``System One'' model answers a typed question --- \emph{which option, yes/no, what level} --- by reading a probability distribution directly from one forward pass of a language model, generating no tokens. TypeSafe AI commercialised this as Jev (September 2026); it is hosted-only and closed-weight, and its terms forbid using its outputs to build a competitor. We show that the technique itself is public, older than Jev, and works locally today, and we characterise it rigorously. On SemIf's public benchmark (144 three-option decisions), a frozen Gemma 4 12B at Q8\_0 reaches mean-family balanced accuracy \textbf{0.943} (95\% CI 0.897--0.981), reproducing SemIf's published Qwen3.5-4B result exactly (0.813) in the same harness and exceeding it ($p<10^{-4}$, paired); however, the 4B with six-ordering permutation averaging reaches 0.912, statistically indistinguishable from the 12B ($p=0.18$), so roughly half of the apparent scale gap is removable option-order bias. Six-permutation averaging plus out-of-fold temperature scaling gives NLL 0.158 and Brier 0.075; Zhao et al.'s contextual calibration is shown to be harmful on option sets that contain an abstain answer. We then build the use case the technique is best suited to --- \emph{voice command $\to$ instant action} --- and show that placing the constant action list before the variable transcript, with a full sliding-window cache, reduces the per-word decision cost from 205\,ms to \textbf{30\,ms} on the 12B while raising intent accuracy from 0.868 to 0.905. A class-aware early-commit policy (a confident \emph{none} on a partial transcript means \emph{keep listening}; cheap reversible actions fire first; irreversible ones wait) yields one harmful action in 198 spoken commands and opens Notepad 652\,ms into ``open notes and type hello world'' from audio. Finally we run Laya --- the strongest open encoder-based ``System One'', which claims to beat Jev --- on byte-identical rows on the same GPU, across its own nine benchmarks: zero-shot Tez beats Laya's trained checkpoints on six of nine English tasks, scores 0.704 on the 2,000-decision typed-decisions benchmark against 0.36 for Laya's base checkpoints (0.766 fine-tuned on that benchmark's own train split; Jev 0.727), reaches 0.885 macro accuracy over eleven languages against 0.524 for Laya's multilingual model, and handles 77 options at 0.713 where Laya collapses to 0.395; Laya remains 2--5$\times$ faster per single question. All numbers were audited; the audit corrections are reported.
+\end{abstract}
+
+\tableofcontents
+
+% ================================================================ 1
+\section{Introduction}
+
+Most decisions inside an AI system are small and typed: \emph{is this ticket urgent? which tool should run next? is the evidence sufficient? which app did the user just ask for?} Today they are usually made by asking a large language model to \emph{generate} an answer --- a JSON object, a word, a chain of reasoning ending in a label --- and then parsing it. Generation is expensive (every output token is a full decode step), slow (hundreds of milliseconds to seconds), non-deterministic under sampling, and gives no usable probability: the parsed label carries no calibrated confidence.
+
+The alternative is old and simple. If the answer is one of a fixed set of options labelled \code{A}, \code{B}, \code{C}, the model's very first output position already contains a full distribution over those labels. One forward pass, read the logits at that position, keep the option letters, normalise. No decoding, no parsing, a distribution for free. Jev packaged this as a product; SemIf \cite{semif} released an open reference implementation days before; this report treats it as an engineering discipline with measurable properties.
+
+\paragraph{Contributions.}
+\begin{enumerate}[label=(\arabic*)]
+\item A precise account of the mechanism, of what Jev documents versus what must be inferred, and of the literature that predicts where the method works and where it fails (\S\ref{sec:background}--\ref{sec:method}).
+\item A reproduction of SemIf's published baseline in two independent harnesses (llama.cpp server and in-process PyTorch), a four-model scale curve, paired significance tests, and a calibration/debiasing study including a negative result (\S\ref{sec:experiments}).
+\item A systems finding --- prompt layout plus cache configuration decide latency more than model size --- with a measured 7$\times$ gain (\S\ref{sec:systems}).
+\item A complete voice$\to$action pipeline with streaming early commit, action classes, residual multi-step decisions, an ASR-stage benchmark and a live demonstration (\S\ref{sec:voice}).
+\item An audit of the first draft's own numbers and the corrections made (\S\ref{sec:audit}).
+\end{enumerate}
+
+% ================================================================ 2
+\section{Background: Jev, SemIf, and what is actually known}
+\label{sec:background}
+
+\subsection{What Jev documents}
+TypeSafe AI's Jev exposes one endpoint, \code{POST /v1/systemone}, taking a \emph{state} (up to 32k tokens of text) and a set of typed \emph{questions}: \code{noul} (yes/no), \code{choice} (up to 255 options, with per-option probabilities) and \code{score} (up to 10 levels). Each answer carries a \code{confidence}, documented as ``a statistic computed from the distribution'' --- a concentration measure, not a calibrated $P(\text{correct})$. The service claims 70--500\,ms per call and ``20--200$\times$ faster / 40--400$\times$ cheaper than an LLM''. It is hosted only, in one US region, with no self-hosting or open weights, and its Master Customer Agreement forbids using outputs for distillation, imitation training or a competing product. No paper, model card or technical report exists; the training method is named (``RLCD'') but not described.
+
+\subsection{What must be inferred}
+Everything about the architecture. By elimination against the open landscape (\S\ref{sec:landscape}) the most plausible reading is a decoder LLM, one prefill, softmax over the option-symbol logits, no decode --- i.e.\ what SemIf does explicitly --- with a fine-tune on a proper scoring rule over label-restricted logits, and ``parallel'' meaning many questions scored against one cached state. Independent measurements (JevBench held-out tier) place Jev at Intelligence 85.7 / Calibration 82.7; frozen, untrained SemIf sits 1.3 points behind on the composite. We do not cite Jev's architecture as fact anywhere below.
+
+\subsection{SemIf, the reference implementation}
+SemIf (MIT) prompts a frozen local model with the evidence, a criterion and options labelled \code{A--P}, runs one forward pass and softmaxes the letter logits. It ships frozen fixtures (144 authored decisions in three families, 108 perturbations) and publishes Qwen3.5-4B at 0.813 mean-family balanced accuracy, a 0.6B at 0.440, and an EXL3 27B at 0.958. What it does well: the readout, prefix reuse, reproducible benchmarks, honest limitations. What it lacks --- and where an open project can add value --- is debiasing, per-schema calibration, an abstention contract and a streaming/early-commit contract.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=4mm]
+% left: generate
+\node[head] (hl) {Generate-and-parse (today)};
+\node[boxk,below=3mm of hl,text width=34mm] (p1) {prompt: evidence + question + options};
+\node[box,below=of p1,text width=34mm] (d1) {decode token 1};
+\node[box,below=of d1,text width=34mm] (d2) {decode token 2 \ldots\ $n$};
+\node[boxc,below=of d2,text width=34mm] (pa) {parse text $\to$ label};
+\node[box,below=of pa,text width=34mm] (o1) {label, no probability};
+\draw[arr] (p1)--(d1); \draw[arr] (d1)--(d2); \draw[arr] (d2)--(pa); \draw[arr] (pa)--(o1);
+\node[lbl,right=1mm of d2] {$n$ decode steps\\ (each a full pass)};
+% right: one pass
+\node[head,right=34mm of hl] (hr) {One-pass readout (Jev / SemIf / Tez)};
+\node[boxk,below=3mm of hr,text width=40mm] (p2) {prompt: evidence + question +\\ ``A. \ldots\ B. \ldots\ C. \ldots\ answer with the letter''};
+\node[boxt,below=of p2,text width=40mm] (f2) {one forward pass (prefill only)};
+\node[box,below=of f2,text width=40mm] (l2) {logits at the first answer position\\ (whole vocabulary)};
+\node[boxg,below=of l2,text width=40mm] (m2) {keep \code{A},\code{B},\code{C} $\to$ softmax};
+\node[boxl,below=of m2,text width=40mm] (o2) {distribution $[p_A,p_B,p_C]$ + confidence\\ + abstain / escalate decision};
+\draw[arr] (p2)--(f2); \draw[arr] (f2)--(l2); \draw[arr] (l2)--(m2); \draw[arr] (m2)--(o2);
+\node[lbl,right=1mm of f2] {0 decode steps};
+\end{tikzpicture}
+\caption{The mechanism. Generation pays $n$ decode steps and returns a label; the one-pass readout pays one prefill and returns a distribution over the declared options. Nothing is sampled or parsed.}
+\label{fig:mechanism}
+\end{figure}
+
+\subsection{Jev versus a local build}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=3mm]
+\node[head] (a) {Jev (hosted)};
+\node[boxk,below=2mm of a,text width=48mm] (a1) {closed weights, US single region};
+\node[box,below=of a1,text width=48mm] (a2) {\code{/v1/systemone} \{state, questions\}};
+\node[box,below=of a2,text width=48mm] (a3) {distribution + concentration ``confidence''};
+\node[boxc,below=of a3,text width=48mm] (a4) {terms: no distillation, no competitor};
+\node[box,below=of a4,text width=48mm] (a5) {70--500\,ms, data leaves the machine};
+\draw[arr](a1)--(a2);\draw[arr](a2)--(a3);\draw[arr](a3)--(a4);\draw[arr](a4)--(a5);
+\node[head,right=70mm of a] (b) {Tez (local, this work)};
+\node[boxt,below=2mm of b,text width=52mm] (b1) {frozen open backbone (Gemma 4 12B, Apache-2.0)};
+\node[box,below=of b1,text width=52mm] (b2) {same wire shape + \code{multi}, implicit \code{\_\_none\_\_}, \code{prior}};
+\node[boxg,below=of b2,text width=52mm] (b3) {permutation debias $\to$ per-schema temperature\\ $\to$ conformal set: act / escalate / fall back};
+\node[boxl,below=of b3,text width=52mm] (b4) {two numbers: distribution confidence \emph{and} fitted $p_\text{correct}$};
+\node[box,below=of b4,text width=52mm] (b5) {30--110\,ms on a laptop GPU, nothing leaves};
+\draw[arr](b1)--(b2);\draw[arr](b2)--(b3);\draw[arr](b3)--(b4);\draw[arr](b4)--(b5);
+\end{tikzpicture}
+\caption{Jev as documented versus the local stack built here. The technique is shared; the differences are openness, the calibration contract, and where the data lives.}
+\end{figure}
+
+% ================================================================ 3
+\section{How the technique works, and what the literature predicts}
+\label{sec:method}
+
+\subsection{The readout, precisely}
+Let $x$ be the rendered prompt (chat template, evidence, question, options with letters $\ell_1\ldots\ell_k$, an instruction to answer with the letter, and the generation prompt). One forward pass yields logits $z\in\mathbb{R}^{|V|}$ at the first answer position. With $t(\ell_i)$ the token id of letter $\ell_i$, the option distribution is
+\[
+p_i \;=\; \frac{\exp z_{t(\ell_i)}}{\sum_{j=1}^{k}\exp z_{t(\ell_j)}} .
+\]
+Two invariants make the read position unambiguous, both enforced by the harness: every letter must be a single round-trip token, and \code{prompt + letter} must tokenise to \code{prompt} followed by exactly that token (no merge across the boundary). Because a server's returned log-probabilities are already log-softmax over $V$, restricting and renormalising them equals the softmax over raw slot logits.
+
+\subsection{Why it works at all: symbol binding}
+The method assumes the model can \emph{bind} the semantics of an option to its letter. Robinson and Wingate \cite{mcsb} showed this multiple-choice symbol binding is an emergent, scale-gated ability; Wong, Nouwen and Gatt \cite{twostage} showed it is computed in two stages --- the winner is decided in content space, then bound to a symbol later in the network. The readout only taps stage two (Fig.~\ref{fig:twostage}). A small model may know the answer and still fail to route it to the letter; that failure looks like order sensitivity, and it is exactly what our 3B and 4B results show (\S\ref{sec:scale}).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5mm]
+\node[boxk,text width=30mm] (in) {evidence + options};
+\node[boxt,right=8mm of in,text width=34mm] (s1) {stage 1: decide in content space\\ \scriptsize (``the second candidate fits'')};
+\node[boxg,right=8mm of s1,text width=34mm] (s2) {stage 2: bind winner to symbol\\ \scriptsize (``\ldots\ which is letter B'')};
+\node[boxl,right=8mm of s2,text width=24mm] (out) {logit for \code{B} rises};
+\draw[arr](in)--(s1);\draw[arr](s1)--(s2);\draw[arr](s2)--(out);
+\node[lbl,below=2mm of s2,text width=50mm] {symbol-logit readout reads here only; a binding failure is its own error mode, distinct from being wrong};
+\node[lbl,below=2mm of s1,text width=40mm] {small models often get this right\\ and lose it in stage 2};
+\end{tikzpicture}
+\caption{The two-stage account of multiple-choice answering \cite{twostage} and where the readout taps it.}
+\label{fig:twostage}
+\end{figure}
+
+\subsection{What each paper changes in the build}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{L{38mm} X L{48mm}}
+\toprule
+Paper & Finding & Consequence here \\
+\midrule
+PET \cite{pet}; LM-BFF \cite{lmbff} & meaningful label words beat bare symbols; label-word choice swings accuracy & \code{A/B/C} is the weakest verbalizer; an ablation to run \\
+Surface-form competition \cite{sfc} & scoring option \emph{text} splits mass across synonyms & symbol scoring sidesteps this --- an argument \emph{for} the design \\
+Calibrate before use \cite{zhao} & content-free input exposes label bias; divide it out & \hl{harmful here} (\S\ref{sec:calib}); never with an abstain option \\
+MCSB \cite{mcsb}; two-stage \cite{twostage} & binding is scale-gated and late & screen the backbone by measuring it \\
+PriDe \cite{pride} & selection bias is mostly token bias on option IDs & measured: flat prior on Gemma 4, so a no-op there \\
+Position bias vs.\ option count \cite{leeson} & bias grows with more options & stress-test above production $N$ \\
+Mind the gap \cite{gap} & bare vs space-prefixed letters differ & read the token the template produces \\
+\bottomrule
+\end{tabularx}
+\caption{The reading list and what it changed.}
+\end{table}
+
+\subsection{What ``calibrated'' has to mean}
+The distribution above is a \emph{conditional option score}; it is not $P(\text{correct})$ until it is made so. The contract adopted here: temperature scaling per schema, fitted out-of-fold with folds split by source group; \emph{conformal} sets mapped onto orchestration (set size 1 $\to$ act; $>1$ $\to$ escalate; empty $\to$ fall back to the full LLM), Mondrian so rare costly classes get their own quantile; log-loss and Brier as primary metrics, binned ECE secondary; risk--coverage and AURC for abstention. Post-hoc calibration is sufficient for v1: the AWS decision-token study \cite{awsdt} shows isotonic regression closes most of the gap that calibration-aware RL claims.
+
+% ================================================================ 4
+\section{Experimental setup}
+\label{sec:setup}
+
+\textbf{Hardware.} NVIDIA RTX 5080 Laptop GPU (16\,GB), Intel Core Ultra 9 275HX (no AVX-512), Windows 11.\quad
+\textbf{Engines.} (a) llama.cpp b11100 \code{win-cuda-13.4}, \code{llama-server}, full offload, one slot, fresh scoring (\code{cache\_prompt=false}) for every accuracy and calibration run; (b) \code{transformers} 5.8 / torch 2.10 in-process, BF16, \code{logits\_to\_keep=1}, CUDA-synchronised timing.\quad
+\textbf{Models.} Gemma 4 12B (Q8\_0 and Q4\_K\_M; Apache-2.0; thinking disabled), Gemma 3 4B Q4\_K\_M (fresh ggml-org GGUF), Llama 3.2 3B Q4\_K\_M, Qwen3.5-4B and Qwen3-4B BF16. Every server run asserts the loaded model path from \code{/props}.\quad
+\textbf{Prompt.} Byte-identical to SemIf's \code{direct-options-v1}, built by importing SemIf's own \code{core.py}, rendered into each model's chat template with the generation prompt appended; for Gemma 4 the empty thought channel \code{<|channel>thought\textbackslash n<channel|>} is included and the letter is read at the next position.\quad
+\textbf{Readout.} \code{n\_predict=1, temperature=0, n\_probs=200}; top-1 token and any missing letter logged (none missing on benchmark rows; top-1 always a declared letter).\quad
+\textbf{Data.} SemIf's frozen fixtures: \code{authored144} (three families $\times$ 48 rows, three options each) and \code{perturbations108} (36 originals $\times$ option reversal / criterion re-wrap / irrelevant context). Labels are model-reviewed, not human-adjudicated; the data are public, so this is a reproduction, not a held-out claim. Gemma 4 12B (June 2026) predates the fixtures (September 2026).\quad
+\textbf{Metrics.} Mean-family balanced accuracy with classes keyed by \emph{option id}, source-group bootstrap 95\% CI; NLL and Brier; ECE-15; option-id-matched flip rate with Wilson CI and total-variation distance for perturbations; AUROC of max-probability as error detector; AURC; exact McNemar for paired model comparisons.\quad
+\textbf{Determinism.} Three independent Q8\_0 runs were byte-identical in every probability.
+
+% ================================================================ 5
+\section{Results on the SemIf benchmark}
+\label{sec:experiments}
+
+\subsection{Headline and scale}
+\label{sec:scale}
+
+\begin{table}[H]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l r r r r r r}
+\toprule
+Model (frozen) & Authored mfba (95\% CI) & Perturb. & NLL raw$\to$best & Brier raw$\to$best & Reversal flips/36 & p50 \\
+\midrule
+\textbf{Gemma 4 12B Q8\_0} & \textbf{0.943} (0.897--0.981) & \textbf{0.992} & 0.478$\to$\textbf{0.158} & 0.094$\to$\textbf{0.075} & \textbf{0} ($\le$9.6\%) & 110\,ms \\
+Gemma 4 12B Q4\_K\_M & 0.918 (0.871--0.958) & 0.981 & 0.549$\to$0.184 & 0.130$\to$0.092 & 1 & 100\,ms \\
+Qwen3.5-4B BF16 (in-process) & 0.813 (0.755--0.865) & --- & 0.427 & 0.248 & --- & 224\,ms$^\dagger$ \\
+\quad + 6-permutation average & \textbf{0.912} & --- & --- & --- & --- & 321\,ms$^\dagger$ \\
+Qwen3-4B BF16 (in-process) & 0.740 (0.676--0.809) & --- & --- & --- & --- & 75\,ms$^\dagger$ \\
+\quad + 6-permutation average & 0.832 & --- & --- & --- & --- & 204\,ms$^\dagger$ \\
+Gemma 3 4B Q4\_K\_M & 0.646 (0.570--0.728) & 0.729 & 3.433$\to$0.696 & 0.661$\to$0.397 & 13 (36\%) & 40\,ms \\
+Llama 3.2 3B Q4\_K\_M & 0.358 (0.319--0.399) & 0.496 & 1.673$\to$1.043 & 0.827$\to$0.627 & 10 (28\%) & 25\,ms \\
+\emph{SemIf published: 4B / 27B} & \emph{0.813 / 0.958} & \emph{0.766 / ---} & & & & \\
+\bottomrule
+\end{tabular}}
+\caption{Decision quality on SemIf's \code{authored144} and \code{perturbations108}. ``best'' = six-permutation average + out-of-fold temperature. $^\dagger$transformers timing, not comparable with llama.cpp.}
+\label{tab:main}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.92\textwidth,height=62mm,ybar,bar width=9mm,ymin=0,ymax=1.05,
+  ylabel={mean-family balanced accuracy},xtick=data,
+  symbolic x coords={Llama 3.2 3B,Gemma 3 4B,Qwen3-4B,Qwen3.5-4B,Q3.5-4B+perm6,Gemma 4 12B Q4,Gemma 4 12B Q8,SemIf 27B},
+  x tick label style={rotate=20,anchor=east,font=\scriptsize},ymajorgrids,grid style={mist},
+  error bars/y dir=both,error bars/y explicit,nodes near coords,every node near coord/.append style={font=\scriptsize,yshift=2pt},
+  point meta=explicit symbolic]
+\addplot[fill=sky!60,draw=navy] coordinates {
+ (Llama 3.2 3B,0.358) +- (0.039,0.039) [0.358]
+ (Gemma 3 4B,0.646) +- (0.076,0.079) [0.646]
+ (Qwen3-4B,0.740) +- (0.064,0.069) [0.740]
+ (Qwen3.5-4B,0.813) +- (0.058,0.052) [0.813]
+ (Q3.5-4B+perm6,0.912) +- (0,0) [0.912]
+ (Gemma 4 12B Q4,0.918) +- (0.047,0.040) [0.918]
+ (Gemma 4 12B Q8,0.943) +- (0.046,0.038) [0.943]
+ (SemIf 27B,0.958) +- (0,0) [0.958]};
+\draw[dashed,coral] (axis cs:Llama 3.2 3B,0.333) -- (axis cs:SemIf 27B,0.333) node[pos=0.1,above,font=\scriptsize,color=coral] {chance};
+\end{axis}
+\end{tikzpicture}
+\caption{The scale curve on one dataset and one prompt (95\% bootstrap CIs where available). Permutation averaging moves the 4B most of the way to the 12B.}
+\label{fig:scale}
+\end{figure}
+
+\paragraph{Paired significance (exact McNemar, same 144 rows).} 12B Q8 vs Qwen3.5-4B: 24 rows only the 12B gets right vs 3 only the 4B, $p=5\times10^{-5}$. 12B Q8 vs Gemma 3 4B: 44 vs 3, $p=2\times10^{-10}$. 12B Q8 vs Q4: 3 vs 0, $p=0.25$ (not significant). Qwen3.5-4B six-permutation vs fresh: 18 fixed, 2 broken, $p=4\times10^{-4}$. \hl{12B Q8 vs Qwen3.5-4B + permutations: 7 vs 2, $p=0.18$.} SemIf's published 0.813 reproduced exactly (0.8132) through \code{apply\_chat\_template(enable\_thinking=False)}, anchoring every other number to a published baseline.
+
+\paragraph{Reading.} A frozen 12B is clearly above the published 4B but is mid-scale (SemIf's 27B: 0.958). Sub-4B decoders are at or near chance with high order sensitivity, and no post-hoc method moves them --- calibration cannot create knowledge. The 4B models sit in between and gain 7--10 points from permutation averaging: they \emph{have} the knowledge and lose it in binding, which is exactly the two-stage prediction.
+
+\subsection{Perturbations and order bias}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{l r r r r}
+\toprule
+Gemma 4 12B Q8\_0, 36 pairs each & flips & flip rate (Wilson 95\%) & TV distance & acc.\ base$\to$pert. \\
+\midrule
+option\_reversal & 0 & 0\% (0--9.6\%) & 0.002 & 1.000$\to$1.000 \\
+criterion\_wrapper & 1 & 2.8\% (0.5--14\%) & 0.025 & 1.000$\to$0.972 \\
+irrelevant\_context & 0 & 0\% (0--9.6\%) & 0.006 & 1.000$\to$1.000 \\
+\midrule
+\multicolumn{5}{p{140mm}}{All six orderings scored: letter mass A/B/C = 0.331/0.336/0.333; all six orderings agree on the argmax for 95.8\% of rows; PriDe prior correction is a no-op} \\
+\bottomrule
+\end{tabular}
+\caption{Stability under SemIf's perturbations and the full-permutation order-bias measurement. ``0/36'' bounds the true flip rate at $\le$9.6\%, not at zero.}
+\end{table}
+
+\subsection{Calibration and debiasing}
+\label{sec:calib}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{l r r r r r r}
+\toprule
+Method (Q8\_0, 144 rows, OOF temperature by group) & Acc & NLL & Brier & ECE-15 & AUROC(err) & AURC \\
+\midrule
+raw & 0.951 & 0.478 & 0.094 & 0.047 & 0.834 & 0.013 \\
+temperature (OOF) & 0.951 & 0.193 & 0.083 & 0.027 & 0.807 & 0.016 \\
+2-permutation average & 0.958 & 0.393 & 0.089 & 0.047 & 0.873 & 0.007 \\
+6-permutation average & 0.951 & 0.281 & 0.083 & 0.038 & \textbf{0.933} & \textbf{0.005} \\
+\textbf{6-permutation + temperature} & 0.951 & \textbf{0.158} & \textbf{0.075} & 0.037 & 0.906 & 0.006 \\
+contextual calibration, ``N/A'' \cite{zhao} & \hl{0.778} & 1.707 & 0.355 & 0.162 & 0.928 & 0.047 \\
+contextual, 3-placeholder average & 0.847 & 1.299 & 0.272 & 0.121 & 0.861 & 0.036 \\
+\quad damped $\alpha=0.25$ & 0.951 & 0.564 & 0.092 & 0.046 & 0.800 & 0.014 \\
+\bottomrule
+\end{tabular}
+\caption{Post-hoc calibration and debiasing. Accuracy is plain accuracy. Six orderings beat two on every proper score and give the best error detection: disagreement between orderings is the best uncertainty signal the frozen model has.}
+\label{tab:calib}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\textwidth}
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth,height=52mm,ybar,bar width=7mm,ymin=0,ymax=1.9,ylabel={NLL (lower is better)},xtick=data,
+ symbolic x coords={raw,temp,perm2,perm6,perm6+T,Zhao},x tick label style={font=\scriptsize,rotate=20,anchor=east},ymajorgrids,grid style={mist},
+ nodes near coords,every node near coord/.append style={font=\tiny}]
+\addplot[fill=teal!55,draw=teal] coordinates {(raw,0.478)(temp,0.193)(perm2,0.393)(perm6,0.281)(perm6+T,0.158)(Zhao,1.707)};
+\end{axis}
+\end{tikzpicture}
+\caption{Negative log-likelihood.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth,height=52mm,xlabel={coverage (fraction of decisions acted on)},ylabel={accuracy on covered},
+ xmin=0.45,xmax=1.02,ymin=0.94,ymax=1.005,ymajorgrids,grid style={mist},legend pos=south west,legend style={font=\scriptsize},x dir=reverse]
+\addplot[color=slate,mark=*] coordinates {(1.0,0.951)(0.95,0.978)(0.9,0.977)(0.8,0.983)(0.7,0.990)(0.5,0.986)};
+\addplot[color=teal,mark=square*] coordinates {(1.0,0.951)(0.95,0.971)(0.9,0.985)(0.8,0.983)(0.7,0.990)(0.5,1.000)};
+\legend{raw confidence,perm6 + temperature}
+\end{axis}
+\end{tikzpicture}
+\caption{Risk--coverage: abstain on the least confident.}
+\end{subfigure}
+\caption{Calibration recipes. Abstaining on the least-confident 10\% lifts accuracy to $\approx$0.98; the residual errors are confidently wrong ``should have said insufficient'' rows.}
+\end{figure}
+
+\paragraph{Why contextual calibration fails here.} With the evidence replaced by ``N/A'', ``[MASK]'' or the empty string, Gemma 4 chose \emph{insufficient} in 144/144/143 rows at mean max-probability 0.999. That is the \emph{correct} answer to an evidence-free question, not a label bias; dividing by it deletes the 36 rows whose gold answer genuinely is \emph{insufficient}. Rule: never apply content-free correction when the option set contains an ``insufficient / unknown / none'' answer that empty input should legitimately select --- which, for a decision model built around abstention, is most option sets.
+
+\paragraph{Error analysis.} 7 misses in 144 at Q8; six have gold = \emph{insufficient}, all at $p>0.97$: over-commitment, the classic instruct-model failure, and precisely what an abstention layer exists to catch. Six-permutation disagreement flags it better than raw confidence (AUROC 0.933 vs 0.834).
+
+% ================================================================ 6
+\section{Systems: prompt layout and the cache decide latency}
+\label{sec:systems}
+
+The first draft of this work concluded that llama-server had a ``$\sim$110\,ms fixed floor'' and ``no partial-prefix reuse''. Both were an artefact of one flag. Gemma 3/4 use sliding-window attention on most layers; llama.cpp's SWA cache cannot be rolled back to an earlier position, so when a request shares a prefix with the cached one the server silently re-evaluates the whole prompt (\code{timings.prompt\_n} never drops). \code{--swa-full} allocates a full cache for those layers and prefix reuse works as documented. The second lever is the prompt itself: whatever is \emph{constant across the decisions about to be made} must come first (Fig.~\ref{fig:layout}).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.2mm]
+\node[head,anchor=west] at (0,1.1) {A. evidence first (SemIf's layout): nothing to share across streamed words};
+\foreach \i/\s/\t in {0/toke/tr,1/toke/an,2/toke/scr,3/toke/ipt,4/toke/\ldots,5/toke/w$_k$,6/toke/sys,7/toke/opt,8/toke/A,9/toke/B,10/toke/\ldots,11/toke/P,12/toke/tail}
+  \node[\s] (a\i) at (\i*0.62,0) {\t};
+\node[lbl,anchor=west] at (8.4,0) {every request: $\sim$358 tokens evaluated $\to$ 148\,ms};
+\node[head,anchor=west] at (0,-1.3) {B. constant first, transcript last (this work): only the new word and the tail are evaluated};
+\foreach \i/\s/\t in {0/tokc/sys,1/tokc/opt,2/tokc/A,3/tokc/B,4/tokc/\ldots,5/tokc/P,6/tokc/tr,7/tokc/w$_1$,8/tokc/\ldots,9/tokc/w$_{k-1}$,10/toke/w$_k$,11/toke/",12/toke/tail}
+  \node[\s] (b\i) at (\i*0.62,-2.4) {\t};
+\node[lbl,anchor=west] at (8.4,-2.4) {every request: $\sim$11 tokens evaluated $\to$ 30\,ms};
+\node[tokc,anchor=west] at (0,-3.4) {}; \node[lbl,anchor=west] at (0.7,-3.4) {cached KV (shared with every earlier decision)};
+\node[toke,anchor=west] at (6.2,-3.4) {}; \node[lbl,anchor=west] at (6.9,-3.4) {evaluated this request};
+\end{tikzpicture}
+\caption{Prompt layout as a systems decision. The token count and timings are measured on the Gemma 4 12B Q8\_0 voice prompt (\S\ref{sec:voice}); with the SWA cache defaulted, layout B still evaluated all 394 tokens.}
+\label{fig:layout}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l r r r}
+\toprule
+Gemma 4 12B Q8\_0, voice prompt & tokens evaluated & prompt\_ms p50/p95 & HTTP round-trip p50/p95 \\
+\midrule
+default server, each streamed word & 394--397 (all) & 205 / --- & 230 / --- \\
+\code{--swa-full}, each streamed word & \textbf{11} & \textbf{30 / 36} & \textbf{45 / 56} \\
+\code{--swa-full}, first word of a new utterance & 11 & 31 & 45 \\
+\code{--swa-full}, after an action fired (33-token \code{prior} line) & 33 & $\sim$55 & $\sim$70 \\
+\code{n\_probs} 32 instead of 200 (letters fall off the list) & 11 & 32 & 49 (no gain) \\
+transcript first (SemIf order), cached & 358 & 148 / 179 & 221 / 252 \\
+fresh 142-token benchmark rows & 142 & 110 / 122 & 178 / 203 \\
+\midrule
+Qwen3-4B in-process: fresh / prefix reuse / 6-perm batch & 148 / 83 / 6$\times$148 & 75 / 54 / 204 & --- \\
+\bottomrule
+\end{tabular}}
+\caption{Latency. Per-decision cost is proportional to the uncached suffix ($\approx$2.7\,ms per token on the 12B Q8 here) plus $\approx$15\,ms of HTTP/JSON, removable in-process. Cached vs fresh in-process differed in argmax on 2/144 rows (TV 0.008) --- SemIf's documented regime.}
+\label{tab:latency}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.8\textwidth,height=50mm,xbar,bar width=5.5mm,xmin=0,xmax=260,xlabel={ms per streamed word (p50)},ytick=data,
+ symbolic y coords={fresh 142-tok rows,transcript first cached,default SWA cache,swa-full transcript last},y tick label style={font=\scriptsize},
+ xmajorgrids,grid style={mist},nodes near coords,every node near coord/.append style={font=\scriptsize},legend style={font=\scriptsize,at={(0.98,0.95)},anchor=north east}]
+\addplot[fill=teal!55,draw=teal] coordinates {(30,swa-full transcript last)(205,default SWA cache)(148,transcript first cached)(110,fresh 142-tok rows)};
+\addplot[fill=gold!50,draw=gold!80!black] coordinates {(45,swa-full transcript last)(230,default SWA cache)(221,transcript first cached)(178,fresh 142-tok rows)};
+\legend{engine compute,HTTP round-trip}
+\end{axis}
+\end{tikzpicture}
+\caption{Same model, same readout: the 7$\times$ comes from layout and cache configuration, not from a smaller model.}
+\end{figure}
+
+\paragraph{The crossover rule.} An encoder cannot cache context (every option changes the whole representation) and pays full context per decision; a decoder caches the constant part and scores short suffixes. One context $\to$ many decisions favours the cached decoder ($\sim$5$\times$); one $\to$ one favours the encoder ($\sim$10$\times$). The voice case is the degenerate version: the option list is the constant and each new word is the suffix.
+
+\paragraph{Precision.} Q4\_K\_M$\to$Q8\_0 moved probability mass on $\sim$3\% of decisions; every argmax that moved was a Q4 error being corrected, for $\sim$10\,ms. Weights at Q8 are the floor for calibration work; the KV cache and \code{lm\_head} stay unquantised; any change to quantisation or caching is a new model and must be re-measured against a fresh reference.
+
+% ================================================================ 7
+\section{Where it applies}
+\label{sec:apps}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\node[boxt,text width=34mm,minimum height=16mm] (hub) at (0,0) {\textbf{one pass}\\ state + typed question\\ $\to$ distribution + confidence};
+\node[box,text width=30mm] (a1) at (-5.6,2.4) {agent loop control\\ \scriptsize continue / review / stop};
+\node[box,text width=30mm] (a2) at (0,3.0) {tool / agent / model routing\\ \scriptsize shortlist top 3--7, escalate on doubt};
+\node[box,text width=30mm] (a3) at (5.6,2.4) {risky-action gate\\ \scriptsize asymmetric: block on low $P$(safe)};
+\node[box,text width=30mm] (a4) at (-6.2,0) {triage / classification\\ \scriptsize email, tickets, documents};
+\node[box,text width=30mm] (a5) at (6.2,0) {RAG relevance / guardrails\\ \scriptsize one state, many yes/no};
+\node[boxg,text width=30mm] (a6) at (-5.6,-2.4) {\textbf{voice $\to$ action}\\ \scriptsize streamed, early commit (\S\ref{sec:voice})};
+\node[box,text width=30mm] (a7) at (0,-3.0) {computer use\\ \scriptsize one scored pass replaces reasoning + action emission};
+\node[box,text width=30mm] (a8) at (5.6,-2.4) {evidence-supports-X / judge\\ \scriptsize NLI-style, flip rate matters};
+\foreach \n in {a1,a2,a3,a4,a5,a6,a7,a8} \draw[arr] (hub)--(\n);
+\end{tikzpicture}
+\caption{Decision types that fit the primitive. The one architectural finding shared by all of them: decomposition wins (a third-party audit of Jev: 62.6\% on ``is this phishing?'' versus 95\% on five narrow sub-questions plus a rule), so the primitive is one state $\to$ many independent typed questions --- the shape that needs prefix reuse.}
+\end{figure}
+
+\paragraph{Computer use, honestly.} Action spaces are tiny (OS-Atlas collapses 17 types to 10) and scoring a fixed action set is established (SayCan; ActionRank: 247 vs 632\,ms, $-2.6$ points, 0\% invalid). But per-step time on OSWorld-Human is planning 53--75\%, reflection 22--34\%, grounding and execution 2--4\%: the action \emph{name} is single-digit percent of the tokens, so replacing it alone attacks noise. The version that works replaces the whole reasoning-plus-action emission with one scored pass, gated by confidence, falling back to full reasoning on doubt, paired with attention-based grounding so coordinates need no tokens either. The voice loop below is the text-only special case of that design, and its commit policy transfers directly.
+
+\paragraph{What a small model can be trusted with.} Routers plateau at 60--75\% regardless of architecture and guardrail classifiers top out around F1 0.73--0.76. Trust: shortlisting, cheap-vs-expensive routing with escalate-on-doubt, recall-first pre-filters, cheap reversible actions on a calibrated early signal. Never: auto-approving irreversible actions, or escalation calls on novel cases --- the model may raise scrutiny, never lower it.
+
+% ================================================================ 8
+\section{Case study: voice command $\to$ instant action}
+\label{sec:voice}
+
+\subsection{Task and data}
+Sixteen actions (\code{open\_notes}, \code{type\_text}, \code{open\_youtube}, \code{play\_youtube}, \code{open\_spotify}, \code{play\_liked\_songs}, \code{play\_spotify}, \code{pause}/\code{resume}/\code{next}, \code{volume\_up}/\code{down}, \code{open\_browser}, \code{search\_web}, \code{close\_app}, \code{none}) and 220 labelled utterances in six styles: canonical (77), paraphrase (55), noisy with fillers and ASR-like errors (33), compound ``open X and do Y'' (22; first action as \code{intent}, second as \code{then}), ambiguous (11; accepted \code{alt}) and out-of-scope (22). Each row carries a human-annotated \emph{commit word}: the earliest word at which a listener knows the action. All 220 were synthesised to 16\,kHz WAV with Windows SAPI so the ASR stage could be timed on audio.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5mm]
+\node[boxk,text width=24mm] (mic) {mic / wav\\ \scriptsize 200\,ms chunks};
+\node[box,right=of mic,text width=30mm] (asr) {faster-whisper base.en\\ \scriptsize partial transcript, $\sim$40\,ms};
+\node[boxt,right=of asr,text width=44mm] (dec) {Gemma 4 12B Q8\_0\\ \scriptsize [instructions][16 actions][transcript]\\ only the transcript is uncached\\ $\sim$30\,ms compute / 45\,ms round trip};
+\node[boxg,right=of dec,text width=30mm] (pol) {commit policy\\ \scriptsize none = keep listening\\ action classes};
+\node[boxl,below=6mm of pol,text width=30mm] (act) {slot extraction (regex)\\ $\to$ OS action};
+\node[box,below=6mm of dec,text width=44mm] (res) {after an action fires: score only the words that followed, with \code{prior} = that action};
+\draw[arr](mic)--(asr);\draw[arr](asr)--(dec);\draw[arr](dec)--(pol);\draw[arr](pol)--(act);
+\draw[arr](pol.south west) to[out=200,in=20] (res.east);
+\draw[arr](res.north) -- (dec.south);
+\end{tikzpicture}
+\caption{The pipeline. Every partial transcript is one typed decision; the model never generates.}
+\end{figure}
+
+\subsection{Decision quality on the full utterance}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{l r r r}
+\toprule
+Gemma 4 12B Q8\_0, 220 utterances & transcript last (used) & transcript first (control) & ``still speaking'' wording \\
+\midrule
+Intent accuracy, strict & \textbf{0.905} & 0.877 & 0.868 \\
+Accepting \code{then} / \code{alt} labels & \textbf{0.982} & 0.955 & 0.968 \\
+canonical / paraphrase / noisy & 1.000 / 0.964 / 0.970 & 1.000 / 0.945 / 0.909 & 1.000 / 0.982 / 0.939 \\
+compound (strict; routes to the \emph{last} verb) & 0.273 & 0.318 & 0.045 \\
+ambiguous & 0.818 & 0.636 & 0.727 \\
+out-of-scope $\to$ \code{none}: recall / precision & 1.000 / \textbf{0.917} & 0.909 / 0.769 & 0.909 / 0.833 \\
+per-word cost (compute / round trip) & \textbf{30 / 45\,ms} & 148 / 221\,ms & 30 / 45\,ms \\
+\bottomrule
+\end{tabular}
+\caption{Moving the transcript after the option list improved accuracy \emph{and} removed 85\% of the latency. Telling the model the transcript may be cut off made it worse everywhere.}
+\end{table}
+
+\subsection{Streaming and early commit}
+Every word prefix of every utterance was scored (1,158 decisions). After one word the model says \code{none} at $p\approx1$ for 74\% of actionable utterances --- correctly: ``open'' is not yet a command (Fig.~\ref{fig:stream}). A naive ``commit when $p\ge0.9$'' therefore fires \code{none} at word~1 and is 17\% accurate. \hl{The single rule that makes early commit work: a confident \code{none} on a prefix never commits.}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.7\textwidth,height=55mm,xlabel={fraction of the utterance heard},ylabel={fraction of prefixes},xtick={0.1,0.3,0.5,0.7,0.9},xticklabels={0--20\%,20--40\%,40--60\%,60--80\%,80--100\%},ymin=0,ymax=1,ymajorgrids,grid style={mist},legend pos=north west,legend style={font=\scriptsize},x tick label style={font=\scriptsize}]
+\addplot[color=teal,mark=*,thick] coordinates {(0.1,0.222)(0.3,0.396)(0.5,0.567)(0.7,0.651)(0.9,0.845)};
+\addplot[color=coral,mark=square*,thick] coordinates {(0.1,0.744)(0.3,0.561)(0.5,0.356)(0.7,0.245)(0.9,0.034)};
+\legend{argmax = gold intent,argmax = none (``keep listening'')}
+\end{axis}
+\end{tikzpicture}
+\caption{What the model says on partial transcripts (198 actionable utterances, transcript-last prompt). Uncertainty is expressed as \code{none}, not as a flat distribution; non-\code{none} predictions at $p\ge0.9$ are 88\% correct on prefixes and 98\% on the earlier SemIf-order run.}
+\label{fig:stream}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l r r r r}
+\toprule
+Policy (198 actionable utterances) & commits & acc.\ at commit strict / accepting & mean commit word (of 5.4) & at/before human word \\
+\midrule
+naive $p\ge0.9$ (any label) & 100\% & 0.172 & 1.0 & 99\% \\
+non-none, $p\ge0.9$, stable 1 & 98.5\% & 0.918 / 0.928 & 2.5 & 93\% \\
+non-none, $p\ge0.99$, stable 1 & 97.0\% & 0.932 / 0.938 & 2.7 & 89\% \\
+non-none, $p\ge0.9$, stable 2 & 76.3\% & 0.960 / 0.967 & 3.5 & 21\% \\
+\bottomrule
+\end{tabular}}
+\caption{Commit policies. The wrong commits at stability 1 are almost all ``youtube \ldots'' $\to$ \code{open\_youtube} before ``play lofi'' arrives: refinable, not wrong, in a live assistant.}
+\end{table}
+
+\subsection{Action classes: commit early, refine later}
+The right question for a live assistant is not ``was the commit the gold label'' but ``did anything wrong \emph{and costly} happen''. Opening YouTube while the user is still speaking is the point; ``youtube play lofi'' then refines that open into a search rather than contradicting it. Actions are therefore graded by the cost of a wrong early fire (Fig.~\ref{fig:policy}).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=4mm]
+\node[boxk,text width=34mm] (in) {partial transcript $\to$ (pred, $p$)};
+\node[boxc,right=8mm of in,text width=30mm] (none) {pred = none\\ or $p<0.9$\\ \scriptsize keep listening};
+\node[boxl,below=of none,text width=30mm] (open) {OPEN actions\\ \scriptsize fire on 1 partial; cheap, reversible, refinable};
+\node[boxg,below=of open,text width=30mm] (media) {MEDIA, play\_liked\_songs\\ \scriptsize 2 consistent partials};
+\node[boxg,below=of media,text width=30mm] (slot) {play\_youtube/spotify, search\_web\\ \scriptsize open the app after 2 partials; search at end (query incomplete)};
+\node[boxc,below=of slot,text width=30mm] (def) {type\_text, close\_app\\ \scriptsize end of utterance only};
+\node[boxt,right=10mm of media,text width=36mm] (res) {after any fire: cursor $\to$ here;\\ later words are a new decision\\ with \code{prior} = fired action};
+\draw[arr](in)--(none);\draw[arr](in.east) to[out=0,in=180] (open.west);\draw[arr](in.east) to[out=0,in=180] (media.west);\draw[arr](in.east) to[out=0,in=180] (slot.west);\draw[arr](in.east) to[out=0,in=180] (def.west);
+\draw[arr](open.east)--(res.west);\draw[arr](media.east)--(res.west);\draw[arr](slot.east)--(res.west);
+\node[lbl,right=2mm of res.north east,anchor=west,text width=30mm] {refinement graph:\\ open\_youtube $\to$ play\_youtube\\ open\_spotify $\to$ play\_*\\ open\_browser $\to$ search\_web\\ open\_notes $\to$ type\_text};
+\end{tikzpicture}
+\caption{The class-aware commit/refine policy (\code{stream\_policy.py}, applied incrementally in the live loop).}
+\label{fig:policy}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{X L{46mm} R{22mm}}
+\toprule
+Class-aware policy, 198 actionable utterances & transcript last & transcript first \\
+\midrule
+Utterances with a \textbf{harmful} action (not in accepted set nor an ancestor of it) & \textbf{1} (0.5\%) --- ``clothes the notepad'', an ASR-error row & 2 \\
+Final action consistent with the label & 0.985 & 0.965 \\
+Mean word of first action & 3.6 & 3.6 \\
+First action at or before the human commit word & 53\% & 53\% \\
+Actions per utterance & 1.30 & 1.28 \\
+Out-of-scope utterances (22) with a false action & \textbf{2} & 4 \\
+Compound rows: residual routes to the second action, without / with \code{prior} & 20/22 / \textbf{22/22} & --- \\
+\bottomrule
+\end{tabularx}
+\caption{Harm-oriented evaluation. The two false actions on out-of-scope speech are ``youtube is down again'' $\to$ YouTube opens at word 1 and ``my notes from the meeting \ldots'' $\to$ Notepad at word 2: prefixes that \emph{are} commands until the sentence continues. That is end-pointing, a property of language, mitigated by cheap-action-first and an undo window --- not by a better classifier.}
+\end{table}
+
+\subsection{The ASR stage}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{X R{24mm} R{24mm}}
+\toprule
+faster-whisper, FP16 GPU, 200\,ms chunks, re-decoding the growing buffer, synthetic speech & base.en & small.en \\
+\midrule
+Partial decode latency p50 / p95 & \textbf{41 / 131\,ms} & 120 / 207\,ms \\
+WER vs command text / exact match & 7.8\% / 75\% & 7.3\% / 77\% \\
+WER, noisy style / all other styles & 24\% / $\le$10\% & 23\% / $\le$7\% \\
+Final transcript's words already stable at 50\% / 75\% of the utterance & 81\% / 97\% & 84\% / 98\% \\
+Intent from ASR transcript agrees with intent from true text & \textbf{97.3\%} & 97.7\% \\
+Intent accuracy from ASR / from text & 0.900 / 0.909 & 0.905 / 0.909 \\
+\bottomrule
+\end{tabularx}
+\caption{ASR costs about one point of intent accuracy; small.en buys under one point for 3$\times$ the latency. The six disagreements are genuine mis-hearings (``quit chrome'' $\to$ ``quick crow'', ``pause'' $\to$ ``paw'').}
+\end{table}
+
+\subsection{End to end}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=46mm,y=10mm]
+\draw[line width=1pt,color=slate,-{Stealth}] (0,0) -- (3.3,0);
+\foreach \t/\l in {0/0, 0.5/500\,ms, 1/1\,s, 1.5/1.5\,s, 2/2\,s, 2.5/2.5\,s, 3/3\,s} { \draw[color=slate] (\t,-0.08)--(\t,0.08); \node[lbl] at (\t,-0.35) {\l}; }
+\draw[decorate,decoration={brace,amplitude=3pt},color=navy] (0,0.35) -- (2.0,0.35) node[midway,above=3pt,font=\scriptsize\color{navy}] {user speaking: ``open notes and type hello world''};
+\node[box,font=\scriptsize,text width=26mm] (n0) at (0.35,-1.7) {\textbf{+493\,ms} partial ``open note''\\ $\to$ open\_notes, $p=1.0$};
+\draw[arr] (n0.north) -- (0.493,-0.1);
+\node[boxl,font=\scriptsize,text width=26mm] (n1) at (0.9,2.0) {\textbf{+652\,ms} Notepad launched\\ (1.3\,s before speech ends)};
+\draw[arrn] (n1.south west) -- (0.652,0.1);
+\node[box,font=\scriptsize,text width=28mm] (n2) at (1.75,-1.7) {\textbf{+1.6\,s} residual ``and type hello world'' $\to$ type\_text (deferred)};
+\draw[arr] (n2.north) -- (1.614,-0.1);
+\node[boxg,font=\scriptsize,text width=26mm] (n3) at (2.75,2.0) {\textbf{+2.6\,s} end of speech\\ types ``hello world''};
+\draw[arrn] (n3.south) -- (2.601,0.1);
+\end{tikzpicture}
+\caption{Live run from audio (\code{voice\_demo.py --wav}, timings from the recording's own clock, contended GPU). The first action lands $\sim$1.3\,s before the user stops speaking; the deferred action executes with the exact slot at end of speech.}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{l r l}
+\toprule
+Stage, per streamed word & ms & note \\
+\midrule
+ASR partial & $\sim$40 & base.en GPU; grows with buffer length \\
+decision compute & $\sim$30 & 11 uncached tokens on the 12B Q8; 2.7\,ms/token \\
+HTTP + JSON & $\sim$15 & removable with an in-process loop \\
+policy + slot extraction & $<1$ & pure Python; slots regex 90/93 exact on labelled rows \\
+\midrule
+\textbf{word $\to$ action dispatched} & \textbf{$\sim$85} & before the next word has finished \\
+\bottomrule
+\end{tabular}
+\caption{The measured budget. Humans read $\sim$100\,ms as instantaneous; the decision is inside that. What remains outside it is end-pointing for the deferred actions (600\,ms of silence) and OS launch time.}
+\end{table}
+
+\paragraph{What this adds over speech-to-intent engines.} Rhino/Snips-class systems have delivered 12--60\,ms on fixed intent sets since 2019. What the one-pass layer adds: an \emph{editable, zero-shot} action set (add ``open Notion'' by editing one JSON line, no retraining), a calibrated early-commit signal with a measured harm rate, multi-step decisions on the residual with a \code{prior}, and one primitive shared with the LLM fallback.
+
+% ================================================================ 8b
+\section{Head-to-head with Laya, on Laya's own benchmarks}
+\label{sec:laya}
+
+Laya (Convai Innovations, Apache-2.0) is the strongest open ``System One'' project besides SemIf and the one that claims to beat Jev. It is a different design: a bidirectional \emph{encoder} (ModernBERT-large 421M for English, mmBERT-base 322M for 100+ languages) with one \code{[MASK]} marker per option --- \code{[CLS] type+instructions [SEP] [MASK] opt$_0$ [MASK] opt$_1$ \ldots\ [SEP] state [SEP]} --- a two-layer head that scores the marker positions, and training by reinforcement learning against a proper scoring rule (log + spherical + ranked-probability score, ``RLCD''). Confidence is $1-H(p)/\log k$; one temperature per (question type, option-count bucket). It reports 33\,ms per question on a T4, 45 of 51 languages usable, ECE 0.081 after temperature refit, and 0.766 on the typed-decisions benchmark against Jev's published 0.727. Its README also states its limits plainly: the base checkpoints are near chance zero-shot on typed-decisions (0.36 vs 0.318 random), the 0.766 comes from a checkpoint fine-tuned on that benchmark's own training split, choice questions should stay under $\sim$20 options (Banking77: 0.425), and it ships over-confident.
+
+Laya could not run Jev (no API access), so every Laya-vs-Jev number is a cross-benchmark comparison. We can do better than that here: \textbf{Laya's three checkpoints and Tez answered byte-identical rows on the same GPU} (\code{experiments/bench\_h2h.py}), using Laya's own datasets and, where it publishes one, its own protocol (MASSIVE: first 100 test rows per language, 20 options = gold + 19 sampled with seed 13, shuffled). Tez is the frozen Gemma 4 12B Q8\_0 with the one-pass letter readout, zero-shot, options first and state last; questions with more than 26 options (Banking77) are run as a chunked tournament (four chunks of $\le$20 plus ``none of these'', winners meet in a final round; five passes). Laya runs in-process with its shipped temperatures. Metrics are Laya's (accuracy, macro-F1, ECE-15, Brier, NLL, mean confidence, accuracy at 50\% coverage) plus a 2-fold out-of-fold temperature refit for every model, option-order flip rate on the first 100 rows of each choice task, and wall-clock ms per decision. Jev's numbers are third-party published and are shown only where they exist.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../figures/tez_vs_laya_vs_jev.pdf}
+\caption{Accuracy on Laya's public datasets, same rows, same machine. ``Laya (routed)'' is the checkpoint Laya's own \code{Router} would pick (English $\to$ \code{laya}, otherwise \code{laya-multilingual}). AG News and BoolQ are in Laya's training mix.}
+\label{fig:h2h}
+\end{figure}
+
+\begin{table}[H]
+\centering\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l r r r r r r r r r r}
+\toprule
+& \multicolumn{4}{c}{accuracy} & \multicolumn{2}{c}{ECE-15 shipped $\to$ refit} & \multicolumn{2}{c}{order flip} & \multicolumn{2}{c}{ms / decision} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+task ($n$) & \textbf{Tez} & laya & laya-ml & laya-td & Tez & laya & Tez & laya & Tez & laya \\
+\midrule
+AG News (400; in Laya's training mix) & 0.880 & \textbf{0.932} & 0.948 & 0.932 & 0.11$\to$0.04 & 0.03$\to$0.03 & 0.03 & 0.00 & 65 & 39 \\
+DAIR Emotion (400) & 0.540 & \textbf{0.550} & 0.487 & 0.547 & 0.43$\to$0.06 & 0.36$\to$0.07 & 0.07 & 0.06 & 60 & 36 \\
+Banking77 (400, 77 options) & \textbf{0.713} & 0.395 & 0.357 & 0.388 & 0.27$\to$0.07 & 0.52$\to$0.07 & --- & --- & 589 & 56 \\
+SST-5 (400, ordinal score) & \textbf{0.512} & 0.362 & 0.280 & 0.460 & 0.47$\to$0.09 & 0.29$\to$0.10 & --- & --- & 57 & 45 \\
+BoolQ (400, noul; in Laya's mix) & \textbf{0.850} & 0.843 & 0.782 & 0.835 & 0.13$\to$0.03 & 0.08$\to$0.02 & --- & --- & 136 & 37 \\
+prompt-injections (116, noul, held out) & \textbf{0.759} & 0.672 & 0.569 & 0.647 & 0.24$\to$0.07 & 0.31$\to$0.03 & --- & --- & 64 & 50 \\
+MASSIVE intent, English (100, 20 options) & \textbf{0.900} & 0.830 & 0.710 & 0.820 & 0.09$\to$0.05 & 0.13$\to$0.09 & \textbf{0.07} & 0.18 & 174 & 45 \\
+MASSIVE, macro over 11 languages & \textbf{0.885} & 0.354 & 0.524 & 0.345 & 0.10 & 0.49 / 0.30 & & & 182 & 38 \\
+\quad Khmer & \textbf{0.790} & 0.000 & 0.210 & 0.050 & & & & & & \\
+XNLI, English (100) & 0.730 & 0.900 & 0.860 & \textbf{0.920} & 0.26$\to$0.11 & 0.05$\to$0.05 & & & 73 & 35 \\
+XNLI, macro over 10 languages & 0.699 & 0.609 & \textbf{0.794} & --- & & & & & & \\
+typed-decisions (2,000 decisions) & \textbf{0.704}$^{\dagger}$ & 0.362 & 0.352 & 0.766$^{\ddagger}$ & 0.26$\to$0.05 & 0.17$\to$0.04 & & & 248 & 36 \\
+\quad soft accuracy vs the teacher distribution & \textbf{0.575} & 0.331 & 0.328 & 0.471 & \multicolumn{6}{l}{Jev published: 0.727 accuracy, 0.580 soft accuracy} \\
+\bottomrule
+\end{tabular}}
+\caption{Same rows, same GPU. $^{\dagger}$zero-shot; $^{\ddagger}$fine-tuned on this benchmark's training split (Laya's own caveat). Laya's published figures reproduce within a point or two in our harness (e.g.\ typed-decisions base 0.362 vs their 0.362, fine-tuned 0.766 vs 0.766, Khmer 0.000 vs 0.000), which validates the comparison.}
+\label{tab:h2h}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}\includegraphics[width=\textwidth]{../figures/languages.pdf}\caption{MASSIVE intent, 20 options, per language.}\end{subfigure}\hfill
+\begin{subfigure}{0.47\textwidth}\includegraphics[width=\textwidth]{../figures/typed_decisions.pdf}\caption{typed-decisions, with Laya's reference points.}\end{subfigure}
+\caption{Laya's two headline charts, redrawn with Tez on the same rows.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}\includegraphics[width=\textwidth]{../figures/calibration.pdf}\caption{ECE as shipped vs after a per-task temperature (2-fold OOF).}\end{subfigure}\hfill
+\begin{subfigure}{0.49\textwidth}\includegraphics[width=\textwidth]{../figures/order_flip.pdf}\caption{Option-order flip rate (first 100 rows, options reversed).}\end{subfigure}
+\caption{Calibration and order robustness, every model, same rows.}
+\end{figure}
+
+\paragraph{What the head-to-head shows.}
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{Zero-shot beats the trained encoders on six of nine English tasks} and ties one (Emotion, 0.540 vs 0.550). The exceptions are exactly the tasks in Laya's training mix or family --- AG News (0.880 vs 0.932) and NLI (XNLI-en 0.730 vs 0.900). That is the expected shape: a 400M encoder learns a task it was trained on; a frozen 12B decoder brings the knowledge to a task it has never seen.
+\item \textbf{typed-decisions: 0.704 zero-shot}, against Laya's base checkpoints at 0.36 (below the 0.461 majority-class baseline), Jev's published 0.727, and 0.766 for the checkpoint fine-tuned on this benchmark's own training split. On \emph{soft} accuracy against the teacher's full distributions Tez is at 0.575 --- level with Jev's 0.580 and above the fine-tuned Laya (0.471). Nothing here was trained on the benchmark, or on anything.
+\item \textbf{Multilingual is not a checkpoint problem.} One frozen model: MASSIVE macro 0.885 over eleven languages spanning six scripts, every language above 0.79, against 0.524 for Laya's multilingual checkpoint and 0.354 for its English one. Laya's Khmer result (0.000 at 0.95 confidence) reproduces exactly in our harness; Tez scores 0.790 there. Laya's answer to this is a script-detecting \code{Router} in front of two encoders; the decoder does not need one.
+\item \textbf{Large option sets are a prompt-shape problem, not a ceiling.} Laya's 77-option collapse (0.395; its own explanation is the shared 192-token head budget) is not shared by the readout: a chunked tournament reaches 0.713 in five cached passes, with no embedding shortlist. Jev's published 0.870 remains ahead.
+\item \textbf{Order robustness at 20 options: 0.07 vs 0.15--0.20.} Laya reports its own flip rate as worse than Jev's 0.13 and suggests more shuffling during training; the frozen 12B is already under it, and permutation averaging (\S\ref{sec:calib}) would take it lower.
+\item \textbf{Calibration: as shipped, Tez is the least over-confident (mean ECE 0.212 vs 0.323 / 0.253); after one temperature per task all four land at 0.07--0.10.} Laya's calibration advantage in its README is an advantage \emph{after} refit, and refit is a lookup any model gets.
+\item \textbf{Where Laya wins: speed and trained tasks.} Laya answers in 25--50\,ms in-process; Tez takes 57--250\,ms here because on these tasks the \emph{state} is the variable part and is evaluated every time (the typed-decisions states are long JSON). This is the crossover rule of \S\ref{sec:systems} in action: one state $\to$ one question favours the encoder; one state $\to$ many questions, or a constant option set with a short suffix (the voice loop, 30\,ms), favours the cached decoder. Laya also has no streaming or early-commit contract, and its own README reports moderation at 0.53 on held-out data and \code{score} as its weakest primitive (SST-5 0.372; Tez 0.512).
+\end{enumerate}
+
+\paragraph{The abstention contract, measured on 2,000 decisions.} typed-decisions is large enough to fit the conformal layer of \S\ref{sec:method} properly: split conformal on the score $1-p(\text{gold})$, Mondrian by question type, calibrated on half the \emph{cases} and evaluated on the other half (both folds, \code{experiments/conformal\_td.py}). At target coverage 90\% the sets cover 90.1\% of gold answers; Tez \emph{acts} (set of size one) on 52\% of decisions with 0.853 accuracy on those, and escalates the rest; at 95\% coverage it acts on 37\% at 0.912. The fine-tuned Laya checkpoint acts on 63\% at 0.876; Laya's base checkpoint can act on only 5\%. Zero fallbacks (empty sets) occurred. This is the contract Jev's ``confidence'' does not provide: a coverage guarantee rather than a concentration statistic.
+
+\paragraph{A negative result: the small-to-large cascade.} A FrugalGPT-style cascade --- answer with Gemma 3 4B (40\,ms) and escalate to the 12B (110\,ms) when the 4B's two orderings disagree --- reaches 0.854 on SemIf's rows at a mean 117\,ms: \emph{slower and less accurate} than the 12B alone (0.951 at 110\,ms), because the 4B is only 2.7$\times$ cheaper and disagrees on a third of rows. Gating on the 4B's raw confidence is worse still (it is confident when wrong). On this hardware the cascade is not worth building; a cascade needs a $\ge$10$\times$ cost gap and a small model that knows when it does not know (\code{experiments/cascade\_analysis.py}).
+
+\paragraph{What Tez does that Laya does not.} Zero-shot strength on unseen schemas (an editable option set needs no retraining); one model for every language and script; large option sets by decomposition; a measured harm-rate streaming policy; permutation-disagreement as an uncertainty signal that does not rely on the model's own confidence; the constant-first prompt layout with verified KV reuse; and an audit trail (every number in this report has a manifest, a CI or a paired test). What Laya does that Tez does not, and that the roadmap should take from it: a shipped, pip-installable runtime with typed primitives and presets, the proper-scoring-rule fine-tuning recipe with a Kaggle notebook, and a multilingual benchmark over 51 languages rather than our eleven. Fine-tuning a decoder backbone on own-traffic data with the same proper-scoring objective is the obvious next experiment; it was not attempted here, so every Tez number above is a floor.
+
+% ================================================================ 9
+\section{The open landscape and what would make this the best open one}
+\label{sec:landscape}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{l l l X}
+\toprule
+Project & Base & Licence & What it does not do \\
+\midrule
+SemIf & Qwen3.5-4B frozen, logit read & MIT & multi-label, abstain, batch API, debiasing, built-in calibration, streaming \\
+Laya & ModernBERT-L 421M / mmBERT 322M, RLCD & Apache-2.0 & zero-shot near chance on typed-decisions; $>$20 options; 512/1024 ctx; no streaming (measured head-to-head in \S\ref{sec:laya}) \\
+openJev-verdict-2.0 & ModernBERT 150M & NOASSERTION & 512 ctx; 48\% on TypeSafe's public evals \\
+djev & DiffusionGemma 26B-A4B & Apache-2.0 & needs 24\,GB; calibration 65.4 \\
+decider & Qwen3.5-2B SFT+RL & Apache-2.0 & hard tier 0.459; English only \\
+\bottomrule
+\end{tabularx}
+\caption{Nobody ships: an abstain option with its own calibration; multi-label; a published $p_\text{correct}$ head fitted on a published set; order-robust options as a feature (worth +10 points on a 4B); a decision-log format; a streaming/early-commit contract; a benchmark with runtime option sets. That list is the product.}
+\end{table}
+
+\paragraph{The bar.} No independent, contamination-resistant benchmark for this class exists yet; JevBench is closest but has LLM-written ground truth and an assumed latency for self-hosted models. This report's numbers are on SemIf's public fixtures and are a reproduction, not a leaderboard. The scorecard to adopt: balanced accuracy with group-bootstrap CIs and \emph{paired} tests; Brier and NLL primary; flip rates with Wilson CIs; AUGRC and accuracy-at-coverage; latency with \code{prompt\_n} logged, fresh and cached; determinism across runs; a private human-authored hold-out hashed before the first checkpoint exists.
+
+% ================================================================ 10
+\section{Architecture and roadmap}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=3.5mm]
+\node[boxk,text width=120mm] (in) {state + typed questions (Jev-compatible wire shape + \code{multi}, implicit \code{\_\_none\_\_}, \code{prior}, \code{calibration\_id})};
+\node[box,below=of in,text width=58mm,xshift=-31mm] (t1) {Tier 1: encoder fast path\\ \scriptsize one $\to$ one, fixed schema, CPU, 15--100\,ms};
+\node[boxt,below=of in,text width=58mm,xshift=31mm] (t2) {Tier 2: cached-decoder logit readout\\ \scriptsize constant-first prompt, GPU, $\sim$30\,ms per suffix};
+\node[boxg,below=of t2,text width=120mm,xshift=-31mm] (cal) {symbol-logit readout $\to$ batched permutation debias $\to$ per-schema temperature $\to$ Mondrian conformal set};
+\node[boxl,below=of cal,text width=120mm] (act) {size 1: \textbf{act} \quad size $>$1: \textbf{escalate} \quad empty: \textbf{full LLM} \quad streaming: \code{none} = keep listening; action classes gate early commit};
+\node[box,below=of act,text width=120mm] (log) {decision log: inputs hash, options, distribution, chosen action, outcome $\to$ shadow-eval loop, own-traffic training later};
+\draw[arr](in)--(t1);\draw[arr](in)--(t2);\draw[arr](t1)--(cal);\draw[arr](t2)--(cal);\draw[arr](cal)--(act);\draw[arr](act)--(log);
+\end{tikzpicture}
+\caption{Two tiers, one contract. v1 is a harness around a frozen model; the evidence says post-hoc calibration is enough and that the frozen 12B (or a 4B with batched permutations) already reproduces and exceeds the published open baseline.}
+\end{figure}
+
+\begin{enumerate}
+\item Backbone by symbol-binding screen (Gemma 4 12B passes; Q8\_0 for calibration-grade mass; a 4B with batched permutation averaging is the budget option, within noise on this data).
+\item Readout at the template's exact answer position with single-token slots; \code{n\_probs} large enough for every letter; top-k always logged.
+\item Six-ordering permutation averaging in one batch; PriDe on a traffic slice once volume allows; never content-free correction on option sets with an abstain answer.
+\item Per-schema out-of-fold temperature, then Mondrian conformal for the act / escalate / fall-back contract; publish risk--coverage.
+\item Prompt layout as part of the schema: constant first, variable last, \code{prior} for multi-step episodes; cache reuse verified by \code{prompt\_n}.
+\item Decision log and shadow-eval loop; sample auto-acted cases to humans too, not only escalations.
+\item Only then, optionally: LoRA on the \emph{base} model with a proper scoring rule on label-restricted logits, permutation-augmented, gated on an OOD hold-out. Never on Jev outputs; never on a benchmark's public tier that is reported.
+\end{enumerate}
+
+% ================================================================ 11
+\section{Audit and limitations}
+\label{sec:audit}
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{X l X}
+\toprule
+Finding on the first draft & Severity & Resolution \\
+\midrule
+Balanced accuracy keyed on gold \emph{position} instead of option \emph{id} & \textbf{high} & fixed; all tables regenerated (Q8 0.953$\to$0.943, Q4 0.932$\to$0.918, Gemma 3 0.665$\to$0.646, Llama 0.458$\to$0.358) \\
+``12B beats the published baseline by 14 points'' framed as a method effect & medium & SemIf lists a 27B at 0.958; 4B + permutations is within noise of the 12B \\
+Q4 vs Q8 difference stated as a result & medium & McNemar $p=0.25$; reported as not significant \\
+No confidence intervals on flip rates & medium & Wilson intervals; ``0/36'' bounds $\le$9.6\% \\
+Labels described as authored & low & stated as model-reviewed \\
+System text folded into the user turn & low & native system-turn rendering re-scored: 1 row of 144 changes \\
+``$\sim$110\,ms floor / no prefix reuse'' & \textbf{high} & sliding-window cache; \code{--swa-full}; 30\,ms per word measured \\
+Determinism unverified & low & three runs byte-identical \\
+\bottomrule
+\end{tabularx}
+\caption{What the audit found and what changed.}
+\end{table}
+
+\paragraph{Limitations.} $n=144$ decisions and 36 perturbation pairs: CIs are wide and several comparisons are underpowered. The voice data is self-authored and the audio is synthetic, so ASR error is a lower bound and field noise will be worse; the out-of-scope set is small (22). Jev itself was not measured on these rows (its terms and its hosted-only access make a like-for-like local comparison impossible); comparisons with Jev are on independent public numbers only. The compound-command labelling convention (first verb as the gold intent) makes strict accuracy on that style look worse than the behaviour is; the accepting and residual metrics are the meaningful ones. Timings are from one laptop GPU and one engine build.
+
+\section{Conclusion}
+The one-pass readout is a small idea with a large surface: it turns any local instruction-tuned decoder into a typed decision function with a distribution attached, and the properties that matter --- accuracy, order robustness, calibration, latency --- are all measurable and, on this evidence, all engineerable without training. A frozen 12B reproduces and exceeds the published open baseline; the cheapest accuracy in the stack is permutation averaging, not scale; the cheapest latency is prompt layout, not a smaller model; and the piece nobody ships --- the abstention and early-commit contract --- is what turns the distribution into an action policy that opens the notes app while you are still asking for it.
+
+\begin{thebibliography}{99}\small
+\bibitem{semif} T.~Lee. \emph{SemIf}, github.com/TheoLeeCJ/SemIf, MIT, Sept.~2026.
+\bibitem{mcsb} J.~Robinson, D.~Wingate. Leveraging large language models for multiple choice question answering. arXiv:2210.12353.
+\bibitem{twostage} Wong, Nouwen, Gatt. Two-stage symbol binding in multiple-choice answering. arXiv:2601.03914.
+\bibitem{pet} T.~Schick, H.~Schütze. Exploiting cloze questions for few-shot text classification. arXiv:2001.07676.
+\bibitem{lmbff} T.~Gao, A.~Fisch, D.~Chen. Making pre-trained language models better few-shot learners. arXiv:2012.15723.
+\bibitem{sfc} A.~Holtzman et al. Surface form competition. arXiv:2104.08315.
+\bibitem{zhao} Z.~Zhao et al. Calibrate before use. arXiv:2102.09690.
+\bibitem{pride} C.~Zheng et al. Large language models are not robust multiple choice selectors (PriDe). arXiv:2309.03882.
+\bibitem{leeson} Lee, Son. Position bias grows with option count. arXiv:2604.14634.
+\bibitem{gap} Mind the gap: space-folded vs bare label tokens. arXiv:2509.15020.
+\bibitem{awsdt} Decision tokens and post-hoc calibration. arXiv:2601.13284.
+\end{thebibliography}
+
+\appendix
+\section{Reproduction}
+\begin{small}
+\begin{verbatim}
+llama-server.exe -m <gguf> -ngl 99 -c 2048 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui --swa-full
+curl http://127.0.0.1:8091/props                       # assert model_path before every run
+py experiments/run_direct.py --data data/semif/authored144.jsonl --out results/a.jsonl --template gemma4
+py experiments/run_direct.py --data data/semif/authored144.jsonl --out results/a_rev.jsonl --reverse
+py experiments/run_direct.py --data data/semif/perturbations108.jsonl --out results/p.jsonl
+py experiments/metrics.py --pred results/a.jsonl ;  py experiments/metrics.py --pred results/p.jsonl --base results/a.jsonl
+py experiments/calibrate.py --pred results/a.jsonl --cf results/a_cf.jsonl --rev results/a_rev.jsonl
+py experiments/perm_analysis.py --tag <tag>
+py experiments/run_hf.py --model Qwen/Qwen3.5-4B --data data/semif/authored144.jsonl --out results/q.jsonl --mode batchperm
+py experiments/run_voice_fast.py --variant final --order last --out results/vf.jsonl
+py experiments/stream_policy.py --stream results/vf_stream.jsonl --full results/vf.jsonl
+py experiments/residual_check.py --prior --out results/residual.json
+py experiments/asr_bench.py --model base.en --server http://127.0.0.1:8091 --out results/asr.jsonl
+py experiments/voice_demo.py --wav data/voice/wav/v013.wav          # --text / --mic; --execute to act
+\end{verbatim}
+\end{small}
+Every run writes a manifest (data SHA-256, model path, settings, latency percentiles). Runs later found to have hit the wrong model are kept under \code{results/INVALID\_wrongmodel\_*} and excluded from every table.
+
+\end{document}

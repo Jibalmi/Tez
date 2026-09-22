@@ -1,0 +1,20 @@
+{
+  "tag": "qwen35-4b-bf16-hf",
+  "model": "Qwen/Qwen3.5-4B",
+  "dtype": "bf16",
+  "mode": "fresh",
+  "rows": 144,
+  "data": "data/semif/authored144.jsonl",
+  "data_sha256": "8162d1c73f925af64453f1ec05ef36d583b3815bf698e60f0d454bd11537e079",
+  "load_seconds": 7.953944299995783,
+  "wall_seconds": 34.943720099996426,
+  "decisions_per_second": 4.1209121292158795,
+  "forward_ms_p50": 223.89649999968242,
+  "forward_ms_p95": 386.9078999996418,
+  "mean_prompt_tokens": 148.11805555555554,
+  "mean_letter_mass": 0.9994041952821944,
+  "top1_not_slot_rows": 0,
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "peak_vram_gb": 8.505903104,
+  "timestamp": "2026-09-22T12:47:53"
+}

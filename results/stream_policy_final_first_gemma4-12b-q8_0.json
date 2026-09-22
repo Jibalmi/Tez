@@ -1,0 +1,94 @@
+{
+  "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+  },
+  "actionable": 198,
+  "harmful_rate": 0.010101010101010102,
+  "harmful": 2,
+  "final_action_consistent_rate": 0.9646464646464646,
+  "mean_first_action_word": 3.5677083333333335,
+  "first_action_at_or_before_human": 0.5252525252525253,
+  "mean_actions_per_utterance": 1.2777777777777777,
+  "oos_rows": 22,
+  "oos_false_actions": 4,
+  "oos_false_action_rate": 0.18181818181818182,
+  "oos_false_detail": [
+    [
+      "v207",
+      [
+        [
+          1,
+          "open_youtube"
+        ]
+      ]
+    ],
+    [
+      "v208",
+      [
+        [
+          7,
+          "type_text"
+        ]
+      ]
+    ],
+    [
+      "v213",
+      [
+        [
+          5,
+          "search_web"
+        ]
+      ]
+    ],
+    [
+      "v215",
+      [
+        [
+          2,
+          "open_notes"
+        ]
+      ]
+    ]
+  ],
+  "harmful_detail": [
+    {
+      "id": "v046",
+      "style": "canonical",
+      "seq": [
+        [
+          3,
+          "open_spotify"
+        ],
+        [
+          5,
+          "open_youtube"
+        ],
+        [
+          7,
+          "play_youtube"
+        ]
+      ],
+      "accepted": [
+        "play_youtube"
+      ],
+      "text": "play lofi hip hop radio on youtube"
+    },
+    {
+      "id": "v197",
+      "style": "noisy",
+      "seq": [
+        [
+          3,
+          "open_notes"
+        ]
+      ],
+      "accepted": [
+        "close_app"
+      ],
+      "text": "clothes the notepad"
+    }
+  ]
+}

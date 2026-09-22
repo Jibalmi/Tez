@@ -1,0 +1,309 @@
+{
+  "tag": "gemma4-12b-q8_0",
+  "variant": "partial",
+  "order": "last",
+  "cache": true,
+  "n": 220,
+  "wall_s": 53.63217969999823,
+  "intent_accuracy": 0.8681818181818182,
+  "intent_accuracy_alt_ok": 0.8727272727272727,
+  "intent_accuracy_alt_or_then_ok": 0.9681818181818181,
+  "accuracy_by_style": {
+    "canonical": 1,
+    "paraphrase": 0.9818181818181818,
+    "noisy": 0.9393939393939394,
+    "compound": 0.045454545454545456,
+    "ambiguous": 0.7272727272727273,
+    "oos": 0.9090909090909091
+  },
+  "none_recall": 0.9090909090909091,
+  "none_precision": 0.8333333333333334,
+  "full_prompt_n_p50": 11,
+  "full_prompt_ms_p50": 30.231,
+  "full_http_ms_p50": 44.3881999963196,
+  "missing_letter_rows": 23,
+  "top1_not_slot_rows": 0,
+  "errors": [
+    {
+      "id": "v014",
+      "text": "open notes and type buy milk eggs and bread",
+      "gold": "open_notes",
+      "pred": "type_text",
+      "p": 0.986,
+      "style": "compound"
+    },
+    {
+      "id": "v015",
+      "text": "open notepad and write dentist appointment friday at ten",
+      "gold": "open_notes",
+      "pred": "type_text",
+      "p": 0.519,
+      "style": "compound"
+    },
+    {
+      "id": "v016",
+      "text": "open the notes app and type call mum tonight",
+      "gold": "open_notes",
+      "pred": "type_text",
+      "p": 0.995,
+      "style": "compound"
+    },
+    {
+      "id": "v017",
+      "text": "open notes then type meeting moved to thursday",
+      "gold": "open_notes",
+      "pred": "type_text",
+      "p": 0.999,
+      "style": "compound"
+    },
+    {
+      "id": "v018",
+      "text": "launch notepad and type pick up dry cleaning",
+      "gold": "open_notes",
+      "pred": "type_text",
+      "p": 0.998,
+      "style": "compound"
+    },
+    {
+      "id": "v042",
+      "text": "open youtube and play never gonna give you up",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v043",
+      "text": "open youtube and play lofi beats",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v044",
+      "text": "open youtube and search for how to tie a tie",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v045",
+      "text": "open youtube then play the latest mkbhd video",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v068",
+      "text": "open spot if i",
+      "gold": "open_spotify",
+      "pred": "none",
+      "p": 0.983,
+      "style": "noisy"
+    },
+    {
+      "id": "v069",
+      "text": "open spotify and play my liked songs",
+      "gold": "open_spotify",
+      "pred": "play_liked_songs",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v070",
+      "text": "open spotify and put on my saved tracks",
+      "gold": "open_spotify",
+      "pred": "play_liked_songs",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v071",
+      "text": "open spotify and play blinding lights",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v072",
+      "text": "open spotify then play some fleetwood mac",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v073",
+      "text": "launch spotify and play my running playlist",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v100",
+      "text": "play something",
+      "gold": "play_spotify",
+      "pred": "none",
+      "p": 1.0,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v101",
+      "text": "play some music",
+      "gold": "play_spotify",
+      "pred": "none",
+      "p": 0.928,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v112",
+      "text": "pause the music and close spotify",
+      "gold": "pause_media",
+      "pred": "close_app",
+      "p": 0.986,
+      "style": "compound"
+    },
+    {
+      "id": "v133",
+      "text": "skip this track and turn it up",
+      "gold": "next_track",
+      "pred": "volume_up",
+      "p": 0.886,
+      "style": "compound"
+    },
+    {
+      "id": "v141",
+      "text": "i can't hear it",
+      "gold": "volume_up",
+      "pred": "none",
+      "p": 0.518,
+      "style": "paraphrase"
+    },
+    {
+      "id": "v156",
+      "text": "turn it down and pause it",
+      "gold": "volume_down",
+      "pred": "pause_media",
+      "p": 0.998,
+      "style": "compound"
+    },
+    {
+      "id": "v163",
+      "text": "open the browser and search for cheap flights to lisbon",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v164",
+      "text": "open chrome and google best pizza near me",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v165",
+      "text": "open the browser and look up the weather in london",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v166",
+      "text": "launch chrome then search how tall is the eiffel tower",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v184",
+      "text": "search for lofi beats",
+      "gold": "search_web",
+      "pred": "play_youtube",
+      "p": 0.998,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v197",
+      "text": "clothes the notepad",
+      "gold": "close_app",
+      "pred": "open_notes",
+      "p": 1.0,
+      "style": "noisy"
+    },
+    {
+      "id": "v208",
+      "text": "text sarah that i'm on my way",
+      "gold": "none",
+      "pred": "type_text",
+      "p": 0.963,
+      "style": "oos"
+    },
+    {
+      "id": "v217",
+      "text": "order more coffee pods from amazon",
+      "gold": "none",
+      "pred": "search_web",
+      "p": 0.998,
+      "style": "oos"
+    }
+  ],
+  "stream_latency": {
+    "incremental_prompt_n_p50": 11,
+    "incremental_prompt_n_p95": 11,
+    "incremental_prompt_ms_p50": 30.307,
+    "incremental_prompt_ms_p95": 35.535,
+    "incremental_http_ms_p50": 44.71889999695122,
+    "incremental_http_ms_p95": 55.68459999631159,
+    "first_word_prompt_n_p50": 11,
+    "first_word_prompt_ms_p50": 30.862,
+    "requests": 1158
+  },
+  "commit_policies": {
+    "nonnone tau=0.9 stable=1": {
+      "commit_rate": 0.9797979797979798,
+      "acc_at_commit": 0.9329896907216495,
+      "acc_at_commit_accepting_then_alt": 0.9484536082474226,
+      "mean_commit_word": 2.7422680412371134,
+      "mean_words_saved": 2.582474226804124,
+      "at_or_before_human": 0.8762886597938144
+    },
+    "nonnone tau=0.9 stable=2": {
+      "commit_rate": 0.7070707070707071,
+      "acc_at_commit": 0.9928571428571429,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 3.85,
+      "mean_words_saved": 2.107142857142857,
+      "at_or_before_human": 0.16428571428571428
+    },
+    "nonnone tau=0.99 stable=1": {
+      "commit_rate": 0.9696969696969697,
+      "acc_at_commit": 0.9322916666666666,
+      "acc_at_commit_accepting_then_alt": 0.9479166666666666,
+      "mean_commit_word": 2.7760416666666665,
+      "mean_words_saved": 2.546875,
+      "at_or_before_human": 0.859375
+    },
+    "nonnone tau=0.99 stable=2": {
+      "commit_rate": 0.7070707070707071,
+      "acc_at_commit": 0.9928571428571429,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 3.8785714285714286,
+      "mean_words_saved": 2.0785714285714287,
+      "at_or_before_human": 0.16428571428571428
+    }
+  },
+  "false_commit_on_oos_rows_tau0.9": {
+    "rows": 22,
+    "false_commits": 4
+  }
+}

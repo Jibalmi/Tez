@@ -1,0 +1,113 @@
+{
+  "file": "results/authored144_qwen35-4b-bf16-hf.jsonl",
+  "n": 144,
+  "overall": {
+    "n": 144,
+    "accuracy": 0.8055555555555556,
+    "balanced_accuracy": 0.7995601749471718,
+    "macro_f1": 0.8001863327913749
+  },
+  "mean_family_balanced_accuracy": 0.8132381607613807,
+  "mfba_ci95": [
+    0.7550925925925925,
+    0.8650054466230938
+  ],
+  "families": {
+    "candidate_selection": {
+      "n": 48,
+      "accuracy": 0.6875,
+      "balanced_accuracy": 0.6897144822841418,
+      "macro_f1": 0.68743961352657
+    },
+    "evidence_interpretation": {
+      "n": 48,
+      "accuracy": 0.8541666666666666,
+      "balanced_accuracy": 0.8706349206349207,
+      "macro_f1": 0.8561314255431901
+    },
+    "rule_application": {
+      "n": 48,
+      "accuracy": 0.875,
+      "balanced_accuracy": 0.8793650793650793,
+      "macro_f1": 0.8694885361552028
+    }
+  },
+  "proper": {
+    "nll": 0.4272828567618693,
+    "brier": 0.24766065306543122,
+    "mean_confidence": 0.8638921267816881,
+    "accuracy": 0.8055555555555556
+  },
+  "ece": {
+    "ece": 0.06317046138357889,
+    "bins": 15,
+    "reliability": [
+      {
+        "bin": 6,
+        "n": 2,
+        "confidence": 0.439,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 7,
+        "n": 8,
+        "confidence": 0.506,
+        "accuracy": 0.375
+      },
+      {
+        "bin": 8,
+        "n": 9,
+        "confidence": 0.561,
+        "accuracy": 0.222
+      },
+      {
+        "bin": 9,
+        "n": 6,
+        "confidence": 0.629,
+        "accuracy": 0.667
+      },
+      {
+        "bin": 10,
+        "n": 5,
+        "confidence": 0.703,
+        "accuracy": 0.6
+      },
+      {
+        "bin": 11,
+        "n": 12,
+        "confidence": 0.754,
+        "accuracy": 0.75
+      },
+      {
+        "bin": 12,
+        "n": 9,
+        "confidence": 0.831,
+        "accuracy": 0.556
+      },
+      {
+        "bin": 13,
+        "n": 15,
+        "confidence": 0.901,
+        "accuracy": 0.867
+      },
+      {
+        "bin": 14,
+        "n": 78,
+        "confidence": 0.988,
+        "accuracy": 0.974
+      }
+    ]
+  },
+  "leakage": {
+    "missing_letter_rows": 0,
+    "top1_not_slot_rows": 0,
+    "top1_non_slot_tokens": []
+  },
+  "latency": {
+    "prompt_ms_p50": 223.85769999527838,
+    "prompt_ms_p95": 386.9078999996418,
+    "http_ms_p50": null,
+    "http_ms_p95": null,
+    "mean_prompt_tokens": 148.11805555555554
+  }
+}

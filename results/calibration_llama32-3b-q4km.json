@@ -1,0 +1,174 @@
+{
+  "raw": {
+    "n": 144,
+    "accuracy": 0.4375,
+    "nll": 1.6733732398293324,
+    "brier": 0.826821890405716,
+    "mean_confidence": 0.8273634246800335,
+    "ece15": 0.38986342468003365,
+    "auroc_error_detection": 0.7117381932196747,
+    "risk_coverage": {
+      "cov100": {
+        "accuracy": 0.4375,
+        "threshold": 0.3469771203219702
+      },
+      "cov95": {
+        "accuracy": 0.44525547445255476,
+        "threshold": 0.4579059372218008
+      },
+      "cov90": {
+        "accuracy": 0.46153846153846156,
+        "threshold": 0.5658182709168146
+      },
+      "cov80": {
+        "accuracy": 0.4956521739130435,
+        "threshold": 0.6843922948058988
+      },
+      "cov70": {
+        "accuracy": 0.5247524752475248,
+        "threshold": 0.7749403930696475
+      },
+      "cov50": {
+        "accuracy": 0.625,
+        "threshold": 0.8891835599843328
+      }
+    },
+    "aurc": 0.4024236489041384
+  },
+  "temperature_oof": {
+    "n": 144,
+    "accuracy": 0.4375,
+    "nll": 1.0118793113903317,
+    "brier": 0.6089200850380484,
+    "mean_confidence": 0.501586393569976,
+    "ece15": 0.11002213251041817,
+    "auroc_error_detection": 0.7117381932196747,
+    "risk_coverage": {
+      "cov100": {
+        "accuracy": 0.4375,
+        "threshold": 0.3360820425911071
+      },
+      "cov95": {
+        "accuracy": 0.44525547445255476,
+        "threshold": 0.3610546713670515
+      },
+      "cov90": {
+        "accuracy": 0.45384615384615384,
+        "threshold": 0.38517249519223157
+      },
+      "cov80": {
+        "accuracy": 0.4956521739130435,
+        "threshold": 0.4213890671839506
+      },
+      "cov70": {
+        "accuracy": 0.5346534653465347,
+        "threshold": 0.44694795103278545
+      },
+      "cov50": {
+        "accuracy": 0.625,
+        "threshold": 0.4836900047227478
+      }
+    },
+    "aurc": 0.4065357306542322,
+    "fold_temperatures": [
+      5.0,
+      4.7,
+      5.04,
+      4.5,
+      4.8
+    ]
+  },
+  "permutation_average": {
+    "n": 144,
+    "accuracy": 0.4375,
+    "nll": 1.5755634995077346,
+    "brier": 0.8417256626913939,
+    "mean_confidence": 0.7930538763344264,
+    "ece15": 0.35555387633442626,
+    "auroc_error_detection": 0.6729374877523026,
+    "risk_coverage": {
+      "cov100": {
+        "accuracy": 0.4375,
+        "threshold": 0.3671638770036223
+      },
+      "cov95": {
+        "accuracy": 0.45255474452554745,
+        "threshold": 0.4387519260374319
+      },
+      "cov90": {
+        "accuracy": 0.46153846153846156,
+        "threshold": 0.48453974889053014
+      },
+      "cov80": {
+        "accuracy": 0.4608695652173913,
+        "threshold": 0.5582624334341062
+      },
+      "cov70": {
+        "accuracy": 0.48514851485148514,
+        "threshold": 0.7221748994613366
+      },
+      "cov50": {
+        "accuracy": 0.5694444444444444,
+        "threshold": 0.8811717122648015
+      }
+    },
+    "aurc": 0.4019528908848449
+  },
+  "permutation_average+temperature_oof": {
+    "n": 144,
+    "accuracy": 0.4375,
+    "nll": 1.0428956892682135,
+    "brier": 0.6270228064987398,
+    "mean_confidence": 0.4696137686511083,
+    "ece15": 0.08760765323183285,
+    "auroc_error_detection": 0.6727415245933764,
+    "risk_coverage": {
+      "cov100": {
+        "accuracy": 0.4375,
+        "threshold": 0.3398910433603004
+      },
+      "cov95": {
+        "accuracy": 0.45985401459854014,
+        "threshold": 0.35831499340929834
+      },
+      "cov90": {
+        "accuracy": 0.45384615384615384,
+        "threshold": 0.3686837351128657
+      },
+      "cov80": {
+        "accuracy": 0.46956521739130436,
+        "threshold": 0.3978685236354888
+      },
+      "cov70": {
+        "accuracy": 0.49504950495049505,
+        "threshold": 0.4227914389362864
+      },
+      "cov50": {
+        "accuracy": 0.5555555555555556,
+        "threshold": 0.47019646400076015
+      }
+    },
+    "aurc": 0.4064856069221689,
+    "fold_temperatures": [
+      4.76,
+      5.12,
+      5.16,
+      4.72,
+      4.3
+    ]
+  },
+  "order_diagnostics": {
+    "full_set_flip_rate": 0.25,
+    "mean_tv_distance": 0.23551964581711327,
+    "predicted_position_counts": {
+      "0": 58,
+      "1": 39,
+      "2": 47
+    },
+    "gold_position_counts": {
+      "0": 55,
+      "1": 44,
+      "2": 45
+    }
+  }
+}

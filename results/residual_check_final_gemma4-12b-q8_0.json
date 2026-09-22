@@ -1,0 +1,1064 @@
+{
+  "summary": {
+    "n": 22,
+    "residual_routes_to_then": 20,
+    "rate": 0.9090909090909091,
+    "mean_stable_fraction": 0.6798701298701298
+  },
+  "rows": [
+    {
+      "id": "v013",
+      "text": "open notes and type hello world",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "and type hello world",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 4,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and type",
+          "pred": "type_text",
+          "pmax": 0.998
+        },
+        {
+          "k": 3,
+          "prefix": "and type hello",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and type hello world",
+          "pred": "type_text",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v014",
+      "text": "open notes and type buy milk eggs and bread",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "and type buy milk eggs and bread",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 7,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and type",
+          "pred": "type_text",
+          "pmax": 0.998
+        },
+        {
+          "k": 3,
+          "prefix": "and type buy",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and type buy milk",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and type buy milk eggs",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "and type buy milk eggs and",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 7,
+          "prefix": "and type buy milk eggs and bread",
+          "pred": "type_text",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v015",
+      "text": "open notepad and write dentist appointment friday at ten",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "and write dentist appointment friday at ten",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 7,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and write",
+          "pred": "type_text",
+          "pmax": 0.995
+        },
+        {
+          "k": 3,
+          "prefix": "and write dentist",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and write dentist appointment",
+          "pred": "type_text",
+          "pmax": 0.997
+        },
+        {
+          "k": 5,
+          "prefix": "and write dentist appointment friday",
+          "pred": "type_text",
+          "pmax": 0.992
+        },
+        {
+          "k": 6,
+          "prefix": "and write dentist appointment friday at",
+          "pred": "type_text",
+          "pmax": 0.996
+        },
+        {
+          "k": 7,
+          "prefix": "and write dentist appointment friday at ten",
+          "pred": "type_text",
+          "pmax": 0.997
+        }
+      ]
+    },
+    {
+      "id": "v016",
+      "text": "open the notes app and type call mum tonight",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "app and type call mum tonight",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 3,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "app",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "app and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "app and type",
+          "pred": "type_text",
+          "pmax": 0.991
+        },
+        {
+          "k": 4,
+          "prefix": "app and type call",
+          "pred": "type_text",
+          "pmax": 0.997
+        },
+        {
+          "k": 5,
+          "prefix": "app and type call mum",
+          "pred": "type_text",
+          "pmax": 0.997
+        },
+        {
+          "k": 6,
+          "prefix": "app and type call mum tonight",
+          "pred": "type_text",
+          "pmax": 0.999
+        }
+      ]
+    },
+    {
+      "id": "v017",
+      "text": "open notes then type meeting moved to thursday",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "then type meeting moved to thursday",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "then",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "then type",
+          "pred": "type_text",
+          "pmax": 0.996
+        },
+        {
+          "k": 3,
+          "prefix": "then type meeting",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "then type meeting moved",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "then type meeting moved to",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "then type meeting moved to thursday",
+          "pred": "type_text",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v018",
+      "text": "launch notepad and type pick up dry cleaning",
+      "first": "open_notes",
+      "then": "type_text",
+      "residual": "and type pick up dry cleaning",
+      "final_pred": "type_text",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and type",
+          "pred": "type_text",
+          "pmax": 0.998
+        },
+        {
+          "k": 3,
+          "prefix": "and type pick",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and type pick up",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and type pick up dry",
+          "pred": "type_text",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "and type pick up dry cleaning",
+          "pred": "type_text",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v042",
+      "text": "open youtube and play never gonna give you up",
+      "first": "open_youtube",
+      "then": "play_youtube",
+      "residual": "and play never gonna give you up",
+      "final_pred": "play_spotify",
+      "ok": false,
+      "first_stable_k": null,
+      "residual_words": 7,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and play never",
+          "pred": "play_spotify",
+          "pmax": 0.963
+        },
+        {
+          "k": 4,
+          "prefix": "and play never gonna",
+          "pred": "play_spotify",
+          "pmax": 0.999
+        },
+        {
+          "k": 5,
+          "prefix": "and play never gonna give",
+          "pred": "play_spotify",
+          "pmax": 0.998
+        },
+        {
+          "k": 6,
+          "prefix": "and play never gonna give you",
+          "pred": "play_spotify",
+          "pmax": 0.999
+        },
+        {
+          "k": 7,
+          "prefix": "and play never gonna give you up",
+          "pred": "play_spotify",
+          "pmax": 0.997
+        }
+      ]
+    },
+    {
+      "id": "v043",
+      "text": "open youtube and play lofi beats",
+      "first": "open_youtube",
+      "then": "play_youtube",
+      "residual": "and play lofi beats",
+      "final_pred": "play_youtube",
+      "ok": true,
+      "first_stable_k": 3,
+      "residual_words": 4,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and play lofi",
+          "pred": "play_youtube",
+          "pmax": 0.991
+        },
+        {
+          "k": 4,
+          "prefix": "and play lofi beats",
+          "pred": "play_youtube",
+          "pmax": 0.989
+        }
+      ]
+    },
+    {
+      "id": "v044",
+      "text": "open youtube and search for how to tie a tie",
+      "first": "open_youtube",
+      "then": "play_youtube",
+      "residual": "and search for how to tie a tie",
+      "final_pred": "search_web",
+      "ok": false,
+      "first_stable_k": null,
+      "residual_words": 8,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and search",
+          "pred": "none",
+          "pmax": 0.955
+        },
+        {
+          "k": 3,
+          "prefix": "and search for",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and search for how",
+          "pred": "search_web",
+          "pmax": 0.888
+        },
+        {
+          "k": 5,
+          "prefix": "and search for how to",
+          "pred": "search_web",
+          "pmax": 0.993
+        },
+        {
+          "k": 6,
+          "prefix": "and search for how to tie",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 7,
+          "prefix": "and search for how to tie a",
+          "pred": "search_web",
+          "pmax": 0.999
+        },
+        {
+          "k": 8,
+          "prefix": "and search for how to tie a tie",
+          "pred": "search_web",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v045",
+      "text": "open youtube then play the latest mkbhd video",
+      "first": "open_youtube",
+      "then": "play_youtube",
+      "residual": "then play the latest mkbhd video",
+      "final_pred": "play_youtube",
+      "ok": true,
+      "first_stable_k": 5,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "then",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "then play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "then play the",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "then play the latest",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "then play the latest mkbhd",
+          "pred": "play_youtube",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "then play the latest mkbhd video",
+          "pred": "play_youtube",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v069",
+      "text": "open spotify and play my liked songs",
+      "first": "open_spotify",
+      "then": "play_liked_songs",
+      "residual": "and play my liked songs",
+      "final_pred": "play_liked_songs",
+      "ok": true,
+      "first_stable_k": 4,
+      "residual_words": 5,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and play my",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and play my liked",
+          "pred": "play_liked_songs",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and play my liked songs",
+          "pred": "play_liked_songs",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v070",
+      "text": "open spotify and put on my saved tracks",
+      "first": "open_spotify",
+      "then": "play_liked_songs",
+      "residual": "and put on my saved tracks",
+      "final_pred": "play_liked_songs",
+      "ok": true,
+      "first_stable_k": 5,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and put",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and put on",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and put on my",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and put on my saved",
+          "pred": "play_liked_songs",
+          "pmax": 0.999
+        },
+        {
+          "k": 6,
+          "prefix": "and put on my saved tracks",
+          "pred": "play_liked_songs",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v071",
+      "text": "open spotify and play blinding lights",
+      "first": "open_spotify",
+      "then": "play_spotify",
+      "residual": "and play blinding lights",
+      "final_pred": "play_spotify",
+      "ok": true,
+      "first_stable_k": 3,
+      "residual_words": 4,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and play blinding",
+          "pred": "play_spotify",
+          "pmax": 0.996
+        },
+        {
+          "k": 4,
+          "prefix": "and play blinding lights",
+          "pred": "play_spotify",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v072",
+      "text": "open spotify then play some fleetwood mac",
+      "first": "open_spotify",
+      "then": "play_spotify",
+      "residual": "then play some fleetwood mac",
+      "final_pred": "play_spotify",
+      "ok": true,
+      "first_stable_k": 4,
+      "residual_words": 5,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "then",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "then play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "then play some",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "then play some fleetwood",
+          "pred": "play_spotify",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "then play some fleetwood mac",
+          "pred": "play_spotify",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v073",
+      "text": "launch spotify and play my running playlist",
+      "first": "open_spotify",
+      "then": "play_spotify",
+      "residual": "and play my running playlist",
+      "final_pred": "play_spotify",
+      "ok": true,
+      "first_stable_k": 5,
+      "residual_words": 5,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and play",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and play my",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and play my running",
+          "pred": "none",
+          "pmax": 0.837
+        },
+        {
+          "k": 5,
+          "prefix": "and play my running playlist",
+          "pred": "play_spotify",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v112",
+      "text": "pause the music and close spotify",
+      "first": "pause_media",
+      "then": "close_app",
+      "residual": "the music and close spotify",
+      "final_pred": "close_app",
+      "ok": true,
+      "first_stable_k": 5,
+      "residual_words": 5,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "the",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "the music",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "the music and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "the music and close",
+          "pred": "close_app",
+          "pmax": 0.58
+        },
+        {
+          "k": 5,
+          "prefix": "the music and close spotify",
+          "pred": "close_app",
+          "pmax": 0.999
+        }
+      ]
+    },
+    {
+      "id": "v133",
+      "text": "skip this track and turn it up",
+      "first": "next_track",
+      "then": "volume_up",
+      "residual": "this track and turn it up",
+      "final_pred": "volume_up",
+      "ok": true,
+      "first_stable_k": 6,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "this",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "this track",
+          "pred": "next_track",
+          "pmax": 0.989
+        },
+        {
+          "k": 3,
+          "prefix": "this track and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "this track and turn",
+          "pred": "none",
+          "pmax": 0.936
+        },
+        {
+          "k": 5,
+          "prefix": "this track and turn it",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "this track and turn it up",
+          "pred": "volume_up",
+          "pmax": 0.999
+        }
+      ]
+    },
+    {
+      "id": "v156",
+      "text": "turn it down and pause it",
+      "first": "volume_down",
+      "then": "pause_media",
+      "residual": "and pause it",
+      "final_pred": "pause_media",
+      "ok": true,
+      "first_stable_k": 2,
+      "residual_words": 3,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and pause",
+          "pred": "pause_media",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and pause it",
+          "pred": "pause_media",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v163",
+      "text": "open the browser and search for cheap flights to lisbon",
+      "first": "open_browser",
+      "then": "search_web",
+      "residual": "and search for cheap flights to lisbon",
+      "final_pred": "search_web",
+      "ok": true,
+      "first_stable_k": 4,
+      "residual_words": 7,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and search",
+          "pred": "none",
+          "pmax": 0.955
+        },
+        {
+          "k": 3,
+          "prefix": "and search for",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 4,
+          "prefix": "and search for cheap",
+          "pred": "search_web",
+          "pmax": 0.998
+        },
+        {
+          "k": 5,
+          "prefix": "and search for cheap flights",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "and search for cheap flights to",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 7,
+          "prefix": "and search for cheap flights to lisbon",
+          "pred": "search_web",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v164",
+      "text": "open chrome and google best pizza near me",
+      "first": "open_browser",
+      "then": "search_web",
+      "residual": "and google best pizza near me",
+      "final_pred": "search_web",
+      "ok": true,
+      "first_stable_k": 3,
+      "residual_words": 6,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and google",
+          "pred": "none",
+          "pmax": 0.996
+        },
+        {
+          "k": 3,
+          "prefix": "and google best",
+          "pred": "search_web",
+          "pmax": 0.996
+        },
+        {
+          "k": 4,
+          "prefix": "and google best pizza",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and google best pizza near",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "and google best pizza near me",
+          "pred": "search_web",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v165",
+      "text": "open the browser and look up the weather in london",
+      "first": "open_browser",
+      "then": "search_web",
+      "residual": "and look up the weather in london",
+      "final_pred": "search_web",
+      "ok": true,
+      "first_stable_k": 5,
+      "residual_words": 7,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "and",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "and look",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 3,
+          "prefix": "and look up",
+          "pred": "none",
+          "pmax": 0.997
+        },
+        {
+          "k": 4,
+          "prefix": "and look up the",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 5,
+          "prefix": "and look up the weather",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 6,
+          "prefix": "and look up the weather in",
+          "pred": "search_web",
+          "pmax": 0.998
+        },
+        {
+          "k": 7,
+          "prefix": "and look up the weather in london",
+          "pred": "search_web",
+          "pmax": 1.0
+        }
+      ]
+    },
+    {
+      "id": "v166",
+      "text": "launch chrome then search how tall is the eiffel tower",
+      "first": "open_browser",
+      "then": "search_web",
+      "residual": "then search how tall is the eiffel tower",
+      "final_pred": "search_web",
+      "ok": true,
+      "first_stable_k": 4,
+      "residual_words": 8,
+      "traj": [
+        {
+          "k": 1,
+          "prefix": "then",
+          "pred": "none",
+          "pmax": 1.0
+        },
+        {
+          "k": 2,
+          "prefix": "then search",
+          "pred": "none",
+          "pmax": 0.997
+        },
+        {
+          "k": 3,
+          "prefix": "then search how",
+          "pred": "search_web",
+          "pmax": 0.652
+        },
+        {
+          "k": 4,
+          "prefix": "then search how tall",
+          "pred": "search_web",
+          "pmax": 0.998
+        },
+        {
+          "k": 5,
+          "prefix": "then search how tall is",
+          "pred": "search_web",
+          "pmax": 0.997
+        },
+        {
+          "k": 6,
+          "prefix": "then search how tall is the",
+          "pred": "search_web",
+          "pmax": 0.998
+        },
+        {
+          "k": 7,
+          "prefix": "then search how tall is the eiffel",
+          "pred": "search_web",
+          "pmax": 1.0
+        },
+        {
+          "k": 8,
+          "prefix": "then search how tall is the eiffel tower",
+          "pred": "search_web",
+          "pmax": 1.0
+        }
+      ]
+    }
+  ]
+}

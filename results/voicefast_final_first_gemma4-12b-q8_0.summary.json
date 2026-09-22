@@ -1,0 +1,293 @@
+{
+  "tag": "gemma4-12b-q8_0",
+  "variant": "final",
+  "order": "first",
+  "cache": true,
+  "n": 220,
+  "wall_s": 243.50415380000777,
+  "intent_accuracy": 0.8772727272727273,
+  "intent_accuracy_alt_ok": 0.8863636363636364,
+  "intent_accuracy_alt_or_then_ok": 0.9545454545454546,
+  "accuracy_by_style": {
+    "canonical": 1,
+    "paraphrase": 0.9454545454545454,
+    "noisy": 0.9090909090909091,
+    "compound": 0.3181818181818182,
+    "ambiguous": 0.6363636363636364,
+    "oos": 0.9090909090909091
+  },
+  "none_recall": 0.9090909090909091,
+  "none_precision": 0.7692307692307693,
+  "full_prompt_n_p50": 358,
+  "full_prompt_ms_p50": 148.357,
+  "full_http_ms_p50": 220.6949999963399,
+  "missing_letter_rows": 27,
+  "top1_not_slot_rows": 0,
+  "errors": [
+    {
+      "id": "v028",
+      "text": "write down car service booked for tuesday",
+      "gold": "type_text",
+      "pred": "open_notes",
+      "p": 0.87,
+      "style": "paraphrase"
+    },
+    {
+      "id": "v033",
+      "text": "tie pick up the kids at four",
+      "gold": "type_text",
+      "pred": "none",
+      "p": 0.582,
+      "style": "noisy"
+    },
+    {
+      "id": "v042",
+      "text": "open youtube and play never gonna give you up",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v043",
+      "text": "open youtube and play lofi beats",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v044",
+      "text": "open youtube and search for how to tie a tie",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v045",
+      "text": "open youtube then play the latest mkbhd video",
+      "gold": "open_youtube",
+      "pred": "play_youtube",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v068",
+      "text": "open spot if i",
+      "gold": "open_spotify",
+      "pred": "none",
+      "p": 1.0,
+      "style": "noisy"
+    },
+    {
+      "id": "v069",
+      "text": "open spotify and play my liked songs",
+      "gold": "open_spotify",
+      "pred": "play_liked_songs",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v070",
+      "text": "open spotify and put on my saved tracks",
+      "gold": "open_spotify",
+      "pred": "play_liked_songs",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v071",
+      "text": "open spotify and play blinding lights",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v072",
+      "text": "open spotify then play some fleetwood mac",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v073",
+      "text": "launch spotify and play my running playlist",
+      "gold": "open_spotify",
+      "pred": "play_spotify",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v094",
+      "text": "what's that band from earlier put it on",
+      "gold": "play_spotify",
+      "pred": "none",
+      "p": 0.686,
+      "style": "paraphrase"
+    },
+    {
+      "id": "v100",
+      "text": "play something",
+      "gold": "play_spotify",
+      "pred": "none",
+      "p": 1.0,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v101",
+      "text": "play some music",
+      "gold": "play_spotify",
+      "pred": "none",
+      "p": 0.992,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v112",
+      "text": "pause the music and close spotify",
+      "gold": "pause_media",
+      "pred": "close_app",
+      "p": 0.66,
+      "style": "compound"
+    },
+    {
+      "id": "v141",
+      "text": "i can't hear it",
+      "gold": "volume_up",
+      "pred": "none",
+      "p": 1.0,
+      "style": "paraphrase"
+    },
+    {
+      "id": "v156",
+      "text": "turn it down and pause it",
+      "gold": "volume_down",
+      "pred": "pause_media",
+      "p": 0.981,
+      "style": "compound"
+    },
+    {
+      "id": "v163",
+      "text": "open the browser and search for cheap flights to lisbon",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v164",
+      "text": "open chrome and google best pizza near me",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v165",
+      "text": "open the browser and look up the weather in london",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v166",
+      "text": "launch chrome then search how tall is the eiffel tower",
+      "gold": "open_browser",
+      "pred": "search_web",
+      "p": 1.0,
+      "style": "compound"
+    },
+    {
+      "id": "v184",
+      "text": "search for lofi beats",
+      "gold": "search_web",
+      "pred": "play_youtube",
+      "p": 0.999,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v197",
+      "text": "clothes the notepad",
+      "gold": "close_app",
+      "pred": "open_notes",
+      "p": 0.999,
+      "style": "noisy"
+    },
+    {
+      "id": "v198",
+      "text": "shut it down",
+      "gold": "close_app",
+      "pred": "pause_media",
+      "p": 0.986,
+      "style": "ambiguous"
+    },
+    {
+      "id": "v208",
+      "text": "text sarah that i'm on my way",
+      "gold": "none",
+      "pred": "type_text",
+      "p": 0.963,
+      "style": "oos"
+    },
+    {
+      "id": "v213",
+      "text": "what's the capital of peru",
+      "gold": "none",
+      "pred": "search_web",
+      "p": 0.554,
+      "style": "oos"
+    }
+  ],
+  "stream_latency": {
+    "incremental_prompt_n_p50": 358,
+    "incremental_prompt_n_p95": 358,
+    "incremental_prompt_ms_p50": 147.335,
+    "incremental_prompt_ms_p95": 179.402,
+    "incremental_http_ms_p50": 220.49050001078285,
+    "incremental_http_ms_p95": 251.94260000716895,
+    "first_word_prompt_n_p50": 358,
+    "first_word_prompt_ms_p50": 141.476,
+    "requests": 1158
+  },
+  "commit_policies": {
+    "nonnone tau=0.9 stable=1": {
+      "commit_rate": 0.9595959595959596,
+      "acc_at_commit": 0.9105263157894737,
+      "acc_at_commit_accepting_then_alt": 0.9210526315789473,
+      "mean_commit_word": 2.5,
+      "mean_words_saved": 2.8210526315789473,
+      "at_or_before_human": 0.9421052631578948
+    },
+    "nonnone tau=0.9 stable=2": {
+      "commit_rate": 0.7474747474747475,
+      "acc_at_commit": 0.918918918918919,
+      "acc_at_commit_accepting_then_alt": 0.9527027027027027,
+      "mean_commit_word": 3.5337837837837838,
+      "mean_words_saved": 2.3445945945945947,
+      "at_or_before_human": 0.22972972972972974
+    },
+    "nonnone tau=0.99 stable=1": {
+      "commit_rate": 0.9545454545454546,
+      "acc_at_commit": 0.9206349206349206,
+      "acc_at_commit_accepting_then_alt": 0.9259259259259259,
+      "mean_commit_word": 2.560846560846561,
+      "mean_words_saved": 2.7724867724867726,
+      "at_or_before_human": 0.9312169312169312
+    },
+    "nonnone tau=0.99 stable=2": {
+      "commit_rate": 0.7323232323232324,
+      "acc_at_commit": 0.9172413793103448,
+      "acc_at_commit_accepting_then_alt": 0.9586206896551724,
+      "mean_commit_word": 3.682758620689655,
+      "mean_words_saved": 2.193103448275862,
+      "at_or_before_human": 0.20689655172413793
+    }
+  },
+  "false_commit_on_oos_rows_tau0.9": {
+    "rows": 22,
+    "false_commits": 4
+  }
+}

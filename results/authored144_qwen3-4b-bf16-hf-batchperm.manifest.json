@@ -1,0 +1,20 @@
+{
+  "tag": "qwen3-4b-bf16-hf-batchperm",
+  "model": "Qwen/Qwen3-4B",
+  "dtype": "bf16",
+  "mode": "batchperm",
+  "rows": 144,
+  "data": "data/semif/authored144.jsonl",
+  "data_sha256": "8162d1c73f925af64453f1ec05ef36d583b3815bf698e60f0d454bd11537e079",
+  "load_seconds": 7.8617869000008795,
+  "wall_seconds": 31.653991700004553,
+  "decisions_per_second": 4.549189289134087,
+  "forward_ms_p50": 204.0818500026944,
+  "forward_ms_p95": 243.20880000595935,
+  "mean_prompt_tokens": 148.13194444444446,
+  "mean_letter_mass": 0.999995452662309,
+  "top1_not_slot_rows": 0,
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "peak_vram_gb": 8.221305344,
+  "timestamp": "2026-09-22T13:41:10"
+}

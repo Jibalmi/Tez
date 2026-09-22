@@ -1,0 +1,110 @@
+{
+  "tez": {
+    "n": 2000,
+    "accuracy": 0.704,
+    "alpha=0.1 temp=False": {
+      "coverage": 0.9015,
+      "mean_set_size": 1.7414999999999998,
+      "act_rate": 0.5175000000000001,
+      "escalate_rate": 0.4825,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.8465920548497681
+    },
+    "alpha=0.1 temp=True": {
+      "coverage": 0.9015,
+      "mean_set_size": 1.6865,
+      "act_rate": 0.503,
+      "escalate_rate": 0.497,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.8528346929741353
+    },
+    "alpha=0.05 temp=False": {
+      "coverage": 0.954,
+      "mean_set_size": 2.1425,
+      "act_rate": 0.38449999999999995,
+      "escalate_rate": 0.6154999999999999,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.9046358155450546
+    },
+    "alpha=0.05 temp=True": {
+      "coverage": 0.9535,
+      "mean_set_size": 2.0145,
+      "act_rate": 0.3665,
+      "escalate_rate": 0.6335,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.9122254594352308
+    }
+  },
+  "laya-en": {
+    "n": 2000,
+    "accuracy": 0.3625,
+    "alpha=0.1 temp=False": {
+      "coverage": 0.9,
+      "mean_set_size": 2.9855,
+      "act_rate": 0.067,
+      "escalate_rate": 0.933,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.423954802259887
+    },
+    "alpha=0.1 temp=True": {
+      "coverage": 0.892,
+      "mean_set_size": 2.9435000000000002,
+      "act_rate": 0.054,
+      "escalate_rate": 0.946,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.39148351648351654
+    },
+    "alpha=0.05 temp=False": {
+      "coverage": 0.9535,
+      "mean_set_size": 3.2335000000000003,
+      "act_rate": 0.026500000000000003,
+      "escalate_rate": 0.9735,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.41522988505747127
+    },
+    "alpha=0.05 temp=True": {
+      "coverage": 0.953,
+      "mean_set_size": 3.1795,
+      "act_rate": 0.023,
+      "escalate_rate": 0.977,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.3920454545454546
+    }
+  },
+  "laya-td": {
+    "n": 2000,
+    "accuracy": 0.7665,
+    "alpha=0.1 temp=False": {
+      "coverage": 0.902,
+      "mean_set_size": 1.395,
+      "act_rate": 0.6134999999999999,
+      "escalate_rate": 0.38649999999999995,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.8689827622898489
+    },
+    "alpha=0.1 temp=True": {
+      "coverage": 0.9025000000000001,
+      "mean_set_size": 1.3865,
+      "act_rate": 0.634,
+      "escalate_rate": 0.366,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.8755900823811054
+    },
+    "alpha=0.05 temp=False": {
+      "coverage": 0.948,
+      "mean_set_size": 1.6455000000000002,
+      "act_rate": 0.42000000000000004,
+      "escalate_rate": 0.5800000000000001,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.917700484851244
+    },
+    "alpha=0.05 temp=True": {
+      "coverage": 0.9465,
+      "mean_set_size": 1.635,
+      "act_rate": 0.452,
+      "escalate_rate": 0.548,
+      "fallback_rate": 0.0,
+      "acc_when_acting": 0.9188000293750459
+    }
+  }
+}

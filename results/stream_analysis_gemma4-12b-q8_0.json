@@ -1,0 +1,313 @@
+{
+  "accuracy_by_fraction_heard": {
+    "0-20%": 0.089,
+    "20-40%": 0.363,
+    "40-60%": 0.529,
+    "60-80%": 0.594,
+    "80-100%": 0.808
+  },
+  "first_word_predictions": {
+    "none": 159,
+    "search_web": 8,
+    "close_app": 8,
+    "pause_media": 6,
+    "resume_media": 5,
+    "next_track": 3
+  },
+  "commit_policies": {
+    "naive tau=0.9 stable=1 min_words=1": {
+      "commit_rate": 1.0,
+      "acc_at_commit": 0.172,
+      "acc_at_commit_accepting_then_alt": 0.172,
+      "mean_commit_word": 1.02,
+      "mean_words_saved": 4.26,
+      "at_or_before_human": 0.99
+    },
+    "naive tau=0.9 stable=1 min_words=2": {
+      "commit_rate": 1.0,
+      "acc_at_commit": 0.444,
+      "acc_at_commit_accepting_then_alt": 0.449,
+      "mean_commit_word": 2.04,
+      "mean_words_saved": 3.24,
+      "at_or_before_human": 0.778
+    },
+    "naive tau=0.9 stable=1 min_words=3": {
+      "commit_rate": 0.864,
+      "acc_at_commit": 0.667,
+      "acc_at_commit_accepting_then_alt": 0.678,
+      "mean_commit_word": 3.05,
+      "mean_words_saved": 2.73,
+      "at_or_before_human": 0.544
+    },
+    "naive tau=0.9 stable=2 min_words=1": {
+      "commit_rate": 0.929,
+      "acc_at_commit": 0.429,
+      "acc_at_commit_accepting_then_alt": 0.435,
+      "mean_commit_word": 2.45,
+      "mean_words_saved": 3.06,
+      "at_or_before_human": 0.576
+    },
+    "naive tau=0.9 stable=2 min_words=2": {
+      "commit_rate": 0.929,
+      "acc_at_commit": 0.429,
+      "acc_at_commit_accepting_then_alt": 0.435,
+      "mean_commit_word": 2.45,
+      "mean_words_saved": 3.06,
+      "at_or_before_human": 0.576
+    },
+    "naive tau=0.9 stable=2 min_words=3": {
+      "commit_rate": 0.778,
+      "acc_at_commit": 0.656,
+      "acc_at_commit_accepting_then_alt": 0.662,
+      "mean_commit_word": 3.39,
+      "mean_words_saved": 2.68,
+      "at_or_before_human": 0.357
+    },
+    "naive tau=0.9 stable=3 min_words=1": {
+      "commit_rate": 0.682,
+      "acc_at_commit": 0.615,
+      "acc_at_commit_accepting_then_alt": 0.652,
+      "mean_commit_word": 3.99,
+      "mean_words_saved": 2.36,
+      "at_or_before_human": 0.356
+    },
+    "naive tau=0.9 stable=3 min_words=2": {
+      "commit_rate": 0.682,
+      "acc_at_commit": 0.615,
+      "acc_at_commit_accepting_then_alt": 0.652,
+      "mean_commit_word": 3.99,
+      "mean_words_saved": 2.36,
+      "at_or_before_human": 0.356
+    },
+    "naive tau=0.9 stable=3 min_words=3": {
+      "commit_rate": 0.682,
+      "acc_at_commit": 0.615,
+      "acc_at_commit_accepting_then_alt": 0.652,
+      "mean_commit_word": 3.99,
+      "mean_words_saved": 2.36,
+      "at_or_before_human": 0.356
+    },
+    "naive tau=0.99 stable=1 min_words=1": {
+      "commit_rate": 0.995,
+      "acc_at_commit": 0.178,
+      "acc_at_commit_accepting_then_alt": 0.178,
+      "mean_commit_word": 1.04,
+      "mean_words_saved": 4.25,
+      "at_or_before_human": 0.985
+    },
+    "naive tau=0.99 stable=1 min_words=2": {
+      "commit_rate": 0.98,
+      "acc_at_commit": 0.459,
+      "acc_at_commit_accepting_then_alt": 0.459,
+      "mean_commit_word": 2.13,
+      "mean_words_saved": 3.2,
+      "at_or_before_human": 0.747
+    },
+    "naive tau=0.99 stable=1 min_words=3": {
+      "commit_rate": 0.854,
+      "acc_at_commit": 0.68,
+      "acc_at_commit_accepting_then_alt": 0.686,
+      "mean_commit_word": 3.19,
+      "mean_words_saved": 2.62,
+      "at_or_before_human": 0.521
+    },
+    "naive tau=0.99 stable=2 min_words=1": {
+      "commit_rate": 0.919,
+      "acc_at_commit": 0.456,
+      "acc_at_commit_accepting_then_alt": 0.456,
+      "mean_commit_word": 2.54,
+      "mean_words_saved": 2.99,
+      "at_or_before_human": 0.566
+    },
+    "naive tau=0.99 stable=2 min_words=2": {
+      "commit_rate": 0.919,
+      "acc_at_commit": 0.456,
+      "acc_at_commit_accepting_then_alt": 0.456,
+      "mean_commit_word": 2.54,
+      "mean_words_saved": 2.99,
+      "at_or_before_human": 0.566
+    },
+    "naive tau=0.99 stable=2 min_words=3": {
+      "commit_rate": 0.768,
+      "acc_at_commit": 0.678,
+      "acc_at_commit_accepting_then_alt": 0.678,
+      "mean_commit_word": 3.49,
+      "mean_words_saved": 2.59,
+      "at_or_before_human": 0.355
+    },
+    "naive tau=0.99 stable=3 min_words=1": {
+      "commit_rate": 0.667,
+      "acc_at_commit": 0.591,
+      "acc_at_commit_accepting_then_alt": 0.644,
+      "mean_commit_word": 4.05,
+      "mean_words_saved": 2.29,
+      "at_or_before_human": 0.364
+    },
+    "naive tau=0.99 stable=3 min_words=2": {
+      "commit_rate": 0.667,
+      "acc_at_commit": 0.591,
+      "acc_at_commit_accepting_then_alt": 0.644,
+      "mean_commit_word": 4.05,
+      "mean_words_saved": 2.29,
+      "at_or_before_human": 0.364
+    },
+    "naive tau=0.99 stable=3 min_words=3": {
+      "commit_rate": 0.667,
+      "acc_at_commit": 0.591,
+      "acc_at_commit_accepting_then_alt": 0.644,
+      "mean_commit_word": 4.05,
+      "mean_words_saved": 2.29,
+      "at_or_before_human": 0.364
+    },
+    "nonnone tau=0.9 stable=1 min_words=1": {
+      "commit_rate": 0.944,
+      "acc_at_commit": 0.93,
+      "acc_at_commit_accepting_then_alt": 0.941,
+      "mean_commit_word": 2.75,
+      "mean_words_saved": 2.61,
+      "at_or_before_human": 0.861
+    },
+    "nonnone tau=0.9 stable=1 min_words=2": {
+      "commit_rate": 0.944,
+      "acc_at_commit": 0.936,
+      "acc_at_commit_accepting_then_alt": 0.952,
+      "mean_commit_word": 2.99,
+      "mean_words_saved": 2.38,
+      "at_or_before_human": 0.701
+    },
+    "nonnone tau=0.9 stable=1 min_words=3": {
+      "commit_rate": 0.823,
+      "acc_at_commit": 0.963,
+      "acc_at_commit_accepting_then_alt": 0.975,
+      "mean_commit_word": 3.63,
+      "mean_words_saved": 2.23,
+      "at_or_before_human": 0.509
+    },
+    "nonnone tau=0.9 stable=2 min_words=1": {
+      "commit_rate": 0.712,
+      "acc_at_commit": 0.957,
+      "acc_at_commit_accepting_then_alt": 0.965,
+      "mean_commit_word": 3.62,
+      "mean_words_saved": 2.2,
+      "at_or_before_human": 0.184
+    },
+    "nonnone tau=0.9 stable=2 min_words=2": {
+      "commit_rate": 0.712,
+      "acc_at_commit": 0.957,
+      "acc_at_commit_accepting_then_alt": 0.965,
+      "mean_commit_word": 3.62,
+      "mean_words_saved": 2.2,
+      "at_or_before_human": 0.184
+    },
+    "nonnone tau=0.9 stable=2 min_words=3": {
+      "commit_rate": 0.646,
+      "acc_at_commit": 0.969,
+      "acc_at_commit_accepting_then_alt": 0.977,
+      "mean_commit_word": 3.95,
+      "mean_words_saved": 2.25,
+      "at_or_before_human": 0.172
+    },
+    "nonnone tau=0.9 stable=3 min_words=1": {
+      "commit_rate": 0.49,
+      "acc_at_commit": 0.948,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.67,
+      "mean_words_saved": 1.95,
+      "at_or_before_human": 0.144
+    },
+    "nonnone tau=0.9 stable=3 min_words=2": {
+      "commit_rate": 0.49,
+      "acc_at_commit": 0.948,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.67,
+      "mean_words_saved": 1.95,
+      "at_or_before_human": 0.144
+    },
+    "nonnone tau=0.9 stable=3 min_words=3": {
+      "commit_rate": 0.49,
+      "acc_at_commit": 0.948,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.67,
+      "mean_words_saved": 1.95,
+      "at_or_before_human": 0.144
+    },
+    "nonnone tau=0.99 stable=1 min_words=1": {
+      "commit_rate": 0.904,
+      "acc_at_commit": 0.933,
+      "acc_at_commit_accepting_then_alt": 0.939,
+      "mean_commit_word": 2.78,
+      "mean_words_saved": 2.59,
+      "at_or_before_human": 0.849
+    },
+    "nonnone tau=0.99 stable=1 min_words=2": {
+      "commit_rate": 0.899,
+      "acc_at_commit": 0.944,
+      "acc_at_commit_accepting_then_alt": 0.949,
+      "mean_commit_word": 3.04,
+      "mean_words_saved": 2.33,
+      "at_or_before_human": 0.68
+    },
+    "nonnone tau=0.99 stable=1 min_words=3": {
+      "commit_rate": 0.783,
+      "acc_at_commit": 0.981,
+      "acc_at_commit_accepting_then_alt": 0.987,
+      "mean_commit_word": 3.7,
+      "mean_words_saved": 2.14,
+      "at_or_before_human": 0.49
+    },
+    "nonnone tau=0.99 stable=2 min_words=1": {
+      "commit_rate": 0.702,
+      "acc_at_commit": 0.978,
+      "acc_at_commit_accepting_then_alt": 0.978,
+      "mean_commit_word": 3.71,
+      "mean_words_saved": 2.12,
+      "at_or_before_human": 0.173
+    },
+    "nonnone tau=0.99 stable=2 min_words=2": {
+      "commit_rate": 0.702,
+      "acc_at_commit": 0.978,
+      "acc_at_commit_accepting_then_alt": 0.978,
+      "mean_commit_word": 3.71,
+      "mean_words_saved": 2.12,
+      "at_or_before_human": 0.173
+    },
+    "nonnone tau=0.99 stable=2 min_words=3": {
+      "commit_rate": 0.631,
+      "acc_at_commit": 0.992,
+      "acc_at_commit_accepting_then_alt": 0.992,
+      "mean_commit_word": 4.04,
+      "mean_words_saved": 2.17,
+      "at_or_before_human": 0.168
+    },
+    "nonnone tau=0.99 stable=3 min_words=1": {
+      "commit_rate": 0.475,
+      "acc_at_commit": 0.926,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.8,
+      "mean_words_saved": 1.82,
+      "at_or_before_human": 0.149
+    },
+    "nonnone tau=0.99 stable=3 min_words=2": {
+      "commit_rate": 0.475,
+      "acc_at_commit": 0.926,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.8,
+      "mean_words_saved": 1.82,
+      "at_or_before_human": 0.149
+    },
+    "nonnone tau=0.99 stable=3 min_words=3": {
+      "commit_rate": 0.475,
+      "acc_at_commit": 0.926,
+      "acc_at_commit_accepting_then_alt": 1.0,
+      "mean_commit_word": 4.8,
+      "mean_words_saved": 1.82,
+      "at_or_before_human": 0.149
+    }
+  },
+  "full_utterance_accuracy_actionable": {
+    "strict": 0.854,
+    "accepting_then_alt": 0.934
+  },
+  "full_utterance_accuracy_all_accepting_then_alt": 0.941,
+  "oracle_stable_commit_fraction": 0.637
+}
