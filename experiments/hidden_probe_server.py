@@ -44,8 +44,18 @@ def main():
     if args.limit_train:
         train = train[: args.limit_train]
     t0 = time.perf_counter()
-    Xtr = np.stack([embed(args.server, f"<|turn>user\n{hp.prompt_text(c)}{TAIL}") for c in train])
-    Xte = np.stack([embed(args.server, f"<|turn>user\n{hp.prompt_text(c)}{TAIL}") for c in test])
+    cache = Path(args.out).with_suffix(".emb")
+
+    def embed_all(cases, tag):
+        ck = Path(str(cache) + f".{tag}.npy")
+        rows = list(np.load(ck)) if ck.exists() else []
+        for i in range(len(rows), len(cases)):
+            rows.append(embed(args.server, f"<|turn>user\n{hp.prompt_text(cases[i])}{TAIL}"))
+            if (i + 1) % 250 == 0 or i + 1 == len(cases):
+                np.save(ck, np.stack(rows)); print(f"{tag}: {i+1}/{len(cases)} embedded, {time.perf_counter()-t0:.0f}s", flush=True)
+        return np.stack(rows)
+
+    Xtr = embed_all(train, "train"); Xte = embed_all(test, "test")
     print(f"embeddings done in {time.perf_counter()-t0:.0f}s, dim {Xtr.shape[1]}", flush=True)
     gtr = np.array([c["gold"] for c in train]); gte = np.array([c["gold"] for c in test])
     acc_lr = acc_nc = 0; nll = 0.0; n = 0
