@@ -101,6 +101,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--offline", action="store_true", help="use the cached features only")
     ap.add_argument("--load-4bit", action="store_true", help="NF4 weights via bitsandbytes (12B on 16 GB)")
+    ap.add_argument("--standardize", action="store_true", help="z-score each layer with train statistics before the probe (Gemma residual norms are large)")
     ap.add_argument("--truncate", type=int, default=0, help="keep only the first N decoder layers (features below N are exact; letter logits invalid)")
     args = ap.parse_args()
     from sklearn.linear_model import LogisticRegression
@@ -113,6 +114,9 @@ def main():
             raise SystemExit("no cache")
         F = extract(args.model, train, test, cache, load_4bit=args.load_4bit, truncate=args.truncate)
     Htr, Hte, Ztr, Zte = F["H_train"].astype(np.float32), F["H_test"].astype(np.float32), F["Z_train"], F["Z_test"]
+    if args.standardize:
+        mu = Htr.mean(0, keepdims=True); sd = Htr.std(0, keepdims=True) + 1e-3
+        Htr = (Htr - mu) / sd; Hte = (Hte - mu) / sd
     gtr = np.array([c["gold"] for c in train]); gte = np.array([c["gold"] for c in test])
     qk_tr = [c["qkey"] for c in train]; qk_te = [c["qkey"] for c in test]
     qkeys = sorted(set(qk_te))
@@ -144,7 +148,7 @@ def main():
         return (r, probs) if return_probs else r
 
     res = {"model": args.model, "n_layers": int(nL), "letter_logits": {}, "truncated": int(args.truncate), "load_4bit": bool(args.load_4bit),
-           "letter_logits_valid": not bool(args.truncate)}
+           "letter_logits_valid": not bool(args.truncate), "standardize": bool(args.standardize)}
     # letter baseline
     ok = 0; nl = 0.0
     for i, c in enumerate(test):

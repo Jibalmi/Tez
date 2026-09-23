@@ -178,6 +178,17 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 Reading the decision at layer 20–24 keeps the probe's full accuracy and removes a third to a half of the prefill. Absolute ms are the eager PyTorch path (the GGUF server does the same prompt in ~30 ms); the ratios are what transfer.
 
+### Probe backbone: Gemma 4 12B mid-depth vs Qwen3.5-4B (typed-decisions, same splits)
+
+| backbone | best layer | probe acc | 50 rows/q | 200 rows/q | conformal 90 %: act / acc |
+|---|---|---|---|---|---|
+| Qwen3.5-4B bf16, raw features | 26 / 32 | **0.793** | 0.741 | **0.788** | 66.6 % / 0.884 |
+| Qwen3.5-4B bf16, z-scored | 30 / 32 | 0.772 | 0.742 | 0.770 | 63.7 % / 0.880 |
+| Gemma 4 12B NF4, z-scored (layers 0–40 of 48) | 34 / 48 | 0.787 | **0.754** | 0.772 | 66.4 % / 0.874 |
+| Gemma 4 12B Q8, final layer via llama-server | 48 / 48 | 0.735 | | | |
+
+12B layer curve (z-scored): 0.483 (0) · 0.627 (4) · 0.600 (12) · 0.662 (20) · 0.714 (26) · 0.750 (28) · 0.775 (32) · **0.787 (34)** · 0.782 (36–39) · 0.776 (40). Unscaled fits did not converge on the 12B (0.714 at layer 26, same as z-scored). The bigger backbone does not buy a better probe; the 4B stays the probe backbone.
+
 ### Task probes on Laya's public benchmarks (`hidden_probe_tasks.py`, frozen Qwen3.5-4B, 2,000 labelled train rows per task, same test rows as §1)
 
 | task | 4B letters | 4B probe L18 | L22 | L26 | final | 12B letters (zero-shot) | laya-td (fine-tuned) | Jev (published) |

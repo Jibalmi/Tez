@@ -257,17 +257,25 @@ def main():
     SW = J("results/hidden_probe_sweep_qwen35-4b.json")
     if SW:
         axt = fig.add_subplot(gs[6, 1])
-        ls = sorted(int(k) for k in SW["layer_sweep"]); axt.plot(ls, [SW["layer_sweep"][str(l)]["acc"] for l in ls], "-o", color=COL["tez"], ms=3)
-        axt.axhline(SW["letter_logits"]["acc"], ls=":", color=COL["laya-en"], lw=.8); axt.text(0, SW["letter_logits"]["acc"] + .01, "4B letter logits", fontsize=5.5, color=COL["laya-en"])
+        ls = sorted(int(k) for k in SW["layer_sweep"]); axt.plot([l / 32 for l in ls], [SW["layer_sweep"][str(l)]["acc"] for l in ls], "-o", color=COL["tez"], ms=3, label="Qwen3.5-4B (bf16)")
+        S12 = J("results/hidden_probe_sweep_gemma4-12b-nf4_std.json")
+        if S12:
+            l12 = sorted(int(k) for k in S12["layer_sweep"]); axt.plot([l / 48 for l in l12], [S12["layer_sweep"][str(l)]["acc"] for l in l12], "-s", color="#0B5F5E", ms=3, label="Gemma 4 12B (NF4, z-scored)")
+            axt.plot([1.0], [0.735], "D", color="#0B5F5E", ms=5); axt.text(.98, .70, "12B final" + chr(10) + "(server) 0.735", fontsize=5.5, ha="right", color="#0B5F5E")
+        axt.legend(fontsize=6, loc="lower right")
+        axt.axhline(SW["letter_logits"]["acc"], ls=":", color=COL["laya-en"], lw=.8); axt.text(0.3, SW["letter_logits"]["acc"] + .01, "4B letter logits", fontsize=5.5, color=COL["laya-en"])
         axt.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axt.text(0, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
-        axt.set_xlabel("layer (of 32)"); axt.set_ylabel("probe accuracy"); axt.tick_params(labelsize=7); axt.set_ylim(.4, .85)
-        axt.set_title("T · Probe accuracy by layer, Qwen3.5-4B")
+        axt.set_xlabel("depth (fraction of layers)"); axt.set_ylabel("probe accuracy"); axt.tick_params(labelsize=7); axt.set_ylim(.4, .85)
+        axt.set_title("T · Probe accuracy by depth, 4B vs 12B")
         axu = fig.add_subplot(gs[6, 2])
-        de = SW["data_efficiency"]; xs = sorted(int(k) for k in de); axu.errorbar(xs, [de[str(x)]["mean"] for x in xs], yerr=[de[str(x)]["std"] for x in xs], fmt="-o", color=COL["tez"], ms=3, capsize=2)
+        de = SW["data_efficiency"]; xs = sorted(int(k) for k in de); axu.errorbar(xs, [de[str(x)]["mean"] for x in xs], yerr=[de[str(x)]["std"] for x in xs], fmt="-o", color=COL["tez"], ms=3, capsize=2, label="4B, layer 26")
+        if S12:
+            d12 = S12["data_efficiency"]; x12 = sorted(int(k) for k in d12); axu.errorbar(x12, [d12[str(x)]["mean"] for x in x12], yerr=[d12[str(x)]["std"] for x in x12], fmt="-s", color="#0B5F5E", ms=3, capsize=2, label="12B, layer 34")
+        axu.legend(fontsize=6, loc="lower right")
         axu.axhline(0.727, ls=":", color="grey", lw=.8); axu.text(10, .73, "Jev 0.727", fontsize=5.5, color="grey")
         axu.axhline(0.766, ls="--", color=COL["laya-td"], lw=.8); axu.text(10, .77, "laya-td 0.766", fontsize=5.5, color=COL["laya-td"])
         axu.set_xscale("log"); axu.set_xlabel("labelled rows per question"); axu.tick_params(labelsize=7); axu.set_ylim(.6, .85)
-        axu.set_title("U · Probe data efficiency (layer 26)")
+        axu.set_title("U · Probe data efficiency")
     # ---------------------------------------------------------------- V: early exit — probe accuracy vs depth vs speed-up
     EE = J("results/early_exit_qwen35-4b.json"); SW = J("results/hidden_probe_sweep_qwen35-4b.json")
     if EE and SW:
