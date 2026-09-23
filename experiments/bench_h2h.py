@@ -177,8 +177,11 @@ def tez_score_letters(server, prompt, k, n_probs=200):
         import importlib.util as _iu
         _s = _iu.spec_from_file_location("backend", ROOT / "experiments" / "backend.py"); _b = _iu.module_from_spec(_s); _s.loader.exec_module(_b)  # type: ignore[union-attr]
         return _b.score_letters(prompt, k, n_probs)
-    body = {"prompt": prompt, "n_predict": 1, "n_probs": n_probs, "temperature": 0, "cache_prompt": True, "samplers": []}
+    body = {"prompt": prompt, "n_predict": 1, "n_probs": n_probs, "temperature": 0, "samplers": [],
+            "cache_prompt": os.environ.get("TEZ_CACHE_PROMPT", "1") != "0"}   # qwen35 GGUFs crash llama.cpp b11100 on partial prefix reuse
     data = SESSION.post(f"{server}/completion", json=body, timeout=300).json()
+    if "completion_probabilities" not in data:   # the first greedy token was end-of-sequence (depth-pruned GGUFs): suppress it and re-read
+        data = SESSION.post(f"{server}/completion", json=dict(body, ignore_eos=True), timeout=300).json()
     tops = data["completion_probabilities"][0]["top_logprobs"]
     lp = {}
     for t in tops:

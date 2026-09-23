@@ -103,21 +103,21 @@ def main():
     ax = fig.add_subplot(gs[1, 1]); W = J("results/probe_lab_w2s_qwen35-4b.json"); LM = J("results/probe_lab_labelmodel_qwen35-4b.json"); ST = J("results/probe_lab_stack_qwen35-4b.json")
     items = []
     if W:
-        items.append(("probe on gold labels (reference)", W["gold"]["26"], COL["grey"]))
-        for tname, lab in (("gemma12b", "12B answers"), ("self", "4B's own answers")):
+        items.append(("gold labels (reference)", W["gold"]["26"], COL["grey"]))
+        for tname, lab in (("gemma12b", "12B"), ("self", "4B self")):
             T = W["teachers"].get(tname)
             if T:
-                items.append((f"teacher: {lab}", T["teacher_test_acc"], COL["orange"]))
+                items.append((f"teacher: {lab} letters", T["teacher_test_acc"], COL["orange"]))
                 best = max(((L, n, v["acc"]) for L, d in T["variants"].items() for n, v in d.items()), key=lambda t: t[2])
-                items.append((f"probe from {lab} ({best[1]}, L{best[0]})", best[2], COL["tez"]))
+                items.append((f"probe taught by {lab} ({best[1]})", best[2], COL["tez"]))
         if W["teachers"].get("agree"):
             v = max(W["teachers"]["agree"]["variants"].values(), key=lambda d: d["agreement-filtered"]["acc"])["agreement-filtered"]["acc"]
-            items.append(("probe from rows where 4B and 12B agree", v, COL["dark"]))
+            items.append(("taught where 4B and 12B agree", v, COL["dark"]))
     if LM:
         best = max(LM["combos"].items(), key=lambda kv: kv[1]["label_model_test_acc"])
-        items.append((f"Dawid-Skene label model ({best[0]})", best[1]["label_model_test_acc"], COL["red"]))
+        items.append(("Dawid-Skene over readouts", best[1]["label_model_test_acc"], COL["red"]))
     if ST:
-        items.append(("stacked: probe + 12B letters (gold labels)", ST["pools"]["probe L26 + 12B letters"]["stacked_logreg"], COL["green"]))
+        items.append(("gold probe + 12B letters, stacked", ST["pools"]["probe L26 + 12B letters"]["stacked_logreg"], COL["green"]))
     if items:
         hbars(ax, items, (.4, .86), ref=(0.727, "Jev"))
     else:
@@ -134,6 +134,11 @@ def main():
         ns = sorted(int(k) for k in FS["n"])
         for m, col, mk in (("LDA (unlabelled covariance)", COL["red"], "v"), ("PCA-64 (unlabelled) + logreg", COL["blue"], "^")):
             ax.plot(ns, [FS["n"][str(n)][m]["mean"] for n in ns], "--" + mk, ms=3, color=col, label=m)
+    PRI = J("results/probe_lab_prior_qwen35-4b.json")
+    if PRI:
+        ns = [n for n in (5, 10, 25, 50)]
+        ax.plot(ns, [PRI["n"][str(n)]["typical"]["mix n0=10"] for n in ns], "-D", ms=3.5, color=COL["dark"], label="typical rows + 12B zero-shot prior")
+        ax.axhline(PRI["zero_shot_12b"], ls="--", color=COL["orange"], lw=.8); ax.text(5.2, PRI["zero_shot_12b"] - .016, "12B zero-shot, no labels", fontsize=6.2, color=COL["orange"])
     if TY or FS:
         refs(ax, 5.2); ax.set_xscale("log"); ax.set_xlabel("labelled rows per question"); ax.set_ylabel("accuracy"); ax.set_ylim(.4, .82); ax.legend(fontsize=6.2, loc="lower right")
     else:
@@ -179,8 +184,9 @@ def main():
         if TR:
             k = max(TR["lowo"], key=lambda kk: TR["lowo"][kk]["mean"])
             ax.bar(x + .5 * w, [TR["lowo"][k][f] for f in wfs], w, color=COL["tez"], label=f"'is this answer right?' probe ({k})")
-        if U["baselines"][wfs[0]].get("letters_12b") is not None:
-            ax.bar(x + 1.5 * w, [U["baselines"][f]["letters_12b"] for f in wfs], w, color=COL["dark"], label="12B letters (zero-shot)")
+        WB = J("results/probe_lab_workflow_baselines.json")
+        if WB:
+            ax.bar(x + 1.5 * w, [WB["letters_12b_by_workflow"][f] for f in wfs], w, color=COL["dark"], label="12B letters (zero-shot)")
         ax.set_xticks(x); ax.set_xticklabels([f.replace("_", "\n") for f in wfs], fontsize=6.5); ax.set_ylim(0, 1.05); ax.legend(fontsize=6.0, loc="upper center", ncol=2)
     ax.set_title("j · One head for workflows it has never seen")
 
@@ -264,16 +270,19 @@ def main():
         empty(ax, "voice commit rule")
     ax.set_title("o · Voice: a shrinking commit bound buys nothing")
 
-    # p: the recipe
-    ax = fig.add_subplot(gs[3, 3]); ax.axis("off")
-    ax.text(0, 1, "What carries over to any schema\n\n"
-                  "1  read the decision at the layer where the\n   unlabelled states are most compressed\n   (intrinsic-dimension minimum: layers 24-28)\n"
-                  "2  cut the model there: fewer layers, same probe\n"
-                  "3  label the most typical rows first,\n   then escalate, but keep a random audit slice\n"
-                  "4  act only under a conformal error bound\n   (5 %: acts on 40 % of decisions)\n"
-                  "5  keep 64 numbers per state: the decision code\n\n"
-                  "What did not work: label-free probes beyond their\nteacher, Dawid-Skene over weak readouts,\nuncertainty-only labelling, DoLa, adaptive depth,\none shared letter probe on unseen workflows,\na collapsing voice bound.",
-            va="top", fontsize=8.2, family="monospace", transform=ax.transAxes)
+    # p: decide, then bind (reversed options at test time)
+    ax = fig.add_subplot(gs[3, 3]); OR = J("results/probe_order_qwen35-4b.json")
+    if OR:
+        ls = sorted(int(k) for k in OR["probe"])
+        ax.plot(ls, [OR["probe"][str(l)]["standard"] for l in ls], "-o", ms=3, color=COL["grey"], label="options in the trained order")
+        ax.plot(ls, [OR["probe"][str(l)]["reversed_read_as_content"] for l in ls], "-o", ms=3, color=COL["tez"], label="options reversed, same probe")
+        ax.axvspan(8, 14.5, color=COL["tez"], alpha=.08); ax.text(11, .45, "order-free", ha="center", fontsize=6.5, color=COL["tez"])
+        ax.axhline(OR["letters"]["standard_order_acc"], ls=":", color=COL["blue"], lw=.8)
+        ax.text(31, OR["letters"]["standard_order_acc"] + .01, f"4B letters {OR['letters']['standard_order_acc']:.2f}; reversal changes the pick in {100 * (1 - OR['letters']['same_option_chosen']):.0f} %", fontsize=6.0, ha="right", color=COL["blue"])
+        ax.set_xlabel("layer (of 32)"); ax.set_ylabel("probe accuracy"); ax.set_ylim(.4, .85); ax.legend(fontsize=6.3, loc="upper left")
+    else:
+        empty(ax, "reversed options")
+    ax.set_title("p · Decide, then bind: reversing the options")
 
     out = ROOT / "docs" / "figures"; out.mkdir(parents=True, exist_ok=True)
     fig.savefig(out / "tez_lab.png", dpi=100, bbox_inches="tight"); fig.savefig(out / "tez_lab.pdf", bbox_inches="tight")

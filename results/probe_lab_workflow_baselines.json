@@ -1,0 +1,8 @@
+{
+ "letters_12b_by_workflow": {
+  "agent_trace_observability": 0.594,
+  "customer_service": 0.768,
+  "invoice_processing": 0.768,
+  "security_incidents": 0.688
+ }
+}

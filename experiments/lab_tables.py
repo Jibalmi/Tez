@@ -203,6 +203,16 @@ def main():
             w(f"| {n} | {f3(R['top1_test'])} | {f3(R['top3_test'])} | {f3(R['top5_test'])} | {f3(R['top10_test'])} | {f3(R['unseen_workflow_mean']['top3'])} |")
         w("")
 
+    OR = J("results/probe_order_qwen35-4b.json")
+    if OR:
+        w("### Decide, then bind: the same probes on prompts with the options reversed" + chr(10))
+        ls = sorted(int(k) for k in OR["probe"])
+        w("| layer | " + " | ".join(str(l) for l in ls) + " |" + chr(10) + "|---|" + "---|" * len(ls))
+        w("| options in the trained order | " + " | ".join(f3(OR['probe'][str(l)]['standard']) for l in ls) + " |")
+        w("| options reversed, same probe | " + " | ".join(f3(OR['probe'][str(l)]['reversed_read_as_content']) for l in ls) + " |")
+        L_ = OR["letters"]
+        w(chr(10) + f"4B letters: {f3(L_['standard_order_acc'])} in the usual order, {f3(L_['reversed_order_acc'])} reversed; reversal changes the option picked in {100 * (1 - L_['same_option_chosen']):.0f} % of decisions. Probes are order-free up to layer 14 and lose 2.4 points at layer 18, 20 at layer 26: read at layer 18 when a schema may reorder its options." + chr(10))
+
     M = J("results/probe_multiq_qwen35-4b.json")
     if M:
         w("### Many decisions from one forward pass (400 test rows, 5 questions each)\n")

@@ -1,0 +1,144 @@
+{
+ "layers": [
+  12,
+  16,
+  20,
+  24,
+  26,
+  28,
+  30,
+  32
+ ],
+ "lowo": {
+  "L12": {
+   "agent_trace_observability": 0.332,
+   "customer_service": 0.306,
+   "invoice_processing": 0.344,
+   "security_incidents": 0.376,
+   "mean": 0.3395
+  },
+  "L12_centred": {
+   "agent_trace_observability": 0.33,
+   "customer_service": 0.278,
+   "invoice_processing": 0.34,
+   "security_incidents": 0.36,
+   "mean": 0.32700000000000007
+  },
+  "L16": {
+   "agent_trace_observability": 0.448,
+   "customer_service": 0.504,
+   "invoice_processing": 0.388,
+   "security_incidents": 0.516,
+   "mean": 0.46399999999999997
+  },
+  "L16_centred": {
+   "agent_trace_observability": 0.448,
+   "customer_service": 0.508,
+   "invoice_processing": 0.386,
+   "security_incidents": 0.512,
+   "mean": 0.4635
+  },
+  "L20": {
+   "agent_trace_observability": 0.412,
+   "customer_service": 0.55,
+   "invoice_processing": 0.508,
+   "security_incidents": 0.578,
+   "mean": 0.512
+  },
+  "L20_centred": {
+   "agent_trace_observability": 0.532,
+   "customer_service": 0.538,
+   "invoice_processing": 0.444,
+   "security_incidents": 0.536,
+   "mean": 0.5125
+  },
+  "L24": {
+   "agent_trace_observability": 0.494,
+   "customer_service": 0.602,
+   "invoice_processing": 0.714,
+   "security_incidents": 0.598,
+   "mean": 0.602
+  },
+  "L24_centred": {
+   "agent_trace_observability": 0.51,
+   "customer_service": 0.576,
+   "invoice_processing": 0.558,
+   "security_incidents": 0.586,
+   "mean": 0.5575
+  },
+  "L26": {
+   "agent_trace_observability": 0.478,
+   "customer_service": 0.66,
+   "invoice_processing": 0.746,
+   "security_incidents": 0.606,
+   "mean": 0.6224999999999999
+  },
+  "L26_centred": {
+   "agent_trace_observability": 0.49,
+   "customer_service": 0.668,
+   "invoice_processing": 0.714,
+   "security_incidents": 0.596,
+   "mean": 0.617
+  },
+  "L28": {
+   "agent_trace_observability": 0.452,
+   "customer_service": 0.672,
+   "invoice_processing": 0.69,
+   "security_incidents": 0.608,
+   "mean": 0.6055
+  },
+  "L28_centred": {
+   "agent_trace_observability": 0.442,
+   "customer_service": 0.666,
+   "invoice_processing": 0.682,
+   "security_incidents": 0.572,
+   "mean": 0.5905
+  },
+  "L30": {
+   "agent_trace_observability": 0.472,
+   "customer_service": 0.638,
+   "invoice_processing": 0.676,
+   "security_incidents": 0.592,
+   "mean": 0.5945
+  },
+  "L30_centred": {
+   "agent_trace_observability": 0.428,
+   "customer_service": 0.618,
+   "invoice_processing": 0.704,
+   "security_incidents": 0.568,
+   "mean": 0.5795
+  },
+  "L32": {
+   "agent_trace_observability": 0.41,
+   "customer_service": 0.576,
+   "invoice_processing": 0.568,
+   "security_incidents": 0.584,
+   "mean": 0.5345
+  },
+  "L32_centred": {
+   "agent_trace_observability": 0.406,
+   "customer_service": 0.456,
+   "invoice_processing": 0.58,
+   "security_incidents": 0.518,
+   "mean": 0.49000000000000005
+  }
+ },
+ "in_distribution": {
+  "L12": 0.5135,
+  "L12_centred": 0.5125,
+  "L16": 0.636,
+  "L16_centred": 0.617,
+  "L20": 0.6875,
+  "L20_centred": 0.6795,
+  "L24": 0.694,
+  "L24_centred": 0.688,
+  "L26": 0.711,
+  "L26_centred": 0.703,
+  "L28": 0.7065,
+  "L28_centred": 0.715,
+  "L30": 0.7175,
+  "L30_centred": 0.727,
+  "L32": 0.7495,
+  "L32_centred": 0.746
+ }
+}

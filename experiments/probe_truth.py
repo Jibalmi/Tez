@@ -99,12 +99,12 @@ def main():
         for centre in (False, True):
             key = f"L{L}{'_centred' if centre else ''}"
             X, y, _ = flat(F["train"], ktr, gtr, np.arange(len(train)), li, centre)
-            clf = LogisticRegression(max_iter=3000, C=0.05).fit(X, y)
+            clf = LogisticRegression(max_iter=500, tol=1e-3, C=0.05).fit(X, y)
             res["in_distribution"][key] = decide(clf, F["test"], kte, gte, np.arange(len(test)), li, centre)
             R = {}
             for w in wfs:
                 X, y, _ = flat(F["train"], ktr, gtr, np.where(wf_tr != w)[0], li, centre)
-                clf = LogisticRegression(max_iter=3000, C=0.05).fit(X, y)
+                clf = LogisticRegression(max_iter=500, tol=1e-3, C=0.05).fit(X, y)
                 R[w] = decide(clf, F["test"], kte, gte, np.where(wf_te == w)[0], li, centre)
             R["mean"] = float(np.mean([R[w] for w in wfs])); res["lowo"][key] = R
             print(f"{key:14s} in-distribution {res['in_distribution'][key]:.3f} | unseen workflow mean {R['mean']:.3f} | " + " ".join(f"{w[:10]}:{R[w]:.2f}" for w in wfs), flush=True)

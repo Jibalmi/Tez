@@ -1,0 +1,74 @@
+{
+ "letters": {
+  "standard_order_acc": 0.4895,
+  "reversed_order_acc": 0.5605,
+  "same_option_chosen": 0.487
+ },
+ "probe": {
+  "8": {
+   "standard": 0.544,
+   "reversed_read_as_content": 0.5435,
+   "reversed_read_as_letter": 0.216
+  },
+  "10": {
+   "standard": 0.5515,
+   "reversed_read_as_content": 0.5515,
+   "reversed_read_as_letter": 0.213
+  },
+  "12": {
+   "standard": 0.5735,
+   "reversed_read_as_content": 0.574,
+   "reversed_read_as_letter": 0.208
+  },
+  "14": {
+   "standard": 0.6615,
+   "reversed_read_as_content": 0.66,
+   "reversed_read_as_letter": 0.1725
+  },
+  "16": {
+   "standard": 0.7365,
+   "reversed_read_as_content": 0.6995,
+   "reversed_read_as_letter": 0.171
+  },
+  "18": {
+   "standard": 0.7775,
+   "reversed_read_as_content": 0.753,
+   "reversed_read_as_letter": 0.149
+  },
+  "20": {
+   "standard": 0.7905,
+   "reversed_read_as_content": 0.68,
+   "reversed_read_as_letter": 0.182
+  },
+  "22": {
+   "standard": 0.7925,
+   "reversed_read_as_content": 0.6895,
+   "reversed_read_as_letter": 0.1875
+  },
+  "24": {
+   "standard": 0.7915,
+   "reversed_read_as_content": 0.612,
+   "reversed_read_as_letter": 0.2395
+  },
+  "26": {
+   "standard": 0.793,
+   "reversed_read_as_content": 0.5885,
+   "reversed_read_as_letter": 0.2495
+  },
+  "28": {
+   "standard": 0.7905,
+   "reversed_read_as_content": 0.564,
+   "reversed_read_as_letter": 0.27
+  },
+  "30": {
+   "standard": 0.7875,
+   "reversed_read_as_content": 0.562,
+   "reversed_read_as_letter": 0.2645
+  },
+  "32": {
+   "standard": 0.772,
+   "reversed_read_as_content": 0.536,
+   "reversed_read_as_letter": 0.2495
+  }
+ }
+}
