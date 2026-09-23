@@ -54,6 +54,7 @@ checkpoints and Tez on byte-identical rows, same GPU, Laya's own datasets and pr
 | typed-decisions, linear probe on the frozen **Qwen3.5-4B**'s hidden state (per-question logreg on the train split; no LLM training) | **0.794** (4B letter readout alone: 0.490) | | | 0.766 | 0.727 |
 | … soft accuracy vs teacher distribution | **0.575 / 0.583** | 0.331 | 0.328 | 0.471 | 0.580 |
 | Banking77 (77 options) | **0.713** | 0.395 | 0.357 | 0.388 | 0.870 |
+| Banking77, linear probe on the frozen Qwen3.5-4B (2,000 labelled rows; supervised) | **0.860** (one pass) | | | 0.388 | 0.870 |
 | MASSIVE intent, macro over 11 languages | **0.885** | 0.354 | 0.524 | 0.345 | — |
 | … Khmer | **0.790** | 0.000 | 0.210 | 0.050 | — |
 | SST-5 / BoolQ / prompt-injections | **0.512 / 0.850 / 0.759** | 0.362 / 0.843 / 0.672 | 0.280 / 0.782 / 0.569 | 0.460 / 0.835 / 0.647 | — |
@@ -72,6 +73,11 @@ Findings worth knowing before you build anything like this:
   Qwen3.5-4B's hidden state (12 layers below the top) scores **0.794** on typed-decisions — above Laya's
   fine-tuned 0.766 and Jev's 0.727 — from a model whose own one-pass letter readout gets 0.49. Minutes of
   logistic regression, no LLM training, and the top third of the network can be skipped.
+- **Reading early is cheap latency.** Truncating the 4B to 20–24 of its 32 layers cuts prefill 1.30–1.54× with
+  no loss in probe accuracy. The same probe recipe on Laya's tasks beats Laya's fine-tuned checkpoint on five of six,
+  and reaches 0.860 on Banking77 (Jev 0.870) in one pass.
+- **Two cheap levers barely moved.** A MiniLM shortlist lifts Banking77 from 0.713 to 0.738 in 1.1 passes;
+  eliminate-then-rescore (PoE) is within ±2 points everywhere and is recorded as negative.
 - **Worked examples in the cached prefix are free accuracy** (+2 pts on 2,000 decisions, +5 on schema-specific
   questions); thinking budgets before the readout, ordinal expected-value readouts and digit/lowercase answer
   symbols are null or negative at 12B.

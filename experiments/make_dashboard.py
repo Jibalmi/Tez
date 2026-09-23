@@ -292,7 +292,7 @@ def main():
         axw.axhline(RN["retrieval_only_acc"], ls=":", color=COL["grey"], lw=.8); axw.text(24, RN["retrieval_only_acc"] - .03, f"retrieval only {RN['retrieval_only_acc']:.3f}", fontsize=6.5, color="grey", ha="right")
         axw.axhline(0.870, ls=":", color=COL["jev"], lw=.8); axw.text(26, .875, "Jev 0.870", fontsize=6.5, ha="right", color=COL["jev"])
         axw.set_xlim(1, 26); axw.set_ylim(.3, 1.0); axw.set_xlabel("shortlist size k"); axw.set_ylabel("accuracy / recall"); axw.legend(fontsize=6.5, loc="lower right")
-        axw.set_title("W · Banking77: embed-then-decide vs the tournament")
+        axw.set_title("W · Banking77: shortlist, then decide")
     # ---------------------------------------------------------------- X: task probes on the frozen 4B vs its letter readout and Laya
     TP = J("results/hidden_probe_tasks_qwen35-4b.json")
     if TP:
@@ -304,7 +304,7 @@ def main():
         axx.bar(x - 1.5 * w, letter, w, color=COL["laya-en"], label="4B letter readout"); axx.bar(x - .5 * w, best, w, color=COL["tez"], label="4B probe (best layer)")
         axx.bar(x + .5 * w, tez12, w, color="#0B5F5E", label="12B letter readout"); axx.bar(x + 1.5 * w, ltd, w, color=COL["laya-td"], label="laya-td (fine-tuned)")
         for i, v in enumerate(best): axx.text(i - .5 * w, v + .01, f"{v:.2f}", ha="center", fontsize=6.5)
-        axx.set_xticks(x); axx.set_xticklabels(tasks, fontsize=7); axx.set_ylim(0, 1.05); axx.legend(fontsize=6.5, loc="lower left"); axx.set_title("X · One probe per task (2,000 labelled rows) vs zero-shot readouts")
+        axx.set_xticks(x); axx.set_xticklabels(tasks, fontsize=7); axx.set_ylim(0, 1.3); axx.legend(fontsize=6.5, loc="upper center", ncol=2); axx.set_title("X · One probe per task, 2,000 rows")
     # ---------------------------------------------------------------- Y: option elimination
     OE = J("results/option_elimination_gemma4-12b-q8_0.json")
     if OE:
@@ -312,7 +312,7 @@ def main():
         cols = [COL["tez"], "#7FB8B7", "#4A7FB5", COL["laya-ml"], COL["laya-td"]]
         for j, r in enumerate(rules):
             axy.bar(x + (j - (len(rules) - 1) / 2) * w, [OE[t]["summary"][r]["acc"] for t in tasks], w, color=cols[j % len(cols)], label=r)
-        axy.set_xticks(x); axy.set_xticklabels(tasks, fontsize=7); axy.set_ylim(0, 1.05); axy.legend(fontsize=6.5, loc="lower left"); axy.set_title("Y · Option elimination: single pass vs eliminate-then-rescore")
+        axy.set_xticks(x); axy.set_xticklabels(tasks, fontsize=7); axy.set_ylim(0, 1.25); axy.legend(fontsize=6.5, loc="upper center", ncol=3); axy.set_title("Y · Option elimination: no gain")
     # ---------------------------------------------------------------- S: headline numbers text
     ax = fig.add_subplot(gs[5, 3]); ax.axis("off")
     txt = ("Headline\n\n"

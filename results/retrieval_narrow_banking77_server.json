@@ -1,0 +1,7261 @@
+{
+ "task": "banking77",
+ "n": 400,
+ "embedder": "server",
+ "ms_embed_per_input": 57.743683250000686,
+ "retrieval_only_acc": 0.025,
+ "recall_at": {
+  "1": 0.025,
+  "2": 0.055,
+  "3": 0.07,
+  "4": 0.085,
+  "5": 0.0925,
+  "6": 0.1125,
+  "7": 0.1275,
+  "8": 0.14,
+  "9": 0.155,
+  "10": 0.1575,
+  "11": 0.165,
+  "12": 0.18,
+  "13": 0.19,
+  "14": 0.195,
+  "15": 0.215,
+  "16": 0.2225,
+  "17": 0.2375,
+  "18": 0.25,
+  "19": 0.26,
+  "20": 0.2825,
+  "21": 0.295,
+  "22": 0.3,
+  "23": 0.3125,
+  "24": 0.3175,
+  "25": 0.3375,
+  "26": 0.3575
+ },
+ "tournament_ref_acc": 0.7125,
+ "tournament_ref_ms": 588.6059000040404,
+ "runs": {
+  "k10": {
+   "k": 10,
+   "with_none": false,
+   "acc": 0.1475,
+   "acc_given_in_shortlist": 0.9365079365079365,
+   "recall": 0.1575,
+   "ms_p50": 196.375133251413,
+   "calls_mean": 1.0,
+   "rows": [
+    {
+     "id": "banking77-1060",
+     "gold": 6,
+     "pred": 51,
+     "conf": 0.7230254853173383,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.96648325304523
+    },
+    {
+     "id": "banking77-1190",
+     "gold": 74,
+     "pred": 70,
+     "conf": 0.9999913738766304,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.81438325178715
+    },
+    {
+     "id": "banking77-2806",
+     "gold": 57,
+     "pred": 71,
+     "conf": 0.9996155744414106,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.33038325144116
+    },
+    {
+     "id": "banking77-2801",
+     "gold": 57,
+     "pred": 64,
+     "conf": 0.9979671122421215,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 220.072783249625
+    },
+    {
+     "id": "banking77-760",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.999973922019669,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 241.17708325137755
+    },
+    {
+     "id": "banking77-2670",
+     "gold": 59,
+     "pred": 65,
+     "conf": 0.9885819641865663,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 228.9722832501775
+    },
+    {
+     "id": "banking77-944",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999989624863239,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.24518324884957
+    },
+    {
+     "id": "banking77-2728",
+     "gold": 20,
+     "pred": 75,
+     "conf": 0.9213814628638296,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.15448324902354
+    },
+    {
+     "id": "banking77-602",
+     "gold": 56,
+     "pred": 15,
+     "conf": 0.9872984123446711,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 235.50408325171702
+    },
+    {
+     "id": "banking77-922",
+     "gold": 40,
+     "pred": 43,
+     "conf": 0.9944563558799228,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.08448325119934
+    },
+    {
+     "id": "banking77-2625",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9999998217933517,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 210.02808324918988
+    },
+    {
+     "id": "banking77-3006",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.9999376231942717,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 149.2321832520156
+    },
+    {
+     "id": "banking77-767",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.999999257674162,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.99678324974047
+    },
+    {
+     "id": "banking77-533",
+     "gold": 49,
+     "pred": 30,
+     "conf": 0.9714623509519831,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.70018324863304
+    },
+    {
+     "id": "banking77-290",
+     "gold": 12,
+     "pred": 10,
+     "conf": 0.93251041339874,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 216.52558325148675
+    },
+    {
+     "id": "banking77-2176",
+     "gold": 7,
+     "pred": 29,
+     "conf": 0.35426455190985046,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.377383247358
+    },
+    {
+     "id": "banking77-876",
+     "gold": 66,
+     "pred": 11,
+     "conf": 0.8415029800464702,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.58288325185094
+    },
+    {
+     "id": "banking77-3050",
+     "gold": 24,
+     "pred": 43,
+     "conf": 0.999372990537357,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 214.30848324961516
+    },
+    {
+     "id": "banking77-1206",
+     "gold": 68,
+     "pred": 13,
+     "conf": 0.9889390646326682,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 214.55058324862875
+    },
+    {
+     "id": "banking77-122",
+     "gold": 17,
+     "pred": 34,
+     "conf": 0.9976187920517487,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 200.90988324954196
+    },
+    {
+     "id": "banking77-1767",
+     "gold": 51,
+     "pred": 44,
+     "conf": 0.7888408211865316,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 186.53368324884468
+    },
+    {
+     "id": "banking77-517",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.9321544446055757,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 214.64558324804784
+    },
+    {
+     "id": "banking77-2802",
+     "gold": 57,
+     "pred": 15,
+     "conf": 0.9791804852101742,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 207.83548324833646
+    },
+    {
+     "id": "banking77-2492",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9994667659010981,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 232.19788325149239
+    },
+    {
+     "id": "banking77-59",
+     "gold": 13,
+     "pred": 13,
+     "conf": 0.9999947604953813,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 209.1763832504421
+    },
+    {
+     "id": "banking77-1129",
+     "gold": 30,
+     "pred": 69,
+     "conf": 0.9007701860173873,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 215.9117832488755
+    },
+    {
+     "id": "banking77-600",
+     "gold": 56,
+     "pred": 15,
+     "conf": 0.9997057096766254,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.60618325179348
+    },
+    {
+     "id": "banking77-347",
+     "gold": 4,
+     "pred": 30,
+     "conf": 0.4883400417651246,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 223.92138325084488
+    },
+    {
+     "id": "banking77-1074",
+     "gold": 6,
+     "pred": 11,
+     "conf": 0.6412905753777278,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.42168324791965
+    },
+    {
+     "id": "banking77-1847",
+     "gold": 48,
+     "pred": 5,
+     "conf": 0.9986793027923602,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 216.48598324826708
+    },
+    {
+     "id": "banking77-1788",
+     "gold": 51,
+     "pred": 19,
+     "conf": 0.8597604766174183,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 215.258483251082
+    },
+    {
+     "id": "banking77-571",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999998750044446,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 219.05878324831974
+    },
+    {
+     "id": "banking77-1051",
+     "gold": 6,
+     "pred": 71,
+     "conf": 0.998406029385312,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.24148325135138
+    },
+    {
+     "id": "banking77-1457",
+     "gold": 3,
+     "pred": 10,
+     "conf": 0.9999971391654513,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.5652832495598
+    },
+    {
+     "id": "banking77-958",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999983075073805,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 210.53178325018052
+    },
+    {
+     "id": "banking77-1993",
+     "gold": 63,
+     "pred": 20,
+     "conf": 0.9648538022582515,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.9702832508974
+    },
+    {
+     "id": "banking77-2251",
+     "gold": 50,
+     "pred": 10,
+     "conf": 0.6849008713766188,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 212.52988325067236
+    },
+    {
+     "id": "banking77-2310",
+     "gold": 35,
+     "pred": 43,
+     "conf": 0.362620055588595,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.58778325030835
+    },
+    {
+     "id": "banking77-1759",
+     "gold": 27,
+     "pred": 6,
+     "conf": 0.8986476555026522,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.80088324841017
+    },
+    {
+     "id": "banking77-2747",
+     "gold": 20,
+     "pred": 20,
+     "conf": 0.9999984708989265,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 211.76948325227386
+    },
+    {
+     "id": "banking77-1491",
+     "gold": 28,
+     "pred": 19,
+     "conf": 0.9857163589572951,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 139.216683252007
+    },
+    {
+     "id": "banking77-1760",
+     "gold": 51,
+     "pred": 19,
+     "conf": 0.4968577577490035,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.62808325059268
+    },
+    {
+     "id": "banking77-2615",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9999999522206918,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 186.61438324851588
+    },
+    {
+     "id": "banking77-1285",
+     "gold": 73,
+     "pred": 73,
+     "conf": 0.9999942468637085,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 219.10438324993265
+    },
+    {
+     "id": "banking77-2683",
+     "gold": 5,
+     "pred": 20,
+     "conf": 0.8238945111876325,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.4975832492546
+    },
+    {
+     "id": "banking77-480",
+     "gold": 1,
+     "pred": 69,
+     "conf": 0.881592819896202,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 241.18758324765622
+    },
+    {
+     "id": "banking77-1417",
+     "gold": 22,
+     "pred": 15,
+     "conf": 0.7600713312649444,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 227.5003832510174
+    },
+    {
+     "id": "banking77-2435",
+     "gold": 39,
+     "pred": 13,
+     "conf": 0.5470430282894815,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.98728325298543
+    },
+    {
+     "id": "banking77-2595",
+     "gold": 76,
+     "pred": 17,
+     "conf": 0.9999999054519885,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.5666832503248
+    },
+    {
+     "id": "banking77-1076",
+     "gold": 6,
+     "pred": 66,
+     "conf": 0.9829535734467991,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 190.29768324980068
+    },
+    {
+     "id": "banking77-2830",
+     "gold": 57,
+     "pred": 71,
+     "conf": 0.9986938420300107,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 196.2830832489908
+    },
+    {
+     "id": "banking77-1836",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9999259165253715,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 171.2750832484653
+    },
+    {
+     "id": "banking77-2270",
+     "gold": 50,
+     "pred": 17,
+     "conf": 0.9984500472757151,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.42218324910755
+    },
+    {
+     "id": "banking77-2503",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9999799033904411,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 190.9288832502989
+    },
+    {
+     "id": "banking77-552",
+     "gold": 49,
+     "pred": 21,
+     "conf": 0.9999992142779687,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 211.92898325170063
+    },
+    {
+     "id": "banking77-1803",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9997491665042965,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.16578324891998
+    },
+    {
+     "id": "banking77-2772",
+     "gold": 31,
+     "pred": 19,
+     "conf": 0.9447389802618699,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 218.88608325024506
+    },
+    {
+     "id": "banking77-2985",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9993198476977802,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 214.93518324858996
+    },
+    {
+     "id": "banking77-1816",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.999526328857556,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.47898324848757
+    },
+    {
+     "id": "banking77-2195",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.9999989052104228,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.95968325059766
+    },
+    {
+     "id": "banking77-723",
+     "gold": 60,
+     "pred": 43,
+     "conf": 0.6918561309606165,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.52818325024236
+    },
+    {
+     "id": "banking77-1201",
+     "gold": 68,
+     "pred": 74,
+     "conf": 0.9506433064591409,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.3039832514969
+    },
+    {
+     "id": "banking77-829",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.9999986428485643,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 203.9672832506676
+    },
+    {
+     "id": "banking77-734",
+     "gold": 60,
+     "pred": 30,
+     "conf": 0.981535813633662,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.75338325072335
+    },
+    {
+     "id": "banking77-2140",
+     "gold": 21,
+     "pred": 30,
+     "conf": 0.7733987987667078,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.7767832503214
+    },
+    {
+     "id": "banking77-1459",
+     "gold": 3,
+     "pred": 20,
+     "conf": 0.9899037892754419,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.38638324883323
+    },
+    {
+     "id": "banking77-1037",
+     "gold": 61,
+     "pred": 56,
+     "conf": 0.9980342852951766,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.68288324932473
+    },
+    {
+     "id": "banking77-1520",
+     "gold": 44,
+     "pred": 14,
+     "conf": 0.9506315637204372,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 256.67638325102416
+    },
+    {
+     "id": "banking77-1881",
+     "gold": 55,
+     "pred": 70,
+     "conf": 0.9682087839502914,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 227.7000832509566
+    },
+    {
+     "id": "banking77-1072",
+     "gold": 6,
+     "pred": 71,
+     "conf": 0.9980594516229405,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 229.01938324866023
+    },
+    {
+     "id": "banking77-2480",
+     "gold": 43,
+     "pred": 14,
+     "conf": 0.9998126325000611,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 244.11068324842745
+    },
+    {
+     "id": "banking77-1147",
+     "gold": 30,
+     "pred": 6,
+     "conf": 0.4205579085487553,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.7151832507716
+    },
+    {
+     "id": "banking77-1621",
+     "gold": 45,
+     "pred": 10,
+     "conf": 0.981357430463456,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 213.552783250625
+    },
+    {
+     "id": "banking77-535",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.999983135293141,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.6063832482523
+    },
+    {
+     "id": "banking77-2364",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999644499805889,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 215.0767832499605
+    },
+    {
+     "id": "banking77-2010",
+     "gold": 70,
+     "pred": 19,
+     "conf": 0.8305602673844839,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 186.89908324812677
+    },
+    {
+     "id": "banking77-2252",
+     "gold": 50,
+     "pred": 71,
+     "conf": 0.7224584997232618,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.90418325040628
+    },
+    {
+     "id": "banking77-964",
+     "gold": 10,
+     "pred": 3,
+     "conf": 0.9681392562924663,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.85868325034062
+    },
+    {
+     "id": "banking77-2315",
+     "gold": 35,
+     "pred": 64,
+     "conf": 0.7600697971216678,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.8307832472983
+    },
+    {
+     "id": "banking77-965",
+     "gold": 10,
+     "pred": 13,
+     "conf": 0.9382607771416105,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 181.37738325093778
+    },
+    {
+     "id": "banking77-796",
+     "gold": 75,
+     "pred": 64,
+     "conf": 0.8022349452360672,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 223.09148325074602
+    },
+    {
+     "id": "banking77-2873",
+     "gold": 0,
+     "pred": 12,
+     "conf": 0.9489609612257311,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.77318325180931
+    },
+    {
+     "id": "banking77-1500",
+     "gold": 28,
+     "pred": 53,
+     "conf": 0.9557121930820089,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.67618324961768
+    },
+    {
+     "id": "banking77-536",
+     "gold": 49,
+     "pred": 10,
+     "conf": 0.8797660838325949,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.82978324975375
+    },
+    {
+     "id": "banking77-300",
+     "gold": 12,
+     "pred": 11,
+     "conf": 0.9983527372421165,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.99438325105257
+    },
+    {
+     "id": "banking77-1762",
+     "gold": 51,
+     "pred": 15,
+     "conf": 0.6886536464227526,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 200.386283249818
+    },
+    {
+     "id": "banking77-2667",
+     "gold": 59,
+     "pred": 20,
+     "conf": 0.6073720347167179,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.91898324910107
+    },
+    {
+     "id": "banking77-2576",
+     "gold": 76,
+     "pred": 15,
+     "conf": 0.9999566032706818,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 207.54128325278543
+    },
+    {
+     "id": "banking77-1899",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9991745211273141,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.25478325078984
+    },
+    {
+     "id": "banking77-1596",
+     "gold": 26,
+     "pred": 10,
+     "conf": 0.994877739292231,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.2206832516149
+    },
+    {
+     "id": "banking77-8",
+     "gold": 11,
+     "pred": 45,
+     "conf": 0.9997443229356481,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.97888325247004
+    },
+    {
+     "id": "banking77-2944",
+     "gold": 9,
+     "pred": 9,
+     "conf": 0.999798645222529,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 203.845283249384
+    },
+    {
+     "id": "banking77-1737",
+     "gold": 27,
+     "pred": 5,
+     "conf": 0.99634230000656,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.81678324901986
+    },
+    {
+     "id": "banking77-176",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9939041960217552,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.4891832493504
+    },
+    {
+     "id": "banking77-921",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999789861670237,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 190.45228324829623
+    },
+    {
+     "id": "banking77-580",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999999314702044,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 200.72728324884338
+    },
+    {
+     "id": "banking77-2039",
+     "gold": 70,
+     "pred": 71,
+     "conf": 0.9995962194253327,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.28918325219092
+    },
+    {
+     "id": "banking77-2859",
+     "gold": 0,
+     "pred": 11,
+     "conf": 0.9814939597017919,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.89658324969605
+    },
+    {
+     "id": "banking77-1823",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9999792660030781,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 166.89248324836626
+    },
+    {
+     "id": "banking77-2617",
+     "gold": 37,
+     "pred": 29,
+     "conf": 0.9999889634430023,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 218.5859832497863
+    },
+    {
+     "id": "banking77-1039",
+     "gold": 61,
+     "pred": 35,
+     "conf": 0.999709305234407,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 223.54638325122323
+    },
+    {
+     "id": "banking77-654",
+     "gold": 47,
+     "pred": 71,
+     "conf": 0.9999926832935645,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.13188324911425
+    },
+    {
+     "id": "banking77-1693",
+     "gold": 52,
+     "pred": 13,
+     "conf": 0.6596155944768302,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.67568324982676
+    },
+    {
+     "id": "banking77-1029",
+     "gold": 61,
+     "pred": 6,
+     "conf": 0.666155861562092,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 212.52368325075622
+    },
+    {
+     "id": "banking77-1436",
+     "gold": 22,
+     "pred": 10,
+     "conf": 0.9935726488412758,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 188.95398325184033
+    },
+    {
+     "id": "banking77-831",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.9996948514927753,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 196.33328325288858
+    },
+    {
+     "id": "banking77-2889",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999853037631754,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 200.70978325019496
+    },
+    {
+     "id": "banking77-2582",
+     "gold": 76,
+     "pred": 76,
+     "conf": 0.9999999334598157,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 195.66238325204722
+    },
+    {
+     "id": "banking77-1535",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999869551583389,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 198.21098325336607
+    },
+    {
+     "id": "banking77-2131",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999995534935289,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 197.63018325101257
+    },
+    {
+     "id": "banking77-2934",
+     "gold": 9,
+     "pred": 9,
+     "conf": 0.9999682852146196,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 185.16388325223488
+    },
+    {
+     "id": "banking77-2690",
+     "gold": 5,
+     "pred": 71,
+     "conf": 0.9905060975882047,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.1336832518773
+    },
+    {
+     "id": "banking77-561",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999998650513751,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 204.24058325078477
+    },
+    {
+     "id": "banking77-2883",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999397020152808,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 249.3055832492155
+    },
+    {
+     "id": "banking77-2471",
+     "gold": 58,
+     "pred": 71,
+     "conf": 0.9997036451196186,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 230.118783249045
+    },
+    {
+     "id": "banking77-973",
+     "gold": 10,
+     "pred": 13,
+     "conf": 0.6601345602026614,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 220.61258324901246
+    },
+    {
+     "id": "banking77-2960",
+     "gold": 2,
+     "pred": 71,
+     "conf": 0.9995340687156526,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 244.15648324792528
+    },
+    {
+     "id": "banking77-2033",
+     "gold": 70,
+     "pred": 74,
+     "conf": 0.999557100781052,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 229.79628325264457
+    },
+    {
+     "id": "banking77-867",
+     "gold": 66,
+     "pred": 10,
+     "conf": 0.9403624250242931,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 244.13458325215288
+    },
+    {
+     "id": "banking77-2528",
+     "gold": 72,
+     "pred": 14,
+     "conf": 0.9999801438264841,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 242.74268325097182
+    },
+    {
+     "id": "banking77-174",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9997967077862858,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.02198325122845
+    },
+    {
+     "id": "banking77-2379",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999999116300138,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 215.64538325036665
+    },
+    {
+     "id": "banking77-2874",
+     "gold": 0,
+     "pred": 13,
+     "conf": 0.6930672438504415,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 207.91028325037587
+    },
+    {
+     "id": "banking77-2421",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9999981894511389,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 220.11768324954573
+    },
+    {
+     "id": "banking77-158",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999991222269211,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 219.683383249494
+    },
+    {
+     "id": "banking77-1471",
+     "gold": 3,
+     "pred": 10,
+     "conf": 0.9999391578078911,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 196.2153832500826
+    },
+    {
+     "id": "banking77-2388",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999952332081169,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 180.01098325111343
+    },
+    {
+     "id": "banking77-2334",
+     "gold": 65,
+     "pred": 71,
+     "conf": 0.9952227369087471,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.13318325109685
+    },
+    {
+     "id": "banking77-1398",
+     "gold": 29,
+     "pred": 37,
+     "conf": 0.9999905764616458,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.41258324978662
+    },
+    {
+     "id": "banking77-746",
+     "gold": 60,
+     "pred": 4,
+     "conf": 0.9974210082606014,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 212.5875832498332
+    },
+    {
+     "id": "banking77-1209",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9999092751643306,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 186.28428324881497
+    },
+    {
+     "id": "banking77-790",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.999997126284762,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.13988325121136
+    },
+    {
+     "id": "banking77-673",
+     "gold": 47,
+     "pred": 65,
+     "conf": 0.9921286042359092,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.57778325056097
+    },
+    {
+     "id": "banking77-3076",
+     "gold": 24,
+     "pred": 10,
+     "conf": 0.9989929682877431,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 182.29208324918545
+    },
+    {
+     "id": "banking77-2274",
+     "gold": 50,
+     "pred": 64,
+     "conf": 0.9991515478302725,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 171.22418325015133
+    },
+    {
+     "id": "banking77-459",
+     "gold": 41,
+     "pred": 22,
+     "conf": 0.9868719395589638,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.72908324779382
+    },
+    {
+     "id": "banking77-923",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999954262811885,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.47208324850908
+    },
+    {
+     "id": "banking77-685",
+     "gold": 8,
+     "pred": 20,
+     "conf": 0.7614508204932003,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.86688324974057
+    },
+    {
+     "id": "banking77-283",
+     "gold": 12,
+     "pred": 12,
+     "conf": 0.9999984645784797,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 204.27778325028157
+    },
+    {
+     "id": "banking77-1757",
+     "gold": 27,
+     "pred": 64,
+     "conf": 0.9977210767795677,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.13418324881604
+    },
+    {
+     "id": "banking77-2635",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9999994692907809,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 194.81908324813958
+    },
+    {
+     "id": "banking77-2437",
+     "gold": 39,
+     "pred": 10,
+     "conf": 0.9561262453518288,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.15958324900384
+    },
+    {
+     "id": "banking77-2278",
+     "gold": 50,
+     "pred": 37,
+     "conf": 0.9500731135934183,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 170.16888324723368
+    },
+    {
+     "id": "banking77-2225",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9999941203498007,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 180.62618324983305
+    },
+    {
+     "id": "banking77-2847",
+     "gold": 0,
+     "pred": 11,
+     "conf": 0.99794562956814,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 175.771983253062
+    },
+    {
+     "id": "banking77-159",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999991907877255,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 192.24968325214832
+    },
+    {
+     "id": "banking77-1800",
+     "gold": 25,
+     "pred": 23,
+     "conf": 0.9975482237259935,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 172.0362832529554
+    },
+    {
+     "id": "banking77-1405",
+     "gold": 22,
+     "pred": 30,
+     "conf": 0.6121935729783724,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 185.9612832486073
+    },
+    {
+     "id": "banking77-2642",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.999988877728461,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.09258324937218
+    },
+    {
+     "id": "banking77-379",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.994727765618511,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 186.43018325018602
+    },
+    {
+     "id": "banking77-2156",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999916138780648,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 186.37278324967156
+    },
+    {
+     "id": "banking77-12",
+     "gold": 11,
+     "pred": 10,
+     "conf": 0.6975568712278762,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.01288324966117
+    },
+    {
+     "id": "banking77-518",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.9419377899311356,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 223.13258325083552
+    },
+    {
+     "id": "banking77-1272",
+     "gold": 38,
+     "pred": 44,
+     "conf": 0.9998988661943577,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 222.2437832497144
+    },
+    {
+     "id": "banking77-497",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.973185405056524,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.4703832513096
+    },
+    {
+     "id": "banking77-1671",
+     "gold": 42,
+     "pred": 44,
+     "conf": 0.9089113888418802,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.8518832521131
+    },
+    {
+     "id": "banking77-1234",
+     "gold": 68,
+     "pred": 71,
+     "conf": 0.9944263289073711,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.33928324944827
+    },
+    {
+     "id": "banking77-1101",
+     "gold": 16,
+     "pred": 34,
+     "conf": 0.9997939413171645,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.77288325068912
+    },
+    {
+     "id": "banking77-2314",
+     "gold": 35,
+     "pred": 28,
+     "conf": 0.9958101582508729,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.16308325103273
+    },
+    {
+     "id": "banking77-2446",
+     "gold": 58,
+     "pred": 6,
+     "conf": 0.8616656979347739,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 226.9472832522206
+    },
+    {
+     "id": "banking77-2863",
+     "gold": 0,
+     "pred": 10,
+     "conf": 0.9994652057647176,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.02378324854908
+    },
+    {
+     "id": "banking77-317",
+     "gold": 12,
+     "pred": 12,
+     "conf": 0.9999708143031849,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 186.45548325001982
+    },
+    {
+     "id": "banking77-1924",
+     "gold": 18,
+     "pred": 11,
+     "conf": 0.9832683555281281,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 182.6038832514223
+    },
+    {
+     "id": "banking77-2138",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999997730790617,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 179.11058324897567
+    },
+    {
+     "id": "banking77-1501",
+     "gold": 28,
+     "pred": 20,
+     "conf": 0.6451500365953011,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.51118324992967
+    },
+    {
+     "id": "banking77-146",
+     "gold": 17,
+     "pred": 76,
+     "conf": 0.9999811253134955,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.6504832521805
+    },
+    {
+     "id": "banking77-23",
+     "gold": 11,
+     "pred": 11,
+     "conf": 0.9999995283746254,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 183.73298324876487
+    },
+    {
+     "id": "banking77-1309",
+     "gold": 73,
+     "pred": 13,
+     "conf": 0.9946100398072578,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.5706832506894
+    },
+    {
+     "id": "banking77-1371",
+     "gold": 29,
+     "pred": 37,
+     "conf": 0.9999921152553725,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.9720832493822
+    },
+    {
+     "id": "banking77-635",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9999613484080973,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 215.24148324896487
+    },
+    {
+     "id": "banking77-2962",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9999891580939766,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 226.31968325003072
+    },
+    {
+     "id": "banking77-2292",
+     "gold": 35,
+     "pred": 71,
+     "conf": 0.9966351400976334,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.76298325004427
+    },
+    {
+     "id": "banking77-2182",
+     "gold": 7,
+     "pred": 7,
+     "conf": 0.9999980059337085,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 196.16618325016134
+    },
+    {
+     "id": "banking77-2116",
+     "gold": 53,
+     "pred": 10,
+     "conf": 0.9233076359356208,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 211.49808325207232
+    },
+    {
+     "id": "banking77-1942",
+     "gold": 18,
+     "pred": 20,
+     "conf": 0.9997633541885544,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 185.06708325002364
+    },
+    {
+     "id": "banking77-913",
+     "gold": 54,
+     "pred": 30,
+     "conf": 0.5676102800604773,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 172.56878325132675
+    },
+    {
+     "id": "banking77-2742",
+     "gold": 20,
+     "pred": 53,
+     "conf": 0.9319163662510992,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.66538325085094
+    },
+    {
+     "id": "banking77-848",
+     "gold": 66,
+     "pred": 5,
+     "conf": 0.9999617276459205,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.8807832504881
+    },
+    {
+     "id": "banking77-1214",
+     "gold": 68,
+     "pred": 44,
+     "conf": 0.48128401118261654,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.36838325013196
+    },
+    {
+     "id": "banking77-130",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999999376148209,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 248.8049832500019
+    },
+    {
+     "id": "banking77-1540",
+     "gold": 44,
+     "pred": 23,
+     "conf": 0.967613260460554,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 237.9260832494674
+    },
+    {
+     "id": "banking77-2053",
+     "gold": 67,
+     "pred": 64,
+     "conf": 0.9899561713232028,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 213.91238324939877
+    },
+    {
+     "id": "banking77-643",
+     "gold": 47,
+     "pred": 36,
+     "conf": 0.5318664637437414,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 210.67738324926722
+    },
+    {
+     "id": "banking77-599",
+     "gold": 23,
+     "pred": 10,
+     "conf": 0.5639947884388278,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 236.83528324908366
+    },
+    {
+     "id": "banking77-1058",
+     "gold": 6,
+     "pred": 20,
+     "conf": 0.9823348159061063,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 188.88948324819467
+    },
+    {
+     "id": "banking77-1742",
+     "gold": 27,
+     "pred": 15,
+     "conf": 0.9492048895385318,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.7649832519437
+    },
+    {
+     "id": "banking77-2946",
+     "gold": 9,
+     "pred": 43,
+     "conf": 0.9918664382628486,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 216.90568324992455
+    },
+    {
+     "id": "banking77-881",
+     "gold": 54,
+     "pred": 29,
+     "conf": 0.9878450501115437,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.3853832500663
+    },
+    {
+     "id": "banking77-1059",
+     "gold": 6,
+     "pred": 20,
+     "conf": 0.6846063981809005,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.04858325228815
+    },
+    {
+     "id": "banking77-1740",
+     "gold": 27,
+     "pred": 16,
+     "conf": 0.9409725670687247,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 220.6734832507118
+    },
+    {
+     "id": "banking77-2408",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9998888966638021,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.30108325042784
+    },
+    {
+     "id": "banking77-3000",
+     "gold": 69,
+     "pred": 71,
+     "conf": 0.997851407393967,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 179.82968324939975
+    },
+    {
+     "id": "banking77-1456",
+     "gold": 3,
+     "pred": 20,
+     "conf": 0.9357290004839817,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 214.76688324763927
+    },
+    {
+     "id": "banking77-1000",
+     "gold": 61,
+     "pred": 43,
+     "conf": 0.483346665607031,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.80138324956897
+    },
+    {
+     "id": "banking77-2425",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9999992072409206,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.93298324816533
+    },
+    {
+     "id": "banking77-1177",
+     "gold": 74,
+     "pred": 3,
+     "conf": 0.49999715365581593,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.45518325157718
+    },
+    {
+     "id": "banking77-1752",
+     "gold": 27,
+     "pred": 64,
+     "conf": 0.9979546184846223,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.83998324758977
+    },
+    {
+     "id": "banking77-834",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.9999990019180943,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 175.21628325265738
+    },
+    {
+     "id": "banking77-2624",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9576500313779498,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 200.40408325075077
+    },
+    {
+     "id": "banking77-2975",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9998915107697118,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 260.2597832483207
+    },
+    {
+     "id": "banking77-2894",
+     "gold": 19,
+     "pred": 64,
+     "conf": 0.9396760758224807,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 241.57258325066323
+    },
+    {
+     "id": "banking77-156",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999768502345642,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 200.0760832488504
+    },
+    {
+     "id": "banking77-1298",
+     "gold": 73,
+     "pred": 37,
+     "conf": 0.8774318527166886,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 206.7997832527817
+    },
+    {
+     "id": "banking77-1628",
+     "gold": 45,
+     "pred": 17,
+     "conf": 0.45624510475149205,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.4830832494099
+    },
+    {
+     "id": "banking77-1886",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9959371010408123,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.57558324876845
+    },
+    {
+     "id": "banking77-355",
+     "gold": 4,
+     "pred": 13,
+     "conf": 0.5361049206118124,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 207.964083252582
+    },
+    {
+     "id": "banking77-280",
+     "gold": 12,
+     "pred": 11,
+     "conf": 0.99222015572726,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 181.97778324974024
+    },
+    {
+     "id": "banking77-186",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9999951543713609,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 214.65228325177122
+    },
+    {
+     "id": "banking77-2456",
+     "gold": 58,
+     "pred": 13,
+     "conf": 0.9933254579355791,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.64788324917572
+    },
+    {
+     "id": "banking77-16",
+     "gold": 11,
+     "pred": 43,
+     "conf": 0.9991018020829687,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.53688324719224
+    },
+    {
+     "id": "banking77-2676",
+     "gold": 59,
+     "pred": 20,
+     "conf": 0.7563624350280844,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.0831832503518
+    },
+    {
+     "id": "banking77-1254",
+     "gold": 38,
+     "pred": 74,
+     "conf": 0.9912992283651071,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.68128324884128
+    },
+    {
+     "id": "banking77-779",
+     "gold": 75,
+     "pred": 75,
+     "conf": 0.9999996836183509,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 190.98348325132065
+    },
+    {
+     "id": "banking77-1841",
+     "gold": 48,
+     "pred": 3,
+     "conf": 0.8451196568130798,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.516983250438
+    },
+    {
+     "id": "banking77-1969",
+     "gold": 63,
+     "pred": 19,
+     "conf": 0.9936152255443598,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.88118324867355
+    },
+    {
+     "id": "banking77-2271",
+     "gold": 50,
+     "pred": 30,
+     "conf": 0.9996433972776089,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 134.75928324986853
+    },
+    {
+     "id": "banking77-2990",
+     "gold": 2,
+     "pred": 71,
+     "conf": 0.9952019673235539,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.67078325052535
+    },
+    {
+     "id": "banking77-1363",
+     "gold": 29,
+     "pred": 37,
+     "conf": 0.9999965633277919,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.78198324736695
+    },
+    {
+     "id": "banking77-251",
+     "gold": 36,
+     "pred": 10,
+     "conf": 0.8306386012390823,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.2472832474068
+    },
+    {
+     "id": "banking77-1185",
+     "gold": 74,
+     "pred": 13,
+     "conf": 0.6544593672768916,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 183.161583248866
+    },
+    {
+     "id": "banking77-2162",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.9996331298210267,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.30858324854307
+    },
+    {
+     "id": "banking77-1781",
+     "gold": 51,
+     "pred": 6,
+     "conf": 0.5536809112374893,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.18038324978806
+    },
+    {
+     "id": "banking77-2967",
+     "gold": 2,
+     "pred": 10,
+     "conf": 0.9078616391035347,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.71568324843793
+    },
+    {
+     "id": "banking77-607",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9999428858887118,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 206.4337832525689
+    },
+    {
+     "id": "banking77-215",
+     "gold": 46,
+     "pred": 6,
+     "conf": 0.8570426892923801,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 212.7815832500255
+    },
+    {
+     "id": "banking77-458",
+     "gold": 41,
+     "pred": 43,
+     "conf": 0.7902075449649643,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.70938325139832
+    },
+    {
+     "id": "banking77-1509",
+     "gold": 28,
+     "pred": 63,
+     "conf": 0.9880101219284722,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.33978325046155
+    },
+    {
+     "id": "banking77-640",
+     "gold": 47,
+     "pred": 23,
+     "conf": 0.9895739943509402,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 204.3793832490246
+    },
+    {
+     "id": "banking77-894",
+     "gold": 54,
+     "pred": 71,
+     "conf": 0.9997939652542396,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.11978325156633
+    },
+    {
+     "id": "banking77-1261",
+     "gold": 38,
+     "pred": 12,
+     "conf": 0.8988354207341611,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.0013832479799
+    },
+    {
+     "id": "banking77-1242",
+     "gold": 38,
+     "pred": 21,
+     "conf": 0.9998223232116904,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.4073832486083
+    },
+    {
+     "id": "banking77-2470",
+     "gold": 58,
+     "pred": 71,
+     "conf": 0.9709027960729328,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.6957832518874
+    },
+    {
+     "id": "banking77-1590",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9990664385391232,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.0718832522016
+    },
+    {
+     "id": "banking77-1191",
+     "gold": 74,
+     "pred": 36,
+     "conf": 0.9544728103015535,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.6959832510238
+    },
+    {
+     "id": "banking77-136",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999999671380164,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 205.2219832512401
+    },
+    {
+     "id": "banking77-1423",
+     "gold": 22,
+     "pred": 53,
+     "conf": 0.7228530474682254,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.4629832507253
+    },
+    {
+     "id": "banking77-525",
+     "gold": 49,
+     "pred": 10,
+     "conf": 0.9542001651093723,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.34388325013242
+    },
+    {
+     "id": "banking77-408",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9846032988421398,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.5054832493679
+    },
+    {
+     "id": "banking77-1478",
+     "gold": 3,
+     "pred": 20,
+     "conf": 0.9056602674945307,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.47578324976166
+    },
+    {
+     "id": "banking77-3004",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.9999594933620964,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 172.92138325136875
+    },
+    {
+     "id": "banking77-1809",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9975896949914913,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.15328324914117
+    },
+    {
+     "id": "banking77-2397",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999998652694444,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 177.36268325096717
+    },
+    {
+     "id": "banking77-2389",
+     "gold": 71,
+     "pred": 30,
+     "conf": 0.4240424620346865,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.1421832490796
+    },
+    {
+     "id": "banking77-1778",
+     "gold": 51,
+     "pred": 34,
+     "conf": 0.9245637660540559,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.65168324938531
+    },
+    {
+     "id": "banking77-178",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9999317691388373,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.25838324825418
+    },
+    {
+     "id": "banking77-1437",
+     "gold": 22,
+     "pred": 23,
+     "conf": 0.5316080794032821,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.08398324954578
+    },
+    {
+     "id": "banking77-2191",
+     "gold": 7,
+     "pred": 10,
+     "conf": 0.8424564456005074,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.08488324694008
+    },
+    {
+     "id": "banking77-1210",
+     "gold": 68,
+     "pred": 13,
+     "conf": 0.5833206921830187,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 200.17028324945386
+    },
+    {
+     "id": "banking77-529",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.9998331249582174,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 216.2057832501796
+    },
+    {
+     "id": "banking77-201",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9997228704884848,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.85088325162906
+    },
+    {
+     "id": "banking77-1321",
+     "gold": 62,
+     "pred": 20,
+     "conf": 0.9903861656941695,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.17048324917232
+    },
+    {
+     "id": "banking77-682",
+     "gold": 8,
+     "pred": 53,
+     "conf": 0.999306607092806,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.82298325178817
+    },
+    {
+     "id": "banking77-2233",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9998727263877002,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 191.91468325151618
+    },
+    {
+     "id": "banking77-514",
+     "gold": 1,
+     "pred": 10,
+     "conf": 0.9113187528197583,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 188.48148324831527
+    },
+    {
+     "id": "banking77-20",
+     "gold": 11,
+     "pred": 6,
+     "conf": 0.5978046228924887,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 213.1014832520941
+    },
+    {
+     "id": "banking77-1016",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.9999975864123908,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 196.28968324831476
+    },
+    {
+     "id": "banking77-2791",
+     "gold": 31,
+     "pred": 17,
+     "conf": 0.9991713440601075,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.67958324742176
+    },
+    {
+     "id": "banking77-613",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.7828343223825494,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 206.1510832499971
+    },
+    {
+     "id": "banking77-367",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9581692290458645,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.98458325244974
+    },
+    {
+     "id": "banking77-1961",
+     "gold": 63,
+     "pred": 17,
+     "conf": 0.9771004016747648,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.66888325069704
+    },
+    {
+     "id": "banking77-1522",
+     "gold": 44,
+     "pred": 21,
+     "conf": 0.9999076483162312,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 190.2221832497071
+    },
+    {
+     "id": "banking77-288",
+     "gold": 12,
+     "pred": 10,
+     "conf": 0.979244164621041,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 226.40698324902587
+    },
+    {
+     "id": "banking77-1413",
+     "gold": 22,
+     "pred": 15,
+     "conf": 0.5077784368071506,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 196.4169832499374
+    },
+    {
+     "id": "banking77-1081",
+     "gold": 16,
+     "pred": 34,
+     "conf": 0.999268453257588,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.99958325025182
+    },
+    {
+     "id": "banking77-875",
+     "gold": 66,
+     "pred": 64,
+     "conf": 0.9725080070089321,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.85678325004665
+    },
+    {
+     "id": "banking77-192",
+     "gold": 34,
+     "pred": 19,
+     "conf": 0.9999946073690459,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 221.58298324938187
+    },
+    {
+     "id": "banking77-974",
+     "gold": 10,
+     "pred": 10,
+     "conf": 0.9999962452266115,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 193.57048325035976
+    },
+    {
+     "id": "banking77-2730",
+     "gold": 20,
+     "pred": 20,
+     "conf": 0.9952768668546351,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 204.76408324974727
+    },
+    {
+     "id": "banking77-977",
+     "gold": 10,
+     "pred": 36,
+     "conf": 0.9434415095508315,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 204.79198325118887
+    },
+    {
+     "id": "banking77-2129",
+     "gold": 21,
+     "pred": 30,
+     "conf": 0.9998014410719323,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.79538325120484
+    },
+    {
+     "id": "banking77-1804",
+     "gold": 25,
+     "pred": 23,
+     "conf": 0.9871343645889809,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.5470832498595
+    },
+    {
+     "id": "banking77-798",
+     "gold": 75,
+     "pred": 76,
+     "conf": 0.998861522290914,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.13668324928403
+    },
+    {
+     "id": "banking77-2348",
+     "gold": 65,
+     "pred": 64,
+     "conf": 0.9818049581378985,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.267983250631
+    },
+    {
+     "id": "banking77-1610",
+     "gold": 45,
+     "pred": 10,
+     "conf": 0.9171546801638242,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 239.0611832488412
+    },
+    {
+     "id": "banking77-2541",
+     "gold": 72,
+     "pred": 23,
+     "conf": 0.8325144118842442,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 204.66048325032716
+    },
+    {
+     "id": "banking77-222",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9996637458164422,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.62238324941973
+    },
+    {
+     "id": "banking77-2240",
+     "gold": 50,
+     "pred": 10,
+     "conf": 0.9646147606731874,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.25248325201937
+    },
+    {
+     "id": "banking77-212",
+     "gold": 46,
+     "pred": 75,
+     "conf": 0.9808620308808867,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 213.8910832509191
+    },
+    {
+     "id": "banking77-472",
+     "gold": 41,
+     "pred": 43,
+     "conf": 0.9940684366881993,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.91188325120856
+    },
+    {
+     "id": "banking77-2512",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9999921521042391,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 195.5032832483903
+    },
+    {
+     "id": "banking77-2857",
+     "gold": 0,
+     "pred": 43,
+     "conf": 0.43875908877378483,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.27238325220787
+    },
+    {
+     "id": "banking77-2186",
+     "gold": 7,
+     "pred": 64,
+     "conf": 0.9978779600963826,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.72588324848584
+    },
+    {
+     "id": "banking77-1518",
+     "gold": 28,
+     "pred": 34,
+     "conf": 0.7358951951669988,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 206.50528324767038
+    },
+    {
+     "id": "banking77-2185",
+     "gold": 7,
+     "pred": 5,
+     "conf": 0.9991027044225239,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 209.27158325138407
+    },
+    {
+     "id": "banking77-1624",
+     "gold": 45,
+     "pred": 10,
+     "conf": 0.9951858884582366,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 183.29278325108135
+    },
+    {
+     "id": "banking77-1226",
+     "gold": 68,
+     "pred": 13,
+     "conf": 0.9622386210953755,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 172.86058325043086
+    },
+    {
+     "id": "banking77-610",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9998067572866961,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.82778325053187
+    },
+    {
+     "id": "banking77-2234",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9996169409310076,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 206.140483249319
+    },
+    {
+     "id": "banking77-1220",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.998216385237296,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.65438325015384
+    },
+    {
+     "id": "banking77-1068",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.999998103622195,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 193.2082832499782
+    },
+    {
+     "id": "banking77-2957",
+     "gold": 9,
+     "pred": 43,
+     "conf": 0.999016973800198,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.67918325040046
+    },
+    {
+     "id": "banking77-1526",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999569253060611,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 180.15668325096158
+    },
+    {
+     "id": "banking77-213",
+     "gold": 46,
+     "pred": 6,
+     "conf": 0.9985398276164462,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.75358324921945
+    },
+    {
+     "id": "banking77-124",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999999001859652,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 197.28308324919453
+    },
+    {
+     "id": "banking77-684",
+     "gold": 8,
+     "pred": 5,
+     "conf": 0.9887678540918802,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 205.5295832505999
+    },
+    {
+     "id": "banking77-63",
+     "gold": 13,
+     "pred": 15,
+     "conf": 0.7015172782508606,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.80618325256182
+    },
+    {
+     "id": "banking77-438",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9093496626012251,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 182.83138324840365
+    },
+    {
+     "id": "banking77-2146",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999992846852689,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 232.38028325066807
+    },
+    {
+     "id": "banking77-1111",
+     "gold": 16,
+     "pred": 20,
+     "conf": 0.9743725129844447,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 228.5506832486044
+    },
+    {
+     "id": "banking77-372",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9999975816211099,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.64658324896845
+    },
+    {
+     "id": "banking77-1366",
+     "gold": 29,
+     "pred": 37,
+     "conf": 0.9999949654822798,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.00908325020828
+    },
+    {
+     "id": "banking77-2569",
+     "gold": 76,
+     "pred": 17,
+     "conf": 0.9999994673499858,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 210.08138325122673
+    },
+    {
+     "id": "banking77-1738",
+     "gold": 27,
+     "pred": 20,
+     "conf": 0.7790740364734574,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.53348324854414
+    },
+    {
+     "id": "banking77-657",
+     "gold": 47,
+     "pred": 3,
+     "conf": 0.706544207163047,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.70918324804188
+    },
+    {
+     "id": "banking77-2548",
+     "gold": 72,
+     "pred": 29,
+     "conf": 0.9575558267698554,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.60198325194324
+    },
+    {
+     "id": "banking77-2761",
+     "gold": 31,
+     "pred": 76,
+     "conf": 0.7989469419139116,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 208.1048832514989
+    },
+    {
+     "id": "banking77-1189",
+     "gold": 74,
+     "pred": 71,
+     "conf": 0.9897240860291774,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.373183250098
+    },
+    {
+     "id": "banking77-167",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9984807969300837,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 179.36158325027463
+    },
+    {
+     "id": "banking77-448",
+     "gold": 41,
+     "pred": 53,
+     "conf": 0.7888353267649298,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.77868324831616
+    },
+    {
+     "id": "banking77-387",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9998439648334758,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.26908324908254
+    },
+    {
+     "id": "banking77-1263",
+     "gold": 38,
+     "pred": 44,
+     "conf": 0.9987784023577412,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 198.99548324973694
+    },
+    {
+     "id": "banking77-1661",
+     "gold": 42,
+     "pred": 14,
+     "conf": 0.9986035351306106,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.6712832512767
+    },
+    {
+     "id": "banking77-1587",
+     "gold": 26,
+     "pred": 19,
+     "conf": 0.9991512517874825,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.03078324867784
+    },
+    {
+     "id": "banking77-1930",
+     "gold": 18,
+     "pred": 3,
+     "conf": 0.9999990730327539,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 190.39268324921977
+    },
+    {
+     "id": "banking77-1597",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9747925051122934,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.37438325035873
+    },
+    {
+     "id": "banking77-1096",
+     "gold": 16,
+     "pred": 64,
+     "conf": 0.5415411978606933,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.50258324992865
+    },
+    {
+     "id": "banking77-617",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9974982893429443,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.74708325004576
+    },
+    {
+     "id": "banking77-612",
+     "gold": 56,
+     "pred": 43,
+     "conf": 0.6632443709355653,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.3247832467514
+    },
+    {
+     "id": "banking77-1843",
+     "gold": 48,
+     "pred": 5,
+     "conf": 0.9171326496137223,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.37318324646003
+    },
+    {
+     "id": "banking77-1232",
+     "gold": 68,
+     "pred": 13,
+     "conf": 0.99098707128638,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.38998325069224
+    },
+    {
+     "id": "banking77-15",
+     "gold": 11,
+     "pred": 10,
+     "conf": 0.9981472010217532,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.1962832499612
+    },
+    {
+     "id": "banking77-2155",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.999999426441251,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 175.31028325173793
+    },
+    {
+     "id": "banking77-119",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9996158891491329,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.95168325010127
+    },
+    {
+     "id": "banking77-2179",
+     "gold": 7,
+     "pred": 23,
+     "conf": 0.44336034864866924,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.7545832489177
+    },
+    {
+     "id": "banking77-3079",
+     "gold": 24,
+     "pred": 43,
+     "conf": 0.9999573777855455,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 181.36578324992115
+    },
+    {
+     "id": "banking77-1131",
+     "gold": 30,
+     "pred": 74,
+     "conf": 0.9951231200533186,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.74468324914596
+    },
+    {
+     "id": "banking77-1359",
+     "gold": 62,
+     "pred": 65,
+     "conf": 0.9985010850772662,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.1233832470225
+    },
+    {
+     "id": "banking77-927",
+     "gold": 40,
+     "pred": 11,
+     "conf": 0.9997206352351546,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 175.98718325097252
+    },
+    {
+     "id": "banking77-1012",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.9999954704486445,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 179.86838324940436
+    },
+    {
+     "id": "banking77-2971",
+     "gold": 2,
+     "pred": 53,
+     "conf": 0.460614465864609,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.4642832489244
+    },
+    {
+     "id": "banking77-1704",
+     "gold": 52,
+     "pred": 15,
+     "conf": 0.6587412469987782,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.83128325026155
+    },
+    {
+     "id": "banking77-641",
+     "gold": 47,
+     "pred": 10,
+     "conf": 0.7117243568191646,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 188.84448325115045
+    },
+    {
+     "id": "banking77-1982",
+     "gold": 63,
+     "pred": 19,
+     "conf": 0.9994735176792229,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 201.44118324968986
+    },
+    {
+     "id": "banking77-1676",
+     "gold": 42,
+     "pred": 13,
+     "conf": 0.9247174695948803,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 198.5027832488322
+    },
+    {
+     "id": "banking77-1070",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.999999694259325,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 206.08908325083576
+    },
+    {
+     "id": "banking77-2910",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999589308977296,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 180.6465832523736
+    },
+    {
+     "id": "banking77-1888",
+     "gold": 55,
+     "pred": 14,
+     "conf": 0.479950699026086,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.13548325225383
+    },
+    {
+     "id": "banking77-2368",
+     "gold": 71,
+     "pred": 4,
+     "conf": 0.9995322849992833,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 199.91408325221528
+    },
+    {
+     "id": "banking77-2198",
+     "gold": 7,
+     "pred": 27,
+     "conf": 0.9999997694737001,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.703983248668
+    },
+    {
+     "id": "banking77-1897",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9956822134508277,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.30018325163655
+    },
+    {
+     "id": "banking77-794",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.8971158687317818,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 174.76918324972758
+    },
+    {
+     "id": "banking77-1538",
+     "gold": 44,
+     "pred": 30,
+     "conf": 0.9979327207129325,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.514983250343
+    },
+    {
+     "id": "banking77-1950",
+     "gold": 18,
+     "pred": 20,
+     "conf": 0.9994066972838692,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.20978325028227
+    },
+    {
+     "id": "banking77-781",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.9999256305028956,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.17778324873325
+    },
+    {
+     "id": "banking77-2757",
+     "gold": 20,
+     "pred": 20,
+     "conf": 0.9999956845113,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 173.31578324955444
+    },
+    {
+     "id": "banking77-2346",
+     "gold": 65,
+     "pred": 64,
+     "conf": 0.7271065595939992,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.58608325290515
+    },
+    {
+     "id": "banking77-140",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.99999992222474,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 180.84378325146645
+    },
+    {
+     "id": "banking77-1974",
+     "gold": 63,
+     "pred": 17,
+     "conf": 0.9696318375052319,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.97908325096614
+    },
+    {
+     "id": "banking77-2051",
+     "gold": 67,
+     "pred": 71,
+     "conf": 0.9597141653190793,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.2288832491813
+    },
+    {
+     "id": "banking77-732",
+     "gold": 60,
+     "pred": 65,
+     "conf": 0.9990942860872695,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.99598324946965
+    },
+    {
+     "id": "banking77-513",
+     "gold": 1,
+     "pred": 10,
+     "conf": 0.9894308611624743,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.26638324872147
+    },
+    {
+     "id": "banking77-421",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9998267115168205,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 177.10148324839793
+    },
+    {
+     "id": "banking77-22",
+     "gold": 11,
+     "pred": 11,
+     "conf": 0.9999992991489612,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 174.55568325020977
+    },
+    {
+     "id": "banking77-2412",
+     "gold": 39,
+     "pred": 37,
+     "conf": 0.9886431209029368,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.10718324794107
+    },
+    {
+     "id": "banking77-544",
+     "gold": 49,
+     "pred": 21,
+     "conf": 0.9999554785852129,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 181.14708325082574
+    },
+    {
+     "id": "banking77-1258",
+     "gold": 38,
+     "pred": 21,
+     "conf": 0.999283586725098,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 175.4046832502263
+    },
+    {
+     "id": "banking77-330",
+     "gold": 4,
+     "pred": 3,
+     "conf": 0.3382070500748203,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.03448324998863
+    },
+    {
+     "id": "banking77-2035",
+     "gold": 70,
+     "pred": 71,
+     "conf": 0.9998180738170711,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.62698324824123
+    },
+    {
+     "id": "banking77-2339",
+     "gold": 65,
+     "pred": 64,
+     "conf": 0.9884752884387826,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.61428325261477
+    },
+    {
+     "id": "banking77-2135",
+     "gold": 21,
+     "pred": 3,
+     "conf": 0.9867681872642875,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.60268325159814
+    },
+    {
+     "id": "banking77-226",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9991581903327673,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 175.74328324916678
+    },
+    {
+     "id": "banking77-877",
+     "gold": 66,
+     "pred": 71,
+     "conf": 0.9864705103963444,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 190.1165832496099
+    },
+    {
+     "id": "banking77-2658",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9995237536109254,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.29488325010425
+    },
+    {
+     "id": "banking77-1754",
+     "gold": 27,
+     "pred": 10,
+     "conf": 0.9217412607285621,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 197.397783249462
+    },
+    {
+     "id": "banking77-110",
+     "gold": 32,
+     "pred": 36,
+     "conf": 0.9995510158485512,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.7852832490371
+    },
+    {
+     "id": "banking77-2177",
+     "gold": 7,
+     "pred": 15,
+     "conf": 0.2785792843976842,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 179.0280832501503
+    },
+    {
+     "id": "banking77-90",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9999507887288402,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.3625832494199
+    },
+    {
+     "id": "banking77-587",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999999514174575,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 177.40748325012646
+    },
+    {
+     "id": "banking77-1221",
+     "gold": 68,
+     "pred": 44,
+     "conf": 0.9971703261565843,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 175.20318325113294
+    },
+    {
+     "id": "banking77-2537",
+     "gold": 72,
+     "pred": 37,
+     "conf": 0.9996895936111562,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 195.65758324823946
+    },
+    {
+     "id": "banking77-629",
+     "gold": 56,
+     "pred": 15,
+     "conf": 0.9982365687162246,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 207.03458325077918
+    },
+    {
+     "id": "banking77-2663",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9999134116672422,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.67368325054667
+    },
+    {
+     "id": "banking77-219",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9992682236296728,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.46058325084414
+    },
+    {
+     "id": "banking77-2050",
+     "gold": 67,
+     "pred": 71,
+     "conf": 0.996357941994331,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 189.31988325129169
+    },
+    {
+     "id": "banking77-2966",
+     "gold": 2,
+     "pred": 4,
+     "conf": 0.998743557960926,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 191.43948324925987
+    },
+    {
+     "id": "banking77-1054",
+     "gold": 6,
+     "pred": 71,
+     "conf": 0.9999890474342261,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 178.79558325147627
+    },
+    {
+     "id": "banking77-924",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9998364476939069,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 185.71188324857758
+    },
+    {
+     "id": "banking77-1992",
+     "gold": 63,
+     "pred": 17,
+     "conf": 0.9649905526607432,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 176.49098324908664
+    },
+    {
+     "id": "banking77-88",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9998835319429854,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.72988325082952
+    },
+    {
+     "id": "banking77-2490",
+     "gold": 43,
+     "pred": 15,
+     "conf": 0.9991960752415131,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.20338324884324
+    },
+    {
+     "id": "banking77-384",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9982226698085103,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.93948325138444
+    },
+    {
+     "id": "banking77-998",
+     "gold": 10,
+     "pred": 2,
+     "conf": 0.9804536046400547,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 186.30918324924096
+    },
+    {
+     "id": "banking77-1295",
+     "gold": 73,
+     "pred": 43,
+     "conf": 0.9161241643389123,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 200.52978325110416
+    },
+    {
+     "id": "banking77-2172",
+     "gold": 7,
+     "pred": 10,
+     "conf": 0.9202378854994696,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 183.05328325003757
+    },
+    {
+     "id": "banking77-2064",
+     "gold": 67,
+     "pred": 64,
+     "conf": 0.9954629144817609,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 180.98638324953754
+    },
+    {
+     "id": "banking77-39",
+     "gold": 11,
+     "pred": 43,
+     "conf": 0.9997169779724601,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 179.12788324973917
+    },
+    {
+     "id": "banking77-2340",
+     "gold": 65,
+     "pred": 71,
+     "conf": 0.999580063271116,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 193.88628325031277
+    },
+    {
+     "id": "banking77-1840",
+     "gold": 48,
+     "pred": 5,
+     "conf": 0.9997570873658824,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 194.24718325170943
+    },
+    {
+     "id": "banking77-1392",
+     "gold": 29,
+     "pred": 29,
+     "conf": 0.9999978274751226,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 198.55028325036074
+    },
+    {
+     "id": "banking77-2674",
+     "gold": 59,
+     "pred": 10,
+     "conf": 0.3140707055895721,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 185.70188325246818
+    },
+    {
+     "id": "banking77-902",
+     "gold": 54,
+     "pred": 10,
+     "conf": 0.9999908480287049,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 173.13208324775587
+    },
+    {
+     "id": "banking77-2700",
+     "gold": 5,
+     "pred": 71,
+     "conf": 0.9999562973837637,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 185.04058325196638
+    },
+    {
+     "id": "banking77-208",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9920283813182715,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 171.95278325015352
+    },
+    {
+     "id": "banking77-2148",
+     "gold": 21,
+     "pred": 30,
+     "conf": 0.9978390718071134,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 200.95188324920855
+    },
+    {
+     "id": "banking77-1749",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.9937322376688525,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 196.67418324751452
+    },
+    {
+     "id": "banking77-3002",
+     "gold": 69,
+     "pred": 13,
+     "conf": 0.9429020099794586,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 202.70708325187115
+    },
+    {
+     "id": "banking77-2089",
+     "gold": 53,
+     "pred": 10,
+     "conf": 0.9994732528504883,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 184.18418325017228
+    },
+    {
+     "id": "banking77-52",
+     "gold": 13,
+     "pred": 38,
+     "conf": 0.790235423480785,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 203.4941832498498
+    },
+    {
+     "id": "banking77-411",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.8419138725489781,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 187.33038325080088
+    },
+    {
+     "id": "banking77-1511",
+     "gold": 28,
+     "pred": 53,
+     "conf": 0.9921844327218065,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 192.256883248765
+    }
+   ]
+  },
+  "k20": {
+   "k": 20,
+   "with_none": false,
+   "acc": 0.2525,
+   "acc_given_in_shortlist": 0.8938053097345132,
+   "recall": 0.2825,
+   "ms_p50": 270.09443325004213,
+   "calls_mean": 1.0,
+   "rows": [
+    {
+     "id": "banking77-1060",
+     "gold": 6,
+     "pred": 71,
+     "conf": 0.9401239674485296,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 250.65838324734614
+    },
+    {
+     "id": "banking77-1190",
+     "gold": 74,
+     "pred": 70,
+     "conf": 0.9997517834729007,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 273.2269832485963
+    },
+    {
+     "id": "banking77-2806",
+     "gold": 57,
+     "pred": 56,
+     "conf": 0.9883128087288817,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 280.34448324978257
+    },
+    {
+     "id": "banking77-2801",
+     "gold": 57,
+     "pred": 65,
+     "conf": 0.9611557372777015,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 280.8776832498461
+    },
+    {
+     "id": "banking77-760",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.9999989436374169,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 292.1186832500007
+    },
+    {
+     "id": "banking77-2670",
+     "gold": 59,
+     "pred": 65,
+     "conf": 0.76081703487366,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.90768324990313
+    },
+    {
+     "id": "banking77-944",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999992474102564,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 283.2855832493715
+    },
+    {
+     "id": "banking77-2728",
+     "gold": 20,
+     "pred": 34,
+     "conf": 0.994582416714653,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.1537832512604
+    },
+    {
+     "id": "banking77-602",
+     "gold": 56,
+     "pred": 15,
+     "conf": 0.995837435211599,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 337.378183248793
+    },
+    {
+     "id": "banking77-922",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9996865318107457,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 351.54438324751936
+    },
+    {
+     "id": "banking77-2625",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.999999894163557,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 305.47958324676983
+    },
+    {
+     "id": "banking77-3006",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.9998700139720608,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.05218324724956
+    },
+    {
+     "id": "banking77-767",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.9999301827285794,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.25298324991854
+    },
+    {
+     "id": "banking77-533",
+     "gold": 49,
+     "pred": 21,
+     "conf": 0.8890997314905497,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.1103832469871
+    },
+    {
+     "id": "banking77-290",
+     "gold": 12,
+     "pred": 11,
+     "conf": 0.9997988277975338,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 283.157883251979
+    },
+    {
+     "id": "banking77-2176",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.998312755756233,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.2041832500454
+    },
+    {
+     "id": "banking77-876",
+     "gold": 66,
+     "pred": 65,
+     "conf": 0.9989180303805597,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 254.7778832485983
+    },
+    {
+     "id": "banking77-3050",
+     "gold": 24,
+     "pred": 10,
+     "conf": 0.9940307585429717,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 286.896983252509
+    },
+    {
+     "id": "banking77-1206",
+     "gold": 68,
+     "pred": 44,
+     "conf": 0.9993694584057872,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.4954832509302
+    },
+    {
+     "id": "banking77-122",
+     "gold": 17,
+     "pred": 34,
+     "conf": 0.9928853437695773,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 285.1911832476526
+    },
+    {
+     "id": "banking77-1767",
+     "gold": 51,
+     "pred": 53,
+     "conf": 0.7382121446438515,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 257.5444832473204
+    },
+    {
+     "id": "banking77-517",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.9985344839269535,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 252.21178324863104
+    },
+    {
+     "id": "banking77-2802",
+     "gold": 57,
+     "pred": 15,
+     "conf": 0.5559714258677647,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 294.6467832480175
+    },
+    {
+     "id": "banking77-2492",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9967046414379361,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 306.80858324921246
+    },
+    {
+     "id": "banking77-59",
+     "gold": 13,
+     "pred": 13,
+     "conf": 0.9999940251092178,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 258.52108324760593
+    },
+    {
+     "id": "banking77-1129",
+     "gold": 30,
+     "pred": 69,
+     "conf": 0.9700306991874637,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 287.1782832516965
+    },
+    {
+     "id": "banking77-600",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9997426499123648,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 298.9717832497172
+    },
+    {
+     "id": "banking77-347",
+     "gold": 4,
+     "pred": 58,
+     "conf": 0.988350794787437,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 247.26708325032632
+    },
+    {
+     "id": "banking77-1074",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.999776987482907,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 263.3000832502057
+    },
+    {
+     "id": "banking77-1847",
+     "gold": 48,
+     "pred": 66,
+     "conf": 0.9986377235960168,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 299.58538325080553
+    },
+    {
+     "id": "banking77-1788",
+     "gold": 51,
+     "pred": 6,
+     "conf": 0.727418433264165,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 310.2542832493691
+    },
+    {
+     "id": "banking77-571",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999997525661474,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 303.83068324953456
+    },
+    {
+     "id": "banking77-1051",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9999963490915839,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 306.09298324997326
+    },
+    {
+     "id": "banking77-1457",
+     "gold": 3,
+     "pred": 10,
+     "conf": 0.9993105915363553,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 269.311083247876
+    },
+    {
+     "id": "banking77-958",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999993214622177,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 277.01928324676373
+    },
+    {
+     "id": "banking77-1993",
+     "gold": 63,
+     "pred": 63,
+     "conf": 0.9999986823100192,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 298.9425832492907
+    },
+    {
+     "id": "banking77-2251",
+     "gold": 50,
+     "pred": 65,
+     "conf": 0.9999701331934835,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.9578832509487
+    },
+    {
+     "id": "banking77-2310",
+     "gold": 35,
+     "pred": 64,
+     "conf": 0.9604324584108206,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 301.79298324946103
+    },
+    {
+     "id": "banking77-1759",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.9809018793896619,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 275.83828325076865
+    },
+    {
+     "id": "banking77-2747",
+     "gold": 20,
+     "pred": 20,
+     "conf": 0.999891360642965,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 287.06028324812905
+    },
+    {
+     "id": "banking77-1491",
+     "gold": 28,
+     "pred": 19,
+     "conf": 0.9857852852412059,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 219.32698324962075
+    },
+    {
+     "id": "banking77-1760",
+     "gold": 51,
+     "pred": 63,
+     "conf": 0.9519662448068698,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.4617832512504
+    },
+    {
+     "id": "banking77-2615",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9999999273512781,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 295.42268325166333
+    },
+    {
+     "id": "banking77-1285",
+     "gold": 73,
+     "pred": 73,
+     "conf": 0.9999995567204685,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 280.8849832472242
+    },
+    {
+     "id": "banking77-2683",
+     "gold": 5,
+     "pred": 6,
+     "conf": 0.9996463164095086,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.60698324851364
+    },
+    {
+     "id": "banking77-480",
+     "gold": 1,
+     "pred": 65,
+     "conf": 0.45049409094941356,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.4935832514511
+    },
+    {
+     "id": "banking77-1417",
+     "gold": 22,
+     "pred": 15,
+     "conf": 0.3652444310713093,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.27988324982834
+    },
+    {
+     "id": "banking77-2435",
+     "gold": 39,
+     "pred": 29,
+     "conf": 0.9812758306323779,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.26538325216643
+    },
+    {
+     "id": "banking77-2595",
+     "gold": 76,
+     "pred": 17,
+     "conf": 0.9999998448699975,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.5973832511718
+    },
+    {
+     "id": "banking77-1076",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9999279713407655,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 279.27718325007845
+    },
+    {
+     "id": "banking77-2830",
+     "gold": 57,
+     "pred": 56,
+     "conf": 0.9975708358205364,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.1794832488722
+    },
+    {
+     "id": "banking77-1836",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9998434133766029,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.0505832490071
+    },
+    {
+     "id": "banking77-2270",
+     "gold": 50,
+     "pred": 17,
+     "conf": 0.9976805420987755,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.7658832514335
+    },
+    {
+     "id": "banking77-2503",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9999782692666023,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 256.04198324798745
+    },
+    {
+     "id": "banking77-552",
+     "gold": 49,
+     "pred": 21,
+     "conf": 0.9999971991590441,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 257.6308832503764
+    },
+    {
+     "id": "banking77-1803",
+     "gold": 25,
+     "pred": 16,
+     "conf": 0.9999526456121482,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.6609832520098
+    },
+    {
+     "id": "banking77-2772",
+     "gold": 31,
+     "pred": 17,
+     "conf": 0.7973792044781964,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 256.46728324863034
+    },
+    {
+     "id": "banking77-2985",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9996143643496065,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 259.3738832510917
+    },
+    {
+     "id": "banking77-1816",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9992254778155683,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 252.87558324997917
+    },
+    {
+     "id": "banking77-2195",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.9999978785182152,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.55668325028637
+    },
+    {
+     "id": "banking77-723",
+     "gold": 60,
+     "pred": 71,
+     "conf": 0.7991409843056813,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.6940832497985
+    },
+    {
+     "id": "banking77-1201",
+     "gold": 68,
+     "pred": 69,
+     "conf": 0.537255893437408,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 222.66028324883337
+    },
+    {
+     "id": "banking77-829",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.9999783767075434,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 270.1068832502551
+    },
+    {
+     "id": "banking77-734",
+     "gold": 60,
+     "pred": 65,
+     "conf": 0.9271981509441709,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.98658324957614
+    },
+    {
+     "id": "banking77-2140",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999966257242303,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 255.02238325133476
+    },
+    {
+     "id": "banking77-1459",
+     "gold": 3,
+     "pred": 20,
+     "conf": 0.9656231184221079,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.7014832525947
+    },
+    {
+     "id": "banking77-1037",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.9992315880005549,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.8665832503957
+    },
+    {
+     "id": "banking77-1520",
+     "gold": 44,
+     "pred": 21,
+     "conf": 0.9997049607776874,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 259.2829832501502
+    },
+    {
+     "id": "banking77-1881",
+     "gold": 55,
+     "pred": 70,
+     "conf": 0.8155349347618095,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 275.8892832498441
+    },
+    {
+     "id": "banking77-1072",
+     "gold": 6,
+     "pred": 71,
+     "conf": 0.9997942575756419,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.98838325198994
+    },
+    {
+     "id": "banking77-2480",
+     "gold": 43,
+     "pred": 12,
+     "conf": 0.9998360623010085,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.7617832511223
+    },
+    {
+     "id": "banking77-1147",
+     "gold": 30,
+     "pred": 6,
+     "conf": 0.5557517044433566,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 287.33888324858526
+    },
+    {
+     "id": "banking77-1621",
+     "gold": 45,
+     "pred": 10,
+     "conf": 0.9629327943522447,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.09258324989605
+    },
+    {
+     "id": "banking77-535",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.9998019850896882,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 291.29808324795704
+    },
+    {
+     "id": "banking77-2364",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999245886296299,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 332.66478325093885
+    },
+    {
+     "id": "banking77-2010",
+     "gold": 70,
+     "pred": 71,
+     "conf": 0.9992904457070226,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 288.27258324962713
+    },
+    {
+     "id": "banking77-2252",
+     "gold": 50,
+     "pred": 36,
+     "conf": 0.999996993691004,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.9414832489474
+    },
+    {
+     "id": "banking77-964",
+     "gold": 10,
+     "pred": 10,
+     "conf": 0.9999948482074837,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 283.49048325252625
+    },
+    {
+     "id": "banking77-2315",
+     "gold": 35,
+     "pred": 65,
+     "conf": 0.990722416543511,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.0146832499213
+    },
+    {
+     "id": "banking77-965",
+     "gold": 10,
+     "pred": 10,
+     "conf": 0.9999858438829404,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 253.16748324984474
+    },
+    {
+     "id": "banking77-796",
+     "gold": 75,
+     "pred": 53,
+     "conf": 0.7913566384874025,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 256.2581832498745
+    },
+    {
+     "id": "banking77-2873",
+     "gold": 0,
+     "pred": 13,
+     "conf": 0.9980584883206226,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 282.60918325030616
+    },
+    {
+     "id": "banking77-1500",
+     "gold": 28,
+     "pred": 34,
+     "conf": 0.832056607396194,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.07928325086505
+    },
+    {
+     "id": "banking77-536",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.9982508042038138,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 223.80468324990034
+    },
+    {
+     "id": "banking77-300",
+     "gold": 12,
+     "pred": 12,
+     "conf": 0.999934167953161,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 342.4612832495677
+    },
+    {
+     "id": "banking77-1762",
+     "gold": 51,
+     "pred": 71,
+     "conf": 0.4148879780294238,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 357.56138325085885
+    },
+    {
+     "id": "banking77-2667",
+     "gold": 59,
+     "pred": 28,
+     "conf": 0.9130713883144977,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 358.09638325007654
+    },
+    {
+     "id": "banking77-2576",
+     "gold": 76,
+     "pred": 19,
+     "conf": 0.9999861993194172,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 342.2364832513176
+    },
+    {
+     "id": "banking77-1899",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9996142470555711,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 338.73808325005484
+    },
+    {
+     "id": "banking77-1596",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9997998015296513,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.32078324894792
+    },
+    {
+     "id": "banking77-8",
+     "gold": 11,
+     "pred": 45,
+     "conf": 0.9986835710998224,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 286.8911832483627
+    },
+    {
+     "id": "banking77-2944",
+     "gold": 9,
+     "pred": 9,
+     "conf": 0.9995138572695246,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 267.936383250335
+    },
+    {
+     "id": "banking77-1737",
+     "gold": 27,
+     "pred": 66,
+     "conf": 0.999736511778297,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 285.7173832526223
+    },
+    {
+     "id": "banking77-176",
+     "gold": 34,
+     "pred": 34,
+     "conf": 0.9999969198513594,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 271.2676832488705
+    },
+    {
+     "id": "banking77-921",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999361903457428,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.8827832470324
+    },
+    {
+     "id": "banking77-580",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999999431877472,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 268.5826832493967
+    },
+    {
+     "id": "banking77-2039",
+     "gold": 70,
+     "pred": 71,
+     "conf": 0.9999591831311052,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 330.1869832466673
+    },
+    {
+     "id": "banking77-2859",
+     "gold": 0,
+     "pred": 0,
+     "conf": 0.9999995238487465,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 309.8923832476339
+    },
+    {
+     "id": "banking77-1823",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9999705860293134,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.28758325063063
+    },
+    {
+     "id": "banking77-2617",
+     "gold": 37,
+     "pred": 29,
+     "conf": 0.9999728511887847,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 304.0767832499023
+    },
+    {
+     "id": "banking77-1039",
+     "gold": 61,
+     "pred": 35,
+     "conf": 0.9971769944104838,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 298.0093832484181
+    },
+    {
+     "id": "banking77-654",
+     "gold": 47,
+     "pred": 71,
+     "conf": 0.9999758438764069,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.72678325059496
+    },
+    {
+     "id": "banking77-1693",
+     "gold": 52,
+     "pred": 13,
+     "conf": 0.6043647009144908,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 253.485983248529
+    },
+    {
+     "id": "banking77-1029",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.9999795694163743,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.2758832514428
+    },
+    {
+     "id": "banking77-1436",
+     "gold": 22,
+     "pred": 10,
+     "conf": 0.9790796436333364,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.90488325055594
+    },
+    {
+     "id": "banking77-831",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.998308961163869,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 246.34348324979328
+    },
+    {
+     "id": "banking77-2889",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999908318249694,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 258.6543832512598
+    },
+    {
+     "id": "banking77-2582",
+     "gold": 76,
+     "pred": 76,
+     "conf": 0.9999999167366074,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 271.9304832535181
+    },
+    {
+     "id": "banking77-1535",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999854420439873,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 277.8400832503303
+    },
+    {
+     "id": "banking77-2131",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999993369830135,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 247.53138325103464
+    },
+    {
+     "id": "banking77-2934",
+     "gold": 9,
+     "pred": 9,
+     "conf": 0.9999099949059224,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 272.46718324749054
+    },
+    {
+     "id": "banking77-2690",
+     "gold": 5,
+     "pred": 71,
+     "conf": 0.4394132927434974,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.04068325121443
+    },
+    {
+     "id": "banking77-561",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.999999826827142,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 259.4598832511019
+    },
+    {
+     "id": "banking77-2883",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9998284466058853,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 270.9557832495102
+    },
+    {
+     "id": "banking77-2471",
+     "gold": 58,
+     "pred": 6,
+     "conf": 0.9293075956960494,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 280.6983832488095
+    },
+    {
+     "id": "banking77-973",
+     "gold": 10,
+     "pred": 10,
+     "conf": 0.9999957155653416,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 243.3631832500305
+    },
+    {
+     "id": "banking77-2960",
+     "gold": 2,
+     "pred": 71,
+     "conf": 0.9996936471692301,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 258.5769832476126
+    },
+    {
+     "id": "banking77-2033",
+     "gold": 70,
+     "pred": 74,
+     "conf": 0.9921050885177628,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.6003832521874
+    },
+    {
+     "id": "banking77-867",
+     "gold": 66,
+     "pred": 10,
+     "conf": 0.9796741239647354,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 254.67498325087035
+    },
+    {
+     "id": "banking77-2528",
+     "gold": 72,
+     "pred": 14,
+     "conf": 0.999721231249347,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.07708324706437
+    },
+    {
+     "id": "banking77-174",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9993676050670718,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.11608325054658
+    },
+    {
+     "id": "banking77-2379",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999988253317537,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 278.7412832476457
+    },
+    {
+     "id": "banking77-2874",
+     "gold": 0,
+     "pred": 13,
+     "conf": 0.9971623694442063,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.19878324766432
+    },
+    {
+     "id": "banking77-2421",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9999862722920168,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 312.95298325129806
+    },
+    {
+     "id": "banking77-158",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999994810095441,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 318.7817832513156
+    },
+    {
+     "id": "banking77-1471",
+     "gold": 3,
+     "pred": 10,
+     "conf": 0.999969247634813,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 290.4784832498899
+    },
+    {
+     "id": "banking77-2388",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999958256264568,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 293.50018325202655
+    },
+    {
+     "id": "banking77-2334",
+     "gold": 65,
+     "pred": 65,
+     "conf": 0.9999987256019512,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 298.0255832517196
+    },
+    {
+     "id": "banking77-1398",
+     "gold": 29,
+     "pred": 29,
+     "conf": 0.9999986332445725,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 268.7044832527954
+    },
+    {
+     "id": "banking77-746",
+     "gold": 60,
+     "pred": 4,
+     "conf": 0.9989234359940121,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 282.5281832519886
+    },
+    {
+     "id": "banking77-1209",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9982842358428166,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 271.32868324769333
+    },
+    {
+     "id": "banking77-790",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.9999976072174601,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.31928325030276
+    },
+    {
+     "id": "banking77-673",
+     "gold": 47,
+     "pred": 65,
+     "conf": 0.9967201470897723,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.38088325183162
+    },
+    {
+     "id": "banking77-3076",
+     "gold": 24,
+     "pred": 10,
+     "conf": 0.8541627706545352,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 237.8120832508921
+    },
+    {
+     "id": "banking77-2274",
+     "gold": 50,
+     "pred": 13,
+     "conf": 0.9441833351993428,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 224.71728325034746
+    },
+    {
+     "id": "banking77-459",
+     "gold": 41,
+     "pred": 22,
+     "conf": 0.993665724672001,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.7418832491585
+    },
+    {
+     "id": "banking77-923",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9999963498875717,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 271.1160832477526
+    },
+    {
+     "id": "banking77-685",
+     "gold": 8,
+     "pred": 65,
+     "conf": 0.9990299983759792,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.6658832470912
+    },
+    {
+     "id": "banking77-283",
+     "gold": 12,
+     "pred": 12,
+     "conf": 0.9804556201227298,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 270.56738324971775
+    },
+    {
+     "id": "banking77-1757",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.9986464932291991,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.92018325046774
+    },
+    {
+     "id": "banking77-2635",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9999992436271578,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 276.41198324999095
+    },
+    {
+     "id": "banking77-2437",
+     "gold": 39,
+     "pred": 13,
+     "conf": 0.9921594625481874,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.2744832493099
+    },
+    {
+     "id": "banking77-2278",
+     "gold": 50,
+     "pred": 65,
+     "conf": 0.97817102397986,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 244.48878324982616
+    },
+    {
+     "id": "banking77-2225",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9999281759412192,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 250.9705832489908
+    },
+    {
+     "id": "banking77-2847",
+     "gold": 0,
+     "pred": 11,
+     "conf": 0.9918285188040454,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 246.89968325036716
+    },
+    {
+     "id": "banking77-159",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999993524961093,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 245.2204832516054
+    },
+    {
+     "id": "banking77-1800",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.995990521155194,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 252.20798325243777
+    },
+    {
+     "id": "banking77-1405",
+     "gold": 22,
+     "pred": 3,
+     "conf": 0.7472596877744269,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.2097832496129
+    },
+    {
+     "id": "banking77-2642",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.999965294472754,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 276.616283248577
+    },
+    {
+     "id": "banking77-379",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9965019570884387,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 246.00818325051478
+    },
+    {
+     "id": "banking77-2156",
+     "gold": 21,
+     "pred": 3,
+     "conf": 0.9989176698032758,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 243.4509832491949
+    },
+    {
+     "id": "banking77-12",
+     "gold": 11,
+     "pred": 11,
+     "conf": 0.9999933569997203,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 264.1965832481128
+    },
+    {
+     "id": "banking77-518",
+     "gold": 1,
+     "pred": 11,
+     "conf": 0.48871017725911087,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 252.88748324964217
+    },
+    {
+     "id": "banking77-1272",
+     "gold": 38,
+     "pred": 44,
+     "conf": 0.9998587612178637,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.78638324908934
+    },
+    {
+     "id": "banking77-497",
+     "gold": 1,
+     "pred": 3,
+     "conf": 0.9631950065453505,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.1385832505093
+    },
+    {
+     "id": "banking77-1671",
+     "gold": 42,
+     "pred": 23,
+     "conf": 0.4560414344498459,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 247.0648832495408
+    },
+    {
+     "id": "banking77-1234",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9982842885777069,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 248.11388325178086
+    },
+    {
+     "id": "banking77-1101",
+     "gold": 16,
+     "pred": 34,
+     "conf": 0.9997502275370228,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 281.3853832485529
+    },
+    {
+     "id": "banking77-2314",
+     "gold": 35,
+     "pred": 5,
+     "conf": 0.7091323923519336,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 290.5919832519339
+    },
+    {
+     "id": "banking77-2446",
+     "gold": 58,
+     "pred": 6,
+     "conf": 0.9977873658935091,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 274.36858325017056
+    },
+    {
+     "id": "banking77-2863",
+     "gold": 0,
+     "pred": 13,
+     "conf": 0.9933180426603772,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 274.09628325039193
+    },
+    {
+     "id": "banking77-317",
+     "gold": 12,
+     "pred": 12,
+     "conf": 0.9979652141376086,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 276.22838324895383
+    },
+    {
+     "id": "banking77-1924",
+     "gold": 18,
+     "pred": 11,
+     "conf": 0.9693742966598453,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 239.48828324863825
+    },
+    {
+     "id": "banking77-2138",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999997010131617,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 243.50278325072395
+    },
+    {
+     "id": "banking77-1501",
+     "gold": 28,
+     "pred": 53,
+     "conf": 0.9978440313131108,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 271.17218324928217
+    },
+    {
+     "id": "banking77-146",
+     "gold": 17,
+     "pred": 76,
+     "conf": 0.9999774818637518,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.03638325002066
+    },
+    {
+     "id": "banking77-23",
+     "gold": 11,
+     "pred": 11,
+     "conf": 0.9999838914329925,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 303.6382832506115
+    },
+    {
+     "id": "banking77-1309",
+     "gold": 73,
+     "pred": 43,
+     "conf": 0.997587310269542,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 354.28628325097634
+    },
+    {
+     "id": "banking77-1371",
+     "gold": 29,
+     "pred": 29,
+     "conf": 0.9999992727808774,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 330.9708832493834
+    },
+    {
+     "id": "banking77-635",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9740438420356075,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 335.6837832470683
+    },
+    {
+     "id": "banking77-2962",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9999844482574206,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 358.9016832483958
+    },
+    {
+     "id": "banking77-2292",
+     "gold": 35,
+     "pred": 71,
+     "conf": 0.9970806357609455,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 316.5246832504545
+    },
+    {
+     "id": "banking77-2182",
+     "gold": 7,
+     "pred": 7,
+     "conf": 0.9999972930331114,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 331.5008832505464
+    },
+    {
+     "id": "banking77-2116",
+     "gold": 53,
+     "pred": 53,
+     "conf": 0.9999872746862352,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 314.25288325043766
+    },
+    {
+     "id": "banking77-1942",
+     "gold": 18,
+     "pred": 3,
+     "conf": 0.9999855181155264,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 287.395683248169
+    },
+    {
+     "id": "banking77-913",
+     "gold": 54,
+     "pred": 36,
+     "conf": 0.9999198174274273,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 305.86698324986173
+    },
+    {
+     "id": "banking77-2742",
+     "gold": 20,
+     "pred": 14,
+     "conf": 0.9959604828285037,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 297.45088324852077
+    },
+    {
+     "id": "banking77-848",
+     "gold": 66,
+     "pred": 66,
+     "conf": 0.9999960718097296,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 310.4799832471963
+    },
+    {
+     "id": "banking77-1214",
+     "gold": 68,
+     "pred": 70,
+     "conf": 0.999092598235495,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.1693832506335
+    },
+    {
+     "id": "banking77-130",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999934026947421,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 300.7635832509459
+    },
+    {
+     "id": "banking77-1540",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999978109139257,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 281.7725832501219
+    },
+    {
+     "id": "banking77-2053",
+     "gold": 67,
+     "pred": 65,
+     "conf": 0.9999925970858954,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.41148324819187
+    },
+    {
+     "id": "banking77-643",
+     "gold": 47,
+     "pred": 71,
+     "conf": 0.999542384201709,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 285.08868324933246
+    },
+    {
+     "id": "banking77-599",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.5331157087564852,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 256.74278325094747
+    },
+    {
+     "id": "banking77-1058",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9987259039704116,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 286.66098324901213
+    },
+    {
+     "id": "banking77-1742",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.9966369861851536,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.31278324868435
+    },
+    {
+     "id": "banking77-2946",
+     "gold": 9,
+     "pred": 43,
+     "conf": 0.9073278299578212,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 267.6263832508903
+    },
+    {
+     "id": "banking77-881",
+     "gold": 54,
+     "pred": 29,
+     "conf": 0.972954766560994,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.58028325012674
+    },
+    {
+     "id": "banking77-1059",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9999996362748922,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 261.27198325047175
+    },
+    {
+     "id": "banking77-1740",
+     "gold": 27,
+     "pred": 25,
+     "conf": 0.9922702197355924,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 273.73198325220983
+    },
+    {
+     "id": "banking77-2408",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.999910244788235,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.68688324869981
+    },
+    {
+     "id": "banking77-3000",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.997498832771888,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 226.5686832506526
+    },
+    {
+     "id": "banking77-1456",
+     "gold": 3,
+     "pred": 2,
+     "conf": 0.7154286417191408,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.27868325195413
+    },
+    {
+     "id": "banking77-1000",
+     "gold": 61,
+     "pred": 53,
+     "conf": 0.5517432207294112,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 246.39388325157597
+    },
+    {
+     "id": "banking77-2425",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9999985546237199,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.81778325189043
+    },
+    {
+     "id": "banking77-1177",
+     "gold": 74,
+     "pred": 30,
+     "conf": 0.9949250261499913,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 238.18238325110542
+    },
+    {
+     "id": "banking77-1752",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.9983310599153368,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.4322832490925
+    },
+    {
+     "id": "banking77-834",
+     "gold": 15,
+     "pred": 15,
+     "conf": 0.9999973534835872,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 252.02008324776216
+    },
+    {
+     "id": "banking77-2624",
+     "gold": 37,
+     "pred": 37,
+     "conf": 0.9807638423312429,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 255.05478325066179
+    },
+    {
+     "id": "banking77-2975",
+     "gold": 2,
+     "pred": 2,
+     "conf": 0.9993452237548697,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 294.94868324763047
+    },
+    {
+     "id": "banking77-2894",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999950242532643,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 308.1297832504697
+    },
+    {
+     "id": "banking77-156",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.999968915868881,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 284.0089832497961
+    },
+    {
+     "id": "banking77-1298",
+     "gold": 73,
+     "pred": 73,
+     "conf": 0.9999970839857579,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 292.1978832491641
+    },
+    {
+     "id": "banking77-1628",
+     "gold": 45,
+     "pred": 53,
+     "conf": 0.929844899756189,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 282.6893832498081
+    },
+    {
+     "id": "banking77-1886",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9345056407529717,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.395583250609
+    },
+    {
+     "id": "banking77-355",
+     "gold": 4,
+     "pred": 65,
+     "conf": 0.8227875768958001,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.61948324966033
+    },
+    {
+     "id": "banking77-280",
+     "gold": 12,
+     "pred": 38,
+     "conf": 0.9793905701318537,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 254.3739832508345
+    },
+    {
+     "id": "banking77-186",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9997106768778417,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.5138832491848
+    },
+    {
+     "id": "banking77-2456",
+     "gold": 58,
+     "pred": 71,
+     "conf": 0.9995412157325911,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.793883249562
+    },
+    {
+     "id": "banking77-16",
+     "gold": 11,
+     "pred": 12,
+     "conf": 0.9921966674793974,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 270.5185832492043
+    },
+    {
+     "id": "banking77-2676",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9999935280934689,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.11058324868463
+    },
+    {
+     "id": "banking77-1254",
+     "gold": 38,
+     "pred": 14,
+     "conf": 0.9985412805027775,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 254.83798324784402
+    },
+    {
+     "id": "banking77-779",
+     "gold": 75,
+     "pred": 75,
+     "conf": 0.9999997027028225,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 278.2953832502153
+    },
+    {
+     "id": "banking77-1841",
+     "gold": 48,
+     "pred": 65,
+     "conf": 0.6087854446720952,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 288.1941832492794
+    },
+    {
+     "id": "banking77-1969",
+     "gold": 63,
+     "pred": 63,
+     "conf": 0.9999994858211999,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 256.16218325011687
+    },
+    {
+     "id": "banking77-2271",
+     "gold": 50,
+     "pred": 30,
+     "conf": 0.9968344533435799,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 215.25768324862838
+    },
+    {
+     "id": "banking77-2990",
+     "gold": 2,
+     "pred": 65,
+     "conf": 0.9978605340210465,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 274.5343832502749
+    },
+    {
+     "id": "banking77-1363",
+     "gold": 29,
+     "pred": 37,
+     "conf": 0.9999984293889511,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.34418325250408
+    },
+    {
+     "id": "banking77-251",
+     "gold": 36,
+     "pred": 10,
+     "conf": 0.7725898432431231,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.424683252515
+    },
+    {
+     "id": "banking77-1185",
+     "gold": 74,
+     "pred": 30,
+     "conf": 0.9999157610019179,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 273.9563832474141
+    },
+    {
+     "id": "banking77-2162",
+     "gold": 7,
+     "pred": 27,
+     "conf": 0.7745234204868533,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 288.14278324715815
+    },
+    {
+     "id": "banking77-1781",
+     "gold": 51,
+     "pred": 66,
+     "conf": 0.9710992830482759,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 291.47308324899313
+    },
+    {
+     "id": "banking77-2967",
+     "gold": 2,
+     "pred": 58,
+     "conf": 0.9924920672084676,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 279.8764832477809
+    },
+    {
+     "id": "banking77-607",
+     "gold": 56,
+     "pred": 4,
+     "conf": 0.7911255617835089,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 343.05388325082276
+    },
+    {
+     "id": "banking77-215",
+     "gold": 46,
+     "pred": 53,
+     "conf": 0.6844478595691217,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 356.3593832513925
+    },
+    {
+     "id": "banking77-458",
+     "gold": 41,
+     "pred": 14,
+     "conf": 0.9994480696767353,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 318.4864832510266
+    },
+    {
+     "id": "banking77-1509",
+     "gold": 28,
+     "pred": 34,
+     "conf": 0.9995563292708012,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 315.878883251562
+    },
+    {
+     "id": "banking77-640",
+     "gold": 47,
+     "pred": 23,
+     "conf": 0.9747536467627563,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 305.09038324816174
+    },
+    {
+     "id": "banking77-894",
+     "gold": 54,
+     "pred": 58,
+     "conf": 0.9909897576626993,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.1998832500449
+    },
+    {
+     "id": "banking77-1261",
+     "gold": 38,
+     "pred": 3,
+     "conf": 0.9011950931308913,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.20138324871914
+    },
+    {
+     "id": "banking77-1242",
+     "gold": 38,
+     "pred": 21,
+     "conf": 0.9997237230560166,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 277.8964832505062
+    },
+    {
+     "id": "banking77-2470",
+     "gold": 58,
+     "pred": 65,
+     "conf": 0.9820959043382321,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 257.18438324837734
+    },
+    {
+     "id": "banking77-1590",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9997955691936289,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.8066832484237
+    },
+    {
+     "id": "banking77-1191",
+     "gold": 74,
+     "pred": 74,
+     "conf": 0.9999862953877877,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 259.76598324995393
+    },
+    {
+     "id": "banking77-136",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.999948341954676,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 256.61718324771755
+    },
+    {
+     "id": "banking77-1423",
+     "gold": 22,
+     "pred": 23,
+     "conf": 0.6777919913649454,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.74738325102044
+    },
+    {
+     "id": "banking77-525",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.998918714017366,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.4494832495311
+    },
+    {
+     "id": "banking77-408",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9750060136194371,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 243.84088324949516
+    },
+    {
+     "id": "banking77-1478",
+     "gold": 3,
+     "pred": 10,
+     "conf": 0.9981002985393238,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 221.7505832486404
+    },
+    {
+     "id": "banking77-3004",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.9997623469715958,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 237.89408325318618
+    },
+    {
+     "id": "banking77-1809",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9982858111119585,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.73908325085904
+    },
+    {
+     "id": "banking77-2397",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.999999408743237,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 261.6296832493299
+    },
+    {
+     "id": "banking77-2389",
+     "gold": 71,
+     "pred": 71,
+     "conf": 0.9999991306230211,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 242.2711832477853
+    },
+    {
+     "id": "banking77-1778",
+     "gold": 51,
+     "pred": 34,
+     "conf": 0.7109325417512228,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 281.0459832471588
+    },
+    {
+     "id": "banking77-178",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.8720996667627746,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.54908325024553
+    },
+    {
+     "id": "banking77-1437",
+     "gold": 22,
+     "pred": 23,
+     "conf": 0.7085648281788741,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.16848324855346
+    },
+    {
+     "id": "banking77-2191",
+     "gold": 7,
+     "pred": 70,
+     "conf": 0.9996035812053269,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.4003832497601
+    },
+    {
+     "id": "banking77-1210",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9905639274132292,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 228.3332832484939
+    },
+    {
+     "id": "banking77-529",
+     "gold": 49,
+     "pred": 44,
+     "conf": 0.9984429605417668,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 253.21678325052744
+    },
+    {
+     "id": "banking77-201",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9978447424325569,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 273.65818325050896
+    },
+    {
+     "id": "banking77-1321",
+     "gold": 62,
+     "pred": 16,
+     "conf": 0.99807148280469,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 292.18048324763913
+    },
+    {
+     "id": "banking77-682",
+     "gold": 8,
+     "pred": 53,
+     "conf": 0.9992264346856832,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 276.6471832510342
+    },
+    {
+     "id": "banking77-2233",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9966099424140931,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 228.4954832502899
+    },
+    {
+     "id": "banking77-514",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.9963292896529911,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 217.48998324982495
+    },
+    {
+     "id": "banking77-20",
+     "gold": 11,
+     "pred": 11,
+     "conf": 0.9917750153065459,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 236.1312832472231
+    },
+    {
+     "id": "banking77-1016",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.999987001876614,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 251.25038325130845
+    },
+    {
+     "id": "banking77-2791",
+     "gold": 31,
+     "pred": 17,
+     "conf": 0.9996926334599661,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.37848324813785
+    },
+    {
+     "id": "banking77-613",
+     "gold": 56,
+     "pred": 65,
+     "conf": 0.9974371378865184,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 260.97198325077443
+    },
+    {
+     "id": "banking77-367",
+     "gold": 14,
+     "pred": 10,
+     "conf": 0.97060423702139,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.79598324980725
+    },
+    {
+     "id": "banking77-1961",
+     "gold": 63,
+     "pred": 10,
+     "conf": 0.5473939500606091,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.2705832485135
+    },
+    {
+     "id": "banking77-1522",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999517388577107,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 249.66968324951267
+    },
+    {
+     "id": "banking77-288",
+     "gold": 12,
+     "pred": 11,
+     "conf": 0.9999889879812949,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.14058325220503
+    },
+    {
+     "id": "banking77-1413",
+     "gold": 22,
+     "pred": 15,
+     "conf": 0.5442866785624587,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 255.3714832501919
+    },
+    {
+     "id": "banking77-1081",
+     "gold": 16,
+     "pred": 16,
+     "conf": 0.953705605234315,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 266.0694832484205
+    },
+    {
+     "id": "banking77-875",
+     "gold": 66,
+     "pred": 65,
+     "conf": 0.9996862236180127,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.3805832489943
+    },
+    {
+     "id": "banking77-192",
+     "gold": 34,
+     "pred": 63,
+     "conf": 0.8930987400079465,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 294.26038324890214
+    },
+    {
+     "id": "banking77-974",
+     "gold": 10,
+     "pred": 10,
+     "conf": 0.9999982933842335,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 265.65288325217807
+    },
+    {
+     "id": "banking77-2730",
+     "gold": 20,
+     "pred": 44,
+     "conf": 0.8877847661384227,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 282.67538324870657
+    },
+    {
+     "id": "banking77-977",
+     "gold": 10,
+     "pred": 14,
+     "conf": 0.9957345665078223,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 306.91418324930964
+    },
+    {
+     "id": "banking77-2129",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999998407588488,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 310.0455832500211
+    },
+    {
+     "id": "banking77-1804",
+     "gold": 25,
+     "pred": 10,
+     "conf": 0.9989022790792179,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.26178325144247
+    },
+    {
+     "id": "banking77-798",
+     "gold": 75,
+     "pred": 76,
+     "conf": 0.9883751034323599,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 280.5124832520869
+    },
+    {
+     "id": "banking77-2348",
+     "gold": 65,
+     "pred": 43,
+     "conf": 0.8412616478820403,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 285.97648325011505
+    },
+    {
+     "id": "banking77-1610",
+     "gold": 45,
+     "pred": 63,
+     "conf": 0.9973198486401563,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.55158324783224
+    },
+    {
+     "id": "banking77-2541",
+     "gold": 72,
+     "pred": 23,
+     "conf": 0.9951288687292196,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.9623832483976
+    },
+    {
+     "id": "banking77-222",
+     "gold": 46,
+     "pred": 6,
+     "conf": 0.9989519372098862,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 245.80828325269067
+    },
+    {
+     "id": "banking77-2240",
+     "gold": 50,
+     "pred": 65,
+     "conf": 0.9992078300634535,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 246.42488325115664
+    },
+    {
+     "id": "banking77-212",
+     "gold": 46,
+     "pred": 6,
+     "conf": 0.9439731576335421,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.5257832518746
+    },
+    {
+     "id": "banking77-472",
+     "gold": 41,
+     "pred": 43,
+     "conf": 0.9970779333989448,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 280.22058325222133
+    },
+    {
+     "id": "banking77-2512",
+     "gold": 43,
+     "pred": 43,
+     "conf": 0.9999941509421705,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 263.28338325037294
+    },
+    {
+     "id": "banking77-2857",
+     "gold": 0,
+     "pred": 14,
+     "conf": 0.9279667750705844,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 271.24298324996744
+    },
+    {
+     "id": "banking77-2186",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.9997736110205638,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 275.09178324907225
+    },
+    {
+     "id": "banking77-1518",
+     "gold": 28,
+     "pred": 34,
+     "conf": 0.9621978009252118,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 285.881483247058
+    },
+    {
+     "id": "banking77-2185",
+     "gold": 7,
+     "pred": 35,
+     "conf": 0.9991246302398535,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 314.64598324963845
+    },
+    {
+     "id": "banking77-1624",
+     "gold": 45,
+     "pred": 63,
+     "conf": 0.985350928446279,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 287.3002832529801
+    },
+    {
+     "id": "banking77-1226",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9679224339946405,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.4884832514126
+    },
+    {
+     "id": "banking77-610",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9926038335238463,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 263.3797832495384
+    },
+    {
+     "id": "banking77-2234",
+     "gold": 64,
+     "pred": 64,
+     "conf": 0.9996908394015076,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 282.42428325028413
+    },
+    {
+     "id": "banking77-1220",
+     "gold": 68,
+     "pred": 30,
+     "conf": 0.9979479974253788,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.8655832466229
+    },
+    {
+     "id": "banking77-1068",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9999823248544697,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 272.72368325065145
+    },
+    {
+     "id": "banking77-2957",
+     "gold": 9,
+     "pred": 9,
+     "conf": 0.9999774604386197,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 243.81908325084623
+    },
+    {
+     "id": "banking77-1526",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999832510149296,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 237.3121832497327
+    },
+    {
+     "id": "banking77-213",
+     "gold": 46,
+     "pred": 6,
+     "conf": 0.9844474698381283,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.7324832471113
+    },
+    {
+     "id": "banking77-124",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999999007377783,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 300.78098324883285
+    },
+    {
+     "id": "banking77-684",
+     "gold": 8,
+     "pred": 65,
+     "conf": 0.9967663098227686,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 325.03638324850726
+    },
+    {
+     "id": "banking77-63",
+     "gold": 13,
+     "pred": 13,
+     "conf": 0.9999992847921232,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 272.3346832499283
+    },
+    {
+     "id": "banking77-438",
+     "gold": 33,
+     "pred": 10,
+     "conf": 0.3034284694991438,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.99908324795797
+    },
+    {
+     "id": "banking77-2146",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999995591395897,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 291.0116832499534
+    },
+    {
+     "id": "banking77-1111",
+     "gold": 16,
+     "pred": 53,
+     "conf": 0.9544278442674234,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.65748324925335
+    },
+    {
+     "id": "banking77-372",
+     "gold": 14,
+     "pred": 14,
+     "conf": 0.9999961790652979,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 270.08198324982914
+    },
+    {
+     "id": "banking77-1366",
+     "gold": 29,
+     "pred": 29,
+     "conf": 0.9999961791320099,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 238.48718324733454
+    },
+    {
+     "id": "banking77-2569",
+     "gold": 76,
+     "pred": 17,
+     "conf": 0.9999994978310175,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.184183248688
+    },
+    {
+     "id": "banking77-1738",
+     "gold": 27,
+     "pred": 27,
+     "conf": 0.9999996862476891,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 268.48768324997764
+    },
+    {
+     "id": "banking77-657",
+     "gold": 47,
+     "pred": 58,
+     "conf": 0.9371224874271943,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 289.6116832525786
+    },
+    {
+     "id": "banking77-2548",
+     "gold": 72,
+     "pred": 29,
+     "conf": 0.9856720848535282,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 289.93368324880976
+    },
+    {
+     "id": "banking77-2761",
+     "gold": 31,
+     "pred": 76,
+     "conf": 0.634031874298485,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 275.55538325031193
+    },
+    {
+     "id": "banking77-1189",
+     "gold": 74,
+     "pred": 71,
+     "conf": 0.9981563749030902,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 255.05338325091543
+    },
+    {
+     "id": "banking77-167",
+     "gold": 34,
+     "pred": 15,
+     "conf": 0.9996533081196857,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 246.2071832487618
+    },
+    {
+     "id": "banking77-448",
+     "gold": 41,
+     "pred": 53,
+     "conf": 0.7048782291160971,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 254.9160832495454
+    },
+    {
+     "id": "banking77-387",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.8006298765859101,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 333.8085832510751
+    },
+    {
+     "id": "banking77-1263",
+     "gold": 38,
+     "pred": 21,
+     "conf": 0.6705675929836957,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 306.2042832534553
+    },
+    {
+     "id": "banking77-1661",
+     "gold": 42,
+     "pred": 44,
+     "conf": 0.9845253809735507,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.04328325145434
+    },
+    {
+     "id": "banking77-1587",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9989925577323451,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 286.8569832498815
+    },
+    {
+     "id": "banking77-1930",
+     "gold": 18,
+     "pred": 3,
+     "conf": 0.9999988388393652,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 304.301283249506
+    },
+    {
+     "id": "banking77-1597",
+     "gold": 26,
+     "pred": 20,
+     "conf": 0.9972641120467642,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 260.93018325263074
+    },
+    {
+     "id": "banking77-1096",
+     "gold": 16,
+     "pred": 63,
+     "conf": 0.9986749122167283,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.3883832493357
+    },
+    {
+     "id": "banking77-617",
+     "gold": 56,
+     "pred": 65,
+     "conf": 0.9989735320355096,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 255.81328324914466
+    },
+    {
+     "id": "banking77-612",
+     "gold": 56,
+     "pred": 36,
+     "conf": 0.9998410830856115,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 252.56158324918033
+    },
+    {
+     "id": "banking77-1843",
+     "gold": 48,
+     "pred": 27,
+     "conf": 0.9949385084485955,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.1240832490348
+    },
+    {
+     "id": "banking77-1232",
+     "gold": 68,
+     "pred": 70,
+     "conf": 0.9976918425170246,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 241.4350832477703
+    },
+    {
+     "id": "banking77-15",
+     "gold": 11,
+     "pred": 12,
+     "conf": 0.9999850484692019,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 268.95138325197877
+    },
+    {
+     "id": "banking77-2155",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999995396461213,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 259.89378324810787
+    },
+    {
+     "id": "banking77-119",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9961310747729928,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 262.44858324934285
+    },
+    {
+     "id": "banking77-2179",
+     "gold": 7,
+     "pred": 65,
+     "conf": 0.9997790614373974,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 283.13208324833795
+    },
+    {
+     "id": "banking77-3079",
+     "gold": 24,
+     "pred": 10,
+     "conf": 0.9981005084282926,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.471283251818
+    },
+    {
+     "id": "banking77-1131",
+     "gold": 30,
+     "pred": 74,
+     "conf": 0.986680699454738,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 255.9994832481516
+    },
+    {
+     "id": "banking77-1359",
+     "gold": 62,
+     "pred": 65,
+     "conf": 0.9993902351463739,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 253.8452832522944
+    },
+    {
+     "id": "banking77-927",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9951952726912613,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.50138324818363
+    },
+    {
+     "id": "banking77-1012",
+     "gold": 61,
+     "pred": 71,
+     "conf": 0.9999530123719333,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.0412832515631
+    },
+    {
+     "id": "banking77-2971",
+     "gold": 2,
+     "pred": 58,
+     "conf": 0.7345199570176534,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.9181832499653
+    },
+    {
+     "id": "banking77-1704",
+     "gold": 52,
+     "pred": 11,
+     "conf": 0.5977540986952716,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 274.16638324938504
+    },
+    {
+     "id": "banking77-641",
+     "gold": 47,
+     "pred": 71,
+     "conf": 0.8943507866650652,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 273.5276832499858
+    },
+    {
+     "id": "banking77-1982",
+     "gold": 63,
+     "pred": 19,
+     "conf": 0.9951614057414295,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.63638325063766
+    },
+    {
+     "id": "banking77-1676",
+     "gold": 42,
+     "pred": 2,
+     "conf": 0.44209535153369506,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.10148324793226
+    },
+    {
+     "id": "banking77-1070",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9999998486874588,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 279.0897832492101
+    },
+    {
+     "id": "banking77-2910",
+     "gold": 19,
+     "pred": 19,
+     "conf": 0.9999786982322274,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 254.48898324974834
+    },
+    {
+     "id": "banking77-1888",
+     "gold": 55,
+     "pred": 74,
+     "conf": 0.5237358288390409,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.3018832501748
+    },
+    {
+     "id": "banking77-2368",
+     "gold": 71,
+     "pred": 62,
+     "conf": 0.8444696973407506,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 278.72538324662855
+    },
+    {
+     "id": "banking77-2198",
+     "gold": 7,
+     "pred": 27,
+     "conf": 0.999923288436997,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 322.75118324831965
+    },
+    {
+     "id": "banking77-1897",
+     "gold": 55,
+     "pred": 30,
+     "conf": 0.9970212640943538,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 320.36748324752807
+    },
+    {
+     "id": "banking77-794",
+     "gold": 75,
+     "pred": 5,
+     "conf": 0.9869156789943009,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 349.3983832486174
+    },
+    {
+     "id": "banking77-1538",
+     "gold": 44,
+     "pred": 44,
+     "conf": 0.9999985287906628,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 354.06558325120386
+    },
+    {
+     "id": "banking77-1950",
+     "gold": 18,
+     "pred": 20,
+     "conf": 0.9993913546564213,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 359.60698324924124
+    },
+    {
+     "id": "banking77-781",
+     "gold": 75,
+     "pred": 20,
+     "conf": 0.9999957115062343,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 332.66738325254664
+    },
+    {
+     "id": "banking77-2757",
+     "gold": 20,
+     "pred": 20,
+     "conf": 0.9999145814962519,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 305.9639832499579
+    },
+    {
+     "id": "banking77-2346",
+     "gold": 65,
+     "pred": 65,
+     "conf": 0.9999952092450779,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 276.1712832507237
+    },
+    {
+     "id": "banking77-140",
+     "gold": 17,
+     "pred": 17,
+     "conf": 0.9999999321623964,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 277.1631832510957
+    },
+    {
+     "id": "banking77-1974",
+     "gold": 63,
+     "pred": 63,
+     "conf": 0.9999997128020134,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 308.76608324978406
+    },
+    {
+     "id": "banking77-2051",
+     "gold": 67,
+     "pred": 65,
+     "conf": 0.9999868831559943,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 282.747983252184
+    },
+    {
+     "id": "banking77-732",
+     "gold": 60,
+     "pred": 29,
+     "conf": 0.9937564233798563,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 259.410983253465
+    },
+    {
+     "id": "banking77-513",
+     "gold": 1,
+     "pred": 30,
+     "conf": 0.9845765790480397,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.80978324694115
+    },
+    {
+     "id": "banking77-421",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9997262819728757,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 239.55698325152298
+    },
+    {
+     "id": "banking77-22",
+     "gold": 11,
+     "pred": 12,
+     "conf": 0.9999087525763468,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 235.28898325092996
+    },
+    {
+     "id": "banking77-2412",
+     "gold": 39,
+     "pred": 43,
+     "conf": 0.9970452712993747,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 271.9233832503869
+    },
+    {
+     "id": "banking77-544",
+     "gold": 49,
+     "pred": 21,
+     "conf": 0.9874320945685515,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 240.02758324785646
+    },
+    {
+     "id": "banking77-1258",
+     "gold": 38,
+     "pred": 44,
+     "conf": 0.9996250882730796,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 249.24248324895416
+    },
+    {
+     "id": "banking77-330",
+     "gold": 4,
+     "pred": 2,
+     "conf": 0.7264773473226532,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 283.15928325172536
+    },
+    {
+     "id": "banking77-2035",
+     "gold": 70,
+     "pred": 71,
+     "conf": 0.9634049439016338,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.88468325017857
+    },
+    {
+     "id": "banking77-2339",
+     "gold": 65,
+     "pred": 65,
+     "conf": 0.9999958748340403,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 284.94188324838433
+    },
+    {
+     "id": "banking77-2135",
+     "gold": 21,
+     "pred": 44,
+     "conf": 0.9991830926340598,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 302.8899832497609
+    },
+    {
+     "id": "banking77-226",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9993671074745661,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.2765832505447
+    },
+    {
+     "id": "banking77-877",
+     "gold": 66,
+     "pred": 63,
+     "conf": 0.9664701305732051,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 282.64268325073317
+    },
+    {
+     "id": "banking77-2658",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9993765618453553,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 272.2590832490732
+    },
+    {
+     "id": "banking77-1754",
+     "gold": 27,
+     "pred": 14,
+     "conf": 0.9999958702121845,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 270.84578324865106
+    },
+    {
+     "id": "banking77-110",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9999544993081573,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 268.76438324688024
+    },
+    {
+     "id": "banking77-2177",
+     "gold": 7,
+     "pred": 53,
+     "conf": 0.46018362826840953,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 256.91328325046015
+    },
+    {
+     "id": "banking77-90",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9753219825262932,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 265.83208325245323
+    },
+    {
+     "id": "banking77-587",
+     "gold": 23,
+     "pred": 23,
+     "conf": 0.9999999248055508,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 258.2896832500319
+    },
+    {
+     "id": "banking77-1221",
+     "gold": 68,
+     "pred": 44,
+     "conf": 0.9987834126643707,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 238.1285832488993
+    },
+    {
+     "id": "banking77-2537",
+     "gold": 72,
+     "pred": 14,
+     "conf": 0.9996842809575125,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 266.02458324849977
+    },
+    {
+     "id": "banking77-629",
+     "gold": 56,
+     "pred": 64,
+     "conf": 0.9999794553639149,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 249.4156832471981
+    },
+    {
+     "id": "banking77-2663",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9994954376815961,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 250.11308325337268
+    },
+    {
+     "id": "banking77-219",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9975694322150545,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 276.2551832529334
+    },
+    {
+     "id": "banking77-2050",
+     "gold": 67,
+     "pred": 65,
+     "conf": 0.9997699516335052,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 248.85978325254655
+    },
+    {
+     "id": "banking77-2966",
+     "gold": 2,
+     "pred": 4,
+     "conf": 0.9980571374352679,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 261.1271832502007
+    },
+    {
+     "id": "banking77-1054",
+     "gold": 6,
+     "pred": 6,
+     "conf": 0.9998895679144135,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 273.5763832497378
+    },
+    {
+     "id": "banking77-924",
+     "gold": 40,
+     "pred": 37,
+     "conf": 0.9994269260083778,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 257.2852832527042
+    },
+    {
+     "id": "banking77-1992",
+     "gold": 63,
+     "pred": 63,
+     "conf": 0.9999997745121862,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 261.5720832509305
+    },
+    {
+     "id": "banking77-88",
+     "gold": 32,
+     "pred": 17,
+     "conf": 0.9998722221761542,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 256.4947832506641
+    },
+    {
+     "id": "banking77-2490",
+     "gold": 43,
+     "pred": 15,
+     "conf": 0.9943205588882787,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 291.5672832495966
+    },
+    {
+     "id": "banking77-384",
+     "gold": 14,
+     "pred": 23,
+     "conf": 0.9996585669513821,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.90238324775964
+    },
+    {
+     "id": "banking77-998",
+     "gold": 10,
+     "pred": 2,
+     "conf": 0.9729012819885684,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 289.41798325103264
+    },
+    {
+     "id": "banking77-1295",
+     "gold": 73,
+     "pred": 38,
+     "conf": 0.9493029586419306,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.4141832503574
+    },
+    {
+     "id": "banking77-2172",
+     "gold": 7,
+     "pred": 10,
+     "conf": 0.870143641208503,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 259.61518325128964
+    },
+    {
+     "id": "banking77-2064",
+     "gold": 67,
+     "pred": 64,
+     "conf": 0.9674626421708632,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 269.76048325012925
+    },
+    {
+     "id": "banking77-39",
+     "gold": 11,
+     "pred": 12,
+     "conf": 0.9994971024596365,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 280.12738324831844
+    },
+    {
+     "id": "banking77-2340",
+     "gold": 65,
+     "pred": 65,
+     "conf": 0.9994397568160622,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 294.1457832530341
+    },
+    {
+     "id": "banking77-1840",
+     "gold": 48,
+     "pred": 27,
+     "conf": 0.9673147296138532,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 310.0654832487544
+    },
+    {
+     "id": "banking77-1392",
+     "gold": 29,
+     "pred": 29,
+     "conf": 0.9999989924896132,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 311.0196832494603
+    },
+    {
+     "id": "banking77-2674",
+     "gold": 59,
+     "pred": 71,
+     "conf": 0.9999780659539197,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 241.835883251033
+    },
+    {
+     "id": "banking77-902",
+     "gold": 54,
+     "pred": 10,
+     "conf": 0.9999939989623595,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 267.957983251099
+    },
+    {
+     "id": "banking77-2700",
+     "gold": 5,
+     "pred": 65,
+     "conf": 0.9996871090481726,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 284.64998324851877
+    },
+    {
+     "id": "banking77-208",
+     "gold": 46,
+     "pred": 20,
+     "conf": 0.9855544695610388,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 293.22508324911723
+    },
+    {
+     "id": "banking77-2148",
+     "gold": 21,
+     "pred": 21,
+     "conf": 0.9999982399526581,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 282.3776832483327
+    },
+    {
+     "id": "banking77-1749",
+     "gold": 27,
+     "pred": 65,
+     "conf": 0.998571981019852,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 254.19668325047496
+    },
+    {
+     "id": "banking77-3002",
+     "gold": 69,
+     "pred": 30,
+     "conf": 0.9992535577859492,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 236.10718324925074
+    },
+    {
+     "id": "banking77-2089",
+     "gold": 53,
+     "pred": 53,
+     "conf": 0.9534225646643231,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 258.89288324832705
+    },
+    {
+     "id": "banking77-52",
+     "gold": 13,
+     "pred": 13,
+     "conf": 0.9999993088010429,
+     "in_shortlist": true,
+     "calls": 1,
+     "ms": 248.4306832520724
+    },
+    {
+     "id": "banking77-411",
+     "gold": 33,
+     "pred": 17,
+     "conf": 0.9640145980052859,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 264.7267832507987
+    },
+    {
+     "id": "banking77-1511",
+     "gold": 28,
+     "pred": 20,
+     "conf": 0.9950766336437581,
+     "in_shortlist": false,
+     "calls": 1,
+     "ms": 283.6218832489885
+    }
+   ]
+  }
+ }
+}

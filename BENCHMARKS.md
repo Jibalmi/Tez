@@ -178,6 +178,44 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 Reading the decision at layer 20–24 keeps the probe's full accuracy and removes a third to a half of the prefill. Absolute ms are the eager PyTorch path (the GGUF server does the same prompt in ~30 ms); the ratios are what transfer.
 
+### Task probes on Laya's public benchmarks (`hidden_probe_tasks.py`, frozen Qwen3.5-4B, 2,000 labelled train rows per task, same test rows as §1)
+
+| task | 4B letters | 4B probe L18 | L22 | L26 | final | 12B letters (zero-shot) | laya-td (fine-tuned) | Jev (published) |
+|---|---|---|---|---|---|---|---|---|
+| Banking77 (77) | — | 0.688 | **0.860** | 0.848 | 0.858 | 0.713 (tournament) | 0.388 | 0.870 |
+| Emotion (6) | 0.468 | 0.600 | 0.630 | **0.640** | 0.610 | 0.540 | 0.547 | |
+| SST-5 (5) | 0.400 | **0.547** | **0.547** | 0.527 | 0.490 | 0.512 | 0.460 | |
+| MASSIVE-en (60, full space) | — | 0.680 | **0.850** | 0.820 | 0.830 | 0.900 (20 options) | 0.820 (20 options) | |
+| XNLI-en (3) | 0.790 | 0.830 | 0.830 | **0.860** | 0.840 | 0.730 | **0.920** | |
+| BoolQ (2) | 0.752 | 0.880 | **0.892** | 0.890 | 0.848 | 0.850 | 0.835 | |
+
+Supervised; compare with laya-td, not with the zero-shot columns. The MASSIVE probe chooses among all 60 intents, so it is a harder task than the 20-option rows.
+
+### Retrieval-narrowed Banking77 (`retrieval_narrow.py`, 400 rows, 12B letter readout on the shortlist)
+
+| shortlist | recall@k | accuracy | ms p50 | passes |
+|---|---|---|---|---|
+| MiniLM top-5 | 0.828 | 0.660 | 201 | 1 |
+| MiniLM top-10 | 0.900 | 0.685 | 308 | 1 |
+| MiniLM top-15 | 0.927 | 0.700 | 465 | 1 |
+| MiniLM top-20 | 0.958 | 0.733 | 584 | 1 |
+| MiniLM top-20 + "none" → tournament | 0.958 | **0.738** | 439 | 1.11 |
+| serving model's own embedding, top-20 | 0.283 | 0.253 | 270 | 1 |
+| chunked tournament (reference) | — | 0.713 | 589 | 5 |
+
+MiniLM top-1 alone: 0.652. The decoder's last-token state is not a retriever (top-1 0.025).
+
+### Option elimination (`option_elimination.py`, 12B, head-to-head rows)
+
+| task | single | top-4 | top-8 | above-mean log-p | 95 % mass |
+|---|---|---|---|---|---|
+| MASSIVE-en (20) | 0.900 | 0.890 | 0.900 | 0.900 | 0.900 |
+| Emotion (6) | 0.540 | 0.557 | 0.540 | 0.527 | 0.550 |
+| AG News (4) | 0.880 | 0.880 | 0.880 | 0.877 | 0.877 |
+| typed-decisions choice, ≥3 options (600) | 0.682 | 0.683 | 0.682 | 0.702 | 0.690 |
+
+Negative: every change is within ±2 points and costs up to a second pass. The 95 % set keeps 1.1 options on average and drops the gold one 10–40 % of the time.
+
 One probe per question schema, fitted on the 6,000 train decisions (same data access as laya-typed-decisions, 0.766). Above Jev's 0.727 and our 12B's 0.704 / 0.725, from a 4B with untouched weights, reading 12 layers below the top.
 
 ## 5. JevBench public tiers (leaderboard formulas, `experiments/bench_jevbench.py`)
