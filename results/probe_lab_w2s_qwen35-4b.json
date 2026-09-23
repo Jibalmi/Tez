@@ -1,0 +1,208 @@
+{
+ "gold": {
+  "22": 0.7925,
+  "26": 0.793
+ },
+ "teachers": {
+  "self": {
+   "teacher_train_acc": 0.4755,
+   "teacher_test_acc": 0.4895,
+   "variants": {
+    "22": {
+     "hard": {
+      "acc": 0.4835,
+      "label_acc": 0.4755,
+      "n_labels": 6000
+     },
+     "confident-top50%": {
+      "acc": 0.4805,
+      "label_acc": 0.5850896508335954,
+      "n_labels": 3179
+     },
+     "confident-top25%": {
+      "acc": 0.4705,
+      "label_acc": 0.6980539861895794,
+      "n_labels": 1593
+     },
+     "soft": {
+      "acc": 0.484,
+      "label_acc": 0.4755,
+      "n_labels": 6000
+     },
+     "self-train round 1": {
+      "acc": 0.4785,
+      "label_acc": 0.4713333333333333,
+      "n_labels": 6000
+     },
+     "self-train round 2": {
+      "acc": 0.476,
+      "label_acc": 0.4701666666666667,
+      "n_labels": 6000
+     },
+     "self-train round 3": {
+      "acc": 0.474,
+      "label_acc": 0.467,
+      "n_labels": 6000
+     },
+     "cluster-then-label": {
+      "acc": 0.4745,
+      "label_acc": 0.4663333333333333,
+      "n_labels": 6000
+     }
+    },
+    "26": {
+     "hard": {
+      "acc": 0.487,
+      "label_acc": 0.4755,
+      "n_labels": 6000
+     },
+     "confident-top50%": {
+      "acc": 0.4835,
+      "label_acc": 0.5850896508335954,
+      "n_labels": 3179
+     },
+     "confident-top25%": {
+      "acc": 0.476,
+      "label_acc": 0.6980539861895794,
+      "n_labels": 1593
+     },
+     "soft": {
+      "acc": 0.4835,
+      "label_acc": 0.4755,
+      "n_labels": 6000
+     },
+     "self-train round 1": {
+      "acc": 0.488,
+      "label_acc": 0.4745,
+      "n_labels": 6000
+     },
+     "self-train round 2": {
+      "acc": 0.4845,
+      "label_acc": 0.4741666666666667,
+      "n_labels": 6000
+     },
+     "self-train round 3": {
+      "acc": 0.4835,
+      "label_acc": 0.47383333333333333,
+      "n_labels": 6000
+     },
+     "cluster-then-label": {
+      "acc": 0.49,
+      "label_acc": 0.4811666666666667,
+      "n_labels": 6000
+     }
+    }
+   }
+  },
+  "gemma12b": {
+   "teacher_train_acc": 0.6891666666666667,
+   "teacher_test_acc": 0.7045,
+   "variants": {
+    "22": {
+     "hard": {
+      "acc": 0.705,
+      "label_acc": 0.6891666666666667,
+      "n_labels": 6000
+     },
+     "confident-top50%": {
+      "acc": 0.661,
+      "label_acc": 0.7923333333333333,
+      "n_labels": 3000
+     },
+     "confident-top25%": {
+      "acc": 0.5905,
+      "label_acc": 0.862,
+      "n_labels": 1500
+     },
+     "soft": {
+      "acc": 0.7085,
+      "label_acc": 0.6891666666666667,
+      "n_labels": 6000
+     },
+     "self-train round 1": {
+      "acc": 0.695,
+      "label_acc": 0.6701666666666667,
+      "n_labels": 6000
+     },
+     "self-train round 2": {
+      "acc": 0.689,
+      "label_acc": 0.6663333333333333,
+      "n_labels": 6000
+     },
+     "self-train round 3": {
+      "acc": 0.681,
+      "label_acc": 0.656,
+      "n_labels": 6000
+     },
+     "cluster-then-label": {
+      "acc": 0.686,
+      "label_acc": 0.6666666666666666,
+      "n_labels": 6000
+     }
+    },
+    "26": {
+     "hard": {
+      "acc": 0.703,
+      "label_acc": 0.6891666666666667,
+      "n_labels": 6000
+     },
+     "confident-top50%": {
+      "acc": 0.6605,
+      "label_acc": 0.7923333333333333,
+      "n_labels": 3000
+     },
+     "confident-top25%": {
+      "acc": 0.5915,
+      "label_acc": 0.862,
+      "n_labels": 1500
+     },
+     "soft": {
+      "acc": 0.7045,
+      "label_acc": 0.6891666666666667,
+      "n_labels": 6000
+     },
+     "self-train round 1": {
+      "acc": 0.6855,
+      "label_acc": 0.6688333333333333,
+      "n_labels": 6000
+     },
+     "self-train round 2": {
+      "acc": 0.686,
+      "label_acc": 0.6675,
+      "n_labels": 6000
+     },
+     "self-train round 3": {
+      "acc": 0.683,
+      "label_acc": 0.661,
+      "n_labels": 6000
+     },
+     "cluster-then-label": {
+      "acc": 0.668,
+      "label_acc": 0.6491666666666667,
+      "n_labels": 6000
+     }
+    }
+   }
+  },
+  "agree": {
+   "teacher_train_acc": 0.6891666666666667,
+   "teacher_test_acc": 0.7045,
+   "variants": {
+    "22": {
+     "agreement-filtered": {
+      "acc": 0.557,
+      "label_acc": 0.7213809812235009,
+      "n_labels": 3302
+     }
+    },
+    "26": {
+     "agreement-filtered": {
+      "acc": 0.56,
+      "label_acc": 0.7213809812235009,
+      "n_labels": 3302
+     }
+    }
+   }
+  }
+ }
+}

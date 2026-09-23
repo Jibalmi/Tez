@@ -1,0 +1,168 @@
+{
+ "layers": {
+  "0": {
+   "twonn_pooled": NaN,
+   "twonn_per_question": NaN
+  },
+  "1": {
+   "twonn_pooled": 7.616661103614712,
+   "twonn_per_question": 13.33884198209689
+  },
+  "2": {
+   "twonn_pooled": 8.548994995907027,
+   "twonn_per_question": 14.173100581586047
+  },
+  "3": {
+   "twonn_pooled": 6.741981712020827,
+   "twonn_per_question": 14.79591759114287
+  },
+  "4": {
+   "twonn_pooled": 6.368980557081053,
+   "twonn_per_question": 15.579754653637934
+  },
+  "5": {
+   "twonn_pooled": 7.60519324114386,
+   "twonn_per_question": 11.578577777261842
+  },
+  "6": {
+   "twonn_pooled": 5.5712907814277415,
+   "twonn_per_question": 8.84869891386705
+  },
+  "7": {
+   "twonn_pooled": 5.9989820162111105,
+   "twonn_per_question": 9.284552373261487
+  },
+  "8": {
+   "twonn_pooled": 6.479554631065756,
+   "twonn_per_question": 9.880594927568414
+  },
+  "9": {
+   "twonn_pooled": 7.818505942504887,
+   "twonn_per_question": 11.583086245900663
+  },
+  "10": {
+   "twonn_pooled": 9.60284244303213,
+   "twonn_per_question": 13.060263461287914
+  },
+  "11": {
+   "twonn_pooled": 8.648975251157875,
+   "twonn_per_question": 13.302155979236739
+  },
+  "12": {
+   "twonn_pooled": 9.28505377277303,
+   "twonn_per_question": 12.183489558100572
+  },
+  "13": {
+   "twonn_pooled": 9.503014941288908,
+   "twonn_per_question": 12.971426088579957
+  },
+  "14": {
+   "twonn_pooled": 10.02444651930833,
+   "twonn_per_question": 12.616337958728877
+  },
+  "15": {
+   "twonn_pooled": 8.922133076926041,
+   "twonn_per_question": 11.605785493566724
+  },
+  "16": {
+   "twonn_pooled": 8.005198481301912,
+   "twonn_per_question": 9.675460409382747
+  },
+  "17": {
+   "twonn_pooled": 8.254628485846306,
+   "twonn_per_question": 9.540841373268314
+  },
+  "18": {
+   "twonn_pooled": 8.153969313055365,
+   "twonn_per_question": 9.698917330442734
+  },
+  "19": {
+   "twonn_pooled": 8.618351400671985,
+   "twonn_per_question": 10.352017059834278
+  },
+  "20": {
+   "twonn_pooled": 9.223536699617231,
+   "twonn_per_question": 10.684862410005774
+  },
+  "21": {
+   "twonn_pooled": 9.455572383981044,
+   "twonn_per_question": 11.24165065840352
+  },
+  "22": {
+   "twonn_pooled": 9.39385874931753,
+   "twonn_per_question": 11.48333909543833
+  },
+  "23": {
+   "twonn_pooled": 9.605209596758803,
+   "twonn_per_question": 11.638648917895523
+  },
+  "24": {
+   "twonn_pooled": 9.90325515989713,
+   "twonn_per_question": 11.80536589641321
+  },
+  "25": {
+   "twonn_pooled": 9.95625574147675,
+   "twonn_per_question": 11.825791021830591
+  },
+  "26": {
+   "twonn_pooled": 10.091547674851336,
+   "twonn_per_question": 12.174735398267297
+  },
+  "27": {
+   "twonn_pooled": 10.424649920312739,
+   "twonn_per_question": 12.14183422111416
+  },
+  "28": {
+   "twonn_pooled": 10.47345851626688,
+   "twonn_per_question": 12.174158718759438
+  },
+  "29": {
+   "twonn_pooled": 10.220511284765333,
+   "twonn_per_question": 11.862918220592164
+  },
+  "30": {
+   "twonn_pooled": 10.121423999826634,
+   "twonn_per_question": 11.711321317473995
+  },
+  "31": {
+   "twonn_pooled": 10.005504482024026,
+   "twonn_per_question": 11.677489479852108
+  },
+  "32": {
+   "twonn_pooled": 9.924001293948333,
+   "twonn_per_question": 11.642627194830794
+  },
+  "33": {
+   "twonn_pooled": 9.601533504459374,
+   "twonn_per_question": 11.507812295551878
+  },
+  "34": {
+   "twonn_pooled": 9.069207072270684,
+   "twonn_per_question": 11.26921667757524
+  },
+  "35": {
+   "twonn_pooled": 8.894552461237256,
+   "twonn_per_question": 11.096355401272888
+  },
+  "36": {
+   "twonn_pooled": 8.840022004126078,
+   "twonn_per_question": 10.814329796119033
+  },
+  "37": {
+   "twonn_pooled": 8.814663514941593,
+   "twonn_per_question": 10.794028060451213
+  },
+  "38": {
+   "twonn_pooled": 8.673831798116645,
+   "twonn_per_question": 10.763809733472481
+  },
+  "39": {
+   "twonn_pooled": 8.638668074402325,
+   "twonn_per_question": 10.675347443368828
+  },
+  "40": {
+   "twonn_pooled": 8.45337110669885,
+   "twonn_per_question": 10.57975685687016
+  }
+ }
+}

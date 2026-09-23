@@ -1,0 +1,100 @@
+{
+ "layers": {
+  "20": {
+   "lowo": {
+    "agent_trace_observability": {
+     "acc": 0.434,
+     "wd": 0.01,
+     "inner": 0.5173333333333333
+    },
+    "customer_service": {
+     "acc": 0.384,
+     "wd": 0.01,
+     "inner": 0.4726666666666666
+    },
+    "invoice_processing": {
+     "acc": 0.596,
+     "wd": 0.01,
+     "inner": 0.4673333333333334
+    },
+    "security_incidents": {
+     "acc": 0.616,
+     "wd": 0.01,
+     "inner": 0.40599999999999997
+    }
+   },
+   "in_distribution": 0.7755,
+   "lowo_mean": 0.5075000000000001
+  },
+  "26": {
+   "lowo": {
+    "agent_trace_observability": {
+     "acc": 0.444,
+     "wd": 0.01,
+     "inner": 0.5419999999999999
+    },
+    "customer_service": {
+     "acc": 0.414,
+     "wd": 0.01,
+     "inner": 0.5253333333333333
+    },
+    "invoice_processing": {
+     "acc": 0.576,
+     "wd": 0.01,
+     "inner": 0.502
+    },
+    "security_incidents": {
+     "acc": 0.65,
+     "wd": 0.01,
+     "inner": 0.46799999999999997
+    }
+   },
+   "in_distribution": 0.778,
+   "lowo_mean": 0.521
+  },
+  "32": {
+   "lowo": {
+    "agent_trace_observability": {
+     "acc": 0.5,
+     "wd": 0.01,
+     "inner": 0.5253333333333333
+    },
+    "customer_service": {
+     "acc": 0.416,
+     "wd": 0.01,
+     "inner": 0.5366666666666666
+    },
+    "invoice_processing": {
+     "acc": 0.566,
+     "wd": 0.01,
+     "inner": 0.4526666666666666
+    },
+    "security_incidents": {
+     "acc": 0.486,
+     "wd": 0.0001,
+     "inner": 0.47400000000000003
+    }
+   },
+   "in_distribution": 0.7815,
+   "lowo_mean": 0.49199999999999994
+  }
+ },
+ "baselines": {
+  "agent_trace_observability": {
+   "letters_4b": 0.464,
+   "letters_12b": null
+  },
+  "customer_service": {
+   "letters_4b": 0.554,
+   "letters_12b": null
+  },
+  "invoice_processing": {
+   "letters_4b": 0.342,
+   "letters_12b": null
+  },
+  "security_incidents": {
+   "letters_4b": 0.598,
+   "letters_12b": null
+  }
+ }
+}

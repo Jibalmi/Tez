@@ -1,0 +1,23 @@
+{
+ "single": {
+  "probe L26": 0.793,
+  "probe L22": 0.7925,
+  "lens L29": 0.583,
+  "4B letters": 0.4895,
+  "12B letters": 0.7045
+ },
+ "pools": {
+  "probe L26 + 12B letters": {
+   "stacked_logreg": 0.7985,
+   "geometric_pool": 0.7845
+  },
+  "probe L26 + 4B letters": {
+   "stacked_logreg": 0.7925,
+   "geometric_pool": 0.785
+  },
+  "probe L26 + L22 + lens + 4B + 12B": {
+   "stacked_logreg": 0.795,
+   "geometric_pool": 0.7865
+  }
+ }
+}

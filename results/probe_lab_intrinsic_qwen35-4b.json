@@ -1,0 +1,136 @@
+{
+ "layers": {
+  "0": {
+   "twonn_pooled": NaN,
+   "twonn_per_question": NaN
+  },
+  "1": {
+   "twonn_pooled": 6.622436326730525,
+   "twonn_per_question": 16.067804236987573
+  },
+  "2": {
+   "twonn_pooled": 8.944344669589452,
+   "twonn_per_question": 16.28617365059447
+  },
+  "3": {
+   "twonn_pooled": 9.37020024887231,
+   "twonn_per_question": 17.03938334013548
+  },
+  "4": {
+   "twonn_pooled": 10.979023913930995,
+   "twonn_per_question": 16.115317850580418
+  },
+  "5": {
+   "twonn_pooled": 11.026334415728451,
+   "twonn_per_question": 16.599667927789362
+  },
+  "6": {
+   "twonn_pooled": 11.087844093391883,
+   "twonn_per_question": 17.006714959649322
+  },
+  "7": {
+   "twonn_pooled": 11.151568449612778,
+   "twonn_per_question": 17.258473138887513
+  },
+  "8": {
+   "twonn_pooled": 11.457478859163885,
+   "twonn_per_question": 16.094959818185753
+  },
+  "9": {
+   "twonn_pooled": 11.77024578028688,
+   "twonn_per_question": 16.578661590648526
+  },
+  "10": {
+   "twonn_pooled": 12.026747004964673,
+   "twonn_per_question": 17.182033196756134
+  },
+  "11": {
+   "twonn_pooled": 12.025539539225043,
+   "twonn_per_question": 17.531310595957734
+  },
+  "12": {
+   "twonn_pooled": 12.343094663579313,
+   "twonn_per_question": 16.931468134829352
+  },
+  "13": {
+   "twonn_pooled": 12.693342638407316,
+   "twonn_per_question": 16.80589993936301
+  },
+  "14": {
+   "twonn_pooled": 12.726377768638482,
+   "twonn_per_question": 15.983889368339636
+  },
+  "15": {
+   "twonn_pooled": 12.591993398192749,
+   "twonn_per_question": 15.612071328958411
+  },
+  "16": {
+   "twonn_pooled": 12.093207692915401,
+   "twonn_per_question": 15.11296261207614
+  },
+  "17": {
+   "twonn_pooled": 11.666973842912773,
+   "twonn_per_question": 14.821421003422978
+  },
+  "18": {
+   "twonn_pooled": 11.053681534854691,
+   "twonn_per_question": 14.600640323729783
+  },
+  "19": {
+   "twonn_pooled": 10.986559071348609,
+   "twonn_per_question": 14.66579107899284
+  },
+  "20": {
+   "twonn_pooled": 9.90015762140308,
+   "twonn_per_question": 13.306283462762147
+  },
+  "21": {
+   "twonn_pooled": 9.891324594934558,
+   "twonn_per_question": 13.516559455215003
+  },
+  "22": {
+   "twonn_pooled": 9.774255372077905,
+   "twonn_per_question": 13.297087367394473
+  },
+  "23": {
+   "twonn_pooled": 9.690865559305394,
+   "twonn_per_question": 13.096646229265435
+  },
+  "24": {
+   "twonn_pooled": 9.226688679064555,
+   "twonn_per_question": 12.358107817457135
+  },
+  "25": {
+   "twonn_pooled": 9.289921383288355,
+   "twonn_per_question": 12.481506959486259
+  },
+  "26": {
+   "twonn_pooled": 9.271604042614706,
+   "twonn_per_question": 12.490361310141607
+  },
+  "27": {
+   "twonn_pooled": 9.166843094713752,
+   "twonn_per_question": 12.346208852399453
+  },
+  "28": {
+   "twonn_pooled": 9.250300008005953,
+   "twonn_per_question": 12.40581493698492
+  },
+  "29": {
+   "twonn_pooled": 9.693447678366834,
+   "twonn_per_question": 13.19719725090898
+  },
+  "30": {
+   "twonn_pooled": 9.848371630201825,
+   "twonn_per_question": 13.453466537673872
+  },
+  "31": {
+   "twonn_pooled": 10.301523832136978,
+   "twonn_per_question": 14.093697491001151
+  },
+  "32": {
+   "twonn_pooled": 10.608610898917334,
+   "twonn_per_question": 14.46988009063
+  }
+ }
+}

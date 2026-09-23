@@ -1,0 +1,171 @@
+{
+ "default_policy": {
+  "all": {
+   "harmful": 1,
+   "oos_false": 4,
+   "errors": 5,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.8666666666666667,
+   "at_or_before_human": 0.5
+  }
+ },
+ "folds": [
+  {
+   "default_on_eval": {
+    "harmful": 0,
+    "oos_false": 1,
+    "errors": 1,
+    "actionable": 101,
+    "oos_rows": 9,
+    "mean_first_word": 3.8282828282828283,
+    "at_or_before_human": 0.5148514851485149
+   },
+   "fixed": {
+    "config": {
+     "kind": "fixed",
+     "tau": 0.999,
+     "media_stable": 1,
+     "play_stable": 1,
+     "slot_stable": 1
+    },
+    "selection_fold": {
+     "harmful": 1,
+     "oos_false": 3,
+     "errors": 4,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.6315789473684212,
+     "at_or_before_human": 0.7010309278350515
+    },
+    "eval_fold": {
+     "harmful": 0,
+     "oos_false": 1,
+     "errors": 1,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.4444444444444446,
+     "at_or_before_human": 0.7128712871287128
+    }
+   },
+   "collapsing": {
+    "config": {
+     "kind": "collapsing",
+     "ceil": 0.99,
+     "floor": 0.5,
+     "T": 0.5,
+     "stability": 2
+    },
+    "selection_fold": {
+     "harmful": 1,
+     "oos_false": 3,
+     "errors": 4,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.84375,
+     "at_or_before_human": 0.4948453608247423
+    },
+    "eval_fold": {
+     "harmful": 0,
+     "oos_false": 1,
+     "errors": 1,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.787878787878788,
+     "at_or_before_human": 0.5247524752475248
+    }
+   }
+  },
+  {
+   "default_on_eval": {
+    "harmful": 1,
+    "oos_false": 3,
+    "errors": 4,
+    "actionable": 97,
+    "oos_rows": 13,
+    "mean_first_word": 3.90625,
+    "at_or_before_human": 0.4845360824742268
+   },
+   "fixed": {
+    "config": {
+     "kind": "fixed",
+     "tau": 0.5,
+     "media_stable": 1,
+     "play_stable": 2,
+     "slot_stable": 1
+    },
+    "selection_fold": {
+     "harmful": 0,
+     "oos_false": 1,
+     "errors": 1,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.2323232323232323,
+     "at_or_before_human": 0.7227722772277227
+    },
+    "eval_fold": {
+     "harmful": 3,
+     "oos_false": 3,
+     "errors": 6,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.3020833333333335,
+     "at_or_before_human": 0.7216494845360825
+    }
+   },
+   "collapsing": {
+    "config": {
+     "kind": "collapsing",
+     "ceil": 0.99999,
+     "floor": 0.5,
+     "T": 0.5,
+     "stability": 1
+    },
+    "selection_fold": {
+     "harmful": 1,
+     "oos_false": 0,
+     "errors": 1,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.2626262626262625,
+     "at_or_before_human": 0.7326732673267327
+    },
+    "eval_fold": {
+     "harmful": 3,
+     "oos_false": 3,
+     "errors": 6,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.3333333333333335,
+     "at_or_before_human": 0.7319587628865979
+    }
+   }
+  }
+ ],
+ "held_out_summary": {
+  "default_on_eval": {
+   "harmful": 1,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.8672664141414144,
+   "at_or_before_human": 0.49969378381137086
+  },
+  "fixed": {
+   "harmful": 3,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.3732638888888893,
+   "at_or_before_human": 0.7172603858323976
+  },
+  "collapsing": {
+   "harmful": 3,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.5606060606060606,
+   "at_or_before_human": 0.6283556190670614
+  }
+ }
+}

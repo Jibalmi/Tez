@@ -1,0 +1,171 @@
+{
+ "default_policy": {
+  "all": {
+   "harmful": 2,
+   "oos_false": 4,
+   "errors": 6,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.5677083333333335,
+   "at_or_before_human": 0.5252525252525253
+  }
+ },
+ "folds": [
+  {
+   "default_on_eval": {
+    "harmful": 0,
+    "oos_false": 2,
+    "errors": 2,
+    "actionable": 101,
+    "oos_rows": 9,
+    "mean_first_word": 3.402061855670103,
+    "at_or_before_human": 0.5544554455445545
+   },
+   "fixed": {
+    "config": {
+     "kind": "fixed",
+     "tau": 0.99,
+     "media_stable": 1,
+     "play_stable": 1,
+     "slot_stable": 2
+    },
+    "selection_fold": {
+     "harmful": 2,
+     "oos_false": 2,
+     "errors": 4,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.5473684210526315,
+     "at_or_before_human": 0.711340206185567
+    },
+    "eval_fold": {
+     "harmful": 1,
+     "oos_false": 2,
+     "errors": 3,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.1649484536082473,
+     "at_or_before_human": 0.7326732673267327
+    }
+   },
+   "collapsing": {
+    "config": {
+     "kind": "collapsing",
+     "ceil": 0.99,
+     "floor": 0.5,
+     "T": 0.5,
+     "stability": 2
+    },
+    "selection_fold": {
+     "harmful": 2,
+     "oos_false": 2,
+     "errors": 4,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.705263157894737,
+     "at_or_before_human": 0.5154639175257731
+    },
+    "eval_fold": {
+     "harmful": 0,
+     "oos_false": 2,
+     "errors": 2,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.3711340206185567,
+     "at_or_before_human": 0.5643564356435643
+    }
+   }
+  },
+  {
+   "default_on_eval": {
+    "harmful": 2,
+    "oos_false": 2,
+    "errors": 4,
+    "actionable": 97,
+    "oos_rows": 13,
+    "mean_first_word": 3.736842105263158,
+    "at_or_before_human": 0.4948453608247423
+   },
+   "fixed": {
+    "config": {
+     "kind": "fixed",
+     "tau": 0.99,
+     "media_stable": 1,
+     "play_stable": 2,
+     "slot_stable": 2
+    },
+    "selection_fold": {
+     "harmful": 0,
+     "oos_false": 2,
+     "errors": 2,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.195876288659794,
+     "at_or_before_human": 0.7029702970297029
+    },
+    "eval_fold": {
+     "harmful": 2,
+     "oos_false": 2,
+     "errors": 4,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.6,
+     "at_or_before_human": 0.6701030927835051
+    }
+   },
+   "collapsing": {
+    "config": {
+     "kind": "collapsing",
+     "ceil": 0.99999,
+     "floor": 0.9,
+     "T": 5,
+     "stability": 1
+    },
+    "selection_fold": {
+     "harmful": 1,
+     "oos_false": 1,
+     "errors": 2,
+     "actionable": 101,
+     "oos_rows": 9,
+     "mean_first_word": 3.082474226804124,
+     "at_or_before_human": 0.7326732673267327
+    },
+    "eval_fold": {
+     "harmful": 4,
+     "oos_false": 2,
+     "errors": 6,
+     "actionable": 97,
+     "oos_rows": 13,
+     "mean_first_word": 3.3789473684210525,
+     "at_or_before_human": 0.711340206185567
+    }
+   }
+  }
+ ],
+ "held_out_summary": {
+  "default_on_eval": {
+   "harmful": 2,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.5694519804666305,
+   "at_or_before_human": 0.5246504031846484
+  },
+  "fixed": {
+   "harmful": 3,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.3824742268041237,
+   "at_or_before_human": 0.7013881800551189
+  },
+  "collapsing": {
+   "harmful": 4,
+   "oos_false": 4,
+   "actionable": 198,
+   "oos_rows": 22,
+   "mean_first_word": 3.3750406945198046,
+   "at_or_before_human": 0.6378483209145657
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "views_test_acc": {
+  "12B letters": 0.7045,
+  "4B letters": 0.4895,
+  "4B lens L29": 0.583,
+  "4B lens L24": 0.576
+ },
+ "combos": {
+  "12B + 4B letters + lens29": {
+   "label_model_test_acc": 0.6165,
+   "majority_vote_test_acc": 0.6155,
+   "label_model_train_label_acc": 0.6051666666666666,
+   "probe_L22_hard": 0.6115,
+   "probe_L22_soft": 0.615,
+   "probe_L26_hard": 0.6085,
+   "probe_L26_soft": 0.6125
+  },
+  "12B + lens29 + lens24": {
+   "label_model_test_acc": 0.611,
+   "majority_vote_test_acc": 0.6225,
+   "label_model_train_label_acc": 0.613,
+   "probe_L22_hard": 0.6125,
+   "probe_L22_soft": 0.6115,
+   "probe_L26_hard": 0.608,
+   "probe_L26_soft": 0.6085
+  },
+  "all four": {
+   "label_model_test_acc": 0.6,
+   "majority_vote_test_acc": 0.6215,
+   "label_model_train_label_acc": 0.6025,
+   "probe_L22_hard": 0.597,
+   "probe_L22_soft": 0.5955,
+   "probe_L26_hard": 0.597,
+   "probe_L26_soft": 0.5995
+  }
+ }
+}

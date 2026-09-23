@@ -1,0 +1,22 @@
+{
+ "layer": 26,
+ "zero_shot_12b": 0.7045,
+ "n": {
+  "0": {
+   "random": {
+    "probe": null,
+    "mix n0=10": 0.7045,
+    "mix n0=20": 0.7045,
+    "mix n0=40": 0.7045,
+    "product of experts": 0.7045
+   },
+   "typical": {
+    "probe": null,
+    "mix n0=10": 0.7045,
+    "mix n0=20": 0.7045,
+    "mix n0=40": 0.7045,
+    "product of experts": 0.7045
+   }
+  }
+ }
+}

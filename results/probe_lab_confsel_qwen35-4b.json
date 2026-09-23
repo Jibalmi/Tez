@@ -1,0 +1,56 @@
+{
+ "4B probe L26 (gold labels)": {
+  "accuracy": 0.793,
+  "alpha0.05": {
+   "acted": 0.40043999999999996,
+   "realised_error_among_acted": 0.051737940461654405,
+   "worst_error": 0.096
+  },
+  "alpha0.1": {
+   "acted": 0.6113200000000001,
+   "realised_error_among_acted": 0.09945755051754894,
+   "worst_error": 0.1369472182596291
+  },
+  "alpha0.2": {
+   "acted": 0.9777000000000001,
+   "realised_error_among_acted": 0.20179535937096937,
+   "worst_error": 0.223
+  }
+ },
+ "12B letters (zero-shot)": {
+  "accuracy": 0.7045,
+  "alpha0.05": {
+   "acted": 0.23806000000000002,
+   "realised_error_among_acted": 0.05182719712873841,
+   "worst_error": 0.09415584415584416
+  },
+  "alpha0.1": {
+   "acted": 0.35950000000000004,
+   "realised_error_among_acted": 0.1022811467072991,
+   "worst_error": 0.14108910891089108
+  },
+  "alpha0.2": {
+   "acted": 0.6552199999999999,
+   "realised_error_among_acted": 0.20468014850309424,
+   "worst_error": 0.24746743849493488
+  }
+ },
+ "4B probe L26 (12B pseudo-labels, no human labels)": {
+  "accuracy": 0.7030000000000001,
+  "alpha0.05": {
+   "acted": 0.0,
+   "realised_error_among_acted": 0.0,
+   "worst_error": 0.0
+  },
+  "alpha0.1": {
+   "acted": 0.0044,
+   "realised_error_among_acted": 0.004272727272727273,
+   "worst_error": 0.21363636363636362
+  },
+  "alpha0.2": {
+   "acted": 0.53828,
+   "realised_error_among_acted": 0.19986435127144844,
+   "worst_error": 0.2527131782945736
+  }
+ }
+}
