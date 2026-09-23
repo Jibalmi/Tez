@@ -1,0 +1,63 @@
+{
+ "schema": {
+  "name": "multilingual-intent",
+  "description": "Map what a user says to a phone or home assistant, in any supported language, to one intent.",
+  "state": "One user utterance to a voice or chat assistant, in any language.",
+  "questions": {
+   "intent": {
+    "type": "choice",
+    "instructions": "What is the user asking the assistant to do?",
+    "criteria": {
+     "alarm_set": "Set an alarm or a wake-up call.",
+     "alarm_query": "Ask which alarms are set.",
+     "alarm_remove": "Delete or cancel an alarm.",
+     "calendar_set": "Add an event or meeting to the calendar.",
+     "calendar_query": "Ask what is in the calendar.",
+     "datetime_query": "Ask the current time or date, or the time somewhere else.",
+     "weather_query": "Ask about the weather or the forecast.",
+     "play_music": "Play a song, artist, album or genre.",
+     "play_radio": "Play a radio station.",
+     "play_podcasts": "Play or resume a podcast.",
+     "audio_volume_up": "Make the sound louder.",
+     "audio_volume_down": "Make the sound quieter.",
+     "lights_on": "Turn lights on or make them brighter.",
+     "lights_off": "Turn lights off or dim them.",
+     "lists_add": "Add an item to a list, such as a shopping list.",
+     "email_send": "Write or send an email.",
+     "news_query": "Ask for the news or headlines.",
+     "takeaway_order": "Order food for delivery or collection.",
+     "transport_query": "Ask about trains, buses, traffic or directions.",
+     "general_question": "A general knowledge question or small talk."
+    }
+   }
+  },
+  "gate": null
+ },
+ "samples": [
+  {
+   "state": "Weck mich morgen früh um halb sieben",
+   "note": "synthetic example"
+  },
+  {
+   "state": "明日の東京の天気を教えて",
+   "note": "synthetic example"
+  },
+  {
+   "state": "شغّل أغاني فيروز",
+   "note": "synthetic example"
+  },
+  {
+   "state": "रसोई की लाइट बंद कर दो",
+   "note": "synthetic example"
+  },
+  {
+   "state": "ข่าววันนี้มีอะไรบ้าง",
+   "note": "synthetic example"
+  },
+  {
+   "state": "Mets quelque chose de relaxant",
+   "note": "synthetic example"
+  }
+ ],
+ "yaml": "# Tez schema (format: docs/API.md, \"Schema files\"). Gallery example with MASSIVE-style assistant intents.\n# 20 options, the same size as the measured MASSIVE protocol; labels and instructions stay in English for every language.\nname: multilingual-intent\ndescription: Map what a user says to a phone or home assistant, in any supported language, to one intent.\nstate: \"One user utterance to a voice or chat assistant, in any language.\"\nquestions:\n  intent:\n    type: choice\n    instructions: What is the user asking the assistant to do?\n    criteria:\n      alarm_set: Set an alarm or a wake-up call.\n      alarm_query: Ask which alarms are set.\n      alarm_remove: Delete or cancel an alarm.\n      calendar_set: Add an event or meeting to the calendar.\n      calendar_query: Ask what is in the calendar.\n      datetime_query: Ask the current time or date, or the time somewhere else.\n      weather_query: Ask about the weather or the forecast.\n      play_music: Play a song, artist, album or genre.\n      play_radio: Play a radio station.\n      play_podcasts: Play or resume a podcast.\n      audio_volume_up: Make the sound louder.\n      audio_volume_down: Make the sound quieter.\n      lights_on: Turn lights on or make them brighter.\n      lights_off: Turn lights off or dim them.\n      lists_add: Add an item to a list, such as a shopping list.\n      email_send: Write or send an email.\n      news_query: Ask for the news or headlines.\n      takeaway_order: Order food for delivery or collection.\n      transport_query: Ask about trains, buses, traffic or directions.\n      general_question: A general knowledge question or small talk.\n"
+}

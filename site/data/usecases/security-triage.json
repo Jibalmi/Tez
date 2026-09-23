@@ -1,0 +1,155 @@
+{
+ "schema": {
+  "name": "security-triage",
+  "description": "First-pass triage of security alerts from endpoint, identity, cloud and email tools before an analyst picks them up.",
+  "state": "One security alert as a JSON object: the rule that fired, the evidence, the account or host involved, and context such as asset criticality and change windows.",
+  "questions": {
+   "category": {
+    "type": "choice",
+    "instructions": "What kind of activity does this alert describe?",
+    "criteria": {
+     "malware": "Malicious or suspicious code running on, or found on, an endpoint.",
+     "credential_abuse": "Stolen or misused credentials, suspicious sign-ins, MFA fatigue or impossible travel.",
+     "data_exfiltration": "Unusual transfer or download of data out of the organisation.",
+     "phishing": "A malicious email, link or attachment that was delivered or reported.",
+     "misconfiguration": "A risky change to cloud, network or access settings.",
+     "benign_activity": "Expected, explainable activity such as an approved admin task or an authorised scanner."
+    }
+   },
+   "severity": {
+    "type": "score",
+    "instructions": "How severe is the potential impact if this alert is real?",
+    "criteria": [
+     "Negligible: no access to anything sensitive.",
+     "Low: limited access, easily reversed.",
+     "Moderate: internal systems or non-public data.",
+     "High: production systems, secrets, employee or customer data.",
+     "Critical: active compromise of crown-jewel systems."
+    ]
+   },
+   "escalate": {
+    "type": "noul",
+    "instructions": "Should the on-call analyst look at this alert now instead of leaving it in the queue?",
+    "criteria": {
+     "true": "Plausibly malicious and touching sensitive assets, or an attack may still be in progress.",
+     "false": "Benign, already contained, or low impact; the normal queue is fine."
+    }
+   }
+  },
+  "gate": {
+   "alpha": 0.05
+  }
+ },
+ "samples": [
+  {
+   "state": {
+    "source": "identity_provider",
+    "rule": "impossible_travel",
+    "time_utc": "2026-09-21T03:12:09Z",
+    "principal": {
+     "user": "j.okafor",
+     "role": "finance analyst",
+     "mfa": "push"
+    },
+    "evidence": "Sign-in from Lagos (203.0.113.77) at 03:12 UTC, 41 minutes after a sign-in from Rotterdam (198.51.100.23). The Lagos sign-in was approved by MFA push after 6 declined pushes in 4 minutes.",
+    "context": {
+     "asset_criticality": "high",
+     "travel_on_record": false,
+     "session_active": true
+    }
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "source": "edr",
+    "rule": "office_app_spawned_powershell",
+    "time_utc": "2026-09-22T09:47:31Z",
+    "host": {
+     "name": "FIN-WS-0142",
+     "owner_team": "accounts payable",
+     "criticality": "medium"
+    },
+    "evidence": "WINWORD.EXE spawned powershell.exe -nop -w hidden -enc JABjAD0ATgBlAHcALQBPAGIAagBlAGMAdAA... The decoded command downloads hxxp://files.invoicecheck-portal[.]example/upd.bin to %TEMP% and starts it. The document Remittance_Advice_0921.docm arrived from an external sender 3 minutes earlier.",
+    "context": {
+     "process_blocked": false,
+     "hosts_with_same_file_hash": 1,
+     "network_connection_made": true
+    }
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "source": "siem",
+    "rule": "mass_group_membership_change",
+    "time_utc": "2026-09-20T22:05:00Z",
+    "principal": {
+     "user": "svc-iam-sync",
+     "type": "service_account"
+    },
+    "evidence": "38 users added to the group VPN-Contractors within 90 seconds.",
+    "context": {
+     "change_ticket": "CHG-20418 (approved): onboard the October contractor cohort, window 22:00-23:00 UTC",
+     "change_window_active": true,
+     "source_on_allowlist": true,
+     "prior_alerts_90d": 0
+    }
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "source": "cloud_posture",
+    "rule": "storage_public_read",
+    "time_utc": "2026-09-22T14:20:11Z",
+    "resource": {
+     "type": "object storage bucket",
+     "name": "hr-exports-prod",
+     "environment": "production"
+    },
+    "evidence": "Bucket policy changed to allow public read (Principal: *) by user m.lindqvist through the web console. The bucket holds 1,204 objects, including payroll_2026_08.csv.",
+    "context": {
+     "change_ticket": null,
+     "anonymous_reads_since_change": "unknown",
+     "asset_criticality": "high"
+    }
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "source": "email_gateway",
+    "rule": "user_reported_phish",
+    "time_utc": "2026-09-23T08:02:40Z",
+    "evidence": "An employee reported an email with the subject 'Action required: mailbox storage full' from it-support@helpdesk-mailcenter.example. The link opens a page that imitates the company sign-in page. Gateway logs: 212 recipients, 3 clicked the link, 1 submitted the form.",
+    "context": {
+     "auto_quarantined": true,
+     "form_submitted_by": "p.nakamura (HR)",
+     "password_reset_done": false
+    }
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "source": "dlp",
+    "rule": "bulk_download_then_sync",
+    "time_utc": "2026-09-22T19:15:02Z",
+    "principal": {
+     "user": "r.barros",
+     "department": "sales",
+     "employment_status": "resigned, last day 2026-09-30"
+    },
+    "evidence": "3,480 files (2.1 GB) downloaded from the CRM export folder and the pricing site between 18:40 and 19:15, then synced to a personal cloud storage client.",
+    "context": {
+     "asset_criticality": "high",
+     "prior_alerts_90d": 0,
+     "manager_approved_handover": false
+    }
+   },
+   "note": "synthetic example"
+  }
+ ],
+ "yaml": "# Tez schema (format: docs/API.md, \"Schema files\"). Gallery example: a first pass before an analyst, not a replacement.\nname: security-triage\ndescription: First-pass triage of security alerts from endpoint, identity, cloud and email tools before an analyst picks them up.\nstate: \"One security alert as a JSON object: the rule that fired, the evidence, the account or host involved, and context such as asset criticality and change windows.\"\nquestions:\n  category:\n    type: choice\n    instructions: What kind of activity does this alert describe?\n    criteria:\n      malware: Malicious or suspicious code running on, or found on, an endpoint.\n      credential_abuse: Stolen or misused credentials, suspicious sign-ins, MFA fatigue or impossible travel.\n      data_exfiltration: Unusual transfer or download of data out of the organisation.\n      phishing: A malicious email, link or attachment that was delivered or reported.\n      misconfiguration: A risky change to cloud, network or access settings.\n      benign_activity: Expected, explainable activity such as an approved admin task or an authorised scanner.\n  severity:\n    type: score\n    instructions: How severe is the potential impact if this alert is real?\n    criteria:\n      - \"Negligible: no access to anything sensitive.\"\n      - \"Low: limited access, easily reversed.\"\n      - \"Moderate: internal systems or non-public data.\"\n      - \"High: production systems, secrets, employee or customer data.\"\n      - \"Critical: active compromise of crown-jewel systems.\"\n  escalate:\n    type: noul\n    instructions: Should the on-call analyst look at this alert now instead of leaving it in the queue?\n    criteria:\n      \"true\": Plausibly malicious and touching sensitive assets, or an attack may still be in progress.\n      \"false\": Benign, already contained, or low impact; the normal queue is fine.\ngate:\n  alpha: 0.05   # conformal gate (docs/API.md): needs a fitted schema (tez fit); answers then carry act or escalate\n"
+}

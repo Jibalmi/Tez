@@ -1,0 +1,86 @@
+{
+ "schema": {
+  "name": "support-triage",
+  "description": "Route and prioritise inbound customer messages before an agent opens them.",
+  "state": "One inbound customer message: plain text, or an object with the message and account context.",
+  "questions": {
+   "topic": {
+    "type": "choice",
+    "instructions": "What is this customer message primarily about?",
+    "criteria": {
+     "billing": "A charge, invoice, subscription or payment problem.",
+     "refund": "The customer explicitly asks for money back or a credit.",
+     "technical": "The product or service is broken, erroring or not working as expected.",
+     "account": "Login, password, access, profile, plan or seat changes.",
+     "delivery": "Shipping, tracking, or a physical item that is late, missing, damaged or wrong.",
+     "sales": "Pricing, plans, quotes or buying more, with no problem to fix.",
+     "other": "None of the above, or too vague to tell."
+    }
+   },
+   "urgent": {
+    "type": "noul",
+    "instructions": "Does this message need a reply today?",
+    "criteria": {
+     "true": "Work or money is blocked, a same-day or next-day deadline is stated, or the customer says it is urgent.",
+     "false": "No time pressure is stated or implied; the normal queue is fine."
+    }
+   },
+   "frustration": {
+    "type": "score",
+    "instructions": "How frustrated is the customer?",
+    "criteria": [
+     "Calm: neutral or positive tone, no complaint.",
+     "Mildly annoyed: a complaint, but polite and patient.",
+     "Frustrated: repeat contact, strong language, or a firm deadline.",
+     "Angry: threatens to cancel, dispute a charge, leave, or go public."
+    ]
+   }
+  },
+  "gate": null
+ },
+ "samples": [
+  {
+   "state": "Hi, I was billed $49 twice for March (INV-20931 and INV-20977). Can you refund the second one? Thanks!",
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "channel": "email",
+    "account": {
+     "plan": "Business",
+     "seats": 40,
+     "tenure_months": 26,
+     "open_tickets": 1
+    },
+    "message": "Since this morning's SSO change nobody on our team can log in. 40 people are locked out and we have a client demo at 2pm. Please call me back ASAP."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": "hey quick q, do you do nonprofit discounts? we'd need about 25 seats starting next month",
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "channel": "chat",
+    "account": {
+     "plan": "Pro",
+     "seats": 5,
+     "tenure_months": 7,
+     "open_tickets": 3
+    },
+    "message": "Third time writing about this. Every CSV export comes out empty. If it's not fixed by Friday we're moving to another vendor."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": "Tracking says it was delivered yesterday but there's nothing at my door or with the neighbours. It's a birthday present for tomorrow :(",
+   "note": "synthetic example"
+  },
+  {
+   "state": "Bonjour, je n'arrive pas à télécharger ma facture de février depuis mon espace client, le bouton ne fait rien.",
+   "note": "synthetic example"
+  }
+ ],
+ "yaml": "# Tez schema (format: docs/API.md, \"Schema files\"). Gallery example: rename the topics to match your queues.\nname: support-triage\ndescription: Route and prioritise inbound customer messages before an agent opens them.\nstate: \"One inbound customer message: plain text, or an object with the message and account context.\"\nquestions:\n  topic:\n    type: choice\n    instructions: What is this customer message primarily about?\n    criteria:\n      billing: A charge, invoice, subscription or payment problem.\n      refund: The customer explicitly asks for money back or a credit.\n      technical: The product or service is broken, erroring or not working as expected.\n      account: Login, password, access, profile, plan or seat changes.\n      delivery: Shipping, tracking, or a physical item that is late, missing, damaged or wrong.\n      sales: Pricing, plans, quotes or buying more, with no problem to fix.\n      other: None of the above, or too vague to tell.\n  urgent:\n    type: noul\n    instructions: Does this message need a reply today?\n    criteria:\n      \"true\": Work or money is blocked, a same-day or next-day deadline is stated, or the customer says it is urgent.\n      \"false\": No time pressure is stated or implied; the normal queue is fine.\n  frustration:\n    type: score\n    instructions: How frustrated is the customer?\n    criteria:\n      - \"Calm: neutral or positive tone, no complaint.\"\n      - \"Mildly annoyed: a complaint, but polite and patient.\"\n      - \"Frustrated: repeat contact, strong language, or a firm deadline.\"\n      - \"Angry: threatens to cancel, dispute a charge, leave, or go public.\"\n"
+}

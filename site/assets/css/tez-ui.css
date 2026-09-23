@@ -1,0 +1,91 @@
+/* Components rendered by tez-ui.js and shared by the landing page, the use-case gallery and the playground:
+   answers, the chosen mark on probability rows, segmented controls, code panes and recorded/live labels. */
+
+:root { --seg-on: var(--bg); }
+:root[data-theme="dark"] { --seg-on: var(--border); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --seg-on: var(--border); } }
+
+.icon { width: 16px; height: 16px; flex: none; }
+
+/* segmented control: a small set of mutually exclusive buttons (aria-pressed) */
+.segmented {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px; max-width: 100%;
+  border-radius: var(--r-md); background: var(--bg-inset);
+  overflow-x: auto; scrollbar-width: none;
+}
+.segmented::-webkit-scrollbar { display: none; }
+.segmented button {
+  appearance: none; border: 0; background: transparent; cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding-inline: 12px; border-radius: 6px;
+  font-size: var(--fs-sm); font-weight: 520; color: var(--text-muted);
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
+}
+.segmented button:hover { color: var(--text); }
+.segmented button:focus-visible { outline-offset: -2px; }
+.segmented button[aria-pressed="true"] { background: var(--seg-on); color: var(--text); box-shadow: var(--shadow-sm); }
+.segmented .count { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.segmented button[aria-pressed="true"] .count { color: var(--text-muted); }
+
+/* the chosen mark on probability rows: a check in the label, plus weight and the accent bar from base.css */
+.prob-check { display: inline-block; width: 13px; height: 13px; margin-right: 6px; vertical-align: -2px; color: var(--accent); opacity: 0; transition: opacity var(--t-fast) var(--ease-out); }
+.prob-row[data-chosen="true"] .prob-check { opacity: 1; }
+.prob-name { font-variant-numeric: tabular-nums; }
+
+/* one answer */
+.answers { display: grid; gap: var(--s-5); }
+.answer { display: grid; gap: var(--s-3); min-width: 0; }
+.answer + .answer { padding-top: var(--s-5); border-top: 1px solid var(--border); }
+.answer-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.answer-chips { display: inline-flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+.answer-chips:empty { display: none; }
+.answer-q { font-size: var(--fs-sm); color: var(--text-muted); max-width: 72ch; }
+.answer-foot { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: var(--fs-xs); color: var(--text-muted); }
+.kv { white-space: nowrap; }
+.kv-k { color: var(--text-muted); }
+.kv-v { color: var(--text); }
+.kv-v.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.prob-more summary {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none;
+  font-size: var(--fs-xs); color: var(--text-muted); padding: 4px 0;
+}
+.prob-more summary::-webkit-details-marker { display: none; }
+.prob-more summary::before { content: ""; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform var(--t-fast) var(--ease-out); }
+.prob-more[open] summary::before { transform: rotate(45deg); }
+.prob-more summary:hover { color: var(--text); }
+.prob-more .prob-list { margin-top: 8px; }
+
+/* code panes: a .code block whose pre scrolls inside a fixed height */
+.code-pane pre { max-height: 420px; overflow: auto; }
+.code-pane pre:focus-visible { outline-offset: -2px; }
+.code-head .code-title { display: inline-flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.code-note { padding: 0 var(--s-5) var(--s-4); font-family: var(--font-sans); font-size: var(--fs-xs); color: var(--text-faint); }
+
+/* command blocks: one command per line; a long command scrolls sideways rather than breaking inside a flag */
+.cmds pre { padding: 14px 18px; overflow-x: auto; }
+.cmds code { display: block; white-space: pre; }
+.cmd { display: block; }
+.cmd .tk { white-space: nowrap; }
+/* phones: a long command wraps between whole tokens, continuation lines hang under the prompt */
+@media (max-width: 720px) {
+  .cmds code { white-space: pre-wrap; }
+  .cmd { padding-left: 2ch; text-indent: -2ch; }
+}
+.cmd + .cmd { margin-top: 4px; }
+
+/* labels that say where an answer came from */
+.origin { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding-inline: 10px; border-radius: var(--r-pill); font-size: var(--fs-xs); font-weight: 560; white-space: nowrap; }
+.origin svg { width: 13px; height: 13px; }
+.origin-recorded { background: var(--escalate-soft); color: var(--text); }
+.origin-recorded svg { color: var(--escalate); }
+.origin-live { background: var(--act-soft); color: var(--text); }
+.origin-live svg { color: var(--act); }
+
+/* proxy badge on evidence measured on a related benchmark rather than on the schema itself */
+.badge-proxy { display: inline-flex; align-items: center; height: 20px; padding-inline: 7px; border-radius: var(--r-pill); border: 1px solid var(--border-strong); color: var(--text-muted); font-size: 11px; font-weight: 560; letter-spacing: 0.01em; white-space: nowrap; }
+
+/* a rendered state: text in a quiet box, objects as JSON */
+.state-text { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--r-md); padding: var(--s-3) var(--s-4); font-size: var(--fs-sm); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@keyframes tez-spin { to { transform: rotate(360deg); } }
+.spin { animation: tez-spin 0.9s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }

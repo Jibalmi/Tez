@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tez: typed decisions from one forward pass</title>
+<meta name="description" content="Tez is an open, local decision engine. Ask typed questions about a message and get a calibrated probability for every answer, read from one forward pass of an open model on your own machine.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Tez: typed decisions from one forward pass">
+<meta property="og:description" content="Open, local, calibrated answers to typed questions. No tokens generated.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/css/tokens.css">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/tez-ui.css">
+<link rel="stylesheet" href="./assets/css/landing.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="./assets/js/site.js" defer></script>
+<script src="./assets/js/tez-ui.js" defer></script>
+<script src="./assets/js/landing.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-8-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title" class="hero-title">Typed decisions from one forward pass.</h1>
+        <p class="lead hero-lead">An open, local decision engine: ask typed questions about a message and get a calibrated probability for every answer. No tokens are generated.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="./docs.html#quickstart">Get started</a>
+          <a class="btn btn-secondary" href="./playground.html">Try the playground</a>
+        </div>
+        <div class="code cmds install">
+          <div class="code-head"><span class="code-title">Install and serve</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code><span class="cmd"><span class="tok-prompt">$ </span><span class="tk">pip</span> <span class="tk">install</span> <span class="tk">git+https://github.com/Jibalmi/Tez</span></span><span class="cmd"><span class="tok-prompt">$ </span><span class="tk">tez</span> <span class="tk">serve</span> <span class="tk">--backend</span> <span class="tk">http://127.0.0.1:8091</span></span></code></pre>
+        </div>
+        <p class="hero-note">Needs Python 3.10 or later and llama.cpp's <code>llama-server</code> hosting a Gemma 4 12B GGUF on port 8091. <a href="./docs.html#quickstart">Quickstart</a></p>
+      </div>
+
+      <div class="hero-demo">
+        <div class="demo panel" data-demo>
+          <div class="demo-bar">
+            <div class="segmented" role="group" aria-label="Example">
+              <button type="button" aria-pressed="true" data-example="support-refund-outage">Support</button>
+              <button type="button" aria-pressed="false" data-example="security-ssh">Security</button>
+              <button type="button" aria-pressed="false" data-example="voice-v062">Voice</button>
+              <button type="button" aria-pressed="false" data-example="injection-cfo">Injection</button>
+            </div>
+            <div class="demo-controls">
+              <span class="pill demo-recorded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Recorded</span>
+              <button class="icon-btn" type="button" data-demo-toggle aria-label="Play the replay" hidden><svg class="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg><svg class="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg></button>
+              <button class="icon-btn" type="button" data-demo-restart aria-label="Replay from the first word" title="Replay from the first word" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+            </div>
+          </div>
+          <div class="tabs demo-tabs" role="tablist" aria-label="Output">
+            <button type="button" role="tab" id="demo-tab-decision" aria-controls="demo-decision" aria-selected="true">Decision</button>
+            <button type="button" role="tab" id="demo-tab-json" aria-controls="demo-json" aria-selected="false" tabindex="-1">Response JSON</button>
+            <button type="button" role="tab" id="demo-tab-python" aria-controls="demo-python" aria-selected="false" tabindex="-1">Python</button>
+            <button type="button" role="tab" id="demo-tab-curl" aria-controls="demo-curl" aria-selected="false" tabindex="-1">curl</button>
+          </div>
+          <div class="demo-body">
+            <div class="demo-pane demo-decision" id="demo-decision" role="tabpanel" aria-labelledby="demo-tab-decision">
+              <div class="demo-meta">
+                <span class="demo-kind" data-demo-kind>Customer message</span>
+                <span class="demo-q-meta"><code data-demo-qid>topic</code><span class="pill" data-demo-qtype>choice · 4 options</span></span>
+              </div>
+              <p class="demo-msg" data-demo-msg aria-hidden="true"><span class="w">The</span> <span class="w">app</span> <span class="w">has</span> <span class="w">been</span> <span class="w">down</span> <span class="w">all</span> <span class="w">week,</span> <span class="w">so</span> <span class="w">I</span> <span class="w">want</span> <span class="w">a</span> <span class="w">refund</span> <span class="w">for</span> <span class="w">this</span> <span class="w">month.</span></p>
+              <p class="visually-hidden" data-demo-fulltext>Message: The app has been down all week, so I want a refund for this month.</p>
+              <div class="demo-track">
+                <label class="visually-hidden" for="demo-scrub">Step through the words</label>
+                <input class="demo-scrub" id="demo-scrub" type="range" min="1" max="15" step="1" value="15" aria-valuetext="Word 15 of 15, month." data-demo-scrub disabled>
+              </div>
+              <p class="demo-q" data-demo-q>What is the message about?</p>
+              <div class="demo-rows">
+                <ul class="prob-list demo-probs" role="list" data-demo-probs>
+                  <li class="prob-row" data-key="billing" data-chosen="true"><span class="prob-label" title="Payments, payouts, invoices, refunds"><svg class="icon prob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="prob-name">billing</span><span class="visually-hidden prob-sr">, chosen</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:96.41%"></span></span><span class="prob-value">0.964</span></li>
+                  <li class="prob-row" data-key="technical" data-chosen="false"><span class="prob-label" title="Something is broken or not working"><svg class="icon prob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="prob-name">technical</span><span class="visually-hidden prob-sr"></span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:3.59%"></span></span><span class="prob-value">0.036</span></li>
+                  <li class="prob-row" data-key="account" data-chosen="false"><span class="prob-label" title="Login, profile, settings"><svg class="icon prob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="prob-name">account</span><span class="visually-hidden prob-sr"></span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:0.00%"></span></span><span class="prob-value">0.000</span></li>
+                  <li class="prob-row" data-key="sales" data-chosen="false"><span class="prob-label" title="Pricing, plans, buying more"><svg class="icon prob-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="prob-name">sales</span><span class="visually-hidden prob-sr"></span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:0.00%"></span></span><span class="prob-value">0.000</span></li>
+                </ul>
+                <p class="demo-others" data-demo-others hidden></p>
+              </div>
+              <div class="demo-foot">
+                <p class="demo-step" data-demo-step>Word <span class="num">15</span> of 15 <span class="demo-word">month.</span></p>
+                <p class="demo-ms" data-demo-ms><span class="num">37.6 ms</span> compute <span class="sep" aria-hidden="true">·</span> <span class="num">43.2 ms</span> round trip</p>
+              </div>
+              <p class="demo-answer" data-demo-answer data-final="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="demo-answer-text">Answer <strong>billing</strong> <span class="sep" aria-hidden="true">·</span> p <span class="num">0.964</span> <span class="sep" aria-hidden="true">·</span> confidence <span class="num">0.952</span></span></p>
+            </div>
+            <div class="demo-pane" id="demo-json" role="tabpanel" aria-labelledby="demo-tab-json" hidden>
+              <div class="code code-pane demo-code">
+                <div class="code-head"><span class="code-title">answers, from the recorded final step</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+                <pre tabindex="0" aria-label="Response JSON"><code data-demo-json>{
+  "answers": {
+    "topic": {
+      "type": "choice",
+      "choice": "billing",
+      "probabilities": {
+        "billing": 0.9641,
+        "technical": 0.03589,
+        "account": 1e-05,
+        "sales": 0.0
+      },
+      "confidence": 0.9521
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+            <div class="demo-pane" id="demo-python" role="tabpanel" aria-labelledby="demo-tab-python" hidden>
+              <div class="code code-pane demo-code">
+                <div class="code-head"><span class="code-title">Python · requests</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+                <pre tabindex="0" aria-label="Python request"><code data-demo-python>import requests</code></pre>
+              </div>
+            </div>
+            <div class="demo-pane" id="demo-curl" role="tabpanel" aria-labelledby="demo-tab-curl" hidden>
+              <div class="code code-pane demo-code">
+                <div class="code-head"><span class="code-title">curl · POSIX shell</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+                <pre tabindex="0" aria-label="curl request"><code data-demo-curl>curl -sS http://127.0.0.1:8787/v1/systemone</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="demo-caption">Recorded run: Gemma 4 12B Q8_0 on llama.cpp, RTX 5080 laptop GPU. Each step is one forward pass over the words so far; replay slowed to reading speed. <span data-demo-note>Synthetic message, recorded 23 September 2026; decided whole without the prompt cache it took 61.9 ms of compute (127 tokens).</span> <a href="./data/strips.json">strips.json</a></p>
+        <p class="visually-hidden" aria-live="polite" data-demo-live></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="how-title">Read the answer instead of generating it.</h2>
+        <p class="lead">Tez writes the question and its options first and the input last, runs one forward pass, and reads the probability of each option's letter at the position where the model would start to answer.</p>
+      </div>
+      <div class="how-grid">
+        <ol class="how-steps" role="list">
+          <li>
+            <h3>Options first, input last</h3>
+            <p>The instructions and options are the same for every decision, so llama.cpp keeps them cached and evaluates only the input. When a message streams in, only the new words are evaluated.</p>
+          </li>
+          <li>
+            <h3>One forward pass, no generation</h3>
+            <p>The model reads the prompt once. Tez stops at the answer position and takes the next-token distribution over the option letters. This is the zero-shot <code>letters</code> readout.</p>
+          </li>
+          <li>
+            <h3>Or a probe on a middle layer</h3>
+            <p>With 25 to 50 labels per question, <code>tez fit</code> trains a logistic probe on a middle layer's hidden state. The served probe model is Qwen3.5-4B cut to 24 of its 32 blocks, so the top of the network never runs.</p>
+          </li>
+          <li>
+            <h3>A calibrated distribution out</h3>
+            <p>Every option gets a probability. Choice and score answers carry a confidence, and an abstain option and a conformal gate mark what to act on and what to escalate.</p>
+          </li>
+        </ol>
+        <figure class="how-figure">
+          <div class="code prompt">
+            <div class="code-head"><span class="code-title">Prompt at word 11 of the Security replay</span></div>
+            <pre tabindex="0" aria-label="Prompt text"><code><span class="pr-tpl">&lt;|turn&gt;user</span>
+<span class="pr-prefix">You are a decision engine. Read the question and the options, then look at the input and answer with the single letter of the best option. Answer with the letter only.
+
+Question (score): How severe is this alert?
+
+Options:
+A. 0: Informational, no action
+B. 1: Low, review this week
+C. 2: Medium, review today
+D. 3: High, act now
+E. 4: Critical, active compromise
+
+Input:</span>
+<mark class="pr-input">212 failed SSH logins from one foreign IP in ten minutes,</mark><span class="pr-tpl">&lt;turn|&gt;
+&lt;|turn&gt;model
+&lt;|channel&gt;thought
+&lt;channel|&gt;</span><span class="pr-caret" aria-hidden="true"></span></code></pre>
+            <ul class="prompt-legend" role="list">
+              <li><span class="swatch swatch-prefix" aria-hidden="true"></span>Instructions and options: the same for every decision, cached</li>
+              <li><span class="swatch swatch-input" aria-hidden="true"></span>Input: evaluated for each decision</li>
+              <li><span class="swatch swatch-caret" aria-hidden="true"></span>Answer position: the letter distribution is read here</li>
+            </ul>
+          </div>
+          <div class="readout card">
+            <p class="readout-title">Next-token probabilities of the option letters</p>
+            <ul class="prob-list readout-list" role="list">
+              <li class="prob-row" data-chosen="false"><span class="prob-label"><span class="ltr">A</span><span class="prob-name">0 · Informational, no action</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:0.01%"></span></span><span class="prob-value">0.000</span></li>
+              <li class="prob-row" data-chosen="false"><span class="prob-label"><span class="ltr">B</span><span class="prob-name">1 · Low, review this week</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:0.83%"></span></span><span class="prob-value">0.008</span></li>
+              <li class="prob-row" data-chosen="false"><span class="prob-label"><span class="ltr">C</span><span class="prob-name">2 · Medium, review today</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:4.21%"></span></span><span class="prob-value">0.042</span></li>
+              <li class="prob-row" data-chosen="true"><span class="prob-label"><span class="ltr">D</span><span class="prob-name">3 · High, act now</span><span class="visually-hidden">, most likely</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:94.95%"></span></span><span class="prob-value">0.950</span></li>
+              <li class="prob-row" data-chosen="false"><span class="prob-label"><span class="ltr">E</span><span class="prob-name">4 · Critical, active compromise</span></span><span class="prob-bar" aria-hidden="true"><span class="prob-fill" style="--p:0%"></span></span><span class="prob-value">0.000</span></li>
+            </ul>
+            <p class="answer-foot"><span class="kv"><span class="kv-k">score</span> <span class="kv-v num">2.94</span></span><span class="kv"><span class="kv-k">confidence</span> <span class="kv-v num">0.937</span></span><span class="kv"><span class="kv-k">compute</span> <span class="kv-v num">41.8 ms</span></span></p>
+            <p class="readout-next">Three words later, <q>then a successful</q> moves the answer to E, Critical, at 0.999.</p>
+          </div>
+          <figcaption class="source">Prompt and probabilities from the recorded run (<a href="https://github.com/Jibalmi/Tez/blob/main/experiments/record_site_strips.py">experiments/record_site_strips.py</a>, <a href="./data/strips.json">strips.json</a>). <code>tez serve</code> builds its prompts with the same layout.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="drop-in" aria-labelledby="dropin-title">
+    <div class="container dropin-grid">
+      <div class="dropin-copy">
+        <h2 id="dropin-title">Speaks the <code class="h-code">/v1/systemone</code> wire format.</h2>
+        <p class="lead">Tez serves TypeSafe's <code>/v1/systemone</code> request and response shapes on <code>http://127.0.0.1:8787</code>, so a client written for Jev's wire format can point its base URL at your machine.</p>
+        <dl class="dropin-points">
+          <div><dt>Same answer shapes</dt><dd><code>noul</code> is P(yes); <code>choice</code> and <code>score</code> carry <code>probabilities</code> and <code>confidence</code>, exactly as Jev returns them.</dd></div>
+          <div><dt>Optional extensions</dt><dd><code>schema</code> and a <code>tez</code> block for readout, abstain and the gate. Strict clients ignore them.</dd></div>
+          <div><dt>Same error codes</dt><dd><code>401</code> without a valid key (only when the server sets one), <code>422</code> for an invalid request, <code>503</code> when llama-server is down.</dd></div>
+        </dl>
+        <p class="dropin-more"><a href="./docs.html#api">API reference</a></p>
+      </div>
+      <div class="dropin-code">
+        <div class="code code-pane">
+          <div class="tabs code-tabs" role="tablist" aria-label="Request example">
+            <button type="button" role="tab" id="di-tab-curl" aria-controls="di-curl" aria-selected="true">curl</button>
+            <button type="button" role="tab" id="di-tab-py" aria-controls="di-py" aria-selected="false" tabindex="-1">Python</button>
+            <button type="button" role="tab" id="di-tab-resp" aria-controls="di-resp" aria-selected="false" tabindex="-1">Response</button>
+          </div>
+          <div id="di-curl" role="tabpanel" aria-labelledby="di-tab-curl" class="code-tabpanel">
+            <div class="code-subhead"><span>POST /v1/systemone</span><button class="copy-btn" type="button" data-copy="#di-curl-pre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+            <pre id="di-curl-pre" tabindex="0" aria-label="curl request"><code>curl<span class="tok-punct"> -sS</span> http://127.0.0.1:8787/v1/systemone <span class="tok-punct">\</span>
+ <span class="tok-punct"> -H</span> <span class="tok-str">&quot;Content-Type: application/json&quot;</span> <span class="tok-punct">\</span>
+ <span class="tok-punct"> -d</span> @- <span class="tok-com">&lt;&lt;&#39;JSON&#39;</span>
+<span class="tok-punct">{</span>
+  <span class="tok-key">&quot;model&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;tez-latest&quot;</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;state&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Help! My payouts have been failing for 3 days.&quot;</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;questions&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+    <span class="tok-key">&quot;is_urgent&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;noul&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Does this convey urgency?&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+        <span class="tok-key">&quot;true&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Explicitly time-sensitive&quot;</span><span class="tok-punct">,</span>
+        <span class="tok-key">&quot;false&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;No urgency expressed&quot;</span>
+      <span class="tok-punct">}</span>
+    <span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;topic&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;choice&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;What is the message about?&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+        <span class="tok-key">&quot;billing&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Payments, payouts, invoices&quot;</span><span class="tok-punct">,</span>
+        <span class="tok-key">&quot;technical&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Something is broken&quot;</span><span class="tok-punct">,</span>
+        <span class="tok-key">&quot;sales&quot;</span><span class="tok-punct">:</span> <span class="tok-num">null</span>
+      <span class="tok-punct">}</span>
+    <span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;anger&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;score&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;How upset is the writer?&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">[</span>
+        <span class="tok-str">&quot;Calm&quot;</span><span class="tok-punct">,</span>
+        <span class="tok-str">&quot;Frustrated&quot;</span><span class="tok-punct">,</span>
+        <span class="tok-str">&quot;Very angry&quot;</span>
+      <span class="tok-punct">]</span>
+    <span class="tok-punct">}</span>
+  <span class="tok-punct">}</span>
+<span class="tok-punct">}</span>
+<span class="tok-com">JSON</span></code></pre>
+          </div>
+          <div id="di-py" role="tabpanel" aria-labelledby="di-tab-py" class="code-tabpanel" hidden>
+            <div class="code-subhead"><span>Python · requests</span><button class="copy-btn" type="button" data-copy="#di-py-pre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+            <pre id="di-py-pre" tabindex="0" aria-label="Python request"><code>import requests
+
+body <span class="tok-punct">=</span> <span class="tok-punct">{</span>
+    <span class="tok-str">&quot;model&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;tez-latest&quot;</span><span class="tok-punct">,</span>
+    <span class="tok-str">&quot;state&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Help! My payouts have been failing for 3 days.&quot;</span><span class="tok-punct">,</span>
+    <span class="tok-str">&quot;questions&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+        <span class="tok-str">&quot;is_urgent&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+            <span class="tok-str">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;noul&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Does this convey urgency?&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+                <span class="tok-str">&quot;true&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Explicitly time-sensitive&quot;</span><span class="tok-punct">,</span>
+                <span class="tok-str">&quot;false&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;No urgency expressed&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-punct">}</span><span class="tok-punct">,</span>
+        <span class="tok-punct">}</span><span class="tok-punct">,</span>
+        <span class="tok-str">&quot;topic&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+            <span class="tok-str">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;choice&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;What is the message about?&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+                <span class="tok-str">&quot;billing&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Payments, payouts, invoices&quot;</span><span class="tok-punct">,</span>
+                <span class="tok-str">&quot;technical&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Something is broken&quot;</span><span class="tok-punct">,</span>
+                <span class="tok-str">&quot;sales&quot;</span><span class="tok-punct">:</span> <span class="tok-num">None</span><span class="tok-punct">,</span>
+            <span class="tok-punct">}</span><span class="tok-punct">,</span>
+        <span class="tok-punct">}</span><span class="tok-punct">,</span>
+        <span class="tok-str">&quot;anger&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+            <span class="tok-str">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;score&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;instructions&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;How upset is the writer?&quot;</span><span class="tok-punct">,</span>
+            <span class="tok-str">&quot;criteria&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">[</span><span class="tok-str">&quot;Calm&quot;</span><span class="tok-punct">,</span> <span class="tok-str">&quot;Frustrated&quot;</span><span class="tok-punct">,</span> <span class="tok-str">&quot;Very angry&quot;</span><span class="tok-punct">]</span><span class="tok-punct">,</span>
+        <span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">}</span><span class="tok-punct">,</span>
+<span class="tok-punct">}</span>
+
+r <span class="tok-punct">=</span> requests.post<span class="tok-punct">(</span><span class="tok-str">&quot;http://127.0.0.1:8787/v1/systemone&quot;</span><span class="tok-punct">,</span> json<span class="tok-punct">=</span>body<span class="tok-punct">,</span> timeout<span class="tok-punct">=</span><span class="tok-num">60</span><span class="tok-punct">)</span>
+r.raise_for_status<span class="tok-punct">()</span>
+for qid<span class="tok-punct">,</span> answer in r.json<span class="tok-punct">()[</span><span class="tok-str">&quot;answers&quot;</span><span class="tok-punct">]</span>.items<span class="tok-punct">():</span>
+    print<span class="tok-punct">(</span>qid<span class="tok-punct">,</span> answer<span class="tok-punct">)</span></code></pre>
+          </div>
+          <div id="di-resp" role="tabpanel" aria-labelledby="di-tab-resp" class="code-tabpanel" hidden>
+            <div class="code-subhead"><span>Example response from docs/API.md</span><button class="copy-btn" type="button" data-copy="#di-resp-pre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+            <pre id="di-resp-pre" tabindex="0" aria-label="Example response"><code><span class="tok-punct">{</span>
+  <span class="tok-key">&quot;model&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;tez-0.1.0 (gemma-4-12b-q8_0, letters)&quot;</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;answers&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+    <span class="tok-key">&quot;is_urgent&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;noul&quot;</span><span class="tok-punct">,</span> <span class="tok-key">&quot;noul&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.93</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;topic&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;choice&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;choice&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;billing&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;probabilities&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;billing&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.91</span><span class="tok-punct">,</span> <span class="tok-key">&quot;technical&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.08</span><span class="tok-punct">,</span> <span class="tok-key">&quot;sales&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.01</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;confidence&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.865</span>
+    <span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;anger&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;type&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;score&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;score&quot;</span><span class="tok-punct">:</span> <span class="tok-num">1.12</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;legend&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;0&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Calm&quot;</span><span class="tok-punct">,</span> <span class="tok-key">&quot;1&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Frustrated&quot;</span><span class="tok-punct">,</span> <span class="tok-key">&quot;2&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;Very angry&quot;</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;probabilities&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;0&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.04</span><span class="tok-punct">,</span> <span class="tok-key">&quot;1&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.8</span><span class="tok-punct">,</span> <span class="tok-key">&quot;2&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.16</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;confidence&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.7</span>
+    <span class="tok-punct">}</span>
+  <span class="tok-punct">}</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;usage&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;input_tokens&quot;</span><span class="tok-punct">:</span> <span class="tok-num">612</span><span class="tok-punct">,</span> <span class="tok-key">&quot;output_tokens&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;tez&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+    <span class="tok-key">&quot;latency_ms&quot;</span><span class="tok-punct">:</span> <span class="tok-num">212.4</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;questions&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;is_urgent&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;readout&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;letters&quot;</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;topic&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;readout&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;probe&quot;</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;anger&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;readout&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;letters&quot;</span><span class="tok-punct">}</span>
+    <span class="tok-punct">}</span>
+  <span class="tok-punct">}</span>
+<span class="tok-punct">}</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="numbers" aria-labelledby="numbers-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="numbers-title">Measured head to head, with the losses.</h2>
+        <p class="lead">Laya's three checkpoints answered the same rows on the same GPU, on Laya's own datasets and protocol. Jev was never run here: its figures are published numbers.</p>
+      </div>
+      <div class="numbers-grid">
+        <figure class="ladder card">
+          <figcaption class="ladder-head">
+            <h3>typed-decisions, 2,000 decisions</h3>
+            <p class="small muted">Accuracy on the test split. Tez read three ways, against Laya fine-tuned on this benchmark and Jev's published figure.</p>
+          </figcaption>
+          <ul class="ladder-list" role="list">
+            <li class="ladder-row is-tez"><span class="ladder-label">Tez, zero-shot<span class="ladder-sub">Gemma 4 12B letters, no labels</span></span><span class="ladder-bar" aria-hidden="true"><span style="width:70.4%"></span></span><span class="ladder-value">0.704</span></li>
+            <li class="ladder-row is-tez"><span class="ladder-label">Tez, 50 labels per question<span class="ladder-sub">12B prior plus a 4B probe, mean of 3 seeds</span></span><span class="ladder-bar" aria-hidden="true"><span style="width:76.6%"></span></span><span class="ladder-value">0.766</span></li>
+            <li class="ladder-row is-tez"><span class="ladder-label">Tez, probe<span class="ladder-sub">frozen Qwen3.5-4B, layer 26, 300 labels per question</span></span><span class="ladder-bar" aria-hidden="true"><span style="width:79.3%"></span></span><span class="ladder-value">0.793</span></li>
+            <li class="ladder-row"><span class="ladder-label">laya-typed-decisions<span class="ladder-sub">fine-tuned on this benchmark's train split</span></span><span class="ladder-bar" aria-hidden="true"><span style="width:76.6%"></span></span><span class="ladder-value">0.766</span></li>
+            <li class="ladder-row"><span class="ladder-label">Jev<span class="ladder-sub">published figure, not run by us</span></span><span class="ladder-bar" aria-hidden="true"><span style="width:72.7%"></span></span><span class="ladder-value">0.727</span></li>
+          </ul>
+          <p class="source">Zero-shot, Laya and Jev: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §1. Labelled rows: §4c, Few labels and Calibration and decision types.</p>
+        </figure>
+        <div class="h2h">
+          <div class="table-wrap">
+            <table class="table h2h-table">
+              <caption class="visually-hidden">Accuracy of Tez zero-shot against the best Laya checkpoint and Jev's published figure on Laya's benchmarks; best value in each row in bold.</caption>
+              <thead>
+                <tr><th scope="col">Task (test rows)</th><th scope="col" class="num">Tez zero-shot</th><th scope="col" class="num">Best Laya</th><th scope="col" class="num">Jev, published</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Banking77, 77 intents (400)<span class="row-note">Tez probe on 2,000 labelled rows: 0.860</span></th><td class="num" data-label="Tez zero-shot">0.713</td><td class="num" data-label="Best Laya">0.395<span class="cell-note">laya</span></td><td class="num best" data-label="Jev, published">0.870</td></tr>
+                <tr><th scope="row">MASSIVE intent, 11 languages (100 each)<span class="row-note">macro accuracy; Khmer lowest at 0.790</span></th><td class="num best" data-label="Tez zero-shot">0.885</td><td class="num" data-label="Best Laya">0.524<span class="cell-note">laya-multilingual</span></td><td class="num muted" data-label="Jev, published"><span aria-hidden="true">—</span><span class="visually-hidden">no published figure</span></td></tr>
+                <tr><th scope="row">prompt-injections, held out (116)</th><td class="num best" data-label="Tez zero-shot">0.759</td><td class="num" data-label="Best Laya">0.672<span class="cell-note">laya</span></td><td class="num muted" data-label="Jev, published"><span aria-hidden="true">—</span><span class="visually-hidden">no published figure</span></td></tr>
+                <tr><th scope="row">AG News (400)<span class="row-note">in Laya's training mix</span></th><td class="num" data-label="Tez zero-shot">0.880</td><td class="num best" data-label="Best Laya">0.948<span class="cell-note">laya-multilingual</span></td><td class="num" data-label="Jev, published">0.910</td></tr>
+                <tr><th scope="row">XNLI, English (100)<span class="row-note">in Laya's training mix</span></th><td class="num" data-label="Tez zero-shot">0.730</td><td class="num best" data-label="Best Laya">0.920<span class="cell-note">laya-typed-decisions</span></td><td class="num muted" data-label="Jev, published"><span aria-hidden="true">—</span><span class="visually-hidden">no published figure</span></td></tr>
+                <tr><th scope="row">ms per decision, p50<span class="row-note">this GPU; lower is better</span></th><td class="num" data-label="Tez zero-shot">57–250</td><td class="num best" data-label="Best Laya">23–52<span class="cell-note">three checkpoints</span></td><td class="num" data-label="Jev, published">236–276</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="h2h-summary">Zero-shot Tez wins six of nine English tasks and every MASSIVE language. Laya wins where it was trained, on AG News and XNLI, and on single-question latency.</p>
+          <p class="source">Same rows, same GPU: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §1 (<a href="https://github.com/Jibalmi/Tez/blob/main/experiments/bench_h2h.py">experiments/bench_h2h.py</a>). Banking77 probe: §4b, Task probes.</p>
+          <p class="more-link"><a href="./benchmarks.html">All benchmarks</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="use-cases" aria-labelledby="uc-title">
+    <div class="container">
+      <div class="section-head section-head-row">
+        <div>
+          <h2 id="uc-title">Start from a worked schema.</h2>
+          <p class="lead">Each use case ships a schema, six sample inputs, the evidence behind its recommended readout and its limits.</p>
+        </div>
+        <a class="btn btn-secondary" href="./usecases.html">Browse all use cases</a>
+      </div>
+      <ul class="uc-preview" role="list" data-uc-preview>
+        <li class="uc-preview-empty"><a href="./usecases.html">Browse the use cases</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="abstain" aria-labelledby="abstain-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="abstain-title">Knows when not to decide.</h2>
+        <p class="lead">Every answer is a distribution, so Tez can hold back: an abstain option for inputs that fit none of the options, and a conformal gate that acts only while the error rate among acted decisions stays under the bound you set.</p>
+      </div>
+      <div class="abstain-grid">
+        <div class="abstain-copy">
+          <dl class="fields">
+            <div><dt><code>confidence</code></dt><dd>On choice and score answers, (k·p<sub>max</sub> − 1)/(k − 1): 0 when every option is equally likely, 1 when one option holds all the probability.</dd></div>
+            <div><dt><code>"tez": {"abstain": true}</code></dt><dd>Adds <code>__none__</code>, "none of these fits", to every choice question.</dd></div>
+            <div><dt><code>"tez": {"gate": {"alpha": 0.05}}</code></dt><dd>Marks each answer <code>act</code> or <code>escalate</code>. Acting needs a schema fitted with <code>tez fit</code>; a question without a calibration always escalates.</dd></div>
+          </dl>
+          <div class="code code-pane">
+            <div class="code-head"><span class="code-title">tez block, response shape from docs/API.md</span></div>
+            <pre tabindex="0" aria-label="tez block example"><code><span class="tok-key">&quot;tez&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+  <span class="tok-key">&quot;latency_ms&quot;</span><span class="tok-punct">:</span> <span class="tok-num">212.4</span><span class="tok-punct">,</span>
+  <span class="tok-key">&quot;questions&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+    <span class="tok-key">&quot;topic&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span>
+      <span class="tok-key">&quot;readout&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;probe&quot;</span><span class="tok-punct">,</span> <span class="tok-key">&quot;decision&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;act&quot;</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;p_correct&quot;</span><span class="tok-punct">:</span> <span class="tok-num">0.94</span><span class="tok-punct">,</span>
+      <span class="tok-key">&quot;calibration_id&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;support-triage@2026-09-24&quot;</span>
+    <span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-key">&quot;anger&quot;</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">&quot;readout&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;letters&quot;</span><span class="tok-punct">,</span> <span class="tok-key">&quot;decision&quot;</span><span class="tok-punct">:</span> <span class="tok-str">&quot;escalate&quot;</span><span class="tok-punct">}</span>
+  <span class="tok-punct">}</span>
+<span class="tok-punct">}</span></code></pre>
+          </div>
+        </div>
+        <figure class="card conformal">
+          <figcaption class="conformal-head">
+            <h3>Conformal selection on typed-decisions</h3>
+            <p class="small muted">Share of the 2,000 test decisions acted on, and the error among them, at three error bounds.</p>
+          </figcaption>
+          <table class="conf-table">
+            <thead>
+              <tr><th scope="col">Bound</th><th scope="col">Readout</th><th scope="col">Acted on</th><th scope="col" class="num">Realised error</th></tr>
+            </thead>
+            <tbody>
+              <tr class="group-start"><th scope="row" rowspan="2" class="num">5 %</th><td>12B letters, zero-shot</td><td><span class="conf-bar" aria-hidden="true"><span style="width:24%"></span></span><span class="num">24 %</span></td><td class="num">5.2 %</td></tr>
+              <tr class="is-probe"><td>4B probe, labelled</td><td><span class="conf-bar" aria-hidden="true"><span style="width:40%"></span></span><span class="num">40 %</span></td><td class="num">5.2 %</td></tr>
+              <tr class="group-start"><th scope="row" rowspan="2" class="num">10 %</th><td>12B letters, zero-shot</td><td><span class="conf-bar" aria-hidden="true"><span style="width:36%"></span></span><span class="num">36 %</span></td><td class="num">10.2 %</td></tr>
+              <tr class="is-probe"><td>4B probe, labelled</td><td><span class="conf-bar" aria-hidden="true"><span style="width:61%"></span></span><span class="num">61 %</span></td><td class="num">9.9 %</td></tr>
+              <tr class="group-start"><th scope="row" rowspan="2" class="num">20 %</th><td>12B letters, zero-shot</td><td><span class="conf-bar" aria-hidden="true"><span style="width:66%"></span></span><span class="num">66 %</span></td><td class="num">20.5 %</td></tr>
+              <tr class="is-probe"><td>4B probe, labelled</td><td><span class="conf-bar" aria-hidden="true"><span style="width:98%"></span></span><span class="num">98 %</span></td><td class="num">20.2 %</td></tr>
+            </tbody>
+          </table>
+          <p class="conformal-note small muted">The realised error tracks the bound. A probe trained on the 12B's own answers instead of human labels matches its accuracy but acts on 0 % at the 5 % bound: its confidence is not usable, and the gate refuses.</p>
+          <p class="source">50 random half/half calibration splits. <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §4c, Conformal selection.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="local" aria-labelledby="local-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="local-title">Runs on your machine.</h2>
+        <p class="lead">llama.cpp hosts an open GGUF model, <code>tez serve</code> answers on 127.0.0.1, and no request leaves the machine. There is no hosted Tez service.</p>
+      </div>
+      <div class="table-wrap spec">
+        <table class="table spec-table">
+          <caption class="visually-hidden">Where Tez runs, what it runs and how fast</caption>
+          <tbody>
+            <tr><th scope="row">Reference hardware</th><td>RTX 5080 laptop GPU, 16 GB. Every number on this site was measured on it.</td><td class="spec-src"></td></tr>
+            <tr><th scope="row">Serving</th><td>llama.cpp <code>llama-server</code> (build b11100) hosts the GGUF; <code>tez serve</code> speaks the wire format on <code>127.0.0.1:8787</code>.</td><td class="spec-src"></td></tr>
+            <tr><th scope="row">Default models</th><td>Gemma 4 12B Q8_0 for zero-shot letters. Qwen3.5-4B cut to 24 of its 32 blocks for probes.</td><td class="spec-src"></td></tr>
+            <tr><th scope="row">Per streamed word</th><td><span class="num">30 ms</span> compute, <span class="num">45 ms</span> round trip (p50) for voice commands: 16 actions in a cached prefix, llama-server run with <code>--swa-full</code>.</td><td class="spec-src"><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §3</td></tr>
+            <tr><th scope="row">Per decision</th><td><span class="num">57–250 ms</span> p50 on Laya's tasks with the 12B, most of it spent reading the input. <span class="num">58 ms</span> p50 for a probe request on the 24-block 4B.</td><td class="spec-src"><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §1, §4c</td></tr>
+            <tr><th scope="row">Licences</th><td>Tez code MIT. Gemma 4 and Qwen3.5 weights Apache-2.0.</td><td class="spec-src"><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">LICENSE</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section start" id="start" aria-labelledby="start-title">
+    <div class="container start-grid">
+      <div class="start-copy">
+        <h2 id="start-title">Run it locally.</h2>
+        <p class="lead">Install Tez, start llama.cpp with the model, then put <code>tez serve</code> in front of it. Clients send requests to <code>http://127.0.0.1:8787/v1/systemone</code>.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="./docs.html#quickstart">Read the quickstart</a>
+          <a class="btn btn-secondary" href="./playground.html">Open the playground</a>
+        </div>
+      </div>
+      <div class="start-code">
+        <div class="code cmds">
+          <div class="code-head"><span class="code-title">Install, start the model, serve</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code><span class="cmd"><span class="tok-prompt">$ </span><span class="tk">pip</span> <span class="tk">install</span> <span class="tk">git+https://github.com/Jibalmi/Tez</span></span><span class="cmd"><span class="tok-prompt">$ </span><span class="tk">llama-server</span> <span class="tk">-m</span> <span class="tk">gemma-4-12b-it-Q8_0.gguf</span> <span class="tk">-ngl</span> <span class="tk">99</span> <span class="tk">-c</span> <span class="tk">4096</span> <span class="tk">--port</span> <span class="tk">8091</span> <span class="tk">--swa-full</span></span><span class="cmd"><span class="tok-prompt">$ </span><span class="tk">tez</span> <span class="tk">serve</span> <span class="tk">--backend</span> <span class="tk">http://127.0.0.1:8091</span> <span class="tk">--template</span> <span class="tk">gemma4</span></span></code></pre>
+        </div>
+        <p class="start-note">The <a href="./docs.html#llama-server">llama-server section</a> of the docs lists the exact flags behind the published numbers. The measured weights are Ollama's <code>gemma4:12b-it-q8_0</code> GGUF. The equivalent public file, <code>gemma-4-12b-it-Q8_0.gguf</code> in <code>unsloth/gemma-4-12b-it-GGUF</code>, was not separately measured.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-about">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="./usecases.html">Use cases</a></li><li><a href="./playground.html">Playground</a></li><li><a href="./benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="./research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</p>
+      <p>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

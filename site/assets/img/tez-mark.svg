@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Tez">
+  <rect x="1" y="1" width="30" height="30" rx="8" fill="#0B0D10"/>
+  <rect x="7.5" y="16" width="4" height="8" rx="1.5" fill="#5B6270"/>
+  <rect x="14" y="8" width="4" height="16" rx="1.5" fill="#6E93FF"/>
+  <rect x="20.5" y="19" width="4" height="5" rx="1.5" fill="#5B6270"/>
+</svg>

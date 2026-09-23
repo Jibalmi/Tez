@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-23T12:00:00Z",
+  "title": "Design System: Tez",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#0b0d10", "tonalRamp": ["#0b0d10", "#191d24", "#343b48", "#5b6270", "#8a93a3", "#cdd2da", "#e4e7ec", "#f6f7f9"] },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#ffffff", "tonalRamp": ["#0b0d10", "#343b48", "#5b6270", "#9aa3b2", "#cdd2da", "#eef0f3", "#f6f7f9", "#ffffff"] },
+      "paper-subtle": { "role": "neutral", "displayName": "Paper Subtle", "canonical": "#f6f7f9" },
+      "paper-inset": { "role": "neutral", "displayName": "Paper Inset", "canonical": "#eef0f3" },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#e4e7ec" },
+      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "#cdd2da" },
+      "ink-muted": { "role": "neutral", "displayName": "Ink Muted", "canonical": "#5b6270" },
+      "ink-faint": { "role": "neutral", "displayName": "Ink Faint", "canonical": "#6b7280" },
+      "signal-blue": { "role": "primary", "displayName": "Signal Blue", "canonical": "#2f5bd8", "tonalRamp": ["#0f1e4a", "#18233d", "#2449b8", "#2f5bd8", "#3f6ff0", "#7c9dff", "#b9ccff", "#eaf0fe"] },
+      "signal-blue-deep": { "role": "primary", "displayName": "Signal Blue Deep", "canonical": "#2449b8" },
+      "signal-blue-fill": { "role": "primary", "displayName": "Signal Blue Fill", "canonical": "#3f6ff0" },
+      "signal-blue-wash": { "role": "primary", "displayName": "Signal Blue Wash", "canonical": "#eaf0fe" },
+      "bar-rest": { "role": "neutral", "displayName": "Bar Rest", "canonical": "#c9ced6" },
+      "act-green": { "role": "tertiary", "displayName": "Act Green", "canonical": "#166534", "tonalRamp": ["#0f2a1a", "#14532d", "#166534", "#15803d", "#22c55e", "#4ade80", "#bbf7d0", "#e8f5ec"] },
+      "act-wash": { "role": "tertiary", "displayName": "Act Wash", "canonical": "#e8f5ec" },
+      "escalate-amber": { "role": "tertiary", "displayName": "Escalate Amber", "canonical": "#9a4a09", "tonalRamp": ["#2d2210", "#6b3406", "#9a4a09", "#c2650c", "#f59e0b", "#fbbf24", "#fde3b8", "#fdf1e4"] },
+      "escalate-wash": { "role": "tertiary", "displayName": "Escalate Wash", "canonical": "#fdf1e4" },
+      "danger-red": { "role": "tertiary", "displayName": "Danger Red", "canonical": "#b91c1c", "tonalRamp": ["#2d1414", "#7f1d1d", "#b91c1c", "#dc2626", "#ef4444", "#f87171", "#fecaca", "#fdecec"] },
+      "danger-wash": { "role": "tertiary", "displayName": "Danger Wash", "canonical": "#fdecec" },
+      "code-string": { "role": "tertiary", "displayName": "Code String Teal", "canonical": "#0e7c66" },
+      "night-bg": { "role": "neutral", "displayName": "Night", "canonical": "#0b0d10" },
+      "night-subtle": { "role": "neutral", "displayName": "Night Subtle", "canonical": "#12151a" },
+      "night-inset": { "role": "neutral", "displayName": "Night Inset", "canonical": "#191d24" },
+      "night-hairline": { "role": "neutral", "displayName": "Night Hairline", "canonical": "#232833" },
+      "night-ink": { "role": "neutral", "displayName": "Night Ink", "canonical": "#e8eaee" },
+      "night-blue": { "role": "primary", "displayName": "Night Blue", "canonical": "#7c9dff" },
+      "night-blue-fill": { "role": "primary", "displayName": "Night Blue Fill", "canonical": "#6e93ff" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Landing hero headline only; 2.25rem on phones." },
+      "headline": { "displayName": "Headline", "purpose": "One section heading per section; page titles at 2.375rem." },
+      "title": { "displayName": "Title", "purpose": "Step, figure, panel and use-case row titles." },
+      "body": { "displayName": "Body", "purpose": "Running copy, measure near 70ch." },
+      "lead": { "displayName": "Lead", "purpose": "Section and hero standfirsts in Ink Muted, capped at 60ch." },
+      "label": { "displayName": "Label", "purpose": "Buttons, tabs, form labels, segmented options. Sentence case, normal tracking." },
+      "mono": { "displayName": "Mono", "purpose": "Every measured number: probabilities, milliseconds, counts, table values." },
+      "code": { "displayName": "Code", "purpose": "Code blocks and commands; 12.5px in dense panes." }
+    },
+    "shadows": [
+      { "name": "shadow-sm", "value": "0 1px 2px rgba(16, 24, 40, 0.06)", "purpose": "Buttons, the pressed segment, the scrubber thumb." },
+      { "name": "shadow-md", "value": "0 4px 12px -2px rgba(16, 24, 40, 0.08), 0 2px 4px -2px rgba(16, 24, 40, 0.05)", "purpose": "Transient overlays: mobile nav sheet, chart tooltips, skip link." },
+      { "name": "shadow-lg", "value": "0 24px 48px -12px rgba(16, 24, 40, 0.16), 0 4px 12px -4px rgba(16, 24, 40, 0.06)", "purpose": "The product panel only." },
+      { "name": "ring", "value": "0 0 0 3px rgba(47, 91, 216, 0.32)", "purpose": "Focus on text inputs and search fields." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The one easing curve for every state transition." },
+      { "name": "t-fast", "value": "120ms", "purpose": "Hover, colour changes, and the probability bar fill reveal." },
+      { "name": "t-med", "value": "200ms", "purpose": "The final-answer strip changing tone." },
+      { "name": "t-slow", "value": "320ms", "purpose": "Reserved longer transitions." },
+      { "name": "replay-pace", "value": "280ms per word", "purpose": "Reading pace of the hero panel's recorded-run replay." },
+      { "name": "reduced-motion", "value": "final state", "purpose": "Under prefers-reduced-motion, replays and bars land on the final state; transitions collapse to 0.01ms." }
+    ],
+    "breakpoints": [
+      { "name": "hero-stack", "value": "1080px" },
+      { "name": "split-stack", "value": "960px" },
+      { "name": "nav-collapse", "value": "860px" },
+      { "name": "phone", "value": "720px" },
+      { "name": "narrow", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action: Get started, Send, Connect.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Get started</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding-inline: 18px; border-radius: 8px; font-family: var(--font-sans, Geist, system-ui, sans-serif); font-size: 0.875rem; font-weight: 560; line-height: 1; border: 1px solid transparent; cursor: pointer; transition: background-color 120ms cubic-bezier(0.16,1,0.3,1), transform 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary { background: var(--accent, #2f5bd8); color: var(--accent-contrast, #fff); box-shadow: 0 1px 2px rgba(16,24,40,0.06); } .ds-btn-primary:hover { background: var(--accent-hover, #2449b8); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The alternative action beside a primary: Playground, Copy.",
+      "html": "<button class=\"ds-btn-secondary\">Open the playground</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; height: 42px; padding-inline: 18px; border-radius: 8px; font-family: var(--font-sans, Geist, system-ui, sans-serif); font-size: 0.875rem; font-weight: 560; background: var(--bg, #fff); color: var(--text, #0b0d10); border: 1px solid var(--border-strong, #cdd2da); box-shadow: 0 1px 2px rgba(16,24,40,0.06); cursor: pointer; transition: background-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-secondary:hover { background: var(--bg-subtle, #f6f7f9); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Pills",
+      "kind": "chip",
+      "refersTo": "pill",
+      "description": "Model-card style tags and decision-state labels.",
+      "html": "<span class=\"ds-pill\">choice · 4 options</span> <span class=\"ds-pill ds-pill-accent\">Tez</span> <span class=\"ds-pill ds-pill-act\">act</span> <span class=\"ds-pill ds-pill-escalate\">escalate</span>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding-inline: 10px; border-radius: 999px; background: var(--bg-inset, #eef0f3); color: var(--text-muted, #5b6270); font-family: var(--font-sans, Geist, system-ui, sans-serif); font-size: 0.75rem; font-weight: 520; white-space: nowrap; } .ds-pill-accent { background: var(--accent-soft, #eaf0fe); color: var(--accent, #2f5bd8); } .ds-pill-act { background: var(--act-soft, #e8f5ec); color: var(--act, #166534); } .ds-pill-escalate { background: var(--escalate-soft, #fdf1e4); color: var(--escalate, #9a4a09); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Playground and search fields.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Server URL</span><input class=\"ds-input\" type=\"url\" value=\"http://127.0.0.1:8787\"></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-field-label { font-size: 0.875rem; font-weight: 560; color: var(--text, #0b0d10); } .ds-input { width: 100%; min-height: 40px; padding: 8px 12px; border: 1px solid var(--border-strong, #cdd2da); border-radius: 8px; background: var(--bg, #fff); color: var(--text, #0b0d10); font: inherit; font-size: 0.875rem; line-height: 1.5; transition: border-color 120ms cubic-bezier(0.16,1,0.3,1), box-shadow 120ms cubic-bezier(0.16,1,0.3,1); } .ds-input:hover { border-color: var(--text-faint, #6b7280); } .ds-input:focus-visible { outline: none; border-color: var(--accent, #2f5bd8); box-shadow: 0 0 0 3px rgba(47,91,216,0.32); }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky hairline header links; the current page sits on the inset grey.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Home</a><a href=\"#\">Use cases</a><a href=\"#\">Playground</a><a href=\"#\">Benchmarks</a><a href=\"#\">Docs</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 4px; height: 64px; padding-inline: 16px; background: var(--bg, #fff); border-bottom: 1px solid var(--border, #e4e7ec); font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-nav a { color: var(--text-muted, #5b6270); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 6px 10px; border-radius: 6px; transition: color 120ms cubic-bezier(0.16,1,0.3,1), background-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-nav a:hover { color: var(--text, #0b0d10); background: var(--bg-subtle, #f6f7f9); } .ds-nav a[aria-current=\"page\"] { color: var(--text, #0b0d10); background: var(--bg-inset, #eef0f3); } .ds-nav a:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Mutually exclusive options, such as the hero panel's example picker.",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"true\">Support</button><button aria-pressed=\"false\">Security</button><button aria-pressed=\"false\">Voice</button><button aria-pressed=\"false\">Injection</button></div>",
+      "css": ".ds-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--bg-inset, #eef0f3); font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-seg button { appearance: none; border: 0; background: transparent; height: 30px; padding-inline: 12px; border-radius: 6px; font: inherit; font-size: 0.875rem; font-weight: 520; color: var(--text-muted, #5b6270); cursor: pointer; transition: background-color 120ms cubic-bezier(0.16,1,0.3,1), color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-seg button:hover { color: var(--text, #0b0d10); } .ds-seg button[aria-pressed=\"true\"] { background: var(--bg, #fff); color: var(--text, #0b0d10); box-shadow: 0 1px 2px rgba(16,24,40,0.06); } .ds-seg button:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: -2px; }"
+    },
+    {
+      "name": "Probability Rows",
+      "kind": "custom",
+      "refersTo": "prob-bar-track",
+      "description": "The signature motif: label, 8px bar revealed by a rounded clip from --p, mono value; only the chosen row turns blue.",
+      "html": "<div class=\"ds-prob-list\"><div class=\"ds-prob-row\" data-chosen=\"true\"><span class=\"ds-prob-label\">billing</span><span class=\"ds-prob-bar\"><span class=\"ds-prob-fill\" style=\"--p: 82%\"></span></span><span class=\"ds-prob-value\">82.0%</span></div><div class=\"ds-prob-row\"><span class=\"ds-prob-label\">outage</span><span class=\"ds-prob-bar\"><span class=\"ds-prob-fill\" style=\"--p: 14%\"></span></span><span class=\"ds-prob-value\">14.0%</span></div><div class=\"ds-prob-row\"><span class=\"ds-prob-label\">account</span><span class=\"ds-prob-bar\"><span class=\"ds-prob-fill\" style=\"--p: 4%\"></span></span><span class=\"ds-prob-value\">4.0%</span></div></div>",
+      "css": ".ds-prob-list { display: grid; gap: 8px; width: 360px; font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-prob-row { display: grid; grid-template-columns: minmax(80px, 34%) 1fr 56px; align-items: center; gap: 10px; font-size: 0.875rem; } .ds-prob-label { color: var(--text-muted, #5b6270); } .ds-prob-bar { position: relative; height: 8px; border-radius: 999px; background: var(--bar-track, #eef0f3); overflow: hidden; } .ds-prob-fill { position: absolute; inset: 0; border-radius: inherit; background: var(--bar-rest, #c9ced6); clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0 round 999px); transition: clip-path 120ms cubic-bezier(0.16,1,0.3,1), background-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-prob-value { font-family: var(--font-mono, 'Geist Mono', ui-monospace, monospace); font-size: 0.75rem; color: var(--text-muted, #5b6270); text-align: right; font-variant-numeric: tabular-nums; } .ds-prob-row[data-chosen=\"true\"] .ds-prob-label { color: var(--text, #0b0d10); font-weight: 560; } .ds-prob-row[data-chosen=\"true\"] .ds-prob-fill { background: var(--accent-fill, #3f6ff0); } .ds-prob-row[data-chosen=\"true\"] .ds-prob-value { color: var(--text, #0b0d10); }"
+    },
+    {
+      "name": "Code Block",
+      "kind": "card",
+      "refersTo": "code-block",
+      "description": "Bordered code with a mono header and a quiet copy button; restrained syntax colour.",
+      "html": "<div class=\"ds-code\"><div class=\"ds-code-head\"><span>install</span><button class=\"ds-copy\">Copy</button></div><pre><span class=\"ds-com\">$</span> pip install tez\n<span class=\"ds-com\">$</span> tez serve --port <span class=\"ds-num\">8787</span></pre></div>",
+      "css": ".ds-code { background: var(--code-bg, #f6f7f9); border: 1px solid var(--code-border, #e4e7ec); border-radius: 12px; color: var(--code-text, #0b0d10); width: 420px; } .ds-code-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--code-border, #e4e7ec); font-family: var(--font-mono, 'Geist Mono', ui-monospace, monospace); font-size: 0.75rem; color: var(--code-comment, #6b7280); } .ds-copy { height: 28px; padding-inline: 8px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: var(--code-comment, #6b7280); font-family: var(--font-sans, Geist, system-ui, sans-serif); font-size: 0.75rem; cursor: pointer; } .ds-copy:hover { color: var(--code-text, #0b0d10); border-color: var(--code-border, #e4e7ec); } .ds-copy:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; } .ds-code pre { margin: 0; padding: 16px 24px; font-family: var(--font-mono, 'Geist Mono', ui-monospace, monospace); font-size: 13.5px; line-height: 1.65; overflow-x: auto; } .ds-com { color: var(--code-comment, #6b7280); user-select: none; } .ds-num { color: var(--code-number, #2f5bd8); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Readout",
+    "overview": "Tez presents itself the way a well-made measuring instrument does: white paper, near-black ink, hairline rules, and one blue that marks the thing that was chosen. The system is built so that numbers carry the page. Every result is a row of probability bars with a mono value at the end, and the page's visual interest comes from those readouts updating, not from decoration. It sits deliberately inside the category standard for open local-model tools (the register of Ollama, LM Studio and Hugging Face) rather than inventing a private idiom: Geist, pill tags, bordered code blocks, a sticky hairline header.\n\nDensity is moderate and tool-like. Sections are separated by a single hairline and generous block padding; inside a section, content sits in a 5/7 split of copy against evidence (a code block, a table, a panel of bars). The only lifted object on a page is the product panel; everything else is flat and bordered. Motion is small and functional: bars ease their fill in 120 ms, words highlight as a recorded run replays, and reduced motion always lands on the final state.\n\nLight is the primary theme. Dark follows the operating system automatically, and a visitor's explicit choice is stored and wins over the system setting. Both themes use the same token names, so no surface defines colours outside the token set.",
+    "keyCharacteristics": [
+      "Ink on white with two quiet grey surface steps; hairline borders instead of fills to separate things.",
+      "One blue, in two steps: a text-and-button blue and a slightly brighter bar blue.",
+      "Probability rows are the recurring motif on every page that shows a result.",
+      "Geist for everything readable, Geist Mono for every number, identifier and command.",
+      "Flat by default; one large soft shadow reserved for the product panel.",
+      "Decision states (act, escalate, danger) have their own hue pairs and never borrow the blue."
+    ],
+    "rules": [
+      { "name": "The One Blue Rule", "body": "Blue means \"chosen\" or \"do this\": the chosen option, the primary action, a link, focus. Nothing else on the page is blue, and no second accent hue exists. If a thing is not chosen and not clickable, it is grey.", "section": "colors" },
+      { "name": "The Two-Step Blue Rule", "body": "Text, buttons and outlines use Signal Blue; bars, fills and marks use Signal Blue Fill. Never swap them.", "section": "colors" },
+      { "name": "The States Keep Their Own Hues Rule", "body": "Act is green, escalate is amber, errors are red, each with its own wash. A decision state never renders in blue, and blue never signals a state.", "section": "colors" },
+      { "name": "The Mono Numbers Rule", "body": "Every measured number (probability, latency, accuracy, count) is Geist Mono with tabular figures, right-aligned in tables. A number in the sans face is prose, not a measurement.", "section": "typography" },
+      { "name": "The Sentence Case Rule", "body": "Headings, labels, pills and buttons are sentence case at normal tracking. There are no uppercase labels and no small overline text above headings.", "section": "typography" },
+      { "name": "The One Lifted Object Rule", "body": "Only the product panel carries the large shadow. Cards, tables, code blocks and notes are flat with a hairline border.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do mark exactly one thing as chosen per question: one blue bar, one checked label.",
+      "Do use Signal Blue for text and buttons and Signal Blue Fill for bars and marks, in both themes via the same tokens.",
+      "Do set every measured number in Geist Mono with tabular figures, and put a source line (12px, Ink Faint) under any figure or table of results.",
+      "Do separate sections with a single hairline and generous padding, and split section bodies 5:7 copy against evidence.",
+      "Do keep bar motion at 120 ms on the shared ease-out curve, and land on the final state under reduced motion.",
+      "Do give every sideways-scrolling code block the right-edge fade, and let tables reflow into labelled cells on phones rather than scroll.",
+      "Do ship light first, follow the system into dark, and respect a stored theme choice."
+    ],
+    "donts": [
+      "Don't introduce a second accent hue or use blue for decision states; act, escalate and danger keep their own colours.",
+      "Don't lift anything except the product panel; cards, tables and code blocks stay flat with hairlines.",
+      "Don't set labels, pills or headings in uppercase or add small overline text above headings.",
+      "Don't use glows, gradient fills or gradient text; the only gradients in the build are the scrubber's progress track and the scroll-edge mask.",
+      "Don't break a command inside a flag or token when it wraps.",
+      "Don't hard-code colours outside the token set; figures that must sit on white (the research PNGs) are framed as paper deliberately."
+    ]
+  }
+}

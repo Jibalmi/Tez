@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarks · Tez</title>
+<meta name="description" content="Tez measured on one RTX 5080 laptop GPU with frozen models: head-to-head with Laya on byte-identical rows, eleven languages, calibration, readouts, few labels, conformal selection, latency, voice, SemIf and JevBench public tiers, with the losses shown.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Tez benchmarks">
+<meta property="og:description" content="Every number measured on one machine with frozen models, every number sourced, losses shown next to wins.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./data/benchmarks.json" as="fetch" type="application/json" crossorigin>
+<link rel="stylesheet" href="./assets/css/tokens.css">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/docs.css">
+<link rel="stylesheet" href="./assets/css/charts.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="./assets/js/site.js" defer></script>
+<script src="./assets/js/docs.js" defer></script>
+<script src="./assets/js/charts.js" defer></script>
+<script src="./assets/js/benchmarks.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container doc-shell is-wide">
+    <nav class="doc-nav" data-toc aria-label="Benchmark sections">
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">Summary</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="toc-panel" id="toc-panel">
+        <div class="toc-group">
+          <p class="toc-heading">Overview</p>
+          <ul class="toc-list">
+            <li><a href="#summary">Summary</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Against Laya and Jev</p>
+          <ul class="toc-list">
+            <li><a href="#head-to-head">Head-to-head</a></li>
+            <li><a href="#languages">Eleven languages</a></li>
+            <li><a href="#xnli">XNLI, where Laya leads</a></li>
+            <li><a href="#calibration">Calibration and latency</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Reading decisions</p>
+          <ul class="toc-list">
+            <li><a href="#readouts">Four readouts</a></li>
+            <li><a href="#few-labels">Few labels</a></li>
+            <li><a href="#layers">Where to read</a></li>
+            <li><a href="#gate">When not to decide</a></li>
+            <li><a href="#cold-start">Cold start</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Speed</p>
+          <ul class="toc-list">
+            <li><a href="#latency">Pruned models and latency</a></li>
+            <li><a href="#voice">Voice</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Other benchmarks</p>
+          <ul class="toc-list">
+            <li><a href="#semif">SemIf</a></li>
+            <li><a href="#jevbench">JevBench public tiers</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Limits and method</p>
+          <ul class="toc-list">
+            <li><a href="#negative">Negative results</a></li>
+            <li><a href="#methodology">Methodology</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="doc-main prose">
+      <header class="page-head">
+        <h1>Benchmarks</h1>
+        <p class="lead">Every number here was measured on one machine with frozen models and zero training, and each one links to the section of BENCHMARKS.md that holds it. Where Laya or Jev is ahead, it says so.</p>
+        <div class="tag-row"><span class="pill">RTX 5080 laptop · 16 GB</span><span class="pill">llama.cpp b11100</span><span class="pill">Gemma 4 12B Q8_0</span><span class="pill">Qwen3.5-4B probes</span><span class="pill">frozen weights</span></div>
+      </header>
+      <noscript><p class="note">The charts and tables on this page are drawn from <a href="./data/benchmarks.json">data/benchmarks.json</a> with JavaScript. With JavaScript off, read <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a>, which holds every number.</p></noscript>
+
+      <!-- ============================================================== summary -->
+      <section class="doc-section is-first" aria-labelledby="summary">
+        <h2 id="summary">Summary</h2>
+        <dl class="facts">
+          <dt>Machine</dt><dd>One RTX 5080 laptop GPU, 16 GB</dd>
+          <dt>Engine</dt><dd>llama.cpp b11100</dd>
+          <dt>Models</dt><dd>Gemma 4 12B Q8_0 with the zero-shot letter readout unless stated; Qwen3.5-4B for probes. Frozen: no fine-tuning, zero training of the language model.</dd>
+          <dt>Laya</dt><dd>Its three checkpoints answered byte-identical rows on the same GPU, on Laya's own datasets and protocol. Laya's published numbers reproduce in this harness (base 0.362, fine-tuned 0.766, Khmer 0.000), which validates the comparison.</dd>
+          <dt>Jev</dt><dd>Never run here (closed API). Its figures are third-party published, marked as such, and drawn hollow.</dd>
+          <dt>Raw data</dt><dd>Run outputs and a manifest per run (data SHA-256, model path, settings) in <a href="https://github.com/Jibalmi/Tez/tree/main/results"><code>results/</code></a>.</dd>
+        </dl>
+        <h3 id="headline">Headline results</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th scope="col">Result</th><th scope="col" class="num">Value</th><th scope="col">Conditions</th><th scope="col">Source</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">typed-decisions, zero-shot</th><td class="num">0.704</td><td>Gemma 4 12B Q8_0 letter readout, 2,000 decisions, no labels</td><td><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#1-same-rows-same-machine-tez-vs-laya-layas-own-benchmarks">§1</a></td></tr>
+              <tr><th scope="row">typed-decisions, probe</th><td class="num">0.793</td><td>Logistic probe on the frozen Qwen3.5-4B, layer 26 (0.794 at layer −12 in the first sweep)</td><td><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4b-ablations-on-the-12b-typed-decisions-unless-stated">§4b</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">§4c</a></td></tr>
+              <tr><th scope="row">MASSIVE intent, 11 languages</th><td class="num">0.885</td><td>Macro accuracy, zero-shot; laya-multilingual 0.524</td><td><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#languages--massive-intent-20-options-100-cases-each">§1 Languages</a></td></tr>
+              <tr><th scope="row">Voice command, per streamed word</th><td class="num">30&nbsp;ms</td><td>Compute (45 ms round trip); 220 spoken commands, 16 actions, intent accuracy 0.905</td><td><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions">§3</a></td></tr>
+              <tr><th scope="row">Harmful actions while streaming</th><td class="num">1&nbsp;/&nbsp;198</td><td>Utterances, class-aware early-commit policy</td><td><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions">§3</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 id="others-lead">Where others lead</h3>
+        <ul>
+          <li><strong>Laya where it was trained:</strong> AG News (laya-multilingual 0.948 against 0.880) and XNLI, where laya-multilingual leads nine of ten languages (0.794 macro against 0.699). Laya also edges Emotion (0.550 against 0.540).</li>
+          <li><strong>Laya on single-question latency:</strong> 23 to 52 ms per decision against 57 to 250 ms for Tez on the same GPU.</li>
+          <li><strong>laya-typed-decisions, fine-tuned on typed-decisions' own training split:</strong> 0.766 against Tez's zero-shot 0.704 (0.725 with four worked examples, 0.793 with a probe).</li>
+          <li><strong>Jev's published figures</strong> on Banking77 (0.870 against 0.713 zero-shot; a probe reaches 0.860), AG News (0.910 against 0.880) and typed-decisions (0.727 against 0.704).</li>
+          <li><strong>SemIf's published EXL3 27B</strong> scores 0.958 on SemIf's benchmark, above the 12B's 0.943.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================== head-to-head -->
+      <section class="doc-section" aria-labelledby="head-to-head">
+        <h2 id="head-to-head">Head-to-head on Laya's benchmarks</h2>
+        <p>Laya is the open, encoder-based "System One" that claims to beat Jev: ModernBERT-large or mmBERT-base with a small head that scores one marker per option. Its three checkpoints and Tez answered byte-identical rows on the same GPU, on Laya's datasets and protocol. Laya runs in-process with its shipped temperatures.</p>
+        <figure class="chart-figure" id="fig-h2h">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-h2h-title">Zero-shot Tez wins six of Laya's nine tasks; Laya leads on AG News, Emotion and XNLI</h3>
+            <p class="chart-sub">Accuracy, 0 to 1, per task. typed-decisions counts as a Tez win over Laya's base checkpoints (0.704 against 0.362); laya-typed-decisions, fine-tuned on that benchmark's own training split, scores 0.766. Jev's published figures lead zero-shot Tez on AG News, Banking77 and typed-decisions. The best value in each panel is in bold.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="h2h" aria-label="Legend"></ul>
+            <div class="chart" data-chart="h2h" data-state="loading" style="--chart-min: 560px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §1.</p></noscript></div>
+            <p class="chart-key">laya-ml = laya-multilingual · laya-td = laya-typed-decisions · Tez with four worked examples in the cached prefix scores 0.725 on typed-decisions.</p>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#1-same-rows-same-machine-tez-vs-laya-layas-own-benchmarks">BENCHMARKS.md §1</a>, <code>experiments/bench_h2h.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-h2h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-h2h" data-table="h2h" hidden></div>
+        </figure>
+        <p>MASSIVE follows Laya's protocol: 20 options (the gold intent plus 19 sampled, seed 13) and the first 100 test rows per language. Banking77 has 77 options, more than the 26 letters one readout can show, so Tez runs a chunked tournament: four chunks of 20 plus "none", then the chunk winners meet in a final.</p>
+
+        <h3 id="td-detail">typed-decisions beyond accuracy</h3>
+        <p>Fine-tuned on this benchmark, laya-typed-decisions is much closer to the benchmark's own teacher distribution (Brier 0.061 against 0.355) and to its score levels (MAE 0.242 against 0.482). Tez's soft accuracy is close to Jev's published figure (0.575 against 0.580).</p>
+        <div data-table="td-detail"></div>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#1-same-rows-same-machine-tez-vs-laya-layas-own-benchmarks">BENCHMARKS.md §1</a>. The best value in each row is in bold.</p>
+
+        <h3 id="by-workflow">By workflow and question type</h3>
+        <div data-table="workflow"></div>
+        <p>By question type, Tez zero-shot scores 0.81 on yes/no, 0.68 on choice and 0.64 on score questions.</p>
+      </section>
+
+      <!-- ============================================================== languages -->
+      <section class="doc-section" aria-labelledby="languages">
+        <h2 id="languages">Eleven languages</h2>
+        <p>One frozen decoder against two trained encoders, on MASSIVE intent in eleven languages and six scripts.</p>
+        <figure class="chart-figure" id="fig-languages">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-languages-title">Tez stays between 0.79 and 0.93 in all eleven languages; Laya's English checkpoints fall to 0.12 or below on five of them</h3>
+            <p class="chart-sub">MASSIVE intent accuracy, 20 options (gold plus 19 sampled, seed 13), first 100 test rows per language. The Tez probe was trained on 2,000 English rows only (Qwen3.5-4B, layer 20) and used unchanged in every language. Values on the right: Tez zero-shot and laya-multilingual.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="languages" aria-label="Legend"></ul>
+            <div class="chart" data-chart="languages" data-state="loading" style="--chart-min: 460px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §1 Languages.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#languages--massive-intent-20-options-100-cases-each">BENCHMARKS.md §1 Languages</a>; English-only probe from <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#massive-one-probe-trained-on-english-only-2000-rows-used-unchanged-in-11-languages-layer-20-same-100-test-rows-per-language-as-1">§4c</a>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-languages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-languages" data-table="languages" hidden></div>
+        </figure>
+        <p>The English-only probe holds within 1 to 5 points of the 12B zero-shot on European and CJK languages and falls 13 to 22 points below it on Arabic, Hindi, Thai and Khmer. Calibration as shipped, macro over the eleven languages:</p>
+        <div data-table="languages-ece"></div>
+      </section>
+
+      <!-- ============================================================== XNLI -->
+      <section class="doc-section" aria-labelledby="xnli">
+        <h2 id="xnli">XNLI, where Laya is ahead</h2>
+        <p>Natural language inference is in Laya's training mix, and it shows: laya-multilingual leads in nine of ten languages and ties Tez in Hindi. Tez's zero-shot letters sit between 0.65 and 0.74 in every language; its macro (0.699) is above Laya's English checkpoint (0.609) and below laya-multilingual (0.794).</p>
+        <figure class="chart-figure" id="fig-xnli">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-xnli-title">XNLI is the one family where Laya's trained encoder leads: 0.794 macro for laya-multilingual against 0.699 for Tez</h3>
+            <p class="chart-sub">Accuracy, 100 rows per language, three options (entailment, neutral, contradiction). Tez is zero-shot. Values on the right: Tez and laya-multilingual.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="xnli" aria-label="Legend"></ul>
+            <div class="chart" data-chart="xnli" data-state="loading" style="--chart-min: 400px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §1 XNLI.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#xnli-100-per-language--the-one-family-where-layas-trained-encoder-is-ahead">BENCHMARKS.md §1 XNLI</a>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-xnli"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-xnli" data-table="xnli" hidden></div>
+        </figure>
+      </section>
+
+      <!-- ============================================================== calibration -->
+      <section class="doc-section" aria-labelledby="calibration">
+        <h2 id="calibration">Calibration, order robustness and latency</h2>
+        <figure class="chart-figure" id="fig-calibration">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-calibration-title">One temperature per task brings every system to an ECE of 0.068 to 0.103; as shipped, Tez has the lowest error</h3>
+            <p class="chart-sub">Mean ECE-15 over Laya's tasks, lower is better. Squares: as shipped. Circles: after one temperature per task, fitted 2-fold out-of-fold. Jev's 0.246 is published and has no refit.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="calibration" aria-label="Legend"></ul>
+            <div class="chart" data-chart="calibration" data-state="loading" style="--chart-min: 220px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §1.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#calibration-order-robustness-latency">BENCHMARKS.md §1 Calibration, order robustness, latency</a>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-calibration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-calibration" data-table="calibration" hidden></div>
+        </figure>
+
+        <figure class="chart-figure" id="fig-latency-ranges">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-latency-ranges-title">Laya is faster per single question: 23 to 52 ms against 57 to 250 ms for Tez</h3>
+            <p class="chart-sub">Milliseconds per decision, p50, range across Laya's tasks on the same RTX 5080 laptop GPU. Tez runs through llama-server over HTTP, Laya in-process. On these tasks Tez's time is dominated by evaluating the state, the variable part of the prompt; Jev's 236 to 276 ms is published.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="latency-ranges" aria-label="Legend" hidden></ul>
+            <div class="chart" data-chart="latency-ranges" data-state="loading" style="--chart-min: 200px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §1.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#calibration-order-robustness-latency">BENCHMARKS.md §1 Calibration, order robustness, latency</a>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-latency-ranges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-latency-ranges" data-table="latency-ranges" hidden></div>
+        </figure>
+        <p>On constant-option work with a short variable part, such as the <a href="#voice">voice loop</a>, the same 12B decides in 30 ms. Option order: when the 20 options of MASSIVE-en are presented in reverse, Tez changes its answer on 0.07 of decisions, Laya's checkpoints on 0.15 to 0.20 (Jev published 0.13).</p>
+        <div data-table="cal-order-latency"></div>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#calibration-order-robustness-latency">BENCHMARKS.md §1</a>. The best value in each row is in bold.</p>
+      </section>
+
+      <!-- ============================================================== readouts -->
+      <section class="doc-section" aria-labelledby="readouts">
+        <h2 id="readouts">Four ways to read a decision</h2>
+        <p>The same 2,000 typed-decisions test decisions, read four ways. Labels buy accuracy and calibration: a logistic probe is fitted with a proper scoring rule, so it comes out calibrated (ECE 0.023 as read), and the gain from labels is largest on ordinal score questions (+11 points over the 12B). How to choose a readout per request is in the <a href="./docs.html#readouts">docs</a>.</p>
+        <div data-table="readouts"></div>
+        <p class="source"><span data-text="readouts-note"></span> Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#calibration-and-decision-types-ece-15-and-nll-as-read-then-after-a-2-fold-out-of-fold-temperature">BENCHMARKS.md §4c Calibration and decision types</a>; references from §1.</p>
+      </section>
+
+      <!-- ============================================================== few labels -->
+      <section class="doc-section" aria-labelledby="few-labels">
+        <h2 id="few-labels">Few labels</h2>
+        <p>How many labels a probe needs, and which rows to spend them on. "Typical" rows are the members nearest each k-means centre of the unlabelled states, the rule <code>tez suggest</code> uses.</p>
+        <figure class="chart-figure" id="fig-few-labels">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-few-labels-title">Fifty typical labels per question on top of the 12B's zero-shot answers reach 0.766, the level of Laya's fully fine-tuned checkpoint</h3>
+            <p class="chart-sub">Accuracy on typed-decisions (2,000 test decisions), probe on layer 26 of the frozen Qwen3.5-4B, mean of 3 seeds. Right: labels mixed with the 12B's zero-shot answers, weight n/(n + 10) on the probe. The y axis starts at 0.55; the x axis is logarithmic.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="few-labels" aria-label="Legend"></ul>
+            <div class="chart" data-chart="few-labels" data-state="loading" style="--chart-min: 300px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §4c Few labels.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#few-labels-which-rows-to-label-and-what-to-combine-them-with-layer-26-3-seeds">BENCHMARKS.md §4c Few labels</a>, <code>experiments/probe_lab.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-few-labels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-few-labels" data-table="few-labels" hidden></div>
+        </figure>
+        <p>With more labels the probe keeps climbing: 0.760 with 100 rows per question, 0.788 with 200 and 0.793 with all 300 (layer 26, 3 seeds).</p>
+      </section>
+
+      <!-- ============================================================== layers -->
+      <section class="doc-section" aria-labelledby="layers">
+        <h2 id="layers">Where to read in the network</h2>
+        <p>Every layer of the frozen Qwen3.5-4B carries some of the decision; the question is which one to read. A probe's accuracy climbs to a plateau at layers 20 to 28 and falls at the top. The intrinsic dimension of unlabelled states, measured without a single label, bottoms out on the same layers; the model's own confidence, the obvious alternative, picks layer 21, where its letters score 0.269.</p>
+        <figure class="chart-figure" id="fig-layers">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-layers-title">The layer to read can be found without labels: intrinsic dimension bottoms out on the probe's plateau, layers 24 to 28</h3>
+            <p class="chart-sub">Frozen Qwen3.5-4B, typed-decisions. Top: probe accuracy by layer (labels, 2,000 test decisions). Bottom: intrinsic dimension of 2,000 unlabelled train states per layer (TwoNN). Two measures, two panels, one shared layer axis.</p>
+          </figcaption>
+          <div class="chart-body">
+            <div class="chart" data-chart="layers" data-state="loading" style="--chart-min: 460px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §4c.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#choosing-the-layer-without-labels-intrinsic-dimension-twonn-2000-unlabelled-train-states-per-layer">BENCHMARKS.md §4c Intrinsic dimension</a>, <code>experiments/probe_lab.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-layers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-layers" data-table="layers" hidden></div>
+        </figure>
+        <p>Reading early is also cheaper: keeping 24 of the 32 layers speeds prefill up 1.30 times and keeping 20 speeds it up 1.54 times, with no loss in probe accuracy (eager PyTorch; the ratios are what transfer).</p>
+        <figure class="chart-figure" id="fig-reversed">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-reversed-title">Reversing the options costs nothing up to layer 14, 2.4 points at layer 18 and 20 points at layer 26</h3>
+            <p class="chart-sub">The same per-question probes on prompts with the options in the trained order and reversed; frozen Qwen3.5-4B, typed-decisions test split. The decision is carried as option content early and bound to option positions later: read at layer 18 if a schema may reorder its options. The y axis starts at 0.5.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="reversed" aria-label="Legend"></ul>
+            <div class="chart" data-chart="reversed" data-state="loading" style="--chart-min: 300px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §4c.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#decide-then-bind-the-same-probes-on-prompts-with-the-options-reversed">BENCHMARKS.md §4c Decide, then bind</a>, <code>experiments/probe_order.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-reversed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-reversed" data-table="reversed" hidden></div>
+        </figure>
+        <p>The 4B's own letters change their pick in 51 % of decisions when the options are reversed.</p>
+      </section>
+
+      <!-- ============================================================== gate -->
+      <section class="doc-section" aria-labelledby="gate">
+        <h2 id="gate">Knowing when not to decide</h2>
+        <p>Conformal selection chooses which decisions to act on so that the error rate among them stays at or below a chosen bound; the rest are escalated. It is what <code>tez fit</code> computes for the <a href="./docs.html#gate">gate</a>.</p>
+        <figure class="chart-figure" id="fig-gate">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-gate-title">At a 5 % error bound the probe acts on 40 % of decisions and the 12B's zero-shot letters on 24 %; the realised error stays at the bound</h3>
+            <p class="chart-sub">typed-decisions, Benjamini–Hochberg on conformal p-values, mean over 50 random half/half calibration splits. Left: share of decisions acted on. Right: realised error among them against the bound (the diagonal). The pseudo-label probe acted on nothing at 5 %, so it has no point there.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="conformal" aria-label="Legend"></ul>
+            <div class="chart" data-chart="conformal" data-state="loading" style="--chart-min: 300px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §4c Conformal selection.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#conformal-selection-a-bound-on-the-error-rate-among-the-decisions-it-acts-on-bh-on-conformal-p-values-50-random-halfhalf-calibration-splits">BENCHMARKS.md §4c Conformal selection</a>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-gate" data-table="conformal" hidden></div>
+        </figure>
+        <p>The pseudo-label probe shows why labels matter even when accuracy does not move: trained on the 12B's zero-shot answers, it matches the teacher's accuracy (0.703) but its confidence cannot separate right from wrong, so the gate acts on nothing at a 5 % bound. An earlier analysis with Mondrian conformal sets at 90 % coverage: the 12B letters act on 52 % of decisions at 0.853 accuracy, a probe on 66.6 % at 0.884, laya-typed-decisions on 63 % at 0.876 and Laya's base checkpoint on 5 %.</p>
+      </section>
+
+      <!-- ============================================================== cold start -->
+      <section class="doc-section" aria-labelledby="cold-start">
+        <h2 id="cold-start">Cold start</h2>
+        <p>Start from the 12B's zero-shot answers, escalate the decisions below a confidence threshold to people, and train a probe on what they label, over a stream of the 6,000 train decisions. Escalating only the unsure decisions at a threshold of 0.6 automates 95 % of the stream at 0.707; adding a 10 % random audit slice automates 77 % at 0.777.</p>
+        <div data-table="cold-start"></div>
+        <p class="source">"Whole stream" counts the human answers as correct; "probe held-out" is the probe trained on the collected labels, scored on the test split. Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#cold-start-begin-zero-shot-escalate-learn-from-the-escalations-stream--the-6000-train-decisions-held-out--test-split">BENCHMARKS.md §4c Cold start</a>.</p>
+        <p class="fineprint" data-text="cold-weak"></p>
+      </section>
+
+      <!-- ============================================================== latency -->
+      <section class="doc-section" aria-labelledby="latency">
+        <h2 id="latency">Latency and depth-pruned models</h2>
+        <p><code>tez truncate</code> keeps the first N blocks of a GGUF plus its output norm and head, so the served state is the one a mid-depth probe reads. Four cuts of Qwen3.5-4B, served by llama.cpp:</p>
+        <figure class="chart-figure" id="fig-pruned">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-pruned-title">Cut to 24 of 32 blocks, the 4B keeps its probe at 0.793 and decides in 58 ms</h3>
+            <p class="chart-sub">Accuracy on typed-decisions against milliseconds per decision (p50, 100 prompts per server, prompt caching off), llama.cpp b11100. Numbers next to the points are blocks kept of 32. Letters are the zero-shot letter readout of the same cut file.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="pruned" aria-label="Legend"></ul>
+            <div class="chart" data-chart="pruned" data-state="loading" style="--chart-min: 330px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §4c.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#depth-pruned-qwen35-4b-ggufs-served-by-llamacpp-gguf_truncatepy-pruned_server_benchpy-latency_breakdownpy">BENCHMARKS.md §4c Depth-pruned GGUFs</a>, <code>experiments/pruned_server_bench.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-pruned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-pruned" data-table="pruned" hidden></div>
+        </figure>
+        <div class="callout callout-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><p><strong>Cut for probes, validate per task for letters.</strong> On Laya's public suite the 24-block cut lowers zero-shot letter accuracy by 17.4 points on average (the 29-block cut by 3.7). On typed-decisions the same cut raises it, from 0.483 to 0.580. Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#the-cut-4b-on-layas-public-suite-zero-shot-letters-same-rows-as-1-prompt-caching-off">BENCHMARKS.md §4c, the cut 4B on Laya's public suite</a>.</p></div></div>
+        <h3 id="latency-breakdown">Where a decision's time goes</h3>
+        <p>p50 / p90 milliseconds over the same 100 prompts, prompt caching off. The embedding request a probe needs is the fastest call on every cut of the 4B; on the 12B it is not.</p>
+        <div data-table="latency-breakdown"></div>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#where-a-decisions-latency-goes-same-100-prompts-p50--p90-ms">BENCHMARKS.md §4c Where a decision's latency goes</a>, <code>experiments/latency_breakdown.py</code>.</p>
+      </section>
+
+      <!-- ============================================================== voice -->
+      <section class="doc-section" aria-labelledby="voice">
+        <h2 id="voice">Voice</h2>
+        <p>220 spoken commands over 16 actions, decided word by word by Gemma 4 12B Q8_0 as the transcript grows.</p>
+        <figure class="chart-figure" id="fig-voice">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-voice-title">Options first, transcript last and <code>--swa-full</code>: 30 ms of compute per streamed word</h3>
+            <p class="chart-sub">Engine compute per streamed word, p50, Gemma 4 12B Q8_0. The same prompt with the transcript first costs 148 ms; before <code>--swa-full</code>, the transcript-last prompt was re-evaluated in full, 394 tokens, at 205 ms.</p>
+          </figcaption>
+          <div class="chart-body">
+            <div class="chart" data-chart="voice" data-state="loading" style="--chart-min: 200px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §3.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions">BENCHMARKS.md §3</a>, <code>experiments/run_voice_fast.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-voice" data-table="voice-per-word" hidden></div>
+        </figure>
+        <div data-table="voice"></div>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions">BENCHMARKS.md §3</a>, <code>experiments/stream_policy.py</code>, <code>experiments/residual_check.py</code>, <code>experiments/asr_bench.py</code>, <code>experiments/voice_demo.py</code>.</p>
+        <p>Streaming, 198 actionable utterances: a naive commit at p ≥ 0.9 fires <code>none</code> at the first word and is right 17 % of the time. With the rule that a confident <code>none</code> on a partial never commits, 98.5 % of utterances commit at 0.918 accuracy, on average at word 2.5 of 5.4. The class-aware policy (opening an app fires on one partial, media and play need two, typing and closing wait for the end) produces 1 harmful action in 198 and 2 false actions on 22 out-of-scope utterances. A collapsing commit bound, tried as an alternative, was neither earlier nor as safe.</p>
+      </section>
+
+      <!-- ============================================================== SemIf -->
+      <section class="doc-section" aria-labelledby="semif">
+        <h2 id="semif">SemIf's benchmark</h2>
+        <p>SemIf's public fixtures: 144 authored three-option decisions in three families and 108 perturbations, scored with SemIf's exact prompt, mean-family balanced accuracy keyed by option id, and 95 % intervals by source-group bootstrap. SemIf's published 0.813 for Qwen3.5-4B reproduces exactly in this harness (0.8132).</p>
+        <figure class="chart-figure" id="fig-semif">
+          <figcaption class="chart-head">
+            <h3 class="chart-title" id="fig-semif-title">Reading a decision from option letters is scale-gated: the frozen 12B reaches 0.943, a 3B sits at chance</h3>
+            <p class="chart-sub">Mean-family balanced accuracy on authored144 with 95 % intervals. Averaging six option orderings in one batch lifts the 4B from 0.813 to 0.912, statistically level with the 12B (p = 0.18). Hollow marks are SemIf's published figures.</p>
+          </figcaption>
+          <div class="chart-body">
+            <ul class="chart-legend" data-legend="semif" aria-label="Legend"></ul>
+            <div class="chart" data-chart="semif" data-state="loading" style="--chart-min: 420px"><noscript><p class="chart-fallback">This chart needs JavaScript; the numbers are in BENCHMARKS.md §2.</p></noscript></div>
+          </div>
+          <div class="chart-foot">
+            <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#2-semifs-benchmark-authored144--perturbations108-frozen-models">BENCHMARKS.md §2</a>, <code>experiments/run_direct.py</code>, <code>metrics.py</code>, <code>calibrate.py</code>, <code>perm_analysis.py</code>, <code>run_hf.py</code>.</p>
+            <button class="chart-toggle" type="button" data-show-data aria-expanded="false" aria-controls="tbl-semif"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></svg><span data-toggle-label>Show data</span></button>
+          </div>
+          <div class="chart-table" id="tbl-semif" data-table="semif" hidden></div>
+        </figure>
+        <h3 id="semif-calibration">Calibration recipes</h3>
+        <p>Gemma 4 12B Q8_0 on the same 144 rows. The best recipe is a six-ordering permutation average plus an out-of-fold temperature.</p>
+        <div data-table="semif-recipes"></div>
+        <p class="fineprint" data-text="zhao"></p>
+      </section>
+
+      <!-- ============================================================== JevBench -->
+      <section class="doc-section" aria-labelledby="jevbench">
+        <h2 id="jevbench">JevBench public tiers</h2>
+        <div class="callout callout-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><p><strong>Not a leaderboard submission.</strong> Tez has not been submitted to JevBench and holds no rank. The leaderboard's headline uses a held-out tier and a judge tier; these numbers use only the public tiers, scored with the leaderboard's own formulas, so they are indicative only.</p></div></div>
+        <div data-table="jevbench"></div>
+        <p>Weighted over the three public tiers with the leaderboard's weights (hard 30 %, easy 14 %, standard 28 %; no judge tier available), the intelligence score is <span data-text="jev-weighted">78.2</span> through the experiment harness and <span data-text="jev-weighted-server">79.0</span> through <code>tez serve</code>, the runtime you install. The hard tier's one collapsed family is <code>temporal_numeric</code> (2 of 15): date and quantity arithmetic that a single forward pass cannot do.</p>
+        <p class="source">Gemma 4 12B Q8_0; the hard tier has states up to 3.9k tokens and ran with an 8k context. Through <code>tez serve</code> the hard tier ran with an 8k context without <code>--swa-full</code> (the full cache does not fit in 16 GB at 8k), so every prompt was evaluated in full and its times are pessimistic. Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#5-jevbench-public-tiers-leaderboard-formulas-experimentsbench_jevbenchpy">BENCHMARKS.md §5</a>, <code>experiments/bench_jevbench.py</code>, <code>release/jevbench/run_public.py</code>.</p>
+      </section>
+
+      <!-- ============================================================== negative -->
+      <section class="doc-section" aria-labelledby="negative">
+        <h2 id="negative">Negative results</h2>
+        <p>What did not work, published so the next person does not spend the time.</p>
+        <ul data-list="negative"><li>This list is drawn from <a href="./data/benchmarks.json">data/benchmarks.json</a>; the same results are in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> §2, §4, §4b and §4c.</li></ul>
+        <p class="source">Sources: README findings; <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4-abstention-debiasing-cascades">BENCHMARKS.md §4</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4b-ablations-on-the-12b-typed-decisions-unless-stated">§4b</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">§4c</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#2-semifs-benchmark-authored144--perturbations108-frozen-models">§2</a>.</p>
+      </section>
+
+      <!-- ============================================================== methodology -->
+      <section class="doc-section" aria-labelledby="methodology">
+        <h2 id="methodology">Methodology and audit trail</h2>
+        <ul>
+          <li><strong>One machine, one engine build, frozen weights.</strong> Every run writes a manifest with the data's SHA-256, the model path and the settings, and the harness asserts the model path llama-server reports before each run.</li>
+          <li><strong>Metrics.</strong> Accuracy; on SemIf's fixtures, mean-family balanced accuracy keyed by option id with source-group bootstrap intervals; ECE with 15 equal-width bins; paired McNemar tests between models on the same rows; latency as the p50 (and p90) of dedicated runs.</li>
+          <li><strong>Competitors on identical inputs.</strong> Laya's checkpoints answered byte-identical rows on the same GPU, and its published numbers reproduce in this harness before any comparison is reported. Jev is never run; its figures are copied from third-party publications and marked.</li>
+          <li><strong>Audit.</strong> The first draft keyed balanced accuracy on the gold position instead of the option id, which inflated every headline by 1 to 3 points; every number here is the corrected one. Its "~110 ms floor, no prefix reuse" was the sliding-window cache, fixed with <code>--swa-full</code>. Runs that hit the wrong model are quarantined under <code>results/INVALID_wrongmodel_*</code> and excluded.</li>
+        </ul>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#6-audit-trail">BENCHMARKS.md §6</a>; the full list of audit findings is in <a href="https://github.com/Jibalmi/Tez/blob/main/docs/REPORT.md#37-audit-findings-on-the-first-version-of-this-report">REPORT.md §3.7</a>. Scripts: <a href="https://github.com/Jibalmi/Tez/tree/main/experiments"><code>experiments/</code></a>.</p>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-blurb">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="./usecases.html">Use cases</a></li><li><a href="./playground.html">Playground</a></li><li><a href="./benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="./research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base"><span>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</span><span>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></span></div>
+  </div>
+</footer>
+</body>
+</html>

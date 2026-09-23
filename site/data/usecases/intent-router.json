@@ -1,0 +1,83 @@
+{
+ "schema": {
+  "name": "intent-router",
+  "description": "Send each assistant request to one of many intents or tools, and flag whether it needs the user's own account.",
+  "state": "One user request to an in-app assistant, as text.",
+  "questions": {
+   "intent": {
+    "type": "choice",
+    "instructions": "Which intent or tool should handle this request?",
+    "criteria": {
+     "card_not_arrived": "A new or replacement card has not arrived yet.",
+     "activate_card": "How to activate a card that has arrived.",
+     "card_lost_or_stolen": "The card is lost, stolen or may be compromised.",
+     "card_payment_declined": "A card payment was declined or failed.",
+     "card_payment_not_recognised": "A card payment the user does not recognise.",
+     "contactless_not_working": "Contactless or tap-to-pay does not work.",
+     "change_pin": "Change, reset or unblock the card PIN.",
+     "atm_cash_problem": "An ATM withdrawal went wrong, such as no cash or the wrong amount.",
+     "top_up_failed": "Adding money to the account failed.",
+     "top_up_pending": "A top-up is still pending or has not arrived.",
+     "transfer_not_received": "A sent transfer has not reached the recipient.",
+     "transfer_failed": "A transfer failed or came back.",
+     "cancel_transfer": "Cancel a transfer that was already sent.",
+     "add_payee": "Add, edit or trust a payee or beneficiary.",
+     "exchange_rate": "The exchange rate applied or offered.",
+     "fee_question": "Why a fee was charged, or what a service costs.",
+     "refund_not_showing": "A merchant refund has not appeared yet.",
+     "request_refund": "The user wants money back from a merchant.",
+     "direct_debit_issue": "An unknown, failed or wrong direct debit.",
+     "verify_identity": "Identity checks, documents or selfie verification.",
+     "update_personal_details": "Change name, address, phone number or email.",
+     "close_account": "Close the account.",
+     "statement_request": "A statement, proof of balance or transaction export.",
+     "balance_not_updated": "The balance did not update after a transfer or deposit.",
+     "mobile_wallet": "Apple Pay, Google Pay or paying with a phone or watch.",
+     "virtual_card": "Create or use a virtual or disposable card.",
+     "spending_limits": "Card or account limits and how to change them.",
+     "savings_interest": "Savings accounts, interest rates or savings pots.",
+     "fraud_or_scam": "The user thinks they were scammed or someone else used their account.",
+     "app_login_problem": "Cannot log in to the app, passcode or new-device problems.",
+     "talk_to_human": "The user asks for a person or an agent.",
+     "other": "None of the above."
+    }
+   },
+   "needs_account_access": {
+    "type": "noul",
+    "instructions": "Does handling this request require looking at or changing the user's own account, cards or transactions?",
+    "criteria": {
+     "true": "The request is about the user's own money, cards, payments or personal data.",
+     "false": "A general question that public product information can answer."
+    }
+   }
+  },
+  "gate": null
+ },
+ "samples": [
+  {
+   "state": "I ordered a new card 10 days ago and it still hasn't shown up. Can I track it?",
+   "note": "synthetic example"
+  },
+  {
+   "state": "there's a payment of 79.99 from DGTL*STRMSVC on my card that I never made",
+   "note": "synthetic example"
+  },
+  {
+   "state": "What rate do you use to convert pounds to euros at the weekend?",
+   "note": "synthetic example"
+  },
+  {
+   "state": "I sent £300 to my landlord yesterday and he says it hasn't arrived. Can you check where it is?",
+   "note": "synthetic example"
+  },
+  {
+   "state": "Got a text saying my account was frozen and I read them the code you sent me. Now £1,200 is gone. HELP",
+   "note": "synthetic example"
+  },
+  {
+   "state": "can I pay with my watch?",
+   "note": "synthetic example"
+  }
+ ],
+ "yaml": "# Tez schema (format: docs/API.md, \"Schema files\"). Gallery example for a digital-banking assistant.\n# More than 26 options: zero-shot letters run a chunked tournament (several passes); a trained probe answers in one pass.\nname: intent-router\ndescription: Send each assistant request to one of many intents or tools, and flag whether it needs the user's own account.\nstate: \"One user request to an in-app assistant, as text.\"\nquestions:\n  intent:\n    type: choice\n    instructions: Which intent or tool should handle this request?\n    criteria:\n      card_not_arrived: A new or replacement card has not arrived yet.\n      activate_card: How to activate a card that has arrived.\n      card_lost_or_stolen: The card is lost, stolen or may be compromised.\n      card_payment_declined: A card payment was declined or failed.\n      card_payment_not_recognised: A card payment the user does not recognise.\n      contactless_not_working: Contactless or tap-to-pay does not work.\n      change_pin: Change, reset or unblock the card PIN.\n      atm_cash_problem: An ATM withdrawal went wrong, such as no cash or the wrong amount.\n      top_up_failed: Adding money to the account failed.\n      top_up_pending: A top-up is still pending or has not arrived.\n      transfer_not_received: A sent transfer has not reached the recipient.\n      transfer_failed: A transfer failed or came back.\n      cancel_transfer: Cancel a transfer that was already sent.\n      add_payee: Add, edit or trust a payee or beneficiary.\n      exchange_rate: The exchange rate applied or offered.\n      fee_question: Why a fee was charged, or what a service costs.\n      refund_not_showing: A merchant refund has not appeared yet.\n      request_refund: The user wants money back from a merchant.\n      direct_debit_issue: An unknown, failed or wrong direct debit.\n      verify_identity: Identity checks, documents or selfie verification.\n      update_personal_details: Change name, address, phone number or email.\n      close_account: Close the account.\n      statement_request: A statement, proof of balance or transaction export.\n      balance_not_updated: The balance did not update after a transfer or deposit.\n      mobile_wallet: Apple Pay, Google Pay or paying with a phone or watch.\n      virtual_card: Create or use a virtual or disposable card.\n      spending_limits: Card or account limits and how to change them.\n      savings_interest: Savings accounts, interest rates or savings pots.\n      fraud_or_scam: The user thinks they were scammed or someone else used their account.\n      app_login_problem: Cannot log in to the app, passcode or new-device problems.\n      talk_to_human: The user asks for a person or an agent.\n      other: None of the above.\n  needs_account_access:\n    type: noul\n    instructions: Does handling this request require looking at or changing the user's own account, cards or transactions?\n    criteria:\n      \"true\": The request is about the user's own money, cards, payments or personal data.\n      \"false\": A general question that public product information can answer.\n"
+}

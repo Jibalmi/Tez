@@ -1,0 +1,1400 @@
+{
+  "meta": {
+    "source": "BENCHMARKS.md (every value copied from it; section named per table)",
+    "machine": "RTX 5080 laptop GPU (16 GB), llama.cpp b11100",
+    "default_model": "Gemma 4 12B Q8_0, frozen, zero training",
+    "jev_note": "Jev was never run here (closed API); its figures are third-party published and marked as such.",
+    "laya_note": "Laya's three checkpoints answered byte-identical rows on the same GPU; Laya's published numbers reproduce in this harness (base 0.362, fine-tuned 0.766, Khmer 0.000)."
+  },
+  "headline": [
+    {
+      "label": "typed-decisions, zero-shot",
+      "value": 0.704,
+      "unit": "accuracy",
+      "detail": "Gemma 4 12B Q8_0 letter readout, 2,000 decisions, no labels",
+      "source": "BENCHMARKS.md §1"
+    },
+    {
+      "label": "typed-decisions, probe",
+      "value": 0.793,
+      "unit": "accuracy",
+      "detail": "logistic probe on the frozen Qwen3.5-4B, layer 26 (0.794 at layer -12 in the first sweep)",
+      "source": "BENCHMARKS.md §4b, §4c"
+    },
+    {
+      "label": "MASSIVE intent, 11 languages",
+      "value": 0.885,
+      "unit": "macro accuracy",
+      "detail": "zero-shot; laya-multilingual 0.524",
+      "source": "BENCHMARKS.md §1 Languages"
+    },
+    {
+      "label": "voice command, per streamed word",
+      "value": 30,
+      "unit": "ms compute (45 ms round trip)",
+      "detail": "220 spoken commands, 16 actions, intent accuracy 0.905",
+      "source": "BENCHMARKS.md §3"
+    },
+    {
+      "label": "harmful actions while streaming",
+      "value": "1 / 198",
+      "unit": "utterances",
+      "detail": "class-aware early-commit policy",
+      "source": "BENCHMARKS.md §3"
+    }
+  ],
+  "h2h": {
+    "title": "Same rows, same machine: Tez vs Laya on Laya's own benchmarks",
+    "source": "BENCHMARKS.md §1 (experiments/bench_h2h.py)",
+    "systems": [
+      "Tez zero-shot",
+      "laya",
+      "laya-multilingual",
+      "laya-typed-decisions",
+      "Jev (published)"
+    ],
+    "rows": [
+      {
+        "task": "AG News",
+        "n": 400,
+        "note": "in Laya's training mix",
+        "values": [
+          0.88,
+          0.932,
+          0.948,
+          0.932,
+          0.91
+        ]
+      },
+      {
+        "task": "DAIR Emotion",
+        "n": 400,
+        "values": [
+          0.54,
+          0.55,
+          0.487,
+          0.547,
+          0.48
+        ]
+      },
+      {
+        "task": "Banking77",
+        "n": 400,
+        "note": "77 options, chunked tournament for Tez",
+        "values": [
+          0.713,
+          0.395,
+          0.357,
+          0.388,
+          0.87
+        ]
+      },
+      {
+        "task": "SST-5",
+        "n": 400,
+        "note": "ordinal score",
+        "values": [
+          0.512,
+          0.362,
+          0.28,
+          0.46,
+          null
+        ]
+      },
+      {
+        "task": "BoolQ",
+        "n": 400,
+        "note": "noul; in Laya's mix",
+        "values": [
+          0.85,
+          0.843,
+          0.782,
+          0.835,
+          null
+        ]
+      },
+      {
+        "task": "prompt-injections",
+        "n": 116,
+        "note": "noul, held out",
+        "values": [
+          0.759,
+          0.672,
+          0.569,
+          0.647,
+          null
+        ]
+      },
+      {
+        "task": "MASSIVE intent, English",
+        "n": 100,
+        "note": "20 options",
+        "values": [
+          0.9,
+          0.83,
+          0.71,
+          0.82,
+          null
+        ]
+      },
+      {
+        "task": "XNLI, English",
+        "n": 100,
+        "values": [
+          0.73,
+          0.9,
+          0.86,
+          0.92,
+          null
+        ]
+      },
+      {
+        "task": "typed-decisions",
+        "n": 2000,
+        "note": "Tez 4-shot in cached prefix: 0.725; laya-typed-decisions is fine-tuned on this benchmark's own train split",
+        "values": [
+          0.704,
+          0.362,
+          0.352,
+          0.766,
+          0.727
+        ]
+      }
+    ],
+    "summary": "Zero-shot Tez wins six of nine English tasks and every language; Laya wins where it was trained (AG News, NLI) and on single-question latency."
+  },
+  "typed_decisions_by_workflow": {
+    "source": "BENCHMARKS.md §1",
+    "systems": [
+      "Tez zero-shot",
+      "laya-typed-decisions (fine-tuned)"
+    ],
+    "rows": [
+      {
+        "workflow": "agent-trace observability",
+        "values": [
+          0.592,
+          0.732
+        ]
+      },
+      {
+        "workflow": "customer service",
+        "values": [
+          0.768,
+          0.764
+        ]
+      },
+      {
+        "workflow": "invoice processing",
+        "values": [
+          0.768,
+          0.804
+        ]
+      },
+      {
+        "workflow": "security incidents",
+        "values": [
+          0.688,
+          0.766
+        ]
+      }
+    ],
+    "by_primitive_tez": {
+      "noul": 0.81,
+      "choice": 0.68,
+      "score": 0.64
+    }
+  },
+  "languages": {
+    "title": "MASSIVE intent, 20 options, 100 cases per language",
+    "source": "BENCHMARKS.md §1 Languages; English-only probe row from §4c",
+    "langs": [
+      "en",
+      "de",
+      "fr",
+      "es",
+      "ja",
+      "zh-CN",
+      "ar",
+      "hi",
+      "th",
+      "ko",
+      "km"
+    ],
+    "series": [
+      {
+        "system": "Tez zero-shot (12B letters)",
+        "values": [
+          0.9,
+          0.87,
+          0.87,
+          0.89,
+          0.93,
+          0.91,
+          0.87,
+          0.9,
+          0.89,
+          0.91,
+          0.79
+        ],
+        "macro": 0.885
+      },
+      {
+        "system": "4B probe trained on English only",
+        "values": [
+          0.91,
+          0.85,
+          0.84,
+          0.84,
+          0.88,
+          0.9,
+          0.74,
+          0.75,
+          0.67,
+          0.86,
+          0.59
+        ],
+        "macro": 0.803
+      },
+      {
+        "system": "laya-multilingual",
+        "values": [
+          0.71,
+          0.5,
+          0.6,
+          0.58,
+          0.64,
+          0.65,
+          0.46,
+          0.47,
+          0.47,
+          0.47,
+          0.21
+        ],
+        "macro": 0.524
+      },
+      {
+        "system": "laya",
+        "values": [
+          0.83,
+          0.42,
+          0.59,
+          0.51,
+          0.52,
+          0.62,
+          0.12,
+          0.09,
+          0.08,
+          0.11,
+          0.0
+        ],
+        "macro": 0.354
+      },
+      {
+        "system": "laya-typed-decisions",
+        "values": [
+          0.82,
+          0.39,
+          0.59,
+          0.46,
+          0.55,
+          0.59,
+          0.08,
+          0.11,
+          0.1,
+          0.06,
+          0.05
+        ],
+        "macro": 0.345
+      }
+    ],
+    "macro_ece_shipped": {
+      "Tez": 0.099,
+      "laya": 0.487,
+      "laya-multilingual": 0.299,
+      "laya-typed-decisions": 0.338
+    }
+  },
+  "xnli_loss": {
+    "title": "XNLI, 100 per language: the one family where Laya's trained encoder is ahead",
+    "source": "BENCHMARKS.md §1 XNLI",
+    "langs": [
+      "en",
+      "de",
+      "fr",
+      "es",
+      "ar",
+      "hi",
+      "th",
+      "zh",
+      "ru",
+      "tr"
+    ],
+    "series": [
+      {
+        "system": "Tez",
+        "values": [
+          0.73,
+          0.68,
+          0.65,
+          0.74,
+          0.68,
+          0.71,
+          0.7,
+          0.68,
+          0.71,
+          0.71
+        ],
+        "macro": 0.699
+      },
+      {
+        "system": "laya",
+        "values": [
+          0.9,
+          0.68,
+          0.76,
+          0.8,
+          0.43,
+          0.46,
+          0.39,
+          0.71,
+          0.56,
+          0.4
+        ],
+        "macro": 0.609
+      },
+      {
+        "system": "laya-multilingual",
+        "values": [
+          0.86,
+          0.8,
+          0.85,
+          0.8,
+          0.78,
+          0.71,
+          0.76,
+          0.79,
+          0.78,
+          0.81
+        ],
+        "macro": 0.794
+      }
+    ]
+  },
+  "calibration_order_latency": {
+    "source": "BENCHMARKS.md §1 Calibration, order robustness, latency",
+    "systems": [
+      "Tez",
+      "laya",
+      "laya-ml",
+      "laya-td",
+      "Jev (published)"
+    ],
+    "rows": [
+      {
+        "metric": "mean ECE-15 as shipped",
+        "values": [
+          0.212,
+          0.323,
+          0.253,
+          0.226,
+          0.246
+        ],
+        "better": "lower"
+      },
+      {
+        "metric": "mean ECE-15 after one temperature per task (2-fold OOF)",
+        "values": [
+          0.078,
+          0.071,
+          0.103,
+          0.068,
+          null
+        ],
+        "better": "lower"
+      },
+      {
+        "metric": "option-order flip, MASSIVE-en (20 options)",
+        "values": [
+          0.07,
+          0.18,
+          0.2,
+          0.15,
+          0.13
+        ],
+        "better": "lower"
+      },
+      {
+        "metric": "ms per decision, p50 (this GPU)",
+        "values": [
+          "57-250",
+          "25-50",
+          "23-35",
+          "36-52",
+          "236-276"
+        ],
+        "better": "lower"
+      }
+    ]
+  },
+  "readouts_typed_decisions": {
+    "title": "Four ways to read a decision on typed-decisions (2,000 test decisions)",
+    "source": "BENCHMARKS.md §4c Calibration and decision types; §4c Few labels",
+    "rows": [
+      {
+        "readout": "12B letters (zero-shot)",
+        "labels": "none",
+        "accuracy": 0.705,
+        "ece": 0.262,
+        "ece_after_temperature": 0.067,
+        "choice": 0.68,
+        "noul": 0.812,
+        "score": 0.642
+      },
+      {
+        "readout": "4B letters (zero-shot)",
+        "labels": "none",
+        "accuracy": 0.489,
+        "ece": 0.226,
+        "ece_after_temperature": 0.12,
+        "choice": 0.583,
+        "noul": 0.518,
+        "score": 0.398
+      },
+      {
+        "readout": "4B logit lens, layer 29 (zero-shot)",
+        "labels": "none",
+        "accuracy": 0.583,
+        "ece": 0.161,
+        "ece_after_temperature": 0.051,
+        "choice": 0.602,
+        "noul": 0.692,
+        "score": 0.487
+      },
+      {
+        "readout": "12B prior + 50 typical labels per question",
+        "labels": "50 per question",
+        "accuracy": 0.772,
+        "ece": 0.028,
+        "ece_after_temperature": 0.028,
+        "choice": 0.733,
+        "noul": 0.853,
+        "score": 0.74,
+        "note": "0.766 averaged over 3 seeds in the few-labels table"
+      },
+      {
+        "readout": "4B probe, layer 26",
+        "labels": "all 300 per question",
+        "accuracy": 0.793,
+        "ece": 0.023,
+        "ece_after_temperature": 0.011,
+        "choice": 0.767,
+        "noul": 0.873,
+        "score": 0.752
+      }
+    ],
+    "references": [
+      {
+        "system": "laya-typed-decisions (fine-tuned on the train split)",
+        "accuracy": 0.766
+      },
+      {
+        "system": "Jev (published)",
+        "accuracy": 0.727,
+        "ece": 0.246
+      }
+    ]
+  },
+  "probe_layers": {
+    "title": "Probe accuracy and intrinsic dimension by layer, frozen Qwen3.5-4B",
+    "source": "BENCHMARKS.md §4c intrinsic dimension",
+    "layers": [
+      2,
+      6,
+      10,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32
+    ],
+    "probe_accuracy": [
+      0.483,
+      0.528,
+      0.551,
+      0.661,
+      0.737,
+      0.777,
+      0.79,
+      0.792,
+      0.791,
+      0.793,
+      0.79,
+      0.787,
+      0.772
+    ],
+    "intrinsic_dimension": [
+      8.9,
+      11.1,
+      12.0,
+      12.7,
+      12.1,
+      11.1,
+      9.9,
+      9.8,
+      9.2,
+      9.3,
+      9.3,
+      9.8,
+      10.6
+    ],
+    "reversed_options_same_probe": {
+      "layers": [
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32
+      ],
+      "trained_order": [
+        0.544,
+        0.551,
+        0.574,
+        0.661,
+        0.737,
+        0.777,
+        0.79,
+        0.792,
+        0.791,
+        0.793,
+        0.79,
+        0.787,
+        0.772
+      ],
+      "reversed": [
+        0.543,
+        0.551,
+        0.574,
+        0.66,
+        0.7,
+        0.753,
+        0.68,
+        0.69,
+        0.612,
+        0.589,
+        0.564,
+        0.562,
+        0.536
+      ],
+      "source": "BENCHMARKS.md §4c Decide, then bind"
+    }
+  },
+  "few_labels": {
+    "title": "Labelled rows per question (layer 26, 3 seeds)",
+    "source": "BENCHMARKS.md §4c Few labels",
+    "n": [
+      5,
+      10,
+      25,
+      50
+    ],
+    "series": [
+      {
+        "name": "random rows, logistic probe",
+        "values": [
+          0.592,
+          0.669,
+          0.707,
+          0.741
+        ]
+      },
+      {
+        "name": "most typical rows first",
+        "values": [
+          0.64,
+          0.679,
+          0.734,
+          null
+        ]
+      },
+      {
+        "name": "random rows + 12B zero-shot prior",
+        "values": [
+          0.708,
+          0.717,
+          0.732,
+          0.752
+        ]
+      },
+      {
+        "name": "typical rows + 12B zero-shot prior",
+        "values": [
+          0.705,
+          0.713,
+          0.753,
+          0.766
+        ]
+      }
+    ],
+    "zero_label_reference": 0.705
+  },
+  "conformal": {
+    "title": "Conformal selection: a bound on the error rate among the decisions Tez acts on",
+    "source": "BENCHMARKS.md §4c Conformal selection (50 random half/half calibration splits)",
+    "bounds": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "rows": [
+      {
+        "readout": "4B probe L26 (gold labels)",
+        "accuracy": 0.793,
+        "acted": [
+          0.4,
+          0.61,
+          0.98
+        ],
+        "realised_error": [
+          0.052,
+          0.099,
+          0.202
+        ]
+      },
+      {
+        "readout": "12B letters (zero-shot)",
+        "accuracy": 0.705,
+        "acted": [
+          0.24,
+          0.36,
+          0.66
+        ],
+        "realised_error": [
+          0.052,
+          0.102,
+          0.205
+        ]
+      },
+      {
+        "readout": "4B probe on 12B pseudo-labels (no human labels)",
+        "accuracy": 0.703,
+        "acted": [
+          0.0,
+          0.0,
+          0.54
+        ],
+        "realised_error": [
+          0.0,
+          0.004,
+          0.2
+        ]
+      }
+    ],
+    "note": "The realised error tracks the bound. The pseudo-label probe has its teacher's accuracy but not a usable confidence."
+  },
+  "cold_start": {
+    "title": "Cold start: begin zero-shot, escalate, learn from the escalations",
+    "source": "BENCHMARKS.md §4c Cold start (stream = 6,000 train decisions)",
+    "rows": [
+      {
+        "threshold": 0.8,
+        "policy": "escalate-only",
+        "human_labels": 2059,
+        "automated_share": 0.66,
+        "automated_accuracy": 0.805,
+        "probe_held_out": 0.771
+      },
+      {
+        "threshold": 0.8,
+        "policy": "escalate + 5% audit",
+        "human_labels": 2724,
+        "automated_share": 0.55,
+        "automated_accuracy": 0.85,
+        "probe_held_out": 0.783
+      },
+      {
+        "threshold": 0.9,
+        "policy": "typical-seed + 5% audit",
+        "human_labels": 4173,
+        "automated_share": 0.32,
+        "automated_accuracy": 0.929,
+        "probe_held_out": 0.794
+      }
+    ],
+    "starting_point": 0.705
+  },
+  "pruned": {
+    "title": "Depth-pruned Qwen3.5-4B GGUFs served by llama.cpp",
+    "source": "BENCHMARKS.md §4c Depth-pruned GGUFs",
+    "rows": [
+      {
+        "blocks": "20 of 32",
+        "size_gb": 3.06,
+        "letters": 0.269,
+        "probe": 0.787,
+        "ms_letters": 85,
+        "ms_probe": 48
+      },
+      {
+        "blocks": "24 of 32",
+        "size_gb": 3.53,
+        "letters": 0.58,
+        "probe": 0.793,
+        "ms_letters": 104,
+        "ms_probe": 58
+      },
+      {
+        "blocks": "29 of 32",
+        "size_gb": 4.13,
+        "letters": 0.58,
+        "probe": 0.781,
+        "ms_letters": 125,
+        "ms_probe": 70
+      },
+      {
+        "blocks": "32 of 32",
+        "size_gb": 4.48,
+        "letters": 0.483,
+        "probe": 0.776,
+        "ms_letters": 136,
+        "ms_probe": 84
+      }
+    ],
+    "caveat": "On Laya's public suite the 24-block cut lowers zero-shot letters by 17.4 points on average: cut for probes, validate per task for letters."
+  },
+  "latency_breakdown": {
+    "title": "Where a decision's latency goes (100 prompts, p50 / p90 ms)",
+    "source": "BENCHMARKS.md §4c Where a decision's latency goes",
+    "columns": [
+      "completion, n_probs 0",
+      "completion, n_probs 20",
+      "completion, n_probs 200",
+      "embedding (probe readout)"
+    ],
+    "rows": [
+      {
+        "model": "Qwen3.5-4B, 20 of 32 blocks",
+        "p50": [
+          87,
+          80,
+          85,
+          48
+        ],
+        "p90": [
+          111,
+          86,
+          92,
+          50
+        ]
+      },
+      {
+        "model": "Qwen3.5-4B, 24 of 32 blocks",
+        "p50": [
+          112,
+          100,
+          104,
+          58
+        ],
+        "p90": [
+          121,
+          117,
+          114,
+          89
+        ]
+      },
+      {
+        "model": "Qwen3.5-4B, 29 of 32 blocks",
+        "p50": [
+          122,
+          116,
+          125,
+          70
+        ],
+        "p90": [
+          130,
+          125,
+          135,
+          81
+        ]
+      },
+      {
+        "model": "Qwen3.5-4B, all 32 blocks",
+        "p50": [
+          128,
+          130,
+          136,
+          84
+        ],
+        "p90": [
+          148,
+          139,
+          159,
+          109
+        ]
+      },
+      {
+        "model": "Gemma 4 12B Q8",
+        "p50": [
+          155,
+          181,
+          207,
+          172
+        ],
+        "p90": [
+          186,
+          216,
+          228,
+          179
+        ]
+      }
+    ]
+  },
+  "voice": {
+    "title": "Voice to instant action: 220 spoken commands, 16 actions",
+    "source": "BENCHMARKS.md §3",
+    "rows": [
+      {
+        "metric": "intent accuracy, strict / accepting the second action of compound commands",
+        "value": "0.905 / 0.982"
+      },
+      {
+        "metric": "out-of-scope recall / precision",
+        "value": "1.000 / 0.917"
+      },
+      {
+        "metric": "per streamed word, compute / HTTP round trip (p50)",
+        "value": "30 / 45 ms"
+      },
+      {
+        "metric": "tokens evaluated per word",
+        "value": "11 (358 with the transcript first)"
+      },
+      {
+        "metric": "harmful actions, class-aware early commit",
+        "value": "1 / 198"
+      },
+      {
+        "metric": "compound commands as two decisions",
+        "value": "22 / 22"
+      },
+      {
+        "metric": "live from audio: 'open notes and type hello world'",
+        "value": "Notepad open at +652 ms, 1.3 s before speech ends"
+      },
+      {
+        "metric": "ASR (faster-whisper base.en) WER on synthetic speech",
+        "value": "7.8 %, intent agreement with text 97.3 %"
+      }
+    ]
+  },
+  "semif": {
+    "title": "SemIf's benchmark (authored 144 decisions), frozen models",
+    "source": "BENCHMARKS.md §2",
+    "rows": [
+      {
+        "model": "Gemma 4 12B Q8_0",
+        "authored": 0.943,
+        "ci": "0.897-0.981",
+        "perturbation": 0.992,
+        "reversal_flips": "0 / 36",
+        "p50_ms": 110
+      },
+      {
+        "model": "Gemma 4 12B Q4_K_M",
+        "authored": 0.918,
+        "ci": "0.871-0.958",
+        "perturbation": 0.981,
+        "reversal_flips": "1 / 36",
+        "p50_ms": 100
+      },
+      {
+        "model": "Qwen3.5-9B Q8_0",
+        "authored": 0.912,
+        "ci": "0.863-0.955",
+        "perturbation": 0.868,
+        "reversal_flips": "3 / 36",
+        "p50_ms": 92
+      },
+      {
+        "model": "Qwen3.5-4B BF16 (SemIf's model, reproduced)",
+        "authored": 0.813,
+        "ci": "0.755-0.865",
+        "perturbation": null,
+        "reversal_flips": null,
+        "p50_ms": 224
+      },
+      {
+        "model": "Gemma 3 4B Q4_K_M",
+        "authored": 0.646,
+        "ci": "0.570-0.728",
+        "perturbation": 0.729,
+        "reversal_flips": "13 / 36",
+        "p50_ms": 40
+      },
+      {
+        "model": "Llama 3.2 3B Q4_K_M",
+        "authored": 0.358,
+        "ci": "0.319-0.399",
+        "perturbation": 0.496,
+        "reversal_flips": "10 / 36",
+        "p50_ms": 25
+      }
+    ],
+    "published": "SemIf published: Qwen3.5-4B 0.813 / EXL3 27B 0.958"
+  },
+  "jevbench_public": {
+    "title": "JevBench public tiers, scored with the leaderboard's formulas (not a leaderboard submission)",
+    "source": "BENCHMARKS.md §5 (experiments/bench_jevbench.py)",
+    "rows": [
+      {
+        "tier": "original",
+        "n": 72,
+        "accuracy": 0.944,
+        "intelligence": 91.9,
+        "ece": 0.053,
+        "median_s": 0.05,
+        "run": "experiment harness"
+      },
+      {
+        "tier": "easy",
+        "n": 48,
+        "accuracy": 1.0,
+        "intelligence": 100,
+        "ece": 0.0,
+        "median_s": 0.06,
+        "run": "experiment harness"
+      },
+      {
+        "tier": "hard",
+        "n": 111,
+        "accuracy": 0.703,
+        "intelligence": 55.2,
+        "ece": 0.251,
+        "median_s": 0.46,
+        "run": "experiment harness"
+      },
+      {
+        "tier": "original",
+        "n": 72,
+        "accuracy": 0.958,
+        "intelligence": 94.0,
+        "ece": 0.039,
+        "median_s": 0.052,
+        "run": "tez serve"
+      },
+      {
+        "tier": "easy",
+        "n": 48,
+        "accuracy": 1.0,
+        "intelligence": 100,
+        "ece": 0.0,
+        "median_s": 0.05,
+        "run": "tez serve"
+      },
+      {
+        "tier": "hard",
+        "n": 111,
+        "accuracy": 0.703,
+        "intelligence": 55.2,
+        "ece": 0.241,
+        "median_s": 0.716,
+        "run": "tez serve"
+      }
+    ],
+    "weighted_public_intelligence": 78.2,
+    "caveat": "The leaderboard's headline uses a held-out tier plus a judge tier, so these public numbers are indicative only. Tez has not been submitted; it holds no rank.",
+    "weighted_public_intelligence_server": 79.0,
+    "server_source": "BENCHMARKS.md §5, Through the runtime (release/jevbench/run_public.py); hard tier at 8k without --swa-full, so its times are pessimistic"
+  },
+  "negative_results": {
+    "source": "README.md findings; BENCHMARKS.md §4, §4b, §4c",
+    "items": [
+      "Thinking budgets before the readout: null or negative at 12B, and 2-4 s per decision.",
+      "Small-to-large cascade (Gemma 3 4B to 12B): 0.854 at 117 ms vs the 12B alone at 0.951 at 110 ms.",
+      "Zhao contextual calibration: 0.951 to 0.778; harmful when an option means 'insufficient'.",
+      "Option elimination: within 2 points everywhere, up to a second pass.",
+      "A probe trained on a teacher's answers matches the teacher and never beats it by more than half a point.",
+      "One universal 'is this answer right?' probe does not transfer to an unseen workflow.",
+      "The 24-block cut lowers zero-shot letters by 17.4 points on Laya's public suite.",
+      "Collapsing commit bounds for streaming voice: neither earlier nor as safe as the default threshold."
+    ]
+  },
+  "typed_decisions_detail": {
+    "title": "typed-decisions beyond accuracy: agreement with the benchmark's teacher distribution",
+    "source": "BENCHMARKS.md §1 (rows '… soft accuracy vs teacher distribution', '… Brier vs teacher distribution', '… score MAE')",
+    "systems": [
+      "Tez zero-shot",
+      "laya",
+      "laya-multilingual",
+      "laya-typed-decisions",
+      "Jev (published)"
+    ],
+    "rows": [
+      {
+        "metric": "soft accuracy vs teacher distribution",
+        "values": [
+          0.575,
+          0.331,
+          0.328,
+          0.471,
+          0.58
+        ],
+        "better": "higher"
+      },
+      {
+        "metric": "Brier vs teacher distribution",
+        "values": [
+          0.355,
+          0.316,
+          0.463,
+          0.061,
+          0.148
+        ],
+        "better": "lower"
+      },
+      {
+        "metric": "score MAE",
+        "values": [
+          0.482,
+          0.694,
+          0.761,
+          0.242,
+          0.391
+        ],
+        "better": "lower"
+      }
+    ],
+    "tez_4shot": {
+      "accuracy": 0.725,
+      "soft_accuracy": 0.583,
+      "note": "4 worked examples in the cached prefix, no training"
+    }
+  },
+  "voice_per_word": {
+    "title": "Decision cost per streamed word, Gemma 4 12B Q8_0, p50",
+    "source": "BENCHMARKS.md §3 (table and the sentence on --swa-full)",
+    "rows": [
+      {
+        "variant": "transcript last, --swa-full (used)",
+        "compute_ms": 30,
+        "round_trip_ms": 45,
+        "tokens_per_word": 11,
+        "intent_accuracy": 0.905
+      },
+      {
+        "variant": "transcript first (control)",
+        "compute_ms": 148,
+        "round_trip_ms": 221,
+        "tokens_per_word": 358,
+        "intent_accuracy": 0.877
+      },
+      {
+        "variant": "transcript last, before --swa-full",
+        "compute_ms": 205,
+        "round_trip_ms": null,
+        "tokens_per_word": 394,
+        "intent_accuracy": null
+      }
+    ],
+    "note": "Before --swa-full the server re-evaluated all 394 tokens every word (205 ms): Gemma's sliding-window cache cannot be rolled back without it."
+  },
+  "semif_extra": {
+    "source": "BENCHMARKS.md §2",
+    "permutation_row": {
+      "model": "Qwen3.5-4B + 6-permutation batch",
+      "authored": 0.912,
+      "p50_ms": 321
+    },
+    "published": [
+      {
+        "model": "SemIf published: Qwen3.5-4B",
+        "authored": 0.813,
+        "perturbation": 0.766
+      },
+      {
+        "model": "SemIf published: EXL3 27B",
+        "authored": 0.958,
+        "perturbation": null
+      }
+    ],
+    "nll_brier": [
+      {
+        "model": "Gemma 4 12B Q8_0",
+        "nll": "0.478 → 0.158",
+        "brier": "0.094 → 0.075"
+      },
+      {
+        "model": "Gemma 4 12B Q4_K_M",
+        "nll": "0.549 → 0.184",
+        "brier": "0.130 → 0.092"
+      },
+      {
+        "model": "Qwen3.5-4B BF16 (SemIf's model, reproduced)",
+        "nll": "0.427",
+        "brier": "0.248"
+      },
+      {
+        "model": "Gemma 3 4B Q4_K_M",
+        "nll": "3.433 → 0.696",
+        "brier": "0.661 → 0.397"
+      },
+      {
+        "model": "Llama 3.2 3B Q4_K_M",
+        "nll": "1.673 → 1.043",
+        "brier": "0.827 → 0.627"
+      }
+    ],
+    "paired_tests": "Paired McNemar on the same 144 rows: 12B Q8 vs Qwen3.5-4B p = 5e-5; 12B vs Qwen3.5-4B with 6-permutation averaging p = 0.18 (not significant); Q8 vs Q4 p = 0.25. SemIf's 0.813 reproduces exactly (0.8132).",
+    "calibration_recipes": {
+      "title": "Calibration recipes, Gemma 4 12B Q8, 144 rows, out-of-fold temperature",
+      "rows": [
+        {
+          "recipe": "raw",
+          "nll": 0.478,
+          "brier": 0.094,
+          "ece": 0.047
+        },
+        {
+          "recipe": "temperature",
+          "nll": 0.193,
+          "brier": 0.083,
+          "ece": 0.027
+        },
+        {
+          "recipe": "6-permutation mean",
+          "nll": 0.281,
+          "brier": 0.083,
+          "ece": 0.038
+        },
+        {
+          "recipe": "6-permutation mean + temperature",
+          "nll": 0.158,
+          "brier": 0.075,
+          "ece": 0.037
+        }
+      ],
+      "zhao": "Zhao contextual calibration: accuracy 0.951 → 0.778 (harmful: empty evidence legitimately selects 'insufficient'; the 3-placeholder average does not rescue it)."
+    }
+  },
+  "cold_start_full": {
+    "title": "Cold start: begin zero-shot, escalate, learn from the escalations",
+    "source": "BENCHMARKS.md §4c Cold start (stream = the 6,000 train decisions; held-out = test split; starting point: the 12B's zero-shot readout, 0.705)",
+    "columns": [
+      "threshold",
+      "policy",
+      "human labels",
+      "automated share",
+      "automated accuracy",
+      "whole stream (human answers count as correct)",
+      "probe held-out",
+      "same number of random labels"
+    ],
+    "rows": [
+      {
+        "threshold": 0.6,
+        "policy": "escalate-only (audit 0.0)",
+        "human_labels": 316,
+        "automated_share": 0.95,
+        "automated_accuracy": 0.707,
+        "whole_stream": 0.723,
+        "probe_held_out": 0.719,
+        "random_labels": 0.712
+      },
+      {
+        "threshold": 0.6,
+        "policy": "escalate+audit (audit 0.05)",
+        "human_labels": 972,
+        "automated_share": 0.84,
+        "automated_accuracy": 0.747,
+        "whole_stream": 0.788,
+        "probe_held_out": 0.757,
+        "random_labels": 0.754
+      },
+      {
+        "threshold": 0.6,
+        "policy": "escalate+audit (audit 0.1)",
+        "human_labels": 1396,
+        "automated_share": 0.77,
+        "automated_accuracy": 0.777,
+        "whole_stream": 0.829,
+        "probe_held_out": 0.77,
+        "random_labels": 0.768
+      },
+      {
+        "threshold": 0.6,
+        "policy": "audit-train (audit 0.1)",
+        "human_labels": 1337,
+        "automated_share": 0.78,
+        "automated_accuracy": 0.745,
+        "whole_stream": 0.802,
+        "probe_held_out": 0.756,
+        "random_labels": 0.769
+      },
+      {
+        "threshold": 0.6,
+        "policy": "typical-seed (audit 0.05)",
+        "human_labels": 1279,
+        "automated_share": 0.8,
+        "automated_accuracy": 0.784,
+        "whole_stream": 0.827,
+        "probe_held_out": 0.763,
+        "random_labels": 0.765
+      },
+      {
+        "threshold": 0.8,
+        "policy": "escalate-only (audit 0.0)",
+        "human_labels": 2059,
+        "automated_share": 0.66,
+        "automated_accuracy": 0.805,
+        "whole_stream": 0.872,
+        "probe_held_out": 0.771,
+        "random_labels": 0.775
+      },
+      {
+        "threshold": 0.8,
+        "policy": "escalate+audit (audit 0.05)",
+        "human_labels": 2724,
+        "automated_share": 0.55,
+        "automated_accuracy": 0.85,
+        "whole_stream": 0.918,
+        "probe_held_out": 0.783,
+        "random_labels": 0.789
+      },
+      {
+        "threshold": 0.8,
+        "policy": "escalate+audit (audit 0.1)",
+        "human_labels": 2990,
+        "automated_share": 0.5,
+        "automated_accuracy": 0.868,
+        "whole_stream": 0.934,
+        "probe_held_out": 0.787,
+        "random_labels": 0.782
+      },
+      {
+        "threshold": 0.8,
+        "policy": "audit-train (audit 0.1)",
+        "human_labels": 2540,
+        "automated_share": 0.58,
+        "automated_accuracy": 0.811,
+        "whole_stream": 0.891,
+        "probe_held_out": 0.756,
+        "random_labels": 0.783
+      },
+      {
+        "threshold": 0.8,
+        "policy": "typical-seed (audit 0.05)",
+        "human_labels": 3068,
+        "automated_share": 0.51,
+        "automated_accuracy": 0.888,
+        "whole_stream": 0.943,
+        "probe_held_out": 0.785,
+        "random_labels": 0.778
+      },
+      {
+        "threshold": 0.9,
+        "policy": "escalate-only (audit 0.0)",
+        "human_labels": 2987,
+        "automated_share": 0.5,
+        "automated_accuracy": 0.835,
+        "whole_stream": 0.917,
+        "probe_held_out": 0.775,
+        "random_labels": 0.783
+      },
+      {
+        "threshold": 0.9,
+        "policy": "escalate+audit (audit 0.05)",
+        "human_labels": 3679,
+        "automated_share": 0.39,
+        "automated_accuracy": 0.871,
+        "whole_stream": 0.95,
+        "probe_held_out": 0.786,
+        "random_labels": 0.786
+      },
+      {
+        "threshold": 0.9,
+        "policy": "escalate+audit (audit 0.1)",
+        "human_labels": 3944,
+        "automated_share": 0.34,
+        "automated_accuracy": 0.897,
+        "whole_stream": 0.965,
+        "probe_held_out": 0.79,
+        "random_labels": 0.784
+      },
+      {
+        "threshold": 0.9,
+        "policy": "audit-train (audit 0.1)",
+        "human_labels": 3473,
+        "automated_share": 0.42,
+        "automated_accuracy": 0.836,
+        "whole_stream": 0.931,
+        "probe_held_out": 0.756,
+        "random_labels": 0.783
+      },
+      {
+        "threshold": 0.9,
+        "policy": "typical-seed (audit 0.05)",
+        "human_labels": 4173,
+        "automated_share": 0.32,
+        "automated_accuracy": 0.929,
+        "whole_stream": 0.977,
+        "probe_held_out": 0.794,
+        "random_labels": 0.789
+      }
+    ],
+    "weak_prior_note": "With the 4B's own letters (0.489) as the starting point instead, labels gathered only from uncertain decisions train a worse probe than random labels: τ 0.6: 1,207 labels → 0.678 vs random 0.746; τ 0.8: 3,335 labels → 0.784 vs random 0.776; τ 0.9: 4,561 labels → 0.793 vs random 0.791; τ 0.95: 5,470 labels → 0.795 vs random 0.793."
+  },
+  "negative_results_extra": {
+    "source": "BENCHMARKS.md §2, §4b, §4c; backbone check",
+    "items": [
+      {
+        "text": "A 3B model is at chance on SemIf's benchmark: Llama 3.2 3B scores 0.358 and 10 of 36 decisions flip when the options are reversed.",
+        "source": "BENCHMARKS.md §2"
+      },
+      {
+        "text": "Thinking budget of 64 tokens on the JevBench hard tier: 0.703 → 0.658 (p = 0.27) at 2.6 s per decision.",
+        "source": "BENCHMARKS.md §4b"
+      },
+      {
+        "text": "Qwen3.5-9B instead of the 12B: lower on SemIf's benchmark (0.912 vs 0.943) and on every head-to-head task measured (typed-decisions 0.622 vs 0.704); it saves about 3 GB.",
+        "source": "BENCHMARKS.md, Backbone check: Qwen3.5-9B Q8_0 vs Gemma 4 12B Q8_0"
+      },
+      {
+        "text": "Dawid–Skene label model over three zero-shot readouts: 0.617 as a teacher; probes trained on it 0.609 (hard) and 0.613 (soft).",
+        "source": "BENCHMARKS.md §4c No human labels"
+      },
+      {
+        "text": "DoLa (final layer minus layer 16): 0.523, below the plain logit lens at layer 29 (0.583).",
+        "source": "BENCHMARKS.md §4c Where to read"
+      },
+      {
+        "text": "Adaptive depth ties a fixed cut: the best stop-when-sure rule scores 0.789 at 22.0 layers on average; a fixed layer 26 scores 0.793.",
+        "source": "BENCHMARKS.md §4c Anytime depth"
+      },
+      {
+        "text": "LDA with a covariance from unlabelled states: 0.445 to 0.552 with 5 to 50 labels per question, below a logistic probe on the same rows.",
+        "source": "BENCHMARKS.md §4c Few labels"
+      },
+      {
+        "text": "Select-and-copy attention heads: 0.526 at best (top-1 head), the level of the 4B's own letters (0.490).",
+        "source": "BENCHMARKS.md §4c Select-and-copy attention readout"
+      },
+      {
+        "text": "Uncertainty-only labelling from a weak prior (the 4B's own letters): at τ 0.6, 1,207 labels train a 0.678 probe; the same number of random labels trains 0.746.",
+        "source": "BENCHMARKS.md §4c Cold start"
+      }
+    ]
+  }
+}

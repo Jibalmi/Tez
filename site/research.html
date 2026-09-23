@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research · Tez</title>
+<meta name="description" content="The Tez research report: how a typed decision is read from one forward pass of a frozen model, a reproduction of SemIf's benchmark, a voice-to-action loop, a head-to-head with Laya, the probe lab, negative results and every figure.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Tez research">
+<meta property="og:description" content="A 35-page report on reading typed decisions from one forward pass of a frozen language model, with every number sourced.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/css/tokens.css">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/docs.css">
+<link rel="stylesheet" href="./assets/css/research.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="./assets/js/site.js" defer></script>
+<script src="./assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container doc-shell is-wide">
+    <nav class="doc-nav" data-toc aria-label="Research sections">
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">The report</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="toc-panel" id="toc-panel">
+        <div class="toc-group">
+          <p class="toc-heading">Research</p>
+          <ul class="toc-list">
+            <li><a href="#report">The report</a></li>
+            <li><a href="#findings">Findings worth knowing</a></li>
+            <li><a href="#probe-lab">The probe lab</a></li>
+            <li><a href="#figures">Figures</a></li>
+            <li><a href="#negative">Negative results</a></li>
+            <li><a href="#cite">Cite</a></li>
+            <li><a href="#sources">Sources and notes</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="doc-main prose">
+      <header class="page-head">
+        <h1>Research</h1>
+        <p class="lead">How Tez reads a decision out of a frozen model, measured end to end: the mechanism, a reproduction of SemIf's benchmark, a voice-to-action loop, a head-to-head with Laya on its own datasets, and a probe lab that reads decisions from the middle of the network. The dead ends are in it too.</p>
+      </header>
+
+      <!-- ============================================================== report -->
+      <section class="doc-section is-first" aria-labelledby="report">
+        <h2 id="report">The report</h2>
+        <div class="report-block">
+          <div class="report-summary">
+            <p>A "System One" model answers a typed question (which option, yes or no, what level) by reading a probability distribution straight out of one forward pass, decoding nothing. The report shows that this works locally today with frozen open weights, measures where it breaks, and builds the use case it suits best. It was audited before release; its section 3.7 lists what the first draft got wrong and how each finding was corrected.</p>
+            <p>What it covers:</p>
+            <ul>
+              <li><strong>Mechanism and literature.</strong> How a typed decision is read from one forward pass, what Jev documents and what can only be inferred, why small models fail, and what "calibrated" has to mean.</li>
+              <li><strong>SemIf's benchmark, reproduced.</strong> A frozen Gemma 4 12B reaches 0.943 mean-family balanced accuracy on 144 three-option decisions; SemIf's own 4B reproduces exactly at 0.813, and averaging six option orderings takes it to 0.912, statistically level with the 12B.</li>
+              <li><strong>Latency as a systems problem.</strong> Constant material first, variable last, and <code>--swa-full</code> took a streamed voice decision from 205 ms to 30 ms per word.</li>
+              <li><strong>Voice to action.</strong> 220 spoken commands, an early-commit policy with action classes, and one harmful action in 198 utterances.</li>
+              <li><strong>Head-to-head with Laya</strong> on byte-identical rows and the same GPU, on Laya's datasets and in eleven languages, with the places Laya wins.</li>
+              <li><strong>The probe lab.</strong> Which layer to read, how many labels a probe needs, where to cut the served model, a conformal error bound, and the ideas that did not work.</li>
+              <li><strong>What a credible open decision model would have to show,</strong> the architecture that follows, the licences, and how to reproduce every run.</li>
+            </ul>
+          </div>
+          <aside class="report-card" aria-label="Download the report">
+            <span class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span>
+            <div>
+              <p class="report-title">Tez: an open, local “System One” decision layer</p>
+              <p class="report-subtitle">Typed decisions with calibrated confidence from a single forward pass</p>
+            </div>
+            <ul class="report-meta" aria-label="Report details">
+              <li><span class="pill">PDF</span></li>
+              <li><span class="pill">35 pages</span></li>
+              <li><span class="pill">0.4 MB</span></li>
+              <li><span class="pill">September 2026</span></li>
+            </ul>
+            <a class="btn btn-primary" href="./assets/Tez_research_report.pdf" download="Tez_research_report.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Download the report</a>
+            <ul class="report-links">
+              <li><a href="./assets/Tez_research_report.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Open the PDF in the browser</a></li>
+              <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/REPORT.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Read it on GitHub (Markdown)</a></li>
+              <li><a href="#cite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>Cite it</a></li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============================================================== findings -->
+      <section class="doc-section" aria-labelledby="findings">
+        <h2 id="findings">Findings worth knowing</h2>
+        <p>From the project README, for anyone about to build something like this.</p>
+        <ul class="findings">
+          <li><strong>The frozen model knows more than its letter logits say.</strong> A per-question linear probe on the frozen Qwen3.5-4B's hidden state (12 layers below the top) scores 0.794 on typed-decisions — above Laya's fine-tuned 0.766 and Jev's 0.727 — from a model whose own one-pass letter readout gets 0.49. Minutes of logistic regression, no LLM training, and the top third of the network can be skipped.</li>
+          <li><strong>Reading early is cheap latency.</strong> Truncating the 4B to 20–24 of its 32 layers cuts prefill 1.30–1.54× with no loss in probe accuracy. The same probe recipe on Laya's tasks beats Laya's fine-tuned checkpoint on five of six, and reaches 0.860 on Banking77 (Jev 0.870) in one pass.</li>
+          <li><strong>Two cheap levers barely moved.</strong> A MiniLM shortlist lifts Banking77 from 0.713 to 0.738 in 1.1 passes; eliminate-then-rescore (PoE) is within ±2 points everywhere and is recorded as negative.</li>
+          <li><strong>Worked examples in the cached prefix are free accuracy</strong> (+2 pts on 2,000 decisions, +5 on schema-specific questions); thinking budgets before the readout, ordinal expected-value readouts and digit/lowercase answer symbols are null or negative at 12B.</li>
+          <li><strong>Symbol-logit decisions are scale-gated.</strong> A 3B model is at chance with 28 % order sensitivity and no calibration trick recovers it; a 4B sits at 0.646 with a third of decisions flipping under option reversal. Screen the backbone for symbol binding first.</li>
+          <li><strong>Permutation averaging is the cheapest accuracy in the stack:</strong> +10 points on Qwen3.5-4B, +7 on Gemma 3 4B, in one batched forward pass.</li>
+          <li><strong>Zhao et al. contextual calibration is harmful here</strong> (0.951 → 0.778, and averaging three placeholders does not rescue it): with the evidence blanked the model <em>correctly</em> answers "insufficient", so dividing that out deletes real answers. Never apply it to option sets that contain an abstain-style answer.</li>
+          <li><strong>Prompt layout is a systems decision:</strong> constant material first, variable last. Transcript-last cut per-word latency 7× <em>and</em> raised accuracy (0.868 → 0.905).</li>
+          <li><strong>A confident <code>none</code> on a partial transcript means "keep listening", never "do nothing"</strong> — the one rule that makes early commit work.</li>
+        </ul>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez#what-we-measured">README.md</a>; the numbers behind each are in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a> and on the <a href="./benchmarks.html">benchmarks page</a>.</p>
+      </section>
+
+      <!-- ============================================================== probe lab -->
+      <section class="doc-section" aria-labelledby="probe-lab">
+        <h2 id="probe-lab">The probe lab</h2>
+        <p>A second round asked what makes the mid-depth probe usable on any schema, borrowing methods from other fields. Almost everything runs on one cache of every layer's hidden state of the frozen Qwen3.5-4B (and layers 0 to 40 of Gemma 4 12B) for the 8,000 typed-decisions prompts, so each idea is cheap to test and every table reuses the same states.</p>
+        <figure class="lab-figure">
+          <a class="paper" href="./assets/figures/tez_lab.png"><img src="./assets/figures/tez_lab.png" width="2087" height="2002" loading="lazy" decoding="async" alt="The probe lab figure: sixteen panels on reading decisions from the middle of a frozen model. Open full size."></a>
+          <figcaption>Reading decisions from the middle of a frozen model, sixteen panels (a to p), typed-decisions with 2,000 test decisions unless stated. Select the figure to open it full size; the tables behind every panel are in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">BENCHMARKS.md §4c</a>.</figcaption>
+        </figure>
+        <h3 id="lab-results">Headline results</h3>
+        <ul>
+          <li><strong>The layer can be chosen without labels.</strong> The intrinsic dimension of unlabelled states bottoms out at layers 24 to 28 of the 4B, exactly the probe's accuracy plateau (0.79); the model's own confidence picks the wrong layer.</li>
+          <li><strong>Cut the served model where the decision is made.</strong> The first 24 of 32 blocks keep a probe at 0.793 (full model 0.776) at 58 ms instead of 84, from a 3.53 GB file. The same cut lowers the zero-shot letters by 17.4 points on average across Laya's public suite: cut for probes, validate per task for letters.</li>
+          <li><strong>Decide first, bind later.</strong> A probe trained on the usual option order still works on reversed options up to layer 14 and loses 20 points at layer 26: read at layer 18 if a schema may reorder its options.</li>
+          <li><strong>A decision needs 64 numbers.</strong> One PCA learned from unlabelled traffic keeps 0.790 of 0.793, and a PCA learned on other workflows keeps 0.782 on a new one.</li>
+          <li><strong>Label the typical rows first, and keep the zero-shot prior.</strong> Fifty typical labels per question on top of the 12B's zero-shot answers reach 0.766, the level of Laya's checkpoint fine-tuned on the whole train split.</li>
+          <li><strong>Calibrated as it comes.</strong> A logistic probe has an ECE of 0.023 as read, against 0.262 for the 12B's raw letters and 0.246 published for Jev.</li>
+          <li><strong>A guaranteed error rate.</strong> Conformal selection acts on 40 % of decisions with at most 5 % wrong (realised 5.2 %).</li>
+          <li><strong>Train in English, use in eleven languages.</strong> A MASSIVE probe trained on English rows only scores 0.803 macro over eleven languages (laya-multilingual 0.524).</li>
+          <li><strong>The benchmark is now the limit.</strong> Every supervised route lands at 0.79 to 0.80. Where the benchmark's own label is decisive the probe is right 98 % of the time; where its labels are split, 56 %.</li>
+        </ul>
+        <p class="source">Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">BENCHMARKS.md §4c</a>, <code>experiments/probe_lab.py</code>. Charts of the layer, label and conformal results are on the <a href="./benchmarks.html#layers">benchmarks page</a>.</p>
+      </section>
+
+      <!-- ============================================================== figures -->
+      <section class="doc-section" aria-labelledby="figures">
+        <h2 id="figures">Figures</h2>
+        <p>Every figure in <code>docs/figures/</code>, as published with the report. Select one to open it full size; the numbers behind each are in BENCHMARKS.md.</p>
+        <ul class="figure-grid">
+          <li>
+            <figure class="fig-card is-tall">
+              <a class="paper" href="./assets/figures/tez_dashboard.png"><img src="./assets/figures/tez_dashboard.png" width="2123" height="3960" loading="lazy" decoding="async" alt="Dashboard: every Tez measurement on one page. Open full size."></a>
+              <figcaption><span class="fig-name">Dashboard</span><span class="fig-desc">Every measurement on one page, 25 panels: the head-to-head with Laya, languages, calibration, SemIf, voice, conformal selection and the probes.</span><span class="fig-meta">tez_dashboard.png · 2123 × 3960</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/tez_lab.png"><img src="./assets/figures/tez_lab.png" width="2087" height="2002" loading="lazy" decoding="async" alt="Probe lab: sixteen panels on reading decisions from the middle of the network. Open full size."></a>
+              <figcaption><span class="fig-name">Probe lab</span><span class="fig-desc">Sixteen panels on reading decisions from the middle of the network: choosing the layer without labels, few labels, cold start, conformal selection, the cut 4B and decide-then-bind.</span><span class="fig-meta">tez_lab.png · 2087 × 2002</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/tez_vs_laya_vs_jev.png"><img src="./assets/figures/tez_vs_laya_vs_jev.png" width="1890" height="720" loading="lazy" decoding="async" alt="Bar chart of accuracy on Laya's nine public tasks for Tez, Laya and Jev. Open full size."></a>
+              <figcaption><span class="fig-name">Tez against Laya and Jev</span><span class="fig-desc">Accuracy on Laya's nine public tasks, same rows and GPU: Tez zero-shot, Laya's routed checkpoint, laya-typed-decisions where it applies, and Jev's published figures.</span><span class="fig-meta">tez_vs_laya_vs_jev.png · 1890 × 720</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/typed_decisions.png"><img src="./assets/figures/typed_decisions.png" width="1440" height="684" loading="lazy" decoding="async" alt="Bar chart of accuracy on typed-decisions for Tez, Laya, Jev and reference baselines. Open full size."></a>
+              <figcaption><span class="fig-name">typed-decisions</span><span class="fig-desc">400 cases, 2,000 decisions in four workflows: Tez zero-shot against Laya's base and fine-tuned checkpoints, Jev's published figure and three reference baselines.</span><span class="fig-meta">typed_decisions.png · 1440 × 684</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/languages.png"><img src="./assets/figures/languages.png" width="1260" height="1047" loading="lazy" decoding="async" alt="Dot plot of MASSIVE intent accuracy in eleven languages for Tez and two Laya checkpoints. Open full size."></a>
+              <figcaption><span class="fig-name">Languages</span><span class="fig-desc">MASSIVE intent in eleven languages, 20 options, 100 cases each: one frozen decoder against Laya's English and multilingual encoders.</span><span class="fig-meta">languages.png · 1260 × 1047</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/calibration.png"><img src="./assets/figures/calibration.png" width="1170" height="648" loading="lazy" decoding="async" alt="Bar chart of calibration error as shipped and after one temperature per task. Open full size."></a>
+              <figcaption><span class="fig-name">Calibration</span><span class="fig-desc">Mean ECE-15 over tasks as shipped and after one temperature per task, for Tez and Laya's three checkpoints, with Jev's published ECE as a reference line.</span><span class="fig-meta">calibration.png · 1170 × 648</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/order_flip.png"><img src="./assets/figures/order_flip.png" width="1440" height="612" loading="lazy" decoding="async" alt="Bar chart of how often the answer changes when options are reversed. Open full size."></a>
+              <figcaption><span class="fig-name">Option order</span><span class="fig-desc">How often the answer changes when the options are reversed, first 100 rows per task, for Tez and Laya's checkpoints, with Jev's published rate.</span><span class="fig-meta">order_flip.png · 1440 × 612</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/speed.png"><img src="./assets/figures/speed.png" width="1440" height="612" loading="lazy" decoding="async" alt="Bar chart of milliseconds per decision for Tez and Laya on eight tasks. Open full size."></a>
+              <figcaption><span class="fig-name">Latency</span><span class="fig-desc">Milliseconds per decision (p50) on the same GPU for eight tasks: Tez through llama-server over HTTP, Laya in-process.</span><span class="fig-meta">speed.png · 1440 × 612</span></figcaption>
+            </figure>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================== negative -->
+      <section class="doc-section" aria-labelledby="negative">
+        <h2 id="negative">Negative results</h2>
+        <p>What did not work, published and labelled as negative.</p>
+        <ul>
+          <li>Thinking budgets before the readout: null or negative at 12B, at 2.0 to 4.3 s per decision.</li>
+          <li>A small-to-large cascade (Gemma 3 4B, then the 12B on disagreement): 0.854 at 117 ms, against the 12B alone at 0.951 at 110 ms.</li>
+          <li>Zhao et al. contextual calibration: accuracy 0.951 → 0.778, harmful whenever an option means "insufficient".</li>
+          <li>Eliminate-then-rescore: within ±2 points everywhere, at the cost of up to a second pass.</li>
+          <li>Probes trained on zero-shot answers only match their teacher (0.709 against 0.705); a Dawid–Skene label model over several readouts reaches 0.617.</li>
+          <li>Uncertainty-only labelling from a weak prior trains a worse probe than the same number of random labels.</li>
+          <li>Batch calibration of the teacher, DoLa, adaptive depth (it ties a fixed cut), LDA with an unlabelled covariance, and select-and-copy attention heads (0.50 to 0.53, the letters' level).</li>
+          <li>A question-agnostic letter probe does not transfer to a workflow it has never seen (0.521).</li>
+          <li>A collapsing commit bound for streaming voice: neither earlier nor as safe as the fixed threshold.</li>
+          <li>Small models cannot bind option letters: Llama 3.2 3B is at chance on SemIf's benchmark (0.358), with 28 % of decisions flipping when the options are reversed.</li>
+        </ul>
+        <p class="source">Sources: <a href="https://github.com/Jibalmi/Tez#the-probe-lab-reading-decisions-from-the-middle-of-the-network">README.md</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4-abstention-debiasing-cascades">BENCHMARKS.md §4</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4b-ablations-on-the-12b-typed-decisions-unless-stated">§4b</a>, <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">§4c</a> and <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#2-semifs-benchmark-authored144--perturbations108-frozen-models">§2</a>.</p>
+      </section>
+
+      <!-- ============================================================== cite -->
+      <section class="doc-section" aria-labelledby="cite">
+        <h2 id="cite">Cite</h2>
+        <p>If you use Tez or its measurements, cite the report:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bibtex</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code>@misc{villax2026tez,
+  title        = {{Tez}: an open, local ``System One'' decision layer},
+  author       = {Miguel Villax},
+  year         = {2026},
+  howpublished = {\url{https://github.com/Jibalmi/Tez}}
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================== sources -->
+      <section class="doc-section" aria-labelledby="sources">
+        <h2 id="sources">Sources and notes</h2>
+        <ul class="source-list">
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/REPORT.md">docs/REPORT.md</a><span>The report in Markdown: mechanism, experiments, audit, voice loop, roadmap.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/paper/tez-paper.tex">docs/paper/tez-paper.tex</a><span>LaTeX source of the PDF.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a><span>Every number, consolidated, with the script that produced it.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/tree/main/experiments">experiments/</a><span>Every script behind a number; run outputs and manifests are in <code>results/</code>.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/research/novelty-check.md">docs/research/novelty-check.md</a><span>The closest prior work for every probe-lab experiment.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/research/abstract-methods-survey.md">docs/research/abstract-methods-survey.md</a><span>Cross-disciplinary methods considered for the readout, with verified identifiers.</span></li>
+          <li><a href="https://github.com/Jibalmi/Tez/blob/main/docs/research/RESEARCH-NOTES.md">docs/research/RESEARCH-NOTES.md</a><span>The seven literature surveys commissioned for the report, with links.</span></li>
+        </ul>
+        <p class="fineprint">The surveys surfaced arXiv identifiers dated 2026; the report's appendix notes which were opened and verified, and the rest should be checked before a specific number is relied on.</p>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-blurb">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="./usecases.html">Use cases</a></li><li><a href="./playground.html">Playground</a></li><li><a href="./benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="./research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base"><span>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</span><span>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></span></div>
+  </div>
+</footer>
+</body>
+</html>

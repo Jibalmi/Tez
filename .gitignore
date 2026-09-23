@@ -20,3 +20,8 @@ INVALID_*
 *.npy
 *.npz
 results/probe_cache_*
+
+# impeccable: machine-local settings and review scratch
+.impeccable/config.local.json
+.impeccable/questions/
+.impeccable/review/

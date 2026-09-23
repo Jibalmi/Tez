@@ -1,0 +1,173 @@
+/* Tez charts: inline SVG drawn by assets/js/charts.js. Colours are CSS variables, so a theme change restyles
+   every chart without a redraw. Emphasis form: Tez in the one blue, every other system in one grey, told apart
+   by shape, row labels, legend and the data table; published (not measured here) figures are hollow. */
+
+:root {
+  --chart-tez: #3f6ff0;
+  --chart-other: #858d9b;
+  --chart-grid: #eceef2;
+  --chart-axis: #cdd2da;
+  --chart-ref: #6b7280;
+  --chart-band: var(--accent-soft);
+  --chart-surface: var(--bg);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --chart-tez: #6189f7;
+    --chart-other: #6c7585;
+    --chart-grid: #1c2029;
+    --chart-axis: #343b48;
+    --chart-ref: #8a93a3;
+  }
+}
+:root[data-theme="dark"] {
+  --chart-tez: #6189f7;
+  --chart-other: #6c7585;
+  --chart-grid: #1c2029;
+  --chart-axis: #343b48;
+  --chart-ref: #8a93a3;
+}
+
+/* figure shell */
+.chart-figure {
+  margin: var(--s-6) 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg);
+}
+.chart-head { padding: var(--s-5) var(--s-5) 0; display: grid; gap: 6px; }
+.chart-figure .chart-head > * { margin: 0; }
+.chart-figure .chart-title { font-size: var(--fs-md); line-height: 1.35; letter-spacing: -0.01em; font-weight: 600; max-width: 64ch; }
+.chart-figure .chart-sub { font-size: var(--fs-sm); color: var(--text-muted); max-width: 72ch; text-wrap: pretty; }
+.chart-figure p { max-width: none; }
+.chart-body { padding: var(--s-4) var(--s-5) var(--s-2); }
+.chart { position: relative; width: 100%; }
+.chart[data-state="loading"] { min-height: var(--chart-min, 220px); }
+.chart svg { display: block; overflow: visible; font-family: var(--font-sans); }
+.chart-foot {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-2) var(--s-4);
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  border-top: 1px solid var(--border);
+}
+.chart-foot .source { margin: 0; max-width: 70ch; }
+.chart-foot .source a { color: var(--text-muted); }
+.chart-foot .source a:hover { color: var(--text); }
+.chart-toggle {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding-inline: 10px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-sm); background: var(--bg);
+  color: var(--text); font-size: var(--fs-xs); font-weight: 540; cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+.chart-toggle:hover { background: var(--bg-subtle); }
+.chart-toggle svg { width: 14px; height: 14px; }
+.chart-table { padding: 0 var(--s-5) var(--s-5); }
+.chart-table .table-wrap { border-radius: var(--r-md); }
+.chart-table[hidden] { display: none; }
+.chart-fallback { margin: 0; padding: var(--s-4) var(--s-5); font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* legend (HTML, above the plot) */
+.chart-body .chart-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--fs-xs); color: var(--text-muted); }
+.chart-body .chart-legend li { display: inline-flex; align-items: center; gap: 7px; margin: 0; max-width: none; }
+.chart-body .chart-legend:empty { display: none; }
+.chart-legend svg { width: 16px; height: 14px; flex: none; overflow: visible; }
+.chart-legend + .chart { margin-top: var(--s-4); }
+.chart-key { margin: var(--s-2) 0 0; font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* SVG text */
+.chart svg text { font-variant-numeric: tabular-nums; }
+.c-tick { fill: var(--text-faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+.c-axis-label { fill: var(--text-muted); font-size: 11.5px; }
+.c-row-label { fill: var(--text); font-size: 13px; }
+.c-row-sub { fill: var(--text-muted); font-size: 11px; }
+.c-col-head { fill: var(--text-muted); font-size: 11px; font-weight: 560; }
+.c-value { fill: var(--text-muted); font-family: var(--font-mono); font-size: 11px; font-variant-numeric: tabular-nums; }
+.c-value-strong { fill: var(--text); font-family: var(--font-mono); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.c-value-missing { fill: var(--text-faint); font-size: 11px; }
+.c-ref-label { fill: var(--chart-ref); font-size: 11px; }
+.c-band-label { fill: var(--accent); font-size: 11px; font-weight: 540; }
+.c-end-label { fill: var(--text-muted); font-size: 11.5px; }
+.c-end-label tspan.v { fill: var(--text); font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+.c-point-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 10.5px; }
+
+/* furniture */
+.c-grid { stroke: var(--chart-grid); stroke-width: 1; shape-rendering: crispEdges; }
+.c-baseline { stroke: var(--chart-axis); stroke-width: 1; shape-rendering: crispEdges; }
+.c-divider { stroke: var(--border); stroke-width: 1; shape-rendering: crispEdges; }
+.c-ref { stroke: var(--chart-ref); stroke-width: 1; }
+.c-band { fill: var(--chart-band); }
+.c-leader { stroke: var(--chart-axis); stroke-width: 1; fill: none; }
+.c-cross { stroke: var(--chart-ref); stroke-width: 1; opacity: 0; pointer-events: none; }
+.c-cross[data-on="true"] { opacity: 0.6; }
+.c-track { fill: var(--bar-track); }
+
+/* marks: Tez = blue, others = grey, published = hollow */
+.m-tez { fill: var(--chart-tez); }
+.m-other { fill: var(--chart-other); }
+.m-pub { fill: var(--chart-surface); stroke: var(--chart-other); stroke-width: 2; }
+.m-dot { stroke: var(--chart-surface); stroke-width: 4; paint-order: stroke; }
+.m-dot.m-pub { stroke: var(--chart-other); stroke-width: 2; paint-order: normal; }
+.m-bar.m-pub { fill: transparent; stroke-width: 1.5; }
+.l-tez { stroke: var(--chart-tez); }
+.l-other { stroke: var(--chart-other); }
+.l-pub { stroke: var(--chart-other); }
+.m-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.m-seg { stroke-width: 2; stroke-linecap: round; }
+.m-ci { stroke-width: 1.5; stroke-linecap: round; }
+
+/* points: hover and keyboard focus */
+.pt { cursor: default; outline: none; }
+.pt-hit { fill: transparent; stroke: none; }
+.pt-focus { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; pointer-events: none; }
+.pt:focus-visible .pt-focus, .pt[data-active="true"] .pt-focus { opacity: 1; }
+.pt[data-active="true"] .m-bar:not(.m-pub), .pt:hover .m-bar:not(.m-pub) { filter: brightness(1.08); }
+
+/* tooltip */
+.chart-tip {
+  position: absolute; z-index: 5; top: 0; left: 0;
+  min-width: 150px; max-width: 280px;
+  padding: 8px 10px 9px;
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-xs); line-height: 1.45;
+  pointer-events: none;
+  opacity: 0; transform: translateY(2px);
+  transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+}
+.chart-tip[data-on="true"] { opacity: 1; transform: none; }
+.chart-tip .tip-title { margin: 0 0 4px; color: var(--text-muted); font-weight: 520; }
+.chart-tip .tip-row { display: grid; grid-template-columns: 14px auto 1fr; align-items: center; gap: 6px; }
+.chart-tip .tip-row svg { width: 14px; height: 10px; overflow: visible; }
+.chart-tip .tip-value { font-family: var(--font-mono); font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.chart-tip .tip-name { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chart-tip .tip-note { margin: 5px 0 0; color: var(--text-muted); }
+
+/* small multiples */
+.panels { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--panel-min, 240px)), 1fr)); gap: var(--s-5) var(--s-6); }
+.panels .panel-title { margin: 0; font-size: var(--fs-sm); line-height: 1.4; font-weight: 600; letter-spacing: -0.005em; }
+.panels .panel-meta { margin: 2px 0 var(--s-2); font-size: var(--fs-xs); color: var(--text-muted); min-height: 1.45em; }
+.panels .panel-title + .chart { margin-top: var(--s-2); }
+
+/* data tables drawn from the same numbers */
+.data-table td.num, .data-table th.num { font-family: var(--font-mono); font-size: 12.5px; }
+.data-table thead th.num { font-family: var(--font-sans); font-size: var(--fs-xs); }
+.data-table .cell-muted { color: var(--text-faint); }
+.data-table tbody th { font-weight: 500; color: var(--text); }
+.data-table tr.is-ref th, .data-table tr.is-ref td { color: var(--text-muted); background: var(--bg-subtle); }
+.data-table tr.is-highlight th, .data-table tr.is-highlight td { background: var(--accent-soft); }
+.data-table caption { caption-side: top; text-align: left; padding: 0 0 var(--s-2); font-size: var(--fs-xs); color: var(--text-muted); }
+
+@media (max-width: 560px) {
+  .chart-head { padding: var(--s-4) var(--s-4) 0; }
+  .chart-body { padding: var(--s-4) var(--s-4) var(--s-2); }
+  .chart-foot { padding: var(--s-3) var(--s-4) var(--s-4); }
+  .chart-table { padding: 0 var(--s-4) var(--s-4); }
+}
+
+@media (forced-colors: active) {
+  .m-tez, .m-other { fill: CanvasText; }
+  .m-pub, .m-bar.m-pub { fill: Canvas; stroke: CanvasText; }
+  .l-tez, .l-other, .l-pub { stroke: CanvasText; }
+  .pt-focus { stroke: Highlight; }
+}
+.panels .facet { min-width: 0; }

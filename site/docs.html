@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs · Tez</title>
+<meta name="description" content="Install Tez, run llama-server and tez serve, and call the Jev-compatible /v1/systemone API: request and response format, schemas, readouts, fitting, the conformal gate, streaming, CLI and Python reference.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Tez documentation">
+<meta property="og:description" content="Run Tez locally and call it like Jev: typed decisions from one forward pass of a frozen open model.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/css/tokens.css">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/docs.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="./assets/js/site.js" defer></script>
+<script src="./assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container doc-shell">
+    <nav class="doc-nav" data-toc aria-label="Documentation sections">
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">Quickstart</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="toc-panel" id="toc-panel">
+        <div class="toc-group">
+          <p class="toc-heading">Get started</p>
+          <ul class="toc-list">
+            <li><a href="#quickstart">Quickstart</a></li>
+            <li><a href="#install">Install</a></li>
+            <li><a href="#llama-server">Run llama-server</a></li>
+            <li><a href="#start-tez">Start Tez</a></li>
+            <li><a href="#first-request">First request</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">API and schemas</p>
+          <ul class="toc-list">
+            <li><a href="#api">API</a></li>
+            <li class="toc-sub"><a href="#api-systemone">POST /v1/systemone</a></li>
+            <li class="toc-sub"><a href="#answer-shapes">Answer shapes</a></li>
+            <li class="toc-sub"><a href="#tez-block">The tez block</a></li>
+            <li class="toc-sub"><a href="#errors">Errors</a></li>
+            <li class="toc-sub"><a href="#api-other">Other endpoints</a></li>
+            <li><a href="#schemas">Schemas</a></li>
+            <li><a href="#readouts">Readouts</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Guides</p>
+          <ul class="toc-list">
+            <li><a href="#fit">Fit a schema</a></li>
+            <li><a href="#gate">The gate</a></li>
+            <li><a href="#streaming">Streaming and voice</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Reference</p>
+          <ul class="toc-list">
+            <li><a href="#cli">CLI reference</a></li>
+            <li class="toc-sub"><a href="#cli-serve">tez serve</a></li>
+            <li class="toc-sub"><a href="#cli-decide">tez decide</a></li>
+            <li class="toc-sub"><a href="#cli-fit">tez fit</a></li>
+            <li class="toc-sub"><a href="#cli-suggest">tez suggest</a></li>
+            <li class="toc-sub"><a href="#cli-eval">tez eval</a></li>
+            <li class="toc-sub"><a href="#cli-truncate">tez truncate</a></li>
+            <li><a href="#python">Python API</a></li>
+          </ul>
+        </div>
+        <div class="toc-group">
+          <p class="toc-heading">Help</p>
+          <ul class="toc-list">
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="doc-main prose">
+      <header class="page-head">
+        <h1>Documentation</h1>
+        <p class="lead">Run Tez on your own machine and call it like Jev: start llama.cpp with a GGUF model, put <code>tez serve</code> in front of it, and send typed questions to <code>/v1/systemone</code>. The commands here are the ones behind the published numbers.</p>
+        <div class="tag-row"><span class="pill">tez 0.1.0</span><span class="pill">llama.cpp b11100</span><span class="pill">Python 3.10+</span><span class="pill">MIT</span></div>
+      </header>
+
+      <!-- ============================================================== quickstart -->
+      <section class="doc-section is-first" aria-labelledby="quickstart">
+        <h2 id="quickstart">Quickstart</h2>
+        <p>Four steps from nothing to a decision. They assume a GPU that can hold Gemma 4 12B at Q8_0; every number on this site was measured on an RTX 5080 laptop GPU with 16 GB. Other GPUs and CPUs run llama.cpp too, but have not been measured here.</p>
+        <ol class="steps">
+          <li>
+            <p class="step-title">Get llama.cpp b11100 and the model</p>
+            <p>Download the build for your platform from the <a href="https://github.com/ggml-org/llama.cpp/releases/tag/b11100">b11100 release page</a>, then the weights:</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">hf download unsloth/gemma-4-12b-it-GGUF gemma-4-12b-it-Q8_0.gguf --local-dir .</code></pre>
+            </div>
+          </li>
+          <li>
+            <p class="step-title">Start llama-server with the measured flags</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">llama-server -m gemma-4-12b-it-Q8_0.gguf -ngl 99 -c 4096 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui --swa-full</code></pre>
+            </div>
+          </li>
+          <li>
+            <p class="step-title">Install Tez and start it in front of the model</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">pip install git+https://github.com/Jibalmi/Tez
+tez serve --backend http://127.0.0.1:8091 --template gemma4</code></pre>
+            </div>
+          </li>
+          <li>
+            <p class="step-title">Ask a question</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone \
+  -H "Content-Type: application/json" \
+  -d '{"state": "Help! My payouts have been failing for 3 days.",
+       "questions": {"topic": {"type": "choice",
+         "instructions": "What is the message about?",
+         "criteria": {"billing": "Payments, payouts, invoices",
+                      "technical": "Something is broken", "sales": null}}}}'</code></pre>
+            </div>
+            <p>The answer comes back in Jev's wire format: the chosen option, a probability for every option and a <code>confidence</code>. Nothing is generated, so <code>usage.output_tokens</code> is always 0. Windows users can send the same request from PowerShell: see <a href="#first-request">First request</a>.</p>
+          </li>
+        </ol>
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>No model yet? <code>tez serve --backend fake</code> starts an offline stand-in so you can wire up a client. It answers from keyword overlap; it is not a model and its answers mean nothing.</p></div></div>
+      </section>
+
+      <!-- ============================================================== install -->
+      <section class="doc-section" aria-labelledby="install">
+        <h2 id="install">Install</h2>
+        <p>Three pieces run on your machine: llama.cpp's <code>llama-server</code> hosts the model, a GGUF file holds the weights, and Tez reads each decision out of the server's next-token distribution or hidden state.</p>
+
+        <h3 id="install-llamacpp">llama.cpp</h3>
+        <p>Every number on this site was measured with llama.cpp release <a href="https://github.com/ggml-org/llama.cpp/releases/tag/b11100">b11100</a>, the Windows <code>win-cuda-13.4</code> build. Download the build for your platform and put <code>llama-server</code> on your <code>PATH</code>. Other builds may work; they have not been measured.</p>
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>Use the official release binaries. Tez talks to <code>llama-server</code> over HTTP and needs no Python bindings; the prebuilt <code>llama-cpp-python</code> wheels we tried were compiled with AVX-512 and crashed on a CPU without it.</p></div></div>
+
+        <h3 id="install-weights">Model weights</h3>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Role</th><th scope="col">File</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr><td>Zero-shot letters, the default</td><td>Hugging Face <code>unsloth/gemma-4-12b-it-GGUF</code>, file <code>gemma-4-12b-it-Q8_0.gguf</code></td><td>Public equivalent of the measured weights; not separately measured</td></tr>
+              <tr><td>The weights we measured</td><td>Ollama <code>gemma4:12b-it-q8_0</code> (GGUF blob <code>sha256-047dae1d…</code>)</td><td>Behind every Gemma 4 12B Q8_0 number on this site</td></tr>
+              <tr><td>Probe backbone, optional</td><td><code>unsloth/Qwen3.5-4B-GGUF</code>, file <code>Qwen3.5-4B-Q8_0.gguf</code>, cut to its first 24 of 32 blocks</td><td>Needs labels; see <a href="#fit">Fit a schema</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">pip install -U huggingface_hub
+hf download unsloth/gemma-4-12b-it-GGUF gemma-4-12b-it-Q8_0.gguf --local-dir models
+# optional, for probes
+hf download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q8_0.gguf --local-dir models</code></pre>
+        </div>
+        <p>If you already use Ollama, <code>ollama pull gemma4:12b-it-q8_0</code> stores the exact file we measured; point <code>llama-server -m</code> at its blob in Ollama's <code>models/blobs</code> directory. Serve it with <code>llama-server</code>, not through Ollama's API: Ollama caps the returned log-probabilities at 20 and its OpenAI-compatible endpoint drops them, which is enough for the top answer but not for calibrated probabilities.</p>
+        <p>To make the probe file, cut the 4B with <code>tez truncate</code> (it needs the <code>truncate</code> extra, below). The cut keeps the output norm and head, so the file's last-token state is what a mid-depth probe reads. The measured file is 3.53 GB.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez truncate models/Qwen3.5-4B-Q8_0.gguf 24 models/Qwen3.5-4B-Q8_0-L24.gguf</code></pre>
+        </div>
+
+        <h3 id="install-tez">Tez</h3>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">pip install git+https://github.com/Jibalmi/Tez</code></pre>
+        </div>
+        <p>Python 3.10 or newer. This installs the <code>tez</code> command and the <code>tez</code> Python package; it is not on PyPI yet. Two extras add optional dependencies: <code>fit</code> (scikit-learn, for <code>tez fit</code> and <code>tez suggest</code>) and <code>truncate</code> (the <code>gguf</code> package, for <code>tez truncate</code>).</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">pip install "tez-decisions[fit,truncate] @ git+https://github.com/Jibalmi/Tez"
+tez --version</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================== llama-server -->
+      <section class="doc-section" aria-labelledby="llama-server">
+        <h2 id="llama-server">Run llama-server</h2>
+        <p>This is the exact command behind the Gemma numbers on this site:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">llama-server -m gemma-4-12b-it-Q8_0.gguf -ngl 99 -c 4096 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui --swa-full</code></pre>
+        </div>
+        <dl class="flag-list">
+          <div><dt>-m gemma-4-12b-it-Q8_0.gguf</dt><dd>The model file.</dd></div>
+          <div><dt>-ngl 99</dt><dd>Offload every layer to the GPU.</dd></div>
+          <div><dt>-c 4096</dt><dd>Context window in tokens: the prompt, including the state, must fit. Raise it for long states; the JevBench hard tier ran with 8k.</dd></div>
+          <div><dt>-b 512</dt><dd>Batch size for prompt evaluation.</dd></div>
+          <div><dt>--port 8091 --host 127.0.0.1</dt><dd>Listen on this machine only.</dd></div>
+          <div><dt>-np 1</dt><dd>One slot, so the cached prompt prefix lives in one place.</dd></div>
+          <div><dt>--no-webui</dt><dd>No chat interface.</dd></div>
+          <div><dt>--swa-full</dt><dd>Keep the full sliding-window cache, so Gemma can reuse the cached options prefix (below).</dd></div>
+        </dl>
+        <p>Add <code>--embeddings --pooling last</code> only when the same server also serves embeddings for probes. Before trusting any number, check which file the server loaded: <code>model_path</code> in <code>curl http://127.0.0.1:8091/props</code>. Our harness asserts it before every run, after a stale server once answered for the wrong model.</p>
+
+        <h3 id="swa-full">Why <code>--swa-full</code> matters</h3>
+        <p>Tez puts the constant part of every prompt first (instructions and options) and the state last, so the server can reuse the cached prefix and evaluate only the new tokens. Gemma uses sliding-window attention, and llama.cpp can only roll that cache back to a shared prefix when the full cache is kept. Without <code>--swa-full</code> the server silently re-evaluates the whole prompt on every request: in the voice loop that was 205 ms per streamed word, with <code>--swa-full</code> 30 ms (11 tokens evaluated per word instead of 394).</p>
+        <p>To confirm reuse, send two requests that share a prefix to llama-server's <code>/completion</code> and read <code>timings.prompt_n</code> in the second response: it should count only the new tokens.</p>
+
+        <h3 id="probe-server">The probe server</h3>
+        <p>Probes read the hidden state of Qwen3.5-4B cut to 24 of its 32 blocks. Run it as a second server:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">llama-server -m Qwen3.5-4B-Q8_0-L24.gguf -ngl 99 -c 4096 --port 8092 --embeddings --pooling last</code></pre>
+        </div>
+        <div class="callout callout-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><p>Prompt caching must stay off for this hybrid model on llama.cpp b11100: reusing part of a cached prompt crashes the server. Tez switches caching off by itself for any backend whose model name matches Qwen3.5, and logs a warning. <code>tez serve --no-cache-prompt</code> forces it off for every backend, including a Gemma letters server, which then loses its cached prefix.</p></div></div>
+        <p>The measured probe runs also passed <code>-b 512 -np 1 --host 127.0.0.1 --no-webui</code>. On the RTX 5080 laptop GPU a probe on this file decides in 58 ms (p50) at 0.793 accuracy on typed-decisions; see <a href="./benchmarks.html#latency">latency and depth-pruned models</a>.</p>
+      </section>
+
+      <!-- ============================================================== start tez -->
+      <section class="doc-section" aria-labelledby="start-tez">
+        <h2 id="start-tez">Start Tez</h2>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez serve --backend http://127.0.0.1:8091 --template gemma4</code></pre>
+        </div>
+        <div class="code is-output">
+          <div class="code-head"><span class="code-label">output</span></div>
+          <pre><code>tez 0.1.0 on http://127.0.0.1:8787  backend http://127.0.0.1:8091 (gemma4), 0 schema(s), 0 probe(s)</code></pre>
+        </div>
+        <p>Tez listens on <code>http://127.0.0.1:8787</code>. <code>--template</code> must match the model behind <code>--backend</code>: <code>gemma4</code> for Gemma 4, <code>qwen3</code> for Qwen3 and Qwen3.5. Without <code>--backend</code>, Tez uses the <code>TEZ_BACKEND</code> environment variable or llama-server's own default address, <code>http://127.0.0.1:8080</code>.</p>
+        <p>With schemas and the probe server:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez serve --backend http://127.0.0.1:8091 --template gemma4 \
+  --embed-backend http://127.0.0.1:8092 --embed-template qwen3 \
+  --schemas schemas</code></pre>
+        </div>
+        <p><code>--schemas</code> loads every <code>*.yaml</code> in the directory, with the probes and calibrations <code>tez fit</code> wrote next to them. <code>GET /healthz</code> shows what was loaded. When other machines can reach the server, require a key with <code>--api-key</code> (or <code>TEZ_API_KEY</code>).</p>
+      </section>
+
+      <!-- ============================================================== first request -->
+      <section class="doc-section" aria-labelledby="first-request">
+        <h2 id="first-request">First request</h2>
+        <p>One state and any number of typed questions: here a yes/no, a choice and a score question about one customer message. A client written for Jev's wire format works by pointing its base URL at <code>http://127.0.0.1:8787</code>; any bearer token is accepted unless the server was started with <code>--api-key</code>.</p>
+        <div class="code-tabs">
+          <div class="tabs" role="tablist" aria-label="First request examples">
+            <button type="button" role="tab" id="tab-req-curl" aria-controls="panel-req-curl" aria-selected="true" tabindex="0">curl</button>
+            <button type="button" role="tab" id="tab-req-py" aria-controls="panel-req-py" aria-selected="false" tabindex="-1">Python</button>
+            <button type="button" role="tab" id="tab-req-ps" aria-controls="panel-req-ps" aria-selected="false" tabindex="-1">PowerShell</button>
+          </div>
+          <div role="tabpanel" id="panel-req-curl" aria-labelledby="tab-req-curl">
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone \
+  -H "Content-Type: application/json" \
+  -d '{
+  "model": "tez-latest",
+  "state": "Help! My payouts have been failing for 3 days.",
+  "questions": {
+    "is_urgent": {
+      "type": "noul",
+      "instructions": "Does this convey urgency?",
+      "criteria": {"true": "Explicitly time-sensitive", "false": "No urgency expressed"}
+    },
+    "topic": {
+      "type": "choice",
+      "instructions": "What is the message about?",
+      "criteria": {"billing": "Payments, payouts, invoices", "technical": "Something is broken", "sales": null}
+    },
+    "anger": {
+      "type": "score",
+      "instructions": "How upset is the writer?",
+      "criteria": ["Calm", "Frustrated", "Very angry"]
+    }
+  }
+}'</code></pre>
+            </div>
+          </div>
+          <div role="tabpanel" id="panel-req-py" aria-labelledby="tab-req-py" hidden>
+            <div class="code">
+              <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="python">import requests
+
+body = {
+    "model": "tez-latest",
+    "state": "Help! My payouts have been failing for 3 days.",
+    "questions": {
+        "is_urgent": {
+            "type": "noul",
+            "instructions": "Does this convey urgency?",
+            "criteria": {"true": "Explicitly time-sensitive", "false": "No urgency expressed"},
+        },
+        "topic": {
+            "type": "choice",
+            "instructions": "What is the message about?",
+            "criteria": {"billing": "Payments, payouts, invoices", "technical": "Something is broken", "sales": None},
+        },
+        "anger": {
+            "type": "score",
+            "instructions": "How upset is the writer?",
+            "criteria": ["Calm", "Frustrated", "Very angry"],
+        },
+    },
+}
+
+r = requests.post("http://127.0.0.1:8787/v1/systemone", json=body, timeout=60)
+r.raise_for_status()
+answers = r.json()["answers"]
+print(answers["topic"]["choice"], answers["topic"]["confidence"])
+print("P(urgent):", answers["is_urgent"]["noul"], "anger level:", answers["anger"]["score"])</code></pre>
+            </div>
+          </div>
+          <div role="tabpanel" id="panel-req-ps" aria-labelledby="tab-req-ps" hidden>
+            <div class="code">
+              <div class="code-head"><span class="code-label">powershell</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="powershell">$body = @'
+{
+  "model": "tez-latest",
+  "state": "Help! My payouts have been failing for 3 days.",
+  "questions": {
+    "topic": {
+      "type": "choice",
+      "instructions": "What is the message about?",
+      "criteria": {"billing": "Payments, payouts, invoices", "technical": "Something is broken", "sales": null}
+    }
+  }
+}
+'@
+Invoke-RestMethod -Uri http://127.0.0.1:8787/v1/systemone -Method Post -ContentType "application/json" -Body $body | ConvertTo-Json -Depth 6</code></pre>
+            </div>
+          </div>
+        </div>
+        <p>The response, with illustrative values (the shape is exact):</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response, illustrative values</span></div>
+          <pre><code data-lang="json">{
+  "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+  "answers": {
+    "is_urgent": {"type": "noul", "noul": 0.93},
+    "topic": {
+      "type": "choice",
+      "choice": "billing",
+      "probabilities": {"billing": 0.91, "technical": 0.08, "sales": 0.01},
+      "confidence": 0.865
+    },
+    "anger": {
+      "type": "score",
+      "score": 1.12,
+      "legend": {"0": "Calm", "1": "Frustrated", "2": "Very angry"},
+      "probabilities": {"0": 0.04, "1": 0.8, "2": 0.16},
+      "confidence": 0.7
+    }
+  },
+  "usage": {"input_tokens": 612, "output_tokens": 0},
+  "tez": {
+    "latency_ms": 212.4,
+    "questions": {
+      "is_urgent": {"readout": "letters"},
+      "topic": {"readout": "letters"},
+      "anger": {"readout": "letters"}
+    }
+  }
+}</code></pre>
+        </div>
+        <p>Strict Jev clients read <code>answers</code> and ignore the <code>tez</code> block, which reports the latency and, per question, how the answer was read.</p>
+      </section>
+
+      <!-- ============================================================== API -->
+      <section class="doc-section" aria-labelledby="api">
+        <h2 id="api">API</h2>
+        <p>Tez speaks TypeSafe's <code>/v1/systemone</code> wire format, so a client written for Jev's wire format, JevBench's own runner included, can point its base URL at a Tez server. Everything Tez adds lives in optional fields that strict clients ignore.</p>
+
+        <h3 id="api-auth">Base URL and authentication</h3>
+        <p>Default address: <code>http://127.0.0.1:8787</code>. Without <code>--api-key</code> any <code>Authorization: Bearer &lt;token&gt;</code> is accepted and none is required. With <code>--api-key</code>, every endpoint except <code>/healthz</code> needs <code>Authorization: Bearer &lt;key&gt;</code> or an <code>x-api-key</code> header. CORS is open by default (<code>--no-cors</code> turns it off), and preflights answer <code>Access-Control-Allow-Private-Network: true</code>, so a web page, such as this site's playground, can call a server on your machine.</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Method</th><th scope="col">Path</th><th scope="col">Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><span class="method method-post">POST</span></td><td><a href="#api-systemone"><code>/v1/systemone</code></a></td><td>Decide: one state, many typed questions (Jev-compatible)</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#api-models"><code>/v1/models</code></a></td><td>List model aliases (Jev-compatible)</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#api-healthz"><code>/healthz</code></a></td><td>Liveness, backend and readout status</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#api-schemas"><code>/v1/schemas</code></a></td><td>Tez: schemas loaded from <code>--schemas</code></td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#api-schemas"><code>/v1/schemas/{name}</code></a></td><td>Tez: one schema (questions, probe status, calibration)</td></tr>
+              <tr><td><span class="method method-post">POST</span></td><td><a href="#api-feedback"><code>/v1/feedback</code></a></td><td>Tez: record a correct label for a past decision (feeds <code>tez fit</code>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="api-systemone" class="endpoint"><span class="method method-post">POST</span> <code>/v1/systemone</code></h3>
+        <p>Decide one state against many typed questions. The request body:</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>state</code></td><td class="type">string, object, array</td><td>Required. The input to decide on. Objects and arrays are serialised as JSON.</td></tr>
+              <tr><td><code>questions</code></td><td class="type">object</td><td>Map of question id to question. Required unless <code>schema</code> names a loaded schema, whose questions are then used.</td></tr>
+              <tr><td><code>questions.{id}.type</code></td><td class="type">string</td><td><code>noul</code> (yes/no), <code>choice</code> (2 to 255 options) or <code>score</code> (2 to 10 ordered levels).</td></tr>
+              <tr><td><code>questions.{id}.instructions</code></td><td class="type">string, object, array</td><td>Required. What to decide.</td></tr>
+              <tr><td><code>questions.{id}.criteria</code></td><td class="type">object or array</td><td><code>choice</code>: label to description or <code>null</code>. <code>score</code>: a list of level descriptions, level <i>i</i> = index <i>i</i>. <code>noul</code>: optional <code>{"true": …, "false": …}</code>.</td></tr>
+              <tr><td><code>model</code></td><td class="type">string</td><td>Any string; <code>tez-latest</code> is the default alias.</td></tr>
+              <tr><td><code>schema</code></td><td class="type">string</td><td>Tez. Name of a loaded schema. Questions with the same id use that schema's trained probe and calibration.</td></tr>
+              <tr><td><code>tez.readout</code></td><td class="type">string</td><td>Tez. <code>auto</code> (default: the probe when one is trained and current for the question, otherwise letters), <code>letters</code> or <code>probe</code>.</td></tr>
+              <tr><td><code>tez.abstain</code></td><td class="type">boolean</td><td>Tez. Adds an implicit <code>__none__</code> option ("none of these fits") to every <code>choice</code> question. Default <code>false</code>.</td></tr>
+              <tr><td><code>tez.gate.alpha</code></td><td class="type">number</td><td>Tez. Target error rate among acted decisions, between 0 and 1. Each answer then gets <code>act</code> or <code>escalate</code>; see <a href="#gate">The gate</a>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The Tez extensions together:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · request extensions</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="json">{
+  "schema": "support-triage",
+  "tez": {
+    "readout": "auto",
+    "abstain": false,
+    "gate": {"alpha": 0.05}
+  }
+}</code></pre>
+        </div>
+        <p>The response carries <code>model</code>, one answer per question in <code>answers</code>, <code>usage</code> and the <code>tez</code> block:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response with a fitted schema and a gate, illustrative values</span></div>
+          <pre><code data-lang="json">{
+  "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+  "answers": {
+    "is_urgent": {"type": "noul", "noul": 0.93},
+    "topic": {
+      "type": "choice",
+      "choice": "billing",
+      "probabilities": {"billing": 0.91, "technical": 0.08, "sales": 0.01},
+      "confidence": 0.865
+    },
+    "anger": {
+      "type": "score",
+      "score": 1.12,
+      "legend": {"0": "Calm", "1": "Frustrated", "2": "Very angry"},
+      "probabilities": {"0": 0.04, "1": 0.8, "2": 0.16},
+      "confidence": 0.7
+    }
+  },
+  "usage": {"input_tokens": 612, "output_tokens": 0},
+  "tez": {
+    "latency_ms": 212.4,
+    "questions": {
+      "is_urgent": {"readout": "letters", "decision": "escalate"},
+      "topic": {"readout": "probe", "decision": "act", "p_correct": 0.94, "calibration_id": "support-triage@2026-09-24"},
+      "anger": {"readout": "letters", "decision": "escalate"}
+    }
+  }
+}</code></pre>
+        </div>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>model</code></td><td class="type">string</td><td><code>tez-&lt;version&gt; (&lt;model&gt;, &lt;readouts used&gt;)</code>.</td></tr>
+              <tr><td><code>answers.{id}</code></td><td class="type">object</td><td>One answer per question, in Jev's shapes (<a href="#answer-shapes">below</a>).</td></tr>
+              <tr><td><code>usage.input_tokens</code></td><td class="type">integer</td><td>Prompt tokens across all questions, cached prefix included.</td></tr>
+              <tr><td><code>usage.output_tokens</code></td><td class="type">integer</td><td>Always 0: nothing is generated.</td></tr>
+              <tr><td><code>tez.latency_ms</code></td><td class="type">number</td><td>Wall time for the whole request.</td></tr>
+              <tr><td><code>tez.questions.{id}.readout</code></td><td class="type">string</td><td><code>letters</code> or <code>probe</code>: how this answer was read.</td></tr>
+              <tr><td><code>tez.questions.{id}.decision</code></td><td class="type">string</td><td><code>act</code> or <code>escalate</code>, present only when a gate applies.</td></tr>
+              <tr><td><code>tez.questions.{id}.p_correct</code></td><td class="type">number</td><td>The calibrated probability of the chosen answer, present when a fitted calibration exists.</td></tr>
+              <tr><td><code>tez.questions.{id}.calibration_id</code></td><td class="type">string</td><td>The fit it came from, for example <code>support-triage@2026-09-24</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="answer-shapes">Answer shapes</h3>
+        <p>The three answer shapes are exactly Jev's:</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Type</th><th scope="col">Fields</th><th scope="col">Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>noul</code></td><td><code>noul</code></td><td>P(yes). No <code>confidence</code>: Jev's noul answers carry none.</td></tr>
+              <tr><td><code>choice</code></td><td><code>choice</code>, <code>probabilities</code>, <code>confidence</code></td><td>The argmax label, a probability per label (they sum to 1), and confidence = (k·p<sub>max</sub> − 1)/(k − 1) for k options: 0 when uniform, 1 when certain.</td></tr>
+              <tr><td><code>score</code></td><td><code>score</code>, <code>legend</code>, <code>probabilities</code>, <code>confidence</code></td><td>The expected level Σ i·p<sub>i</sub>, the level descriptions keyed by level string, a probability per level string, and confidence as for choice.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>With <code>tez.abstain</code>, a choice answer can be <code>__none__</code>, with its own probability.</p>
+
+        <h3 id="tez-block">The tez block</h3>
+        <p><code>latency_ms</code>, and per question the <code>readout</code> used, a <code>decision</code> when a gate applies, and <code>p_correct</code> with <code>calibration_id</code> when a fitted calibration exists.</p>
+        <ul>
+          <li>The gate never acts without evidence: <code>act</code> always comes with <code>p_correct</code> and <code>calibration_id</code>. A question with no usable fitted calibration, and any <code>__none__</code> answer, gets <code>escalate</code> whenever a gate is requested.</li>
+          <li><code>tez.gate: null</code> or <code>false</code> turns a schema's default gate off; <code>tez.gate: {}</code> uses the schema's default alpha.</li>
+          <li>Thresholds are precomputed for alpha 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 and the schema's default; any other alpha uses the largest precomputed value at or below it.</li>
+          <li><code>tez.readout: "probe"</code> is strict: the request fails with 422 if a requested question has no usable probe. <code>auto</code> falls back to letters question by question.</li>
+          <li>A fit is used only while the question's prompt (instructions, options, few-shot examples, template) and the model still match what <code>tez fit</code> saw. Otherwise the question falls back to uncalibrated letters and <code>GET /v1/schemas/{name}</code> marks it <code>stale</code>.</li>
+        </ul>
+
+        <h3 id="errors">Errors</h3>
+        <p>The same codes as Jev, with one body shape: <code>{"error": {"type": "…", "message": "…"}}</code>. Messages name the offending field.</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Status</th><th scope="col">type</th><th scope="col">When</th></tr></thead>
+            <tbody>
+              <tr><td>401</td><td><code>unauthorized</code></td><td>The server runs with <code>--api-key</code> and the request has no valid key.</td></tr>
+              <tr><td>404</td><td><code>not_found</code></td><td>Unknown route, or <code>GET /v1/schemas/{name}</code> for a schema that is not loaded.</td></tr>
+              <tr><td>405</td><td><code>method_not_allowed</code></td><td>Wrong method for a route.</td></tr>
+              <tr><td>422</td><td><code>invalid_request</code></td><td>The request does not match the contract, <code>tez.readout: "probe"</code> for a question without a usable probe, or a prompt longer than the model's context (with llama.cpp's message).</td></tr>
+              <tr><td>503</td><td><code>backend_unavailable</code></td><td>The model server is unreachable, still loading or failed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · 422 response</span></div>
+          <pre><code data-lang="json">{"error": {"type": "invalid_request", "message": "questions.q.type must be one of noul, choice, score; got 'multi'"}}</code></pre>
+        </div>
+
+        <h3 id="api-other">Other endpoints</h3>
+        <h4 id="api-models" class="endpoint"><span class="method">GET</span> <code>/v1/models</code></h4>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response</span></div>
+          <pre><code data-lang="json">{"models": [{"name": "tez-latest", "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)", "release_date": "2026-09-24"}]}</code></pre>
+        </div>
+        <h4 id="api-healthz" class="endpoint"><span class="method">GET</span> <code>/healthz</code></h4>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response</span></div>
+          <pre><code data-lang="json">{"status": "ok", "version": "0.1.0", "backend": "http://127.0.0.1:8091", "template": "gemma4", "backend_status": "ok",
+ "model": "gemma-4-12b-q8_0", "embed_backend": null, "schemas": ["support-triage"], "probes": {"support-triage": ["topic"]}}</code></pre>
+        </div>
+        <p><code>status</code> is <code>degraded</code> when the backend is unreachable (<code>backend_status: "unreachable"</code>). With a separate embedding backend, <code>embed_template</code> and <code>embed_backend_status</code> are added. <code>/healthz</code> needs no key.</p>
+        <h4 id="api-schemas" class="endpoint"><span class="method">GET</span> <code>/v1/schemas</code> and <code>/v1/schemas/{name}</code></h4>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · GET /v1/schemas</span></div>
+          <pre><code data-lang="json">{"schemas": [{"name": "support-triage", "description": "...", "questions": {"topic": "choice", "is_urgent": "noul"},
+              "calibration_id": "support-triage@2026-09-24", "probes": ["topic"]}]}</code></pre>
+        </div>
+        <p>One schema returns its questions in wire form plus <code>calibration_id</code>, <code>probes</code> (per question: <code>probe</code> is <code>ready</code>, <code>stale</code> or <code>none</code>, with <code>letters_calibrated</code>, <code>n_labels</code> and a <code>note</code>), <code>calibration</code> and <code>manifest</code>.</p>
+        <h4 id="api-feedback" class="endpoint"><span class="method method-post">POST</span> <code>/v1/feedback</code></h4>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · request</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="json">{"schema": "support-triage", "question": "topic", "state": "Help! My payouts have been failing for 3 days.", "label": "billing"}</code></pre>
+        </div>
+        <p>Records the correct label for a past decision. Tez appends the row to <code>&lt;data-dir&gt;/feedback/&lt;schema&gt;.jsonl</code> (the data dir defaults to <code>&lt;schemas&gt;/.tez</code>) and answers <code>{"ok": true, "schema": …, "question": …, "label": …}</code>. <code>tez fit</code> trains from these rows plus any labelled file.</p>
+      </section>
+
+      <!-- ============================================================== schemas -->
+      <section class="doc-section" aria-labelledby="schemas">
+        <h2 id="schemas">Schemas</h2>
+        <p>A schema is a named, reusable set of questions plus what Tez has learned about them. Put schema files in a directory, start the server with <code>--schemas &lt;dir&gt;</code>, and a request can name the schema instead of repeating its questions.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">yaml · schemas/support-triage.yaml</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="yaml">name: support-triage
+description: Route and prioritise inbound customer messages.
+state: "One customer message (text)."
+questions:
+  topic:
+    type: choice
+    instructions: What is the message about?
+    criteria:
+      billing: Payments, payouts, invoices, refunds
+      technical: Something is broken or not working
+      account: Login, profile, settings
+      sales: Pricing, plans, buying more
+  is_urgent:
+    type: noul
+    instructions: Does this convey urgency?
+    criteria:
+      "true": Explicitly time-sensitive or blocking
+      "false": No urgency expressed
+  anger:
+    type: score
+    instructions: How upset is the writer?
+    criteria: [Calm, Frustrated, Very angry]
+gate:
+  alpha: 0.05          # optional default for tez.gate
+examples:              # optional labelled rows: the first 4 per question become few-shot examples
+  - state: "I was charged twice this month."
+    labels: {topic: billing, is_urgent: "false", anger: 1}</code></pre>
+        </div>
+        <p>A request that names the schema needs only the state:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · request</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="json">{"state": "I was charged twice this month.", "schema": "support-triage"}</code></pre>
+        </div>
+
+        <h3 id="schema-fields">Fields</h3>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Field</th><th scope="col">Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>name</code></td><td>Letters, digits, <code>.</code>, <code>_</code> or <code>-</code>; defaults to the file name. Names must be unique across the directory.</td></tr>
+              <tr><td><code>description</code></td><td>Free text for people and for <code>GET /v1/schemas</code>.</td></tr>
+              <tr><td><code>state</code></td><td>What a state is, for people. It is not sent to the model.</td></tr>
+              <tr><td><code>questions</code></td><td>Map of question id to question, in the wire format's shape.</td></tr>
+              <tr><td><code>gate.alpha</code></td><td>Optional default gate for every request that names the schema. A request turns it off with <code>"gate": null</code> or <code>false</code>.</td></tr>
+              <tr><td><code>examples</code></td><td>Optional labelled rows. The first 4 labelled for a question become few-shot examples in its prompt (for questions with 26 options or fewer); the rest are training rows for <code>tez fit</code>. A row shown as an example is never used for fitting or measurement.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Tez reads YAML with 1.2 booleans: only <code>true</code> and <code>false</code> are booleans, so options called <code>yes</code>, <code>no</code>, <code>on</code> or <code>off</code> stay text. Worked examples in the cached prefix are measured free accuracy: four examples of the same question took the 12B from 0.704 to 0.725 on typed-decisions, with no training.</p>
+
+        <h3 id="schema-artefacts">Trained artefacts</h3>
+        <p><code>tez fit</code> writes what it learns next to the schema, in <code>schemas/.tez/&lt;name&gt;/</code>:</p>
+        <ul>
+          <li><code>probes.npz</code>: per-question logistic weights on the embedding backend's features.</li>
+          <li><code>calibration.json</code>: per question, the temperature of each readout and the conformal thresholds per alpha, with the prompt fingerprint they were fitted on.</li>
+          <li><code>manifest.json</code>: backend, template, model, layer or cut, label counts, settings and date.</li>
+        </ul>
+        <p>Feedback from <code>POST /v1/feedback</code> goes to <code>&lt;data-dir&gt;/feedback/&lt;schema&gt;.jsonl</code>. Editing a question's instructions, options, examples or template, or serving a different model, makes its fit <code>stale</code>: the question falls back to uncalibrated letters until you run <code>tez fit</code> again.</p>
+      </section>
+
+      <!-- ============================================================== readouts -->
+      <section class="doc-section" aria-labelledby="readouts">
+        <h2 id="readouts">Readouts</h2>
+        <p>A readout turns one forward pass into a probability per option. Choose one per request with <code>tez.readout</code>; <code>auto</code> uses a probe where one is trained and current, and letters otherwise.</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Readout</th><th scope="col">Needs</th><th scope="col">Backend call</th><th scope="col" class="num">Measured, typed-decisions</th></tr></thead>
+            <tbody>
+              <tr><td><code>letters</code></td><td>Nothing (zero-shot)</td><td><code>/completion</code>, one token, top-200 log-probabilities</td><td class="num">0.704 (Gemma 4 12B Q8_0)</td></tr>
+              <tr><td><code>probe</code></td><td>25 to 50 labels per question (<code>tez fit</code>)</td><td><code>/embedding</code> (last-token state)</td><td class="num">0.793 (Qwen3.5-4B cut to 24 blocks)</td></tr>
+              <tr><td>blend</td><td>A few labels</td><td>Both</td><td class="num">0.766 (12B letters + 50 typical labels per question)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 id="readout-letters">Letters</h3>
+        <p>The prompt gives the instructions, then the options, each with a letter, then the state, and ends where the model would answer. One <code>/completion</code> call reads the top-200 log-probabilities of the next token; the softmax over the option letters is the distribution, divided by a per-question temperature once <code>tez fit</code> has calibrated it. More than 26 options run as a chunked tournament: chunks of 20 options plus "none of the options above fits", then the chunk winners meet in a final. Raw letters are poorly calibrated: ECE 0.262 on typed-decisions before a temperature, 0.067 after one.</p>
+        <h3 id="readout-probe">Probe</h3>
+        <p>One <code>/embedding</code> call returns the last-token state of the same prompt, and a per-question logistic probe trained by <code>tez fit</code> maps it to option probabilities. <code>tez fit</code> trains a probe once a question has 20 labels; the measurements say 25 to 50 per question is where a probe starts to pay. A logistic probe is fitted with a proper scoring rule, so it comes out calibrated: ECE 0.023 as read on typed-decisions.</p>
+        <h3 id="readout-blend">Blend</h3>
+        <p>Unless you fit with <code>--no-blend</code>, a probe is served blended with the zero-shot letters: weight n/(n + 10) on a probe trained on n labels and the rest on the letters, so with few labels the zero-shot prior still counts. Fifty typical labels per question on top of the 12B's zero-shot answers reach 0.766, the level of Laya's checkpoint fine-tuned on the whole train split.</p>
+        <p>With <code>tez.abstain</code>, the probability of <code>__none__</code> comes from the letters readout even when a probe answers. Accuracy by question type and calibration for each readout are on the <a href="./benchmarks.html#readouts">benchmarks page</a>.</p>
+      </section>
+
+      <!-- ============================================================== fit -->
+      <section class="doc-section" aria-labelledby="fit">
+        <h2 id="fit">Fit a schema</h2>
+        <p>Zero-shot letters need no labels. With labels, <code>tez fit</code> calibrates every question, trains probes and precomputes the gate's thresholds. The loop below is the one the measurements favour: label the most typical rows first, and keep the zero-shot answers as a prior. The examples use both servers from <a href="#llama-server">Run llama-server</a>.</p>
+        <ol class="steps">
+          <li>
+            <p class="step-title">Write the schema</p>
+            <p>See <a href="#schemas">Schemas</a>. Save it as <code>schemas/support-triage.yaml</code>.</p>
+          </li>
+          <li>
+            <p class="step-title">Pick the rows to label</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">tez suggest --schema schemas/support-triage.yaml --unlabelled inbox.jsonl --n 50 --out to-label.jsonl \
+  --backend http://127.0.0.1:8091 --template gemma4 \
+  --embed-backend http://127.0.0.1:8092 --embed-template qwen3</code></pre>
+            </div>
+            <p><code>inbox.jsonl</code> holds unlabelled states: JSON rows with a <code>state</code> field, or one plain-text state per line. <code>tez suggest</code> embeds each state with every question's prompt, clusters the states (k-means on 32 principal components) and returns the member nearest each centre, largest cluster first.</p>
+          </li>
+          <li>
+            <p class="step-title">Label them</p>
+            <p>Fill in <code>labels</code> on each row: an option key for a choice question, <code>true</code> or <code>false</code> for a yes/no question, the level index for a score question.</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">jsonl · to-label.jsonl</span></div>
+              <pre><code data-lang="json">{"state": "I was charged twice this month.", "labels": {"topic": "billing", "is_urgent": "false", "anger": 1}}</code></pre>
+            </div>
+          </li>
+          <li>
+            <p class="step-title">Fit</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">tez fit --schema schemas/support-triage.yaml --labels to-label.jsonl \
+  --backend http://127.0.0.1:8091 --template gemma4 \
+  --embed-backend http://127.0.0.1:8092 --embed-template qwen3</code></pre>
+            </div>
+            <p>For each question, <code>tez fit</code> splits the labelled rows once (30 % held out, <code>--holdout</code>), fits a temperature for the letters, trains a logistic probe once the question has 20 labels (<code>--min-labels</code>) and blends it with the letters. The held-out rows are used for nothing but measurement and the gate's thresholds, so the error bound rests on decisions nothing was fitted on. It prints a table (labels, probe status, held-out accuracy of each readout, temperatures, the confidence cut at alpha 0.05) and writes <code>schemas/.tez/support-triage/</code>.</p>
+          </li>
+          <li>
+            <p class="step-title">Evaluate on rows it has not seen</p>
+            <div class="code">
+              <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre><code data-lang="bash">tez eval --schema schemas/support-triage.yaml --labels held-out.jsonl --alpha 0.05 \
+  --backend http://127.0.0.1:8091 --template gemma4 \
+  --embed-backend http://127.0.0.1:8092 --embed-template qwen3</code></pre>
+            </div>
+            <p>Accuracy, ECE and mean confidence per question, and with <code>--alpha</code> the share of decisions acted on and the error among them. Rows a probe was trained on are skipped unless you pass <code>--include-seen</code>.</p>
+          </li>
+          <li>
+            <p class="step-title">Serve it, and keep learning</p>
+            <p>Restart <code>tez serve</code> with <code>--schemas schemas</code>: requests that name the schema use its probes and calibration. When a person corrects a decision, send the right label to <a href="#api-feedback"><code>POST /v1/feedback</code></a>; the next <code>tez fit</code> reads those rows too (<code>--no-feedback</code> ignores them).</p>
+          </li>
+        </ol>
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>What the measurements say about labels (typed-decisions, probe on layer 26 of the frozen Qwen3.5-4B, 3 seeds): random rows reach 0.707 with 25 labels per question and 0.741 with 50; the most typical rows first reach 0.734 with 25; typical rows on top of the 12B's zero-shot answers reach 0.766 with 50. The 12B alone scores 0.705 with no labels. <a href="./benchmarks.html#few-labels">See the chart.</a></p></div></div>
+      </section>
+
+      <!-- ============================================================== gate -->
+      <section class="doc-section" aria-labelledby="gate">
+        <h2 id="gate">The gate</h2>
+        <p>Ask for a gate and every answer also says <code>act</code> or <code>escalate</code>. The gate is conformal selection (Jin and Candès, 2023): it chooses which decisions to act on so that the expected share of wrong ones among them stays at or below a target alpha.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · request</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="json">{"state": "I can't log in since this morning.", "schema": "support-triage", "tez": {"gate": {"alpha": 0.05}}}</code></pre>
+        </div>
+        <p>The same gate is <code>gate: {alpha: 0.05}</code> in a schema, <code>--alpha 0.05</code> on <code>tez decide</code>, or <code>alpha=0.05</code> in Python.</p>
+        <h3 id="gate-how">How it decides</h3>
+        <p>For a decision with confidence c, the conformal p-value of "this decision is wrong" counts the held-out calibration decisions that were wrong with confidence at least c: (1 + that count) / (number of calibration decisions + 1). Benjamini–Hochberg at level alpha over the held-out decisions gives one confidence cut per question and alpha, which <code>tez fit</code> stores. At request time Tez acts when the answer's top probability reaches the cut, and escalates otherwise.</p>
+        <h3 id="gate-guarantee">What it guarantees, and what it needs</h3>
+        <ul>
+          <li><strong>A bound on the expected error rate among acted decisions</strong>, when live traffic resembles the held-out rows. It does not bound any single batch, and it does not survive a shift in traffic or an edited question: fit again when either changes.</li>
+          <li><strong>A fitted calibration.</strong> A question without one, and any <code>__none__</code> answer, always escalates when a gate is requested.</li>
+          <li><strong>A conservative alpha.</strong> Thresholds exist for alpha 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 and the schema's default; a value in between uses the largest one below it.</li>
+        </ul>
+        <p>Measured on typed-decisions, over 50 random calibration splits: at a 5 % bound a probe acts on 40 % of decisions with a realised error of 5.2 %, and the 12B's zero-shot letters act on 24 % at the same realised error. What <code>escalate</code> means is yours to choose: a person, a larger model, or another question. The cold-start measurements favour also sending a small random slice of acted decisions to people, so the labels you collect are not only the hard cases. <a href="./benchmarks.html#gate">See the chart.</a></p>
+      </section>
+
+      <!-- ============================================================== streaming -->
+      <section class="doc-section" aria-labelledby="streaming">
+        <h2 id="streaming">Streaming and voice</h2>
+        <p>Tez was built and measured on a voice loop: 220 spoken commands over 16 actions, decided word by word as the transcript grows. Three things make it fast and safe.</p>
+        <ul>
+          <li><strong>Options cached, message last.</strong> The action list is the constant prefix and the transcript is the only new text per word. With <code>--swa-full</code> the 12B spends 30 ms of compute per streamed word (45 ms round trip), evaluating 11 tokens where the transcript-first layout needs 358.</li>
+          <li><strong>Re-decide on every word.</strong> Send the partial transcript as the state each time a word arrives; the cached prefix keeps each call cheap.</li>
+          <li><strong>A confident <code>none</code> on a partial transcript means keep listening.</strong> Early in a sentence the right answer is often "none of these yet". Read it as "wait for more words", never as "do nothing".</li>
+        </ul>
+        <p>Actions then fire by class: a cheap, reversible action such as opening an app fires on one confident partial; media and play actions need the same answer on two consecutive partials; typing and closing wait for the end of the utterance. Measured: 1 harmful action in 198 utterances, the first action on average at word 3.6 of 5.4, and Notepad open 652 ms into "open notes and type hello world", 1.3 s before the speaker finished.</p>
+        <p>The policy lives in your client; Tez answers each partial. A sketch with part of the measured action set:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import Tez
+
+tez = Tez(backend="http://127.0.0.1:8091", template="gemma4")
+ACTION = {
+    "type": "choice",
+    "instructions": "Which action does the speaker want?",
+    "criteria": {
+        "open_notes": "Open the notes or notepad application.",
+        "type_text": "Type the dictated text into the app that is currently in focus.",
+        "play_spotify": "Play a specific song, artist, album or playlist on Spotify.",
+        "none": "Out of scope: chit-chat, a question, or a request for something the assistant cannot do.",
+    },
+}
+FIRE_NOW = {"open_notes"}      # cheap and reversible: one confident partial
+TWICE = {"play_spotify"}       # the same answer on two consecutive partials
+AT_END = {"type_text"}         # needs the whole utterance
+
+
+def on_words(transcript, seen, final=False):
+    """Call on every ASR partial; returns an action to run, or None to keep listening."""
+    answer = tez.decide(transcript, questions={"action": ACTION})["answers"]["action"]
+    choice = answer["choice"]
+    seen.append(choice)
+    if choice == "none" or answer["probabilities"][choice] &lt; 0.9:
+        return None            # a confident none on a partial means keep listening
+    if choice in AT_END and not final:
+        return None
+    if choice in TWICE and seen[-2:] != [choice, choice]:
+        return None
+    return choice</code></pre>
+        </div>
+        <p>The measured policy is <a href="https://github.com/Jibalmi/Tez/blob/main/experiments/stream_policy.py"><code>experiments/stream_policy.py</code></a>, and the whole loop with speech recognition is <a href="https://github.com/Jibalmi/Tez/blob/main/experiments/voice_demo.py"><code>experiments/voice_demo.py</code></a>. Out-of-scope speech that starts like a command ("youtube is down again") is the remaining risk: it is a property of language, handled by firing cheap actions first.</p>
+      </section>
+
+      <!-- ============================================================== CLI -->
+      <section class="doc-section" aria-labelledby="cli">
+        <h2 id="cli">CLI reference</h2>
+        <p><code>tez</code> has six commands; <code>tez &lt;command&gt; --help</code> prints the same options, and <code>python -m tez</code> works too. <code>tez --version</code> prints the version.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">usage</span></div>
+          <pre><code>tez serve | decide | fit | suggest | eval | truncate</code></pre>
+        </div>
+
+        <h3 id="cli-backend">Backend options</h3>
+        <p>Shared by <code>serve</code>, <code>decide</code>, <code>fit</code>, <code>suggest</code> and <code>eval</code>.</p>
+        <dl class="flag-list">
+          <div><dt>--backend URL<span class="dflt">default http://127.0.0.1:8080, or TEZ_BACKEND</span></dt><dd>llama-server URL, or <code>fake</code> for the offline demo backend.</dd></div>
+          <div><dt>--template {gemma4,qwen3}<span class="dflt">default gemma4, or TEZ_TEMPLATE</span></dt><dd>Prompt template of the model behind <code>--backend</code>.</dd></div>
+          <div><dt>--embed-backend URL<span class="dflt">default: --backend, or TEZ_EMBED_BACKEND</span></dt><dd>Separate llama-server for probe features, started with <code>--embeddings --pooling last</code>.</dd></div>
+          <div><dt>--embed-template {gemma4,qwen3}<span class="dflt">default: --template</span></dt><dd>Prompt template of the embedding model.</dd></div>
+          <div><dt>--no-cache-prompt</dt><dd>Switch llama.cpp prompt caching off for every backend (hybrid Qwen3.5 GGUFs crash b11100 on partial prefix reuse).</dd></div>
+          <div><dt>--model-name NAME<span class="dflt">default: read from the server</span></dt><dd>Model name used in responses and calibration.</dd></div>
+        </dl>
+
+        <h3 id="cli-serve"><code>tez serve</code></h3>
+        <p>Run the HTTP server (Jev-compatible <code>/v1/systemone</code>).</p>
+        <dl class="flag-list">
+          <div><dt>--schemas DIR</dt><dd>Directory of <code>*.yaml</code> schemas; trained artefacts live in <code>&lt;dir&gt;/.tez/</code>.</dd></div>
+          <div><dt>--data-dir DIR<span class="dflt">default &lt;schemas&gt;/.tez</span></dt><dd>Where <code>POST /v1/feedback</code> writes.</dd></div>
+          <div><dt>--host HOST<span class="dflt">default 127.0.0.1</span></dt><dd>Address to listen on.</dd></div>
+          <div><dt>--port PORT<span class="dflt">default 8787</span></dt><dd>Port to listen on.</dd></div>
+          <div><dt>--api-key KEY<span class="dflt">default TEZ_API_KEY</span></dt><dd>Require <code>Authorization: Bearer &lt;key&gt;</code>.</dd></div>
+          <div><dt>--no-cors</dt><dd>Do not send CORS headers (open to every origin by default).</dd></div>
+          <div><dt>--log-level LEVEL<span class="dflt">default info</span></dt><dd><code>critical</code>, <code>error</code>, <code>warning</code>, <code>info</code> or <code>debug</code>.</dd></div>
+        </dl>
+
+        <h3 id="cli-decide"><code>tez decide</code></h3>
+        <p>Decide one state and print the wire-format JSON. Give <code>--schema</code>, <code>--questions</code> or both, and exactly one of <code>--state</code> and <code>--state-file</code>.</p>
+        <dl class="flag-list">
+          <div><dt>--schema FILE</dt><dd>Schema YAML file; its fitted probes and calibration are used.</dd></div>
+          <div><dt>--questions FILE</dt><dd>JSON file with Jev questions (<code>{id: {type, instructions, criteria}}</code>).</dd></div>
+          <div><dt>--state TEXT</dt><dd>The state as text.</dd></div>
+          <div><dt>--state-file FILE</dt><dd>File with the state (<code>-</code> reads stdin; <code>*.json</code> is parsed as JSON).</dd></div>
+          <div><dt>--readout {auto,letters,probe}<span class="dflt">default auto</span></dt><dd>Which readout to use.</dd></div>
+          <div><dt>--abstain</dt><dd>Add the implicit <code>__none__</code> option to choice questions.</dd></div>
+          <div><dt>--alpha ALPHA</dt><dd>Gate: target error rate among acted decisions.</dd></div>
+          <div><dt>--compact</dt><dd>One-line JSON.</dd></div>
+        </dl>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez decide --backend http://127.0.0.1:8091 --template gemma4 \
+  --schema schemas/support-triage.yaml --state "Help! My payouts have been failing for 3 days."</code></pre>
+        </div>
+
+        <h3 id="cli-fit"><code>tez fit</code></h3>
+        <p>Train probes, temperatures and gate thresholds for a schema. Needs the <code>fit</code> extra.</p>
+        <dl class="flag-list">
+          <div><dt>--schema FILE<span class="dflt">required</span></dt><dd>Schema YAML file; artefacts go to <code>&lt;dir&gt;/.tez/&lt;name&gt;/</code>.</dd></div>
+          <div><dt>--labels FILE<span class="dflt">repeatable</span></dt><dd>Labelled JSONL rows <code>{"state": …, "labels": {question: label}}</code>.</dd></div>
+          <div><dt>--data-dir DIR<span class="dflt">default &lt;schema dir&gt;/.tez</span></dt><dd>Where recorded feedback lives.</dd></div>
+          <div><dt>--no-feedback</dt><dd>Ignore rows recorded through <code>POST /v1/feedback</code>.</dd></div>
+          <div><dt>--holdout FRACTION<span class="dflt">default 0.3</span></dt><dd>Share of each question's labels held out for calibration.</dd></div>
+          <div><dt>--min-labels N<span class="dflt">default 20</span></dt><dd>Fewest labels for which a probe is trained.</dd></div>
+          <div><dt>--seed N<span class="dflt">default 0</span></dt><dd>Seed for the split and the folds.</dd></div>
+          <div><dt>--no-letters</dt><dd>Skip the letters readout (no letters calibration, no blend).</dd></div>
+          <div><dt>--no-blend</dt><dd>Serve the probe alone, without the zero-shot letters prior.</dd></div>
+        </dl>
+
+        <h3 id="cli-suggest"><code>tez suggest</code></h3>
+        <p>Pick the most typical unlabelled states to label first. Needs the <code>fit</code> extra and an embedding backend.</p>
+        <dl class="flag-list">
+          <div><dt>--schema FILE<span class="dflt">required</span></dt><dd>Schema YAML file.</dd></div>
+          <div><dt>--unlabelled FILE<span class="dflt">required</span></dt><dd>JSONL rows with a state, or one state per line.</dd></div>
+          <div><dt>--n N<span class="dflt">default 25</span></dt><dd>How many rows to pick.</dd></div>
+          <div><dt>--question ID</dt><dd>Cluster on one question's prompt (default: all questions averaged).</dd></div>
+          <div><dt>--seed N<span class="dflt">default 0</span></dt><dd>Seed for the clustering.</dd></div>
+          <div><dt>--out FILE</dt><dd>Write the picks here (JSONL with empty labels) instead of stdout.</dd></div>
+        </dl>
+
+        <h3 id="cli-eval"><code>tez eval</code></h3>
+        <p>Accuracy and calibration (ECE) per question on labelled rows.</p>
+        <dl class="flag-list">
+          <div><dt>--schema FILE<span class="dflt">required</span></dt><dd>Schema YAML file.</dd></div>
+          <div><dt>--labels FILE<span class="dflt">required, repeatable</span></dt><dd>Labelled JSONL rows.</dd></div>
+          <div><dt>--readout {auto,letters,probe}<span class="dflt">default auto</span></dt><dd>Which readout to evaluate.</dd></div>
+          <div><dt>--alpha ALPHA</dt><dd>Also report the gate: share acted and error among acted.</dd></div>
+          <div><dt>--include-seen</dt><dd>Keep rows a probe was trained on.</dd></div>
+          <div><dt>--json FILE</dt><dd>Also write the results as JSON.</dd></div>
+        </dl>
+
+        <h3 id="cli-truncate"><code>tez truncate</code></h3>
+        <p>Keep the first N transformer blocks of a GGUF. Needs the <code>truncate</code> extra.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">usage</span></div>
+          <pre><code>tez truncate SRC N DST</code></pre>
+        </div>
+        <dl class="flag-list">
+          <div><dt>SRC</dt><dd>Input <code>.gguf</code>.</dd></div>
+          <div><dt>N</dt><dd>Blocks to keep.</dd></div>
+          <div><dt>DST</dt><dd>Output <code>.gguf</code>; it must differ from the input.</dd></div>
+        </dl>
+      </section>
+
+      <!-- ============================================================== Python -->
+      <section class="doc-section" aria-labelledby="python">
+        <h2 id="python">Python API</h2>
+        <p>The server is a thin layer over the <code>Tez</code> class, and the same engine runs in your own process. <code>decide</code> returns the wire-format response as a dict.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import Tez
+
+tez = Tez(backend="http://127.0.0.1:8091", template="gemma4")
+res = tez.decide(
+    "Help! My payouts have been failing for 3 days.",
+    questions={
+        "topic": {
+            "type": "choice",
+            "instructions": "What is the message about?",
+            "criteria": {"billing": "Payments, payouts, invoices", "technical": "Something is broken", "sales": None},
+        },
+    },
+)
+print(res["answers"]["topic"])      # the same shape as the HTTP response
+
+# with schemas, probes and a gate
+tez = Tez(backend="http://127.0.0.1:8091", template="gemma4",
+          embed_backend="http://127.0.0.1:8092", embed_template="qwen3", schemas="schemas")
+res = tez.decide("I can't log in since this morning.", schema="support-triage", alpha=0.05)
+print(res["tez"]["questions"])      # readout, act or escalate, p_correct, calibration_id</code></pre>
+        </div>
+        <h3 id="python-tez"><code>Tez(…)</code></h3>
+        <dl class="flag-list">
+          <div><dt>backend<span class="dflt">default http://127.0.0.1:8080</span></dt><dd>llama-server URL, <code>"fake"</code>, or a <code>Backend</code> instance.</dd></div>
+          <div><dt>template<span class="dflt">default "gemma4"</span></dt><dd>Prompt template of the letters model: <code>gemma4</code> or <code>qwen3</code>.</dd></div>
+          <div><dt>schemas</dt><dd>A directory of <code>*.yaml</code> schemas, a schema file, <code>Schema</code> objects, or a list of these.</dd></div>
+          <div><dt>embed_backend, embed_template</dt><dd>A separate server for probe features and its template (default: the letters backend and template).</dd></div>
+          <div><dt>cache_prompt<span class="dflt">default True</span></dt><dd>llama.cpp prompt caching; switched off automatically for Qwen3.5 model names.</dd></div>
+          <div><dt>data_dir</dt><dd>Where feedback is written (default <code>&lt;schema dir&gt;/.tez</code>).</dd></div>
+          <div><dt>model_name, embed_model_name</dt><dd>Override the model names read from the servers.</dd></div>
+        </dl>
+        <h3 id="python-methods">Methods</h3>
+        <dl class="flag-list">
+          <div><dt>decide(state, questions=None, schema=None, readout="auto", abstain=False, alpha=None, gate=None, model="tez-latest")</dt><dd>Decide one state. <code>schema</code> is a loaded name or a <code>Schema</code>; <code>gate=False</code> turns a schema's default gate off. Returns the response dict.</dd></div>
+          <div><dt>handle(body)</dt><dd>Validate and decide a wire-format request body, exactly as the server does.</dd></div>
+          <div><dt>add_schemas(source)</dt><dd>Load more schemas and their fitted artefacts; returns the names added.</dd></div>
+          <div><dt>health(), models(), schema_summaries(), schema_detail(name)</dt><dd>The bodies of <code>/healthz</code>, <code>/v1/models</code>, <code>/v1/schemas</code> and <code>/v1/schemas/{name}</code>.</dd></div>
+          <div><dt>record_feedback(body)</dt><dd>What <code>POST /v1/feedback</code> does: append a corrected label.</dd></div>
+        </dl>
+        <p>Errors are <code>TezError</code> subclasses carrying the HTTP status and type: <code>InvalidRequest</code> (422), <code>BackendRequestError</code> (422) and <code>BackendUnavailable</code> (503). The package also exports <code>load_schema</code>, <code>load_schemas</code>, <code>Schema</code>, <code>Question</code>, <code>parse_question</code>, <code>LlamaCppBackend</code> and <code>FakeBackend</code>. Fitting is in <code>tez.fit</code> (<code>fit</code>, <code>suggest</code>, <code>evaluate</code>), and <code>tez.server.create_app(tez, api_key=None, cors=True)</code> returns the FastAPI application if you want to mount it in your own server.</p>
+      </section>
+
+      <!-- ============================================================== troubleshooting -->
+      <section class="doc-section" aria-labelledby="troubleshooting">
+        <h2 id="troubleshooting">Troubleshooting</h2>
+
+        <h3 id="ts-qwen">llama-server crashes on a Qwen3.5 model</h3>
+        <p>Partial reuse of a cached prompt crashes llama.cpp b11100 with hybrid Qwen3.5 GGUFs. Tez switches caching off for backends whose model name matches Qwen3.5; if your file is named otherwise, pass <code>--no-cache-prompt</code> (or <code>--model-name</code>), and send <code>"cache_prompt": false</code> yourself when you call llama-server directly.</p>
+
+        <h3 id="ts-swa">Every request re-reads the whole prompt</h3>
+        <p>Start Gemma with <code>--swa-full</code>. Without it the sliding-window cache cannot be rolled back to the shared prefix and each call pays for the full prompt: 205 ms instead of 30 ms per streamed word in the voice loop. Check <code>timings.prompt_n</code> in a <code>/completion</code> response.</p>
+
+        <h3 id="ts-eos">No token probabilities from a depth-pruned model</h3>
+        <p>A cut model sometimes puts end-of-sequence first when read greedily, and <code>/completion</code> then returns no <code>completion_probabilities</code>. Tez repeats the request with <code>"ignore_eos": true</code>; do the same when you call llama-server yourself.</p>
+
+        <h3 id="ts-503">503 backend_unavailable</h3>
+        <p>Tez could not reach the model server, or the server is still loading (llama-server answers 503 while it loads, and Tez retries twice). <code>GET /healthz</code> reports <code>backend_status: "unreachable"</code> when nothing answers at <code>--backend</code>.</p>
+
+        <h3 id="ts-playground">The playground cannot reach my server</h3>
+        <p>The playground runs in your browser and calls <code>http://127.0.0.1:8787</code> directly, so the request never leaves your machine. Start <code>tez serve</code> without <code>--no-cors</code>. The first time a public page calls your machine, Chrome asks whether the site may connect to devices on your local network: allow it for this site. Tez answers the browser's private-network preflight with <code>Access-Control-Allow-Private-Network: true</code> by default. A server started with <code>--api-key</code> rejects requests that do not send the key.</p>
+
+        <h3 id="ts-stale">A fitted probe is not used</h3>
+        <p>Fits are tied to the question's prompt and to the model. After editing instructions, options, examples or the template, or serving another model, <code>GET /v1/schemas/{name}</code> shows <code>"probe": "stale"</code> with a note, and the question falls back to uncalibrated letters. Run <code>tez fit</code> again.</p>
+
+        <h3 id="ts-template">Flat or wrong letters with your own prompts</h3>
+        <p>Gemma 4 is a thinking model: unless the prompt ends with an empty thought channel, its first token is a channel marker, not an option letter. Tez's <code>gemma4</code> template ends with <code>&lt;|turn&gt;model</code>, <code>&lt;|channel&gt;thought</code>, <code>&lt;channel|&gt;</code>; use the template that matches the model behind <code>--backend</code>.</p>
+
+        <h3 id="ts-windows">Stopping llama-server on Windows</h3>
+        <p><code>taskkill /IM llama-server.exe</code> silently fails under Git Bash, which rewrites <code>/IM</code> as a path. Use PowerShell, <code>Stop-Process -Name llama-server</code>, and check <code>/props</code> before the next run.</p>
+      </section>
+
+      <!-- ============================================================== FAQ -->
+      <section class="doc-section" aria-labelledby="faq">
+        <h2 id="faq">FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Is Tez Jev?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p>No. Tez is not affiliated with TypeSafe AI. It speaks the same wire format, so clients written for Jev work with it, but it is built from the published technique (reading a decision from one forward pass of an open model), and nothing in it was trained on or derived from Jev's outputs; Jev's terms forbid that. Jev was never run for any number on this site: its figures are third-party published and labelled as such.</p></div>
+          </details>
+          <details>
+            <summary>What hardware do I need?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p>Every number here comes from one RTX 5080 laptop GPU with 16 GB, running llama.cpp b11100. Gemma 4 12B at Q8_0 is the default for zero-shot letters; the cut Qwen3.5-4B for probes is a 3.53 GB file. Other GPUs, CPUs and Apple silicon can run llama.cpp, but they have not been measured here.</p></div>
+          </details>
+          <details>
+            <summary>What are the licences?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p>Tez's code is MIT. The Gemma 4 and Qwen3.5 weights are Apache-2.0. The SemIf fixtures and prompt code vendored in <code>data/semif/</code> are MIT. This site's fonts (Geist) are under the SIL Open Font License 1.1 and its icons (Lucide) under the ISC licence; see <a href="./assets/LICENSES.md">assets/LICENSES.md</a>.</p></div>
+          </details>
+          <details>
+            <summary>Does Tez generate text?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p>No. Each question is one forward pass, and the answer is read from the next-token distribution (letters) or from a hidden state (probe). <code>usage.output_tokens</code> is always 0.</p></div>
+          </details>
+          <details>
+            <summary>Can I try the API without a model?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p><code>tez serve --backend fake</code> runs an offline stand-in that answers from keyword overlap. It is not a model and its answers mean nothing; it exists for wiring clients and tests.</p></div>
+          </details>
+          <details>
+            <summary>Is Tez on PyPI, a hosted service or the JevBench leaderboard?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="faq-body"><p>None of the three. Install it from GitHub; it runs on your machine and there is no hosted version. Tez has not been submitted to JevBench, so it holds no rank there; the public-tier scores on the <a href="./benchmarks.html#jevbench">benchmarks page</a> use the leaderboard's formulas and are indicative only.</p></div>
+          </details>
+        </div>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-blurb">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="./usecases.html">Use cases</a></li><li><a href="./playground.html">Playground</a></li><li><a href="./benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="./research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base"><span>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</span><span>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></span></div>
+  </div>
+</footer>
+</body>
+</html>

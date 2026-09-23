@@ -1,0 +1,78 @@
+/* Research hub: the report card, the probe-lab figure, the figures gallery and the citation. */
+
+/* report summary with the download beside it */
+.report-block { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--s-6) var(--s-7); align-items: start; }
+.report-block > * + * { margin-top: 0; }
+.report-summary > * + * { margin-top: var(--s-4); }
+.report-summary ul { padding-left: 1.25em; }
+.report-summary li + li { margin-top: 8px; }
+
+.report-card {
+  position: sticky; top: calc(var(--header-h) + var(--s-5));
+  display: grid; gap: var(--s-4);
+  padding: var(--s-5);
+  border: 1px solid var(--border); border-radius: var(--r-xl);
+  background: var(--bg); box-shadow: var(--shadow-md);
+}
+.report-card .doc-icon {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md);
+  background: var(--accent-soft); color: var(--accent);
+}
+.report-card .doc-icon svg { width: 22px; height: 22px; }
+.report-card .report-title { margin: 0; font-size: var(--fs-md); line-height: 1.35; font-weight: 600; letter-spacing: -0.01em; color: var(--text); max-width: none; }
+.report-card .report-subtitle { margin: 4px 0 0; font-size: var(--fs-sm); color: var(--text-muted); max-width: none; }
+.report-meta { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.report-meta li { margin: 0; max-width: none; }
+.report-meta .pill { font-size: 12px; font-weight: 520; }
+.report-card .btn { width: 100%; }
+.report-links { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: var(--fs-sm); }
+.report-links li { margin: 0; max-width: none; }
+.report-links a { display: inline-flex; align-items: center; gap: 8px; }
+.report-links svg { width: 15px; height: 15px; flex: none; }
+
+@media (max-width: 900px) {
+  .report-block { grid-template-columns: minmax(0, 1fr); }
+  .report-card { position: static; order: -1; }
+}
+
+/* findings: the lead phrase carries the claim */
+.findings li + li { margin-top: 12px; }
+
+/* figures: PNGs are drawn on white, so frame them as paper in both themes */
+.paper {
+  display: block; background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-md);
+  padding: 10px; overflow: hidden;
+}
+.paper img { width: 100%; height: auto; }
+
+.lab-figure { margin: var(--s-5) 0 0; }
+.lab-figure figcaption { margin-top: var(--s-3); font-size: var(--fs-sm); color: var(--text-muted); max-width: 72ch; }
+.lab-figure a.paper { transition: border-color var(--t-fast) var(--ease-out); }
+.lab-figure a.paper:hover { border-color: var(--border-strong); }
+
+.figure-grid { list-style: none; margin: var(--s-5) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-5); }
+.figure-grid > li { margin: 0; max-width: none; }
+.fig-card { display: grid; gap: var(--s-3); margin: 0; }
+.fig-card .paper { aspect-ratio: 3 / 2; display: grid; place-items: center; transition: border-color var(--t-fast) var(--ease-out); }
+.fig-card .paper:hover { border-color: var(--border-strong); }
+.fig-card .paper img { width: 100%; height: 100%; object-fit: contain; }
+.fig-card.is-tall .paper img { object-fit: cover; object-position: top center; }
+.fig-card figcaption { display: grid; gap: 4px; font-size: var(--fs-sm); line-height: 1.5; }
+.fig-card .fig-name { font-weight: 600; color: var(--text); }
+.fig-card .fig-desc { color: var(--text-muted); }
+.fig-card .fig-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); }
+.fig-card .fig-meta a { color: inherit; }
+@media (max-width: 720px) { .figure-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* lists that are layouts, not prose: undo the prose list indent and rhythm */
+.prose .figure-grid, .prose .report-meta, .prose .report-links, .prose .source-list { padding-left: 0; }
+.prose .figure-grid > li + li, .prose .report-meta li + li, .prose .report-links li + li { margin-top: 0; }
+
+/* sources */
+.source-list { list-style: none; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--border); }
+.prose .source-list { padding-left: 0; }
+.source-list > li { margin: 0; max-width: none; padding: 12px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 4px 24px; font-size: var(--fs-sm); }
+.prose .source-list > li + li { margin-top: 0; }
+.source-list a { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.source-list span { color: var(--text-muted); }
+@media (max-width: 640px) { .source-list > li { grid-template-columns: minmax(0, 1fr); } }

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playground · Tez</title>
+<meta name="description" content="Send typed questions to a Tez server on your own machine and read the calibrated answers, the raw JSON and the matching curl and Python requests. Without a server it shows recorded replays, labelled as such.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Tez playground">
+<meta property="og:description" content="Call a local Tez server from your browser: answers, JSON, curl and Python.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/css/tokens.css">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/tez-ui.css">
+<link rel="stylesheet" href="./assets/css/playground.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="./assets/js/site.js" defer></script>
+<script src="./assets/js/tez-ui.js" defer></script>
+<script src="./assets/js/playground.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-8-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container pg-page">
+    <header class="pg-top">
+      <h1>Playground</h1>
+      <p class="lead">Send typed questions to a Tez server on your machine. The page calls the address you enter straight from your browser; nothing goes anywhere else.</p>
+    </header>
+
+    <section class="pg-conn" aria-labelledby="pg-conn-title">
+      <h2 id="pg-conn-title" class="visually-hidden">Connection</h2>
+      <form class="pg-conn-form" data-conn-form novalidate>
+        <div class="field pg-field-base">
+          <label for="pg-base">Server</label>
+          <input id="pg-base" type="url" value="http://127.0.0.1:8787" spellcheck="false" autocomplete="off" aria-describedby="pg-conn-hint" data-base>
+        </div>
+        <div class="field pg-field-key">
+          <label for="pg-key">API key <span class="optional">optional</span></label>
+          <input id="pg-key" type="password" autocomplete="off" spellcheck="false" placeholder="Only with tez serve --api-key" data-key>
+        </div>
+        <div class="pg-conn-actions">
+          <button class="btn btn-primary" type="submit" data-connect><span data-connect-label>Connect</span></button>
+          <button class="btn btn-ghost" type="button" data-disconnect hidden>Disconnect</button>
+        </div>
+      </form>
+      <div class="pg-conn-foot">
+        <label class="check"><input type="checkbox" data-remember><span>Remember the key in this browser</span></label>
+        <p class="pg-hint" id="pg-conn-hint">Chrome may ask to allow this page to reach devices on your local network. CORS is open on <code>tez serve</code> by default.</p>
+      </div>
+      <div class="pg-status" data-status role="status" aria-live="polite"></div>
+    </section>
+
+    <div class="pg-grid">
+      <section class="pg-card pg-build" aria-labelledby="pg-build-title">
+        <div class="pg-card-head">
+          <h2 id="pg-build-title">Request</h2>
+          <span class="pg-endpoint"><code>POST /v1/systemone</code></span>
+        </div>
+        <div class="pg-card-body">
+          <div class="field-row field-row-stack">
+            <div class="field">
+              <label for="pg-usecase">Use case</label>
+              <select id="pg-usecase" data-usecase>
+                <option value="">Loading use cases</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="pg-sample">Sample</label>
+              <select id="pg-sample" data-sample disabled>
+                <option value="">No samples</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-head">
+              <label for="pg-state">State</label>
+              <div class="segmented seg-sm" role="group" aria-label="Send the state as" data-state-mode>
+                <button type="button" aria-pressed="true" data-mode="text">Text</button>
+                <button type="button" aria-pressed="false" data-mode="json">JSON</button>
+              </div>
+            </div>
+            <textarea id="pg-state" rows="5" spellcheck="false" aria-describedby="pg-state-msg" data-state></textarea>
+            <p class="field-msg" id="pg-state-msg" data-state-msg></p>
+          </div>
+
+          <div class="field">
+            <div class="field-head">
+              <label for="pg-questions">Questions <span class="optional">wire format, JSON</span></label>
+              <button class="btn btn-ghost btn-sm pg-format" type="button" data-format>Format JSON</button>
+            </div>
+            <textarea id="pg-questions" class="mono" rows="14" spellcheck="false" aria-describedby="pg-q-msg" data-questions></textarea>
+            <p class="field-msg" id="pg-q-msg" data-q-msg></p>
+          </div>
+
+          <fieldset class="pg-options">
+            <legend>Tez options</legend>
+            <div class="field-row">
+              <div class="field">
+                <label for="pg-readout">Readout</label>
+                <select id="pg-readout" data-readout>
+                  <option value="auto">auto (probe if trained)</option>
+                  <option value="letters">letters (zero-shot)</option>
+                  <option value="probe">probe (needs tez fit)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="pg-alpha">Gate alpha <span class="optional">optional</span></label>
+                <input id="pg-alpha" type="text" inputmode="decimal" placeholder="none, e.g. 0.05" autocomplete="off" aria-describedby="pg-tez-msg" data-alpha>
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" data-abstain><span>Abstain: add <code>__none__</code>, “none of these fits”, to choice questions</span></label>
+            <p class="field-msg" id="pg-tez-msg" data-tez-msg></p>
+          </fieldset>
+
+          <div class="pg-send">
+            <button class="btn btn-primary" type="button" data-send><span data-send-label>Send request</span></button>
+            <p class="pg-send-note" data-send-note></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="pg-card pg-result" aria-labelledby="pg-result-title">
+        <div class="pg-card-head">
+          <h2 id="pg-result-title">Response</h2>
+          <span data-origin></span>
+        </div>
+        <div class="tabs pg-tabs" role="tablist" aria-label="Response views">
+          <button type="button" role="tab" id="pg-tab-answers" aria-controls="pg-answers" aria-selected="true">Answers</button>
+          <button type="button" role="tab" id="pg-tab-json" aria-controls="pg-json" aria-selected="false" tabindex="-1">JSON</button>
+          <button type="button" role="tab" id="pg-tab-curl" aria-controls="pg-curl" aria-selected="false" tabindex="-1">curl</button>
+          <button type="button" role="tab" id="pg-tab-python" aria-controls="pg-python" aria-selected="false" tabindex="-1">Python</button>
+        </div>
+        <div class="pg-panels">
+          <div class="pg-panel" id="pg-answers" role="tabpanel" aria-labelledby="pg-tab-answers">
+            <div class="pg-banner" data-banner hidden></div>
+            <p class="pg-meta" data-meta hidden></p>
+            <div class="pg-out" data-out></div>
+            <p class="visually-hidden" aria-live="polite" data-live></p>
+          </div>
+          <div class="pg-panel" id="pg-json" role="tabpanel" aria-labelledby="pg-tab-json" hidden>
+            <div class="code code-pane pg-code">
+              <div class="code-head"><span class="code-title" data-json-title>Response JSON</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre tabindex="0" aria-label="Response JSON"><code data-json>No response yet.</code></pre>
+            </div>
+          </div>
+          <div class="pg-panel" id="pg-curl" role="tabpanel" aria-labelledby="pg-tab-curl" hidden>
+            <div class="code code-pane pg-code">
+              <div class="code-head"><span class="code-title">This request with curl · POSIX shell</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre tabindex="0" aria-label="curl request"><code data-curl></code></pre>
+            </div>
+          </div>
+          <div class="pg-panel" id="pg-python" role="tabpanel" aria-labelledby="pg-tab-python" hidden>
+            <div class="code code-pane pg-code">
+              <div class="code-head"><span class="code-title">This request with Python · requests</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+              <pre tabindex="0" aria-label="Python request"><code data-python></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-about">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="./usecases.html">Use cases</a></li><li><a href="./playground.html">Playground</a></li><li><a href="./benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="./research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</p>
+      <p>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

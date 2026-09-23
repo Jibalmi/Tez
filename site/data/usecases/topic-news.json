@@ -1,0 +1,59 @@
+{
+ "schema": {
+  "name": "topic-news",
+  "description": "File each incoming news item under one of four broad sections.",
+  "state": "One news item as an object with a `text` field: the headline, optionally followed by its first paragraph.",
+  "questions": {
+   "topic": {
+    "type": "choice",
+    "instructions": "What is the topic of `text`?",
+    "criteria": {
+     "World": "world news, politics, international affairs",
+     "Sports": "sports",
+     "Business": "business, economy, finance",
+     "Sci/Tech": "science and technology"
+    }
+   }
+  },
+  "gate": null
+ },
+ "samples": [
+  {
+   "state": {
+    "text": "Coastal states sign fisheries pact after three years of talks. Ministers from six countries agreed on shared quotas for the northern shelf, ending a dispute that had closed ports twice this year."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "text": "Rivers United clinch the title on the final day. A stoppage-time header gave the club its first league crown in 31 years as their closest rivals drew away from home."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "text": "Harbor Point Energy to cut 1,200 jobs as profits slide. The utility said third-quarter earnings fell 38 percent on lower wholesale power prices and higher borrowing costs."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "text": "Battery cell keeps 90% of its capacity after 5,000 charge cycles, researchers report. The team combined a silicon-carbon anode with a new electrolyte additive, according to a paper published this week."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "text": "Investor group buys basketball franchise for $2.1 billion. The sale, approved by the league's owners on Tuesday, is the second-highest price ever paid for a team."
+   },
+   "note": "synthetic example"
+  },
+  {
+   "state": {
+    "text": "Lawmakers approve rules forcing app stores to allow outside payment systems. The regulation takes effect next year and applies to platforms with more than 45 million monthly users."
+   },
+   "note": "synthetic example"
+  }
+ ],
+ "yaml": "# Tez schema (format: docs/API.md, \"Schema files\"). The four labels, their descriptions and the instruction are\n# the ones used for the AG News measurement (experiments/bench_h2h.py); the state is an object with a `text` field.\nname: topic-news\ndescription: File each incoming news item under one of four broad sections.\nstate: \"One news item as an object with a `text` field: the headline, optionally followed by its first paragraph.\"\nquestions:\n  topic:\n    type: choice\n    instructions: What is the topic of `text`?\n    criteria:\n      World: world news, politics, international affairs\n      Sports: sports\n      Business: business, economy, finance\n      Sci/Tech: science and technology\n"
+}
