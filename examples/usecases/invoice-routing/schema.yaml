@@ -1,0 +1,27 @@
+# Tez schema (format: docs/API.md, "Schema files"). Gallery example: compute totals and differences in code
+# and pass them in the state; one forward pass is weak at arithmetic.
+name: invoice-routing
+description: Decide what accounts payable does with a vendor invoice after matching it against the purchase order and the goods receipt.
+state: "One vendor invoice as a JSON object: the invoice lines, the purchase order it cites, the goods receipt, and the vendor's recent invoices."
+questions:
+  disposition:
+    type: choice
+    instructions: How should accounts payable handle this invoice?
+    criteria:
+      approve: Invoice, purchase order and goods receipt agree; approve for payment.
+      hold: Something must be confirmed with the vendor or the requester before paying.
+      reject: Must not be paid as submitted; a duplicate, unauthorised or materially wrong invoice.
+  missing_po:
+    type: noul
+    instructions: Is the invoice missing a valid purchase order?
+    criteria:
+      "true": No PO number is given, or the PO it cites does not appear in the record or is closed.
+      "false": The invoice cites an open purchase order that appears in the record.
+  amount_mismatch:
+    type: noul
+    instructions: Do the invoiced quantities or amounts differ from the purchase order or the goods receipt by more than rounding?
+    criteria:
+      "true": Quantity, unit price, total, tax or freight differs by more than a few cents.
+      "false": Quantities and amounts reconcile, allowing for rounding.
+gate:
+  alpha: 0.05   # conformal gate (docs/API.md): needs a fitted schema (tez fit); answers then carry act or escalate

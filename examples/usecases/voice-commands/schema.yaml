@@ -1,0 +1,27 @@
+# Tez schema (format: docs/API.md, "Schema files"). The 16 actions and descriptions are the measured set in
+# data/voice/intents.json. Stream the transcript word by word; a confident "none" on a partial transcript means
+# "keep listening", not "do nothing" (BENCHMARKS.md section 3).
+name: voice-commands
+description: Turn a spoken command into a desktop action while the user is still speaking (open apps, play media, type text).
+state: "The transcript of one spoken command so far, as the speech recogniser streams it: lowercase words, no punctuation."
+questions:
+  action:
+    type: choice
+    instructions: Which action does the user want the computer to take?
+    criteria:
+      open_notes: Open the notes or notepad application.
+      type_text: Type the dictated text into the app that is currently in focus.
+      open_youtube: Open YouTube without playing anything in particular.
+      play_youtube: Search for and play a specific video, channel or topic on YouTube.
+      open_spotify: Open Spotify without playing anything in particular.
+      play_liked_songs: Play the user's own liked or saved songs collection on Spotify.
+      play_spotify: Play a specific song, artist, album or playlist on Spotify.
+      pause_media: Pause or stop whatever is currently playing.
+      resume_media: Resume or continue playback that was paused.
+      next_track: Skip to the next track or video.
+      volume_up: Make the sound louder by increasing the volume.
+      volume_down: Make the sound quieter by decreasing the volume.
+      open_browser: Open the web browser without searching for anything.
+      search_web: Search the web or look something up online for the user.
+      close_app: Close the current window or a named application.
+      none: "Out of scope: chit-chat, a question, or a request for something the assistant cannot do."

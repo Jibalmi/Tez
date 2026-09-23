@@ -537,6 +537,21 @@ Neither family is both earlier and as safe as the default; the default stays.
 
 Weighted over the three public tiers with the leaderboard's weights (hard 30 %, easy 14 %, standard 28 %; no judge tier available), Tez's intelligence is **78.2**. The leaderboard's headline uses a held-out tier plus a judge tier (Jev 85.7, SemIf 79.0, Laya 45.8), so these public numbers are indicative only. The hard tier's one collapsed family is `temporal_numeric` (2/15): date and quantity arithmetic that a single forward pass cannot do.
 
+**Through the runtime** (`tez serve`, TypeSafe wire format, `release/jevbench/run_public.py`, 2026-09-23): standard and easy
+on llama-server `-c 4096 --swa-full` (`results/jevbench_tez_server_short_warm.json`, second pass on a warm server; the first
+pass after a restart had p50 0.192 s on standard, same accuracy); hard on `-c 8192` without `--swa-full`, because the full
+sliding-window cache at 8k spills past 16 GB (`results/jevbench_tez_server_hard.json`; answers unchanged, every prompt
+evaluated in full, so its times are pessimistic).
+
+| tier (n) | accuracy / intelligence / ECE / median s / p95 s |
+|---|---:|
+| original (72) | **0.958 / 94.0 / 0.039 / 0.052 s / 0.087 s** (paraphrase-pair consistency 0.917) |
+| easy (48) | **1.000 / 100 / 0.000 / 0.050 s / 0.083 s** |
+| hard (111) | **0.703 / 55.2 / 0.241 / 0.716 s / 2.173 s** |
+
+Weighted over the public tiers with the leaderboard's weights: **79.0** through the runtime (78.2 through the harness).
+Indicative only; Tez has not been submitted to the leaderboard.
+
 ## 6. Audit trail
 
 The first draft's balanced accuracy was keyed on gold *position* instead of option *id* (inflated by 1–3 points; all numbers here are corrected), and its "~110 ms floor / no prefix reuse" was the sliding-window cache (fixed with `--swa-full`). Runs that hit the wrong model are quarantined under `results/INVALID_wrongmodel_*`. Every run writes a manifest with data SHA-256, model path and settings.

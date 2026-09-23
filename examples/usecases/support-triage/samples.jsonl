@@ -1,0 +1,6 @@
+{"state": "Hi, I was billed $49 twice for March (INV-20931 and INV-20977). Can you refund the second one? Thanks!", "note": "synthetic example"}
+{"state": {"channel": "email", "account": {"plan": "Business", "seats": 40, "tenure_months": 26, "open_tickets": 1}, "message": "Since this morning's SSO change nobody on our team can log in. 40 people are locked out and we have a client demo at 2pm. Please call me back ASAP."}, "note": "synthetic example"}
+{"state": "hey quick q, do you do nonprofit discounts? we'd need about 25 seats starting next month", "note": "synthetic example"}
+{"state": {"channel": "chat", "account": {"plan": "Pro", "seats": 5, "tenure_months": 7, "open_tickets": 3}, "message": "Third time writing about this. Every CSV export comes out empty. If it's not fixed by Friday we're moving to another vendor."}, "note": "synthetic example"}
+{"state": "Tracking says it was delivered yesterday but there's nothing at my door or with the neighbours. It's a birthday present for tomorrow :(", "note": "synthetic example"}
+{"state": "Bonjour, je n'arrive pas à télécharger ma facture de février depuis mon espace client, le bouton ne fait rien.", "note": "synthetic example"}

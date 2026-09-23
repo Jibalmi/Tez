@@ -1,0 +1,3543 @@
+{
+ "summary": {
+  "original": {
+   "n": 72,
+   "n_valid": 72,
+   "n_invalid": 0,
+   "n_errors": 0,
+   "accuracy": 0.9583333333333334,
+   "chance": 0.3111111111111111,
+   "intelligence": 93.95161290322581,
+   "ece15": 0.03529996257656398,
+   "nll": 0.14432148249582713,
+   "brier": 0.06319105016453042,
+   "mean_confidence": 0.9936332959098976,
+   "median_s": 0.1923949999982142,
+   "p95_s": 0.2804055549982879,
+   "speed_score": 94.3161243737605,
+   "speed_score_p95": 91.04426773984177,
+   "speed_axis": 92.68019605680114,
+   "speed_axis_selfhosted": 84.20062514957888,
+   "by_family": {
+    "adequacy": 0.9166666666666666,
+    "extraction": 1.0,
+    "intent": 1.0,
+    "ordinal": 1.0,
+    "policy": 0.8333333333333334,
+    "routing": 1.0
+   },
+   "pair_consistency": 0.9166666666666666
+  },
+  "easy": {
+   "n": 48,
+   "n_valid": 48,
+   "n_invalid": 0,
+   "n_errors": 0,
+   "accuracy": 1.0,
+   "chance": 0.284375,
+   "intelligence": 100.0,
+   "ece15": 2.0585710280851544e-07,
+   "nll": 2.0585714829581686e-07,
+   "brier": 1.3886825513623755e-13,
+   "mean_confidence": 0.9999997941428972,
+   "median_s": 0.061481849996198434,
+   "p95_s": 0.11453713500377488,
+   "speed_score": 104.22506146005855,
+   "speed_score_p95": 98.82107368787491,
+   "speed_axis": 101.52306757396673,
+   "speed_axis_selfhosted": 89.85170796344647,
+   "by_family": {
+    "extraction": 1.0,
+    "fact": 1.0,
+    "intent": 1.0,
+    "tool_selection": 1.0
+   }
+  }
+ },
+ "public_weighted": {
+  "intelligence": 95.96774193548387,
+  "weights": {
+   "original": 0.28,
+   "easy": 0.14
+  },
+  "tiers": [
+   "original",
+   "easy"
+  ],
+  "note": "leaderboard tier weights (hard 0.30, easy 0.14, standard 0.28) renormalised over the public tiers run; the judge tier (0.28) is not public. Indicative only: the leaderboard uses held-out items."
+ },
+ "manifest": {
+  "runner": "release/jevbench/run_public.py",
+  "runner_version": "1.0",
+  "started_utc": "2026-09-23T18:56:41+00:00",
+  "finished_utc": "2026-09-23T18:56:56+00:00",
+  "endpoint": "http://127.0.0.1:8787/v1/systemone",
+  "request_model": "tez-latest",
+  "server_models": [
+   "tez-0.1.0 (gemma-4-12b-q8_0, letters)"
+  ],
+  "models_endpoint": {
+   "models": [
+    {
+     "name": "tez-latest",
+     "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)",
+     "release_date": "2026-09-24"
+    }
+   ]
+  },
+  "healthz": {
+   "status": "ok",
+   "version": "0.1.0",
+   "backend": "http://127.0.0.1:8091",
+   "template": "gemma4",
+   "embed_backend": null,
+   "schemas": [],
+   "probes": {},
+   "backend_status": "ok",
+   "model": "gemma-4-12b-q8_0"
+  },
+  "data_dir": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez\\data\\jevbench",
+  "data": {
+   "original": {
+    "file": "original.jsonl",
+    "sha256": "5c2414edb3006b8bfcb70fda433f0f9ca015759433849f8d3104328a1f7c4180",
+    "items": 72
+   },
+   "easy": {
+    "file": "easy.jsonl",
+    "sha256": "231df3c2c8e88a1a8c137ebe85de96ba70fabd330849098ac7b3c52c70b7172b",
+    "items": 48
+   }
+  },
+  "tiers": [
+   "original",
+   "easy"
+  ],
+  "criteria_order": "labels",
+  "question_id": "decision",
+  "warmup": 1,
+  "limit": null,
+  "timeout_s": 300.0,
+  "timing": "caller wall time per request including the network; one request at a time",
+  "python": "3.14.3",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "choice_label_disagreements": 0
+ },
+ "markdown_table": "| tier (n) | accuracy | chance | intelligence | ECE-15 | NLL | p50 s | p95 s | speed score p50 / p95 | invalid + errors |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| standard (original) (72) | 0.958 | 0.311 | 94.0 | 0.035 | 0.144 | 0.192 | 0.280 | 94.3 / 91.0 | 0 |\n| easy (48) | 1.000 | 0.284 | 100.0 | 0.000 | 0.000 | 0.061 | 0.115 | 104.2 / 98.8 | 0 |\n\nPublic-tier intelligence, leaderboard weights over original, easy (judge tier not public): 96.0 (indicative only).",
+ "rows": [
+  {
+   "id": "original-policy-01-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-01",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.34318129999155644,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 341.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999613097563,
+    3.8690243640014044e-08
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-01-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-01",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.2356549999967683,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 233.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999997457560472,
+    2.5424395279257267e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-02-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-02",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.2084242999990238,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 206.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.0003664296361759467,
+    0.999633570363824
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-policy-02-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-02",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.22551960000419058,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 223.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.6380916583751524,
+    0.3619083416248477
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-03-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-03",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.21502489999693353,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 213.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.002335635818299431,
+    0.9976643641817006
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-policy-03-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-03",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.21015749999787658,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 208.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    8.11668594413728e-06,
+    0.9999918833140559
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-policy-04-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-04",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.22883910000382457,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 227.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999956021742341,
+    4.397825765872773e-06
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-04-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-04",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.20416049999766983,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 202.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.999978048590859,
+    2.1951409140979655e-05
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-05-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-05",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.23824770000646822,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 236.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.999996643419105,
+    3.3565808950042123e-06
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-05-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-05",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.23196119999920484,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 230.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999997970408276,
+    2.0295917236111198e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-policy-06-0",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-06",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.22694639999826904,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 225.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.00033032519500175717,
+    0.9996696748049982
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-policy-06-1",
+   "tier": "original",
+   "family": "policy",
+   "group": "original-policy-06",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.2206538000027649,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 218.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9325870180015675,
+    0.0674129819984325
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-intent-01-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-01",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.35685080000257585,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 355.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    9.668381724109418e-09,
+    0.9999999393030093,
+    2.8275718756047664e-09,
+    1.2304869521128124e-09,
+    4.6970550097585494e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-01-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-01",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.213489000001573,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 211.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.1520647667441287e-08,
+    0.9999998807371353,
+    3.804616539692987e-09,
+    1.4505789263581007e-09,
+    9.248702155188985e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-02-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-02",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.23818210000172257,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 235.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    4.476889679152859e-08,
+    1.2069770851425137e-07,
+    0.9999994116972041,
+    3.804106032884005e-08,
+    3.8479513036340357e-07
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-02-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-02",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.18960100000549573,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 187.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.659733442260894e-08,
+    9.326829110446486e-08,
+    0.9999996214263122,
+    2.3676833171568228e-08,
+    2.3503122919326626e-07
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-03-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-03",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.20292110000445973,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 201.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.9806651188409161e-07,
+    2.998045570818595e-07,
+    1.4547071728993932e-07,
+    0.9999991595985672,
+    1.9705964656371494e-07
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-03-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-03",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.1913936999917496,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 189.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.3645089621191264e-07,
+    1.4379576790252472e-07,
+    6.240978289373504e-08,
+    0.9999995458738891,
+    1.1146966393104907e-07
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-04-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-04",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.2011066999984905,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 199.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999593070417,
+    2.644370161936888e-08,
+    1.1912973564710333e-08,
+    7.044011055790859e-10,
+    1.6318820221155372e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-04-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-04",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.2004970999987563,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 198.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.999999965741658,
+    2.1913150839688772e-08,
+    9.25033894677837e-09,
+    7.048432729942772e-10,
+    2.390009059778613e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-05-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-05",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.2446773999981815,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 242.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.5362145901155035e-07,
+    2.4660354385292103e-07,
+    1.0668960825698411e-07,
+    6.07118079275059e-08,
+    0.999999432373581
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-05-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-05",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.19636819999141153,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 194.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.8478515838628134e-07,
+    3.3349957735709227e-07,
+    1.9809762113504178e-07,
+    8.952757248057052e-08,
+    0.9999990940900707
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-06-0",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-06",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.1944452000025194,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 192.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    9.281748017584789e-07,
+    1.1420610908434427e-06,
+    0.9999855797837217,
+    4.77294324356417e-07,
+    1.1872686061355158e-05
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-intent-06-1",
+   "tier": "original",
+   "family": "intent",
+   "group": "original-intent-06",
+   "qtype": "choice",
+   "labels": [
+    "cancel",
+    "refund",
+    "status",
+    "change_address",
+    "other"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.1926750999991782,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 191.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.3032285966550744e-07,
+    5.121674399280172e-07,
+    0.9999956080345409,
+    1.6248273184509352e-07,
+    3.4869924276744157e-06
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-ordinal-01-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-01",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.4484586000035051,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 446.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999842229264,
+    1.1208249962215325e-08,
+    3.848656988807357e-09,
+    7.201667280606425e-10
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-ordinal-01-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-01",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.2003238000033889,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 198.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999800570005,
+    1.2998078052936613e-08,
+    5.9666495348001564e-09,
+    9.782719309847104e-10
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-ordinal-02-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-02",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19211489999725018,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 189.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.1469034115934335e-07,
+    0.9999993856572579,
+    2.750568989732022e-07,
+    2.4595501879663426e-08
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-ordinal-02-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-02",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.2083786000002874,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 206.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.0770346134424742e-07,
+    0.9999998051734369,
+    7.940237527222462e-08,
+    7.72072654041524e-09
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-ordinal-03-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-03",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.1946872000116855,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 193.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.623406296452925e-08,
+    3.714602320519113e-07,
+    0.9999995390441168,
+    5.3261588298844565e-08
+   ],
+   "pred": 2
+  },
+  {
+   "id": "original-ordinal-03-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-03",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19481320001068525,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 192.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.719982426962258e-08,
+    4.4144573654094596e-07,
+    0.9999994506915267,
+    7.066291243141519e-08
+   ],
+   "pred": 2
+  },
+  {
+   "id": "original-ordinal-04-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-04",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19728289998602122,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 195.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    9.795939844766314e-08,
+    1.8440647630755173e-07,
+    6.532006322758096e-07,
+    0.9999990644334931
+   ],
+   "pred": 3
+  },
+  {
+   "id": "original-ordinal-04-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-04",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.2130063000076916,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 211.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.2394205526995551e-07,
+    2.1690817733424977e-07,
+    9.660855069664802e-07,
+    0.9999986930642605
+   ],
+   "pred": 3
+  },
+  {
+   "id": "original-ordinal-05-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-05",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19687620000331663,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 195.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999993028282642,
+    6.507112115162132e-07,
+    4.0913402467540375e-08,
+    5.547121896302106e-09
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-ordinal-05-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-05",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19142429999192245,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 189.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999997987517557,
+    1.7974741704997214e-07,
+    1.786423316858178e-08,
+    3.6365941148823228e-09
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-ordinal-06-0",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-06",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.23880600000848062,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 236.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    4.1983459085747895e-08,
+    1.0444422233620675e-06,
+    0.9999988470439718,
+    6.65303457715324e-08
+   ],
+   "pred": 2
+  },
+  {
+   "id": "original-ordinal-06-1",
+   "tier": "original",
+   "family": "ordinal",
+   "group": "original-ordinal-06",
+   "qtype": "score",
+   "labels": [
+    "0",
+    "1",
+    "2",
+    "3"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.20998639999015722,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 208.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.509463498088478e-08,
+    2.1820940005826664e-07,
+    0.9999997126826354,
+    3.401332953299003e-08
+   ],
+   "pred": 2
+  },
+  {
+   "id": "original-extraction-01-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-01",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.3240732999984175,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 322.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.685734369378202e-08,
+    0.9999998662518534,
+    2.9068199746266906e-09,
+    9.39839829340805e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-01-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-01",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.19775530000333674,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 196.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.66865098901494e-07,
+    0.9999989595849472,
+    9.766483916771125e-09,
+    8.637834698552665e-07
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-02-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-02",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.21070169999438804,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 208.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.0689188929867811e-07,
+    2.46028776104558e-07,
+    3.0009907241911454e-08,
+    0.9999996170694273
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-02-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-02",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.1961927999946056,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 193.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    7.929559627050255e-08,
+    2.4053317022769607e-07,
+    4.825003132544294e-08,
+    0.9999996319212022
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-03-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-03",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.10374240000965074,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 102.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999392420297,
+    2.386798286971156e-08,
+    5.196020687692973e-09,
+    3.169396681175206e-08
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-03-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-03",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.07272779999766499,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 71.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999749990179,
+    1.0224300376882882e-08,
+    3.6231339181724373e-09,
+    1.115354777321733e-08
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-04-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-04",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05664439999964088,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.974019125018089e-08,
+    7.237174943433826e-08,
+    0.9999997080857742,
+    1.798022851115491e-07
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-04-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-04",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05722360000072513,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.3338586153104887e-07,
+    6.68756265839766e-08,
+    0.9999995410046613,
+    2.587338506207074e-07
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-05-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-05",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.06774179999774788,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 66.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.434562802765997e-07,
+    3.972993049526514e-07,
+    4.348256481462341e-08,
+    0.9999994157618499
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-05-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-05",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.057719500007806346,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.9908774109071264e-06,
+    1.1154409254795514e-06,
+    9.433481280689328e-08,
+    0.9999967993468508
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-06-0",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-06",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.06840660001034848,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 66.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999492095654,
+    2.1599519624844086e-08,
+    8.991868527750268e-09,
+    2.0199046489510017e-08
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-extraction-06-1",
+   "tier": "original",
+   "family": "extraction",
+   "group": "original-extraction-06",
+   "qtype": "choice",
+   "labels": [
+    "courier",
+    "pickup",
+    "post",
+    "unknown"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05339129999629222,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 51.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999774726317,
+    1.4932271690466975e-08,
+    3.496050177894239e-09,
+    4.0990464370349174e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-adequacy-01-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-01",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.09400230000028387,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 92.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.998705693635371,
+    0.0012943063646290488
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-01-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-01",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.0647568999993382,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 63.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.02406976378587533,
+    0.9759302362141247
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-adequacy-02-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-02",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05676540000422392,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999992860060252,
+    7.139939748379934e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-02-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-02",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.059941999992588535,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999998629687362,
+    1.3703126373038662e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-03-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-03",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.06426039998768829,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 63.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999673537849625,
+    3.264621503749227e-05
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-03-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-03",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05945730001258198,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999847761935281,
+    1.5223806471871565e-05
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-04-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-04",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.055367999986629,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.1448541315537426e-07,
+    0.9999996855145868
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-adequacy-04-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-04",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.0555467999947723,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.860933566832372e-07,
+    0.9999993139066433
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-adequacy-05-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-05",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.07118659999105148,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 69.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999037849248499,
+    9.621507515012958e-05
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-05-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-05",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05243650000193156,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 51.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999820546228523,
+    1.7945377147682156e-05
+   ],
+   "pred": 0
+  },
+  {
+   "id": "original-adequacy-06-0",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-06",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05687410000246018,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    4.7815671466722165e-06,
+    0.9999952184328533
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-adequacy-06-1",
+   "tier": "original",
+   "family": "adequacy",
+   "group": "original-adequacy-06",
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.07195739999588113,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 70.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.0004108281856828322,
+    0.9995891718143172
+   ],
+   "pred": 1
+  },
+  {
+   "id": "original-routing-01-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-01",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 0,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.12318510000477545,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 121.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999975117435278,
+    1.2369737649106272e-06,
+    6.749909434498171e-08,
+    2.7502044004829753e-08,
+    1.1173037316273757e-08,
+    1.145108531537811e-06
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-01-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-01",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 0,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.07103379999171011,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 69.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.999996861371615,
+    2.176375187554103e-06,
+    1.2935135808834824e-07,
+    4.475565587856324e-08,
+    1.069644010980872e-08,
+    7.774497432526239e-07
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-02-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-02",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 1,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.05583679999108426,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    7.848249087430802e-09,
+    0.9999996966429822,
+    2.677211402323988e-07,
+    3.6117423525243953e-09,
+    7.380612786854395e-09,
+    1.6795273341150236e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-02-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-02",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 1,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.05822070001158863,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    5.861642780448792e-09,
+    0.9999998378300534,
+    1.3693302175483883e-07,
+    2.402806922248437e-09,
+    5.857239437842525e-09,
+    1.1115235761932441e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-03-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-03",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 2,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.07088839999050833,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 69.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.740988406164005e-08,
+    5.801872577502065e-08,
+    0.9999998843149905,
+    1.565781944088524e-08,
+    1.289983258626686e-08,
+    1.1698747555429475e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-03-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-03",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 2,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.06876239999837708,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 67.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.0152649599997806e-08,
+    6.327300968491719e-08,
+    0.9999998701458443,
+    1.9398957324525616e-08,
+    1.4751194385483993e-08,
+    1.2278344688971472e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-04-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-04",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 3,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.05564880000019912,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.2740193855468414e-07,
+    4.92075391781402e-07,
+    1.7039534649233917e-07,
+    0.9999979610055207,
+    8.710374184060955e-08,
+    1.1620180606254753e-06
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-04-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-04",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 3,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.05982209999638144,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.3452097889389487e-07,
+    6.581168568128137e-07,
+    2.212804705266687e-07,
+    0.9999896822272285,
+    1.6800562381895956e-07,
+    9.035848841411234e-06
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-05-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-05",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 4,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.06468379999569152,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 63.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.5532056835384465e-08,
+    7.974420753049569e-08,
+    8.081203929036355e-08,
+    2.9505949720368967e-08,
+    0.9999989678570265,
+    8.16548720236819e-07
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-05-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-05",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 4,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.060234000004129484,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    4.872630008321488e-08,
+    1.776262600714312e-07,
+    1.1760258289634308e-07,
+    5.792939751521004e-08,
+    0.9999895805808037,
+    1.0017534655832346e-05
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-06-0",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-06",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 5,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.05811399999947753,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    4.728662001676137e-08,
+    3.1835796438325247e-07,
+    3.753601480526681e-08,
+    1.3027243392793569e-08,
+    2.8616524725598053e-08,
+    0.9999995551756327
+   ],
+   "pred": 5,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "original-routing-06-1",
+   "tier": "original",
+   "family": "routing",
+   "group": "original-routing-06",
+   "qtype": "choice",
+   "labels": [
+    "math",
+    "coding",
+    "coding_agent",
+    "document",
+    "tools",
+    "general"
+   ],
+   "gold": 5,
+   "k": 6,
+   "gold_probs": null,
+   "s": 0.06271060000290163,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 61.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    7.0877942873546e-08,
+    4.5825107030799397e-07,
+    6.235254745148033e-08,
+    1.7570914112577433e-08,
+    4.124829886114534e-08,
+    0.9999993496992264
+   ],
+   "pred": 5,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-00",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.11256639999919571,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 111.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999852474035,
+    9.962855272554556e-09,
+    3.4753540590569974e-09,
+    6.946506576190584e-10,
+    6.197364499451656e-10
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-01",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05736719998822082,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.571105027021026e-09,
+    0.9999999755262792,
+    9.563655427248376e-09,
+    2.225804917637686e-09,
+    6.113155504700668e-09
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-02",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06092770000395831,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 59.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.186272907490503e-08,
+    1.3928526899688762e-07,
+    0.9999997831777759,
+    1.3929542662149646e-08,
+    3.174468338004778e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-03",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.07147360000817571,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 70.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    5.936777444852561e-08,
+    1.3393057705673028e-07,
+    4.458125918933667e-08,
+    0.9999996939256024,
+    6.819478688835598e-08
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-04",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06239040000946261,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 61.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.5522071904222525e-08,
+    1.7915941905854134e-07,
+    1.1056249028842717e-08,
+    7.046490102724258e-09,
+    0.9999997772157699
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-05",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "track_order",
+    "cancel_order",
+    "change_address",
+    "report_damage",
+    "billing_question"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.061157099989941344,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 59.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999826179236,
+    1.1497157858824307e-08,
+    4.450967276401671e-09,
+    9.368786928615618e-10,
+    4.970726228218297e-10
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-06",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.09881340000720229,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 97.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999817753046,
+    1.55956706752664e-08,
+    1.8061082923058982e-09,
+    3.253800366262566e-10,
+    4.975364550709352e-10
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-07",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06345869999495335,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 62.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.517527464884713e-09,
+    0.9999999884233021,
+    2.3895530145406333e-09,
+    1.2195334722230251e-09,
+    4.450083946487707e-09
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-08",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.0623588999878848,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 60.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.0286084961969406e-08,
+    1.5180041479579928e-07,
+    0.9999997322745786,
+    1.8110775005275457e-08,
+    7.752814662899426e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-09",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.07736979999754112,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 75.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.0318121534417141e-07,
+    6.435851079451172e-07,
+    7.664304935800356e-08,
+    0.9999990047895855,
+    7.180104192747151e-08
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-10",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06724340000073425,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 65.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.0443434133421277e-08,
+    7.10594672291286e-08,
+    1.3527241266540116e-08,
+    1.3075539540087425e-08,
+    0.9999998818943179
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-intent-11",
+   "tier": "easy",
+   "family": "intent",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "set_alarm",
+    "play_music",
+    "weather",
+    "send_message",
+    "turn_off_lights"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05509599999641068,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 53.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999902685721,
+    8.103575327418178e-09,
+    9.923364048586515e-10,
+    1.9347895565297967e-10,
+    4.420371953894105e-10
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-fact-00",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.1155983000062406,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 114.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    7.260497614236527e-08,
+    0.9999999273950239
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-01",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05761279999569524,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.999999580357029,
+    4.1964297106330184e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-fact-02",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.1183922999916831,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 117.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.455009637917897e-08,
+    0.9999999354499036
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-03",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.061806600002455525,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 60.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999996338499972,
+    3.661500027506201e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-fact-04",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.09933929999533575,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 97.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.6175850925392865e-07,
+    0.9999998382414907
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-05",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05351749999681488,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 52.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999996494534279,
+    3.505465720973746e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-fact-06",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.12191190000157803,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 120.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    2.793480058382869e-08,
+    0.9999999720651994
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-07",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.08875260000058915,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 86.8,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999996429299777,
+    3.5707002238254007e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-fact-08",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.0940240000054473,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 92.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    7.578086402837414e-08,
+    0.999999924219136
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-09",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.05894300001091324,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 57.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999434546476,
+    5.6545352454861193e-08
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-fact-10",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 1,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.08809229999314994,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 86.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.138888264395348e-08,
+    0.9999999386111174
+   ],
+   "pred": 1
+  },
+  {
+   "id": "easy-fact-11",
+   "tier": "easy",
+   "family": "fact",
+   "group": null,
+   "qtype": "noul",
+   "labels": [
+    "no",
+    "yes"
+   ],
+   "gold": 0,
+   "k": 2,
+   "gold_probs": null,
+   "s": 0.056595300004119053,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999998543028035,
+    1.4569719648106866e-07
+   ],
+   "pred": 0
+  },
+  {
+   "id": "easy-extraction-00",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "credit_card",
+    "paypal",
+    "bank_transfer",
+    "cash"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.08334399999876041,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 81.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.601720059364913e-09,
+    0.9999999858384216,
+    5.5074177774824126e-09,
+    2.052440558668723e-09
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-01",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "credit_card",
+    "paypal",
+    "bank_transfer",
+    "cash"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.056921100011095405,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    9.672098467671298e-08,
+    1.2797401799441333e-07,
+    8.850799608325118e-08,
+    0.9999996867970014
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-02",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "credit_card",
+    "paypal",
+    "bank_transfer",
+    "cash"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.060188499992364086,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.6064234662178418e-08,
+    1.647250707781079e-07,
+    0.9999998082185196,
+    1.0992174977426724e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-03",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "low",
+    "medium",
+    "high",
+    "urgent"
+   ],
+   "gold": 2,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.0743540999974357,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 72.9,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.883351429124375e-08,
+    2.90743891603846e-07,
+    0.9999994415445931,
+    1.988780010413535e-07
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-04",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "low",
+    "medium",
+    "high",
+    "urgent"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05251870000211056,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 51.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999998965446322,
+    7.460954603458648e-08,
+    2.7587348173239443e-08,
+    1.2584736669835816e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-05",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "low",
+    "medium",
+    "high",
+    "urgent"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05664549999346491,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    8.137662510909541e-08,
+    2.2692982315358012e-07,
+    6.693632186198859e-07,
+    0.9999990223303331
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-06",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "gold": 1,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.07581239999854006,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 74.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.560873153161904e-09,
+    0.9999999648709027,
+    1.4209039774574608e-08,
+    1.4359184383773428e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-07",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "gold": 3,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.05846630000451114,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    9.985807834651326e-08,
+    2.898154956952559e-07,
+    1.8606460989826743e-07,
+    0.9999994242618161
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-08",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.08613660000264645,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 84.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.3289525314912476e-08,
+    8.309133624864217e-08,
+    2.1795273629352466e-08,
+    0.9999997787830697,
+    8.304079518314783e-08
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-09",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.058005600003525615,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 56.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999997996160335,
+    1.4855127409683527e-07,
+    2.023919675804805e-08,
+    1.7912441587431434e-08,
+    1.3681054134894623e-08
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-10",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05551540000305977,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 53.6,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.7616477414163602e-08,
+    2.275766374954253e-08,
+    1.5598495202685403e-08,
+    6.70589014870322e-08,
+    0.9999998769684622
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-extraction-11",
+   "tier": "easy",
+   "family": "extraction",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "credit_card",
+    "paypal",
+    "bank_transfer",
+    "cash"
+   ],
+   "gold": 0,
+   "k": 4,
+   "gold_probs": null,
+   "s": 0.08244030000059865,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 80.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999586655907,
+    3.2124809106208283e-08,
+    7.688469629809528e-09,
+    1.5211306208242366e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-00",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.10139450000133365,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 99.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999756080667,
+    1.5253705352240673e-08,
+    6.284753278361463e-09,
+    1.6720029458935648e-09,
+    1.181471679880342e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-01",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05909290000272449,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 57.0,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.9136355367595105e-09,
+    0.9999999157024302,
+    2.9609718531054305e-08,
+    1.0604694267470148e-08,
+    3.716952149486104e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-02",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05944969999836758,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 57.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.235969050028547e-08,
+    6.749703637205006e-08,
+    0.9999998049377663,
+    5.288564250641105e-08,
+    6.23198643267643e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-03",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05726129999675322,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 55.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.252108778664043e-08,
+    2.1331912620465283e-07,
+    7.752270135766918e-08,
+    0.9999995888126559,
+    5.7824428762930735e-08
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-04",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.056104000002960674,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    3.7685370027327435e-08,
+    9.756066101346838e-08,
+    3.0577449280862696e-08,
+    5.1132732469258376e-08,
+    0.9999997830437872
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-05",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "get_weather",
+    "send_email",
+    "create_calendar_event",
+    "convert_currency",
+    "translate_text"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.056655300009879284,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.5,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.4319837922877705e-08,
+    9.914130215839045e-08,
+    0.9999997648927694,
+    6.152325522972404e-08,
+    6.012283530047197e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-06",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 0,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.0922434000094654,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 90.3,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    0.9999999857371862,
+    6.563615183082068e-09,
+    5.692385248987831e-09,
+    9.24252160582845e-10,
+    1.0825612753171973e-09
+   ],
+   "pred": 0,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-07",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 1,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05622440000297502,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 54.2,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.7282061098963106e-09,
+    0.9999998960958304,
+    3.9691693675575275e-08,
+    6.405712800527309e-09,
+    5.607855696945646e-08
+   ],
+   "pred": 1,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-08",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.05421459999342915,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 52.7,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.3066363040581887e-08,
+    4.7641864236263754e-08,
+    0.9999998524528565,
+    3.192392034099368e-08,
+    5.491499589157136e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-09",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 3,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06014659999345895,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    6.851193232656065e-08,
+    1.786689292391605e-07,
+    3.2833471287321796e-08,
+    0.9999995120521618,
+    2.0793350546934704e-07
+   ],
+   "pred": 3,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-10",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 4,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.062220100007834844,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 60.1,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.2539697737162976e-08,
+    3.346516211329662e-08,
+    1.503036901868296e-08,
+    9.022587101675893e-09,
+    0.999999929942184
+   ],
+   "pred": 4,
+   "choice_matches_argmax": true
+  },
+  {
+   "id": "easy-tool_selection-11",
+   "tier": "easy",
+   "family": "tool_selection",
+   "group": null,
+   "qtype": "choice",
+   "labels": [
+    "search_flights",
+    "book_restaurant",
+    "set_reminder",
+    "get_stock_price",
+    "call_taxi"
+   ],
+   "gold": 2,
+   "k": 5,
+   "gold_probs": null,
+   "s": 0.06042619999789167,
+   "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+   "server_latency_ms": 58.4,
+   "readout": "letters",
+   "status": "ok",
+   "probabilities": [
+    1.2508813859541016e-08,
+    4.376827514240112e-08,
+    0.999999847675826,
+    3.828386882226184e-08,
+    5.776321620497343e-08
+   ],
+   "pred": 2,
+   "choice_matches_argmax": true
+  }
+ ]
+}
