@@ -863,9 +863,46 @@ def exp_prior(D, args):
     return res
 
 
+# ------------------------------------------------------------ is the decision code universal?
+def exp_codetransfer(D, args):
+    """PCA code fitted on the unlabelled states of three workflows, applied unchanged to the fourth.
+    Per-question probes on the held-out workflow then use the transferred code (m numbers)."""
+    from sklearn.decomposition import PCA
+    L = args.layer; Xtr, Xte = D.X("train", L), D.X("test", L)
+    wf_tr = np.array([q[0] for q in D.qtr])
+    wfs = sorted(set(wf_tr))
+    res = {"layer": L, "m": {}}
+    for m in (8, 16, 32, 64, 128):
+        own, transfer, full = [], [], []
+        for w in wfs:
+            qs = [q for q in D.qkeys if q[0] == w]
+            p_own = PCA(n_components=m, random_state=0).fit(Xtr[wf_tr == w])
+            p_tr = PCA(n_components=m, random_state=0).fit(Xtr[wf_tr != w])
+            ok = {"own": 0, "transfer": 0, "full": 0}; n = 0
+            for q in qs:
+                itr, ite = D.idx_tr[q], D.idx_te[q]; y = D.gtr[itr]; yt = D.gte[ite]; n += len(ite)
+                if len(np.unique(y)) < 2:
+                    for k_ in ok:
+                        ok[k_] += int((yt == y[0]).sum())
+                    continue
+                ok["own"] += int((fit_lr(p_own.transform(Xtr[itr]), y).predict(p_own.transform(Xte[ite])) == yt).sum())
+                ok["transfer"] += int((fit_lr(p_tr.transform(Xtr[itr]), y).predict(p_tr.transform(Xte[ite])) == yt).sum())
+                if m == 8:
+                    ok["full"] += int((fit_lr(Xtr[itr], y).predict(Xte[ite]) == yt).sum())
+            own.append(ok["own"] / n); transfer.append(ok["transfer"] / n); full.append(ok["full"] / n)
+        res["m"][str(m)] = dict(code_from_same_workflow=float(np.mean(own)), code_from_other_workflows=float(np.mean(transfer)),
+                                per_workflow_transfer={w: float(t) for w, t in zip(wfs, transfer)})
+        if m == 8:
+            res["full_features"] = float(np.mean(full))
+        print(f"m={m:3d}: code fitted on the same workflow {np.mean(own):.3f} | on the other three {np.mean(transfer):.3f}", flush=True)
+        Path(args.out).write_text(json.dumps(res, indent=1), encoding="utf-8")
+    print("full features (per-workflow mean):", res.get("full_features"), flush=True)
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("exp", choices=["w2s", "anytime", "variants", "universal", "online", "lens", "labelmodel", "fewshot", "confsel", "stack", "typical", "intrinsic", "online2", "prior"])
+    ap.add_argument("exp", choices=["w2s", "anytime", "variants", "universal", "online", "lens", "labelmodel", "fewshot", "confsel", "stack", "typical", "intrinsic", "online2", "prior", "codetransfer"])
     ap.add_argument("--tag", default="qwen35-4b")
     ap.add_argument("--layers", default="22,26")
     ap.add_argument("--layer", type=int, default=26)
@@ -878,7 +915,7 @@ def main():
     D = Data(args.tag)
     {"w2s": exp_w2s, "anytime": exp_anytime, "variants": exp_variants, "universal": exp_universal, "online": exp_online, "lens": exp_lens,
      "labelmodel": exp_labelmodel, "fewshot": exp_fewshot, "confsel": exp_confsel,
-     "stack": exp_stack, "typical": exp_typical, "intrinsic": exp_intrinsic, "online2": exp_online2, "prior": exp_prior}[args.exp](D, args)
+     "stack": exp_stack, "typical": exp_typical, "intrinsic": exp_intrinsic, "online2": exp_online2, "prior": exp_prior, "codetransfer": exp_codetransfer}[args.exp](D, args)
     print("wrote", args.out)
 
 

@@ -1,0 +1,10 @@
+{
+ "12B letters": 0.7045,
+ "12B letters + batch calibration (per question, unlabelled test batch)": 0.698,
+ "pseudo-labels on train: raw": 0.6891666666666667,
+ "pseudo-labels on train: batch-calibrated": 0.6866666666666666,
+ "probe L22 from batch-calibrated 12B labels (hard)": 0.7015,
+ "probe L22 from batch-calibrated 12B labels (soft)": 0.702,
+ "probe L26 from batch-calibrated 12B labels (hard)": 0.702,
+ "probe L26 from batch-calibrated 12B labels (soft)": 0.704
+}

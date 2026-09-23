@@ -1,0 +1,46 @@
+{
+ "12B zero-shot (0 labels)": {
+  "accuracy": 0.7045,
+  "alpha0.05": {
+   "acted": 0.23806000000000002,
+   "realised_error": 0.05182719712873841
+  },
+  "alpha0.1": {
+   "acted": 0.35950000000000004,
+   "realised_error": 0.1022811467072991
+  }
+ },
+ "12B prior + 25 typical labels/question": {
+  "accuracy": 0.7515000000000001,
+  "alpha0.05": {
+   "acted": 0.23298000000000002,
+   "realised_error": 0.05071913462857219
+  },
+  "alpha0.1": {
+   "acted": 0.48611999999999994,
+   "realised_error": 0.10113154838146224
+  }
+ },
+ "12B prior + 50 typical labels/question": {
+  "accuracy": 0.772,
+  "alpha0.05": {
+   "acted": 0.29485999999999996,
+   "realised_error": 0.04827215381314057
+  },
+  "alpha0.1": {
+   "acted": 0.53314,
+   "realised_error": 0.10116611660510273
+  }
+ },
+ "4B probe, all 300 labels/question": {
+  "accuracy": 0.793,
+  "alpha0.05": {
+   "acted": 0.40026000000000006,
+   "realised_error": 0.05108978805385317
+  },
+  "alpha0.1": {
+   "acted": 0.6111000000000001,
+   "realised_error": 0.09930351045831882
+  }
+ }
+}

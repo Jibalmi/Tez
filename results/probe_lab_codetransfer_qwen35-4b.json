@@ -1,0 +1,56 @@
+{
+ "layer": 26,
+ "m": {
+  "8": {
+   "code_from_same_workflow": 0.7444999999999999,
+   "code_from_other_workflows": 0.7375,
+   "per_workflow_transfer": {
+    "agent_trace_observability": 0.666,
+    "customer_service": 0.778,
+    "invoice_processing": 0.788,
+    "security_incidents": 0.718
+   }
+  },
+  "16": {
+   "code_from_same_workflow": 0.7669999999999999,
+   "code_from_other_workflows": 0.7525,
+   "per_workflow_transfer": {
+    "agent_trace_observability": 0.702,
+    "customer_service": 0.798,
+    "invoice_processing": 0.792,
+    "security_incidents": 0.718
+   }
+  },
+  "32": {
+   "code_from_same_workflow": 0.786,
+   "code_from_other_workflows": 0.773,
+   "per_workflow_transfer": {
+    "agent_trace_observability": 0.732,
+    "customer_service": 0.808,
+    "invoice_processing": 0.822,
+    "security_incidents": 0.73
+   }
+  },
+  "64": {
+   "code_from_same_workflow": 0.789,
+   "code_from_other_workflows": 0.782,
+   "per_workflow_transfer": {
+    "agent_trace_observability": 0.744,
+    "customer_service": 0.822,
+    "invoice_processing": 0.83,
+    "security_incidents": 0.732
+   }
+  },
+  "128": {
+   "code_from_same_workflow": 0.7935,
+   "code_from_other_workflows": 0.79,
+   "per_workflow_transfer": {
+    "agent_trace_observability": 0.736,
+    "customer_service": 0.832,
+    "invoice_processing": 0.842,
+    "security_incidents": 0.75
+   }
+  }
+ },
+ "full_features": 0.7929999999999999
+}

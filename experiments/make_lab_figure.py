@@ -209,7 +209,7 @@ def main():
         ax.set_xticks(x); ax.set_xticklabels(langs, fontsize=6.5); ax.set_ylim(0, 1.15); ax.legend(fontsize=6.0, loc="upper center", ncol=2)
     else:
         empty(ax, "cross-lingual probe")
-    ax.set_title("l · MASSIVE: trained in English, used in 11 languages")
+    ax.set_title(f"l · MASSIVE: trained in English only, 11 languages" + (f" (macro {R['macro_acc20']:.3f})" if X else ""))
 
     # m: pruned GGUFs served by llama.cpp
     ax = fig.add_subplot(gs[3, 0]); P = J("results/pruned_server_qwen35-4b.json")

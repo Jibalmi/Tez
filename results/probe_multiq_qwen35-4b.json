@@ -1,0 +1,66 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "rows_test": 400,
+ "decisions_test": 2000,
+ "tokens_test": {
+  "per_question_prompts": 709730,
+  "A_all_questions_one_pass": 266746,
+  "B_state_only": 98746
+ },
+ "passes_test": {
+  "per_question_prompts": 2000,
+  "A_all_questions_one_pass": 400,
+  "B_state_only": 400
+ },
+ "zero_shot_letters": {
+  "per_question_prompt": 0.4895,
+  "A_at_markers": 0.522
+ },
+ "probe": {
+  "12": {
+   "per_question_prompt": 0.5735,
+   "A_all_questions_one_pass": 0.614,
+   "B_state_only": 0.6445
+  },
+  "16": {
+   "per_question_prompt": 0.7365,
+   "A_all_questions_one_pass": 0.718,
+   "B_state_only": 0.7215
+  },
+  "18": {
+   "per_question_prompt": 0.7775,
+   "A_all_questions_one_pass": 0.7525,
+   "B_state_only": 0.745
+  },
+  "20": {
+   "per_question_prompt": 0.7905,
+   "A_all_questions_one_pass": 0.7685,
+   "B_state_only": 0.7475
+  },
+  "22": {
+   "per_question_prompt": 0.7925,
+   "A_all_questions_one_pass": 0.7685,
+   "B_state_only": 0.7455
+  },
+  "24": {
+   "per_question_prompt": 0.7915,
+   "A_all_questions_one_pass": 0.77,
+   "B_state_only": 0.744
+  },
+  "26": {
+   "per_question_prompt": 0.793,
+   "A_all_questions_one_pass": 0.774,
+   "B_state_only": 0.748
+  },
+  "28": {
+   "per_question_prompt": 0.7905,
+   "A_all_questions_one_pass": 0.778,
+   "B_state_only": 0.7465
+  },
+  "32": {
+   "per_question_prompt": 0.772,
+   "A_all_questions_one_pass": 0.765,
+   "B_state_only": 0.752
+  }
+ }
+}
