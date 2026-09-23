@@ -614,6 +614,104 @@
       "system_acc": 0.861,
       "test_acc": 0.7755
      }
+    ],
+    "tau0.9": [
+     {
+      "step": 500,
+      "labels": 74,
+      "auto_rate": 0.852,
+      "auto_acc": 0.7417840375586855,
+      "system_acc": 0.78,
+      "test_acc": 0.71
+     },
+     {
+      "step": 1000,
+      "labels": 207,
+      "auto_rate": 0.793,
+      "auto_acc": 0.755359394703657,
+      "system_acc": 0.806,
+      "test_acc": 0.7275
+     },
+     {
+      "step": 1500,
+      "labels": 403,
+      "auto_rate": 0.7313333333333333,
+      "auto_acc": 0.7566089334548769,
+      "system_acc": 0.822,
+      "test_acc": 0.7315
+     },
+     {
+      "step": 2000,
+      "labels": 606,
+      "auto_rate": 0.697,
+      "auto_acc": 0.7582496413199427,
+      "system_acc": 0.8315,
+      "test_acc": 0.7315
+     },
+     {
+      "step": 2500,
+      "labels": 837,
+      "auto_rate": 0.6652,
+      "auto_acc": 0.7672880336740829,
+      "system_acc": 0.8452,
+      "test_acc": 0.744
+     },
+     {
+      "step": 3000,
+      "labels": 1114,
+      "auto_rate": 0.6286666666666667,
+      "auto_acc": 0.7751855779427359,
+      "system_acc": 0.8586666666666667,
+      "test_acc": 0.7605
+     },
+     {
+      "step": 3500,
+      "labels": 1402,
+      "auto_rate": 0.5994285714285714,
+      "auto_acc": 0.7869399428026692,
+      "system_acc": 0.8722857142857143,
+      "test_acc": 0.7775
+     },
+     {
+      "step": 4000,
+      "labels": 1681,
+      "auto_rate": 0.57975,
+      "auto_acc": 0.7990513152220785,
+      "system_acc": 0.8835,
+      "test_acc": 0.7815
+     },
+     {
+      "step": 4500,
+      "labels": 1973,
+      "auto_rate": 0.5615555555555556,
+      "auto_acc": 0.8056984566679858,
+      "system_acc": 0.8908888888888888,
+      "test_acc": 0.777
+     },
+     {
+      "step": 5000,
+      "labels": 2300,
+      "auto_rate": 0.54,
+      "auto_acc": 0.8140740740740741,
+      "system_acc": 0.8996,
+      "test_acc": 0.7735
+     },
+     {
+      "step": 5500,
+      "labels": 2617,
+      "auto_rate": 0.5241818181818182,
+      "auto_acc": 0.8217134928893514,
+      "system_acc": 0.9065454545454545,
+      "test_acc": 0.781
+     },
+     {
+      "step": 6000,
+      "labels": 2924,
+      "auto_rate": 0.5126666666666667,
+      "auto_acc": 0.8299739921976593,
+      "system_acc": 0.9128333333333334,
+      "test_acc": 0.778
+     }
     ]
    },
    "passive": {
@@ -624,6 +722,10 @@
     "tau0.8": {
      "labels": 1937,
      "test_acc": 0.776
+    },
+    "tau0.9": {
+     "labels": 2924,
+     "test_acc": 0.7855
     }
    }
   }

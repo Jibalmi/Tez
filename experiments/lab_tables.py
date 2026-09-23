@@ -113,6 +113,26 @@ def main():
             w("| PCA-64 from unlabelled states + logistic | " + " | ".join(f3(FS['n'][str(n)]['PCA-64 (unlabelled) + logreg']['mean']) for n in (5, 10, 25, 50)) + " |")
         w("\nThe 12B alone scores 0.705 with no labels; 50 typical labels per question on top of it reach Laya's fully fine-tuned 0.766.\n")
 
+    CB = J("results/probe_lab_calibration_bytype_qwen35-4b.json")
+    if CB:
+        w("### Calibration and decision types (ECE-15 and NLL as read, then after a 2-fold out-of-fold temperature)" + chr(10))
+        w("| readout | accuracy | ECE | ECE after temperature | NLL | choice (600) | yes/no (600) | score (800) |" + chr(10) + "|---|---|---|---|---|---|---|---|")
+        for n, r in CB.items():
+            b = r["by_type"]
+            w(f"| {n} | {f3(r['acc'])} | {f3(r['ece'])} | {f3(r['ece_oof_temp'])} | {f3(r['nll'])} | {f3(b['choice'])} | {f3(b['noul'])} | {f3(b['score'])} |")
+        w(chr(10) + "A logistic probe is fitted with a proper scoring rule, so it comes out calibrated (ECE 0.023 as read; Jev's published ECE is 0.246). The gain from labels is largest on ordinal score questions (+11 points over the 12B)." + chr(10))
+
+    AM, TM = J("results/probe_lab_ambiguity_qwen35-4b.json"), J("results/probe_lab_twomodel_ensemble.json")
+    if AM:
+        w("### Where the remaining errors are: accuracy by how decided the benchmark's own soft label is" + chr(10))
+        bins = list(AM["4B probe"])
+        w("| max of the benchmark's soft label | " + " | ".join(bins) + " |" + chr(10) + "|---|" + "---|" * len(bins))
+        w("| share of test decisions | " + " | ".join(f"{100 * AM['4B probe'][b]['share']:.0f} %" for b in bins) + " |")
+        for n in AM:
+            w(f"| {n} | " + " | ".join(f3(AM[n][b]['acc']) for b in bins) + " |")
+        if TM:
+            w(chr(10) + f"Two backbones' probes averaged: {f3(TM['geometric mean(4B probe, 12B probe)'])} (4B {f3(TM['4B probe L26'])}, 12B {f3(TM['12B probe L34'])}); they agree on {100 * TM['agreement of the two probes']:.0f} % of decisions. Every supervised route converges on 0.79-0.80, and the errors sit where the benchmark's own labels are split." + chr(10))
+
     W, LM, ST = J("results/probe_lab_w2s_qwen35-4b.json"), J("results/probe_lab_labelmodel_qwen35-4b.json"), J("results/probe_lab_stack_qwen35-4b.json")
     if W:
         w("### No human labels: probes trained on zero-shot answers\n")

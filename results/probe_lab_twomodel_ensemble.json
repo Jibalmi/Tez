@@ -1,0 +1,10 @@
+{
+ "4B probe L26": 0.793,
+ "12B probe L34": 0.7875,
+ "12B letters": 0.7045,
+ "mean(4B probe, 12B probe)": 0.7975,
+ "geometric mean(4B probe, 12B probe)": 0.798,
+ "mean(4B probe, 12B probe, 12B letters)": 0.792,
+ "agreement of the two probes": 0.829,
+ "accuracy when the probes agree": 0.8570566948130277
+}
