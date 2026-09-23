@@ -6,13 +6,39 @@ model, with a calibrated confidence and an explicit abstain/escalate contract. N
 generated. Think of it as an open, self-hosted alternative to TypeSafe AI's Jev, built on the
 published technique rather than on Jev's outputs (which its terms forbid).
 
-> Status: **research, experiments and a working voice→action loop in `experiments/`;
-> no library API yet.** Read [`docs/REPORT.md`](docs/REPORT.md) first — it was audited before
-> release and §3.7 lists what the first draft got wrong.
+> Status: **a runtime you can install** (`tez`: a local server that speaks TypeSafe's `/v1/systemone` wire format,
+> a CLI, schemas, probes and a conformal gate) **plus the research behind it** in `experiments/`.
+> Website, playground and use-case gallery: <https://jibalmi.github.io/Tez/>. Read
+> [`docs/REPORT.md`](docs/REPORT.md) for the method; it was audited before release and §3.7 lists what the first
+> draft got wrong.
 
 ![Tez dashboard — every measurement on one page](docs/figures/tez_dashboard.png)
 
 Full tables: [`BENCHMARKS.md`](BENCHMARKS.md). Individual figures: `docs/figures/`.
+
+## Use it
+
+Tez sits in front of a local [llama.cpp](https://github.com/ggml-org/llama.cpp) server. The numbers below were
+measured with release b11100 and Gemma 4 12B Q8_0 (Ollama's `gemma4:12b-it-q8_0`; the public equivalent is
+`unsloth/gemma-4-12b-it-GGUF` / `gemma-4-12b-it-Q8_0.gguf`, not separately measured).
+
+```
+llama-server -m gemma-4-12b-it-Q8_0.gguf -ngl 99 -c 4096 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui --swa-full
+pip install git+https://github.com/Jibalmi/Tez
+tez serve --backend http://127.0.0.1:8091 --template gemma4          # listens on http://127.0.0.1:8787
+
+curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '{
+  "state": "Help! My payouts have been failing for 3 days.",
+  "questions": {"topic": {"type": "choice", "instructions": "What is the message about?",
+    "criteria": {"billing": "Payments, payouts, invoices", "technical": "Something is broken", "sales": null}}}}'
+```
+
+- The wire format, schema files, readouts and the gate: [`docs/API.md`](docs/API.md).
+- Ten worked use cases (schemas, sample inputs, the evidence behind each): [`examples/usecases/`](examples/usecases/).
+- Python: `from tez import Tez; Tez(backend="http://127.0.0.1:8091").decide(state, questions=...)`
+  ([`examples/quickstart.py`](examples/quickstart.py)).
+- Learn from labels: `tez suggest` picks the most typical rows to label first; `tez fit` trains per-question probes,
+  temperatures and conformal thresholds; `tez eval` reports accuracy and ECE.
 
 ## What we measured
 
@@ -112,7 +138,7 @@ What worked:
 - **On typed-decisions, the 4B's top three layers cost ten points of zero-shot accuracy.** Its letter readout scores
   0.583 at layer 29 and 0.485 at the top. It does not generalise: on Laya's public suite the same cut lowers the
   letters by 3.7 points on average, and the 12B keeps improving to full depth.
-- **Cut the served model where the decision is made.** `experiments/gguf_truncate.py` keeps the first 24 of 32 blocks: a probe on the served state scores 0.793 (full model 0.776) at 58 vs 84 ms, from a 3.53 GB file. The zero-shot letters gain 10 points on typed-decisions but lose 3.7 on average across Laya's public suite: cut for probes, validate per task for letters.
+- **Cut the served model where the decision is made.** `experiments/gguf_truncate.py` keeps the first 24 of 32 blocks: a probe on the served state scores 0.793 (full model 0.776) at 58 vs 84 ms, from a 3.53 GB file. The zero-shot letters gain 10 points on typed-decisions but lose 17.4 on average across Laya's public suite (3.7 at 29 blocks): cut for probes, validate per task for letters.
 - **On the 4B the most accurate readout is also the fastest.** Same prompts, caching off: a probe on the 24-block model decides in 58 ms (0.793), the full model's letters take 136 ms (0.483), the 12B's letters 207 ms (0.705).
 - **Decide first, bind later, measured.** A probe trained on the usual option order still works on reversed options
   up to layer 14 (no loss) and 18 (−2.4 points), but loses 20 points at layer 26: read at layer 18 if a schema
@@ -145,6 +171,14 @@ select-and-copy attention heads (0.50–0.53, the letters' level); a collapsing 
 ## Layout
 
 ```
+tez/                             the runtime: server, CLI, schemas, prompts, backends, readouts, fit, gate, truncate
+tests/                           pytest suite (live tests skip when no llama-server is running)
+docs/API.md                      the wire format, schema files, readouts and the gate
+examples/usecases/               ten use cases: schema.yaml, samples.jsonl, evidence and limits (usecases.json)
+site/                            the website (static; deployed to GitHub Pages by .github/workflows/pages.yml)
+release/hf/                      Hugging Face model card and upload script for the 24-block Qwen3.5-4B GGUF
+release/jevbench/                JevBench runner through the wire format, stub server, submission draft
+experiments/record_site_*.py     recorded traces and replays used by the website
 docs/REPORT.md                   the write-up: mechanism, papers, experiments, audit, voice loop, roadmap
 docs/research/RESEARCH-NOTES.md  the seven commissioned literature surveys, with links
 experiments/run_direct.py        symbol-logit readout via llama-server, SemIf-compatible prompt
@@ -236,8 +270,8 @@ registered with `os.add_dll_directory` next to a CUDA 13 torch.
 3. Prompt layout as part of the schema (constant first, variable last, `prior` for multi-step);
    prefix reuse verified by `prompt_n`.
 4. Decision log + shadow-eval loop; sample auto-acted cases to humans too.
-5. Jev-compatible wire format plus `multi`, implicit `__none__`, `p_correct` with calibration id,
-   and a streaming/early-commit contract with action classes.
+5. Jev-compatible wire format with implicit `__none__`, `p_correct` and a calibration id: **done** (`tez serve`).
+   Still open: `multi` and a streaming/early-commit contract with action classes.
 6. Optional, last: LoRA on Gemma 4 12B *base*, proper scoring rule, gated on an OOD hold-out.
 
 ## Licence

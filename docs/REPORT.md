@@ -1,7 +1,7 @@
 # Tez — an open, local "System One" decision layer
 
 **Research, experiments and design for a self-hosted alternative to TypeSafe AI's Jev**
-Miguel Villax · September 2026 · github.com/AILABS-WORK/Tez
+Miguel Villax · September 2026 · github.com/Jibalmi/Tez
 
 > **Revision note (22 Sept, afternoon).** The first version of this report was audited before
 > release and two things were wrong. (1) `metrics.py` keyed balanced accuracy on the gold *position*
@@ -691,7 +691,7 @@ What worked:
 - **On typed-decisions, the 4B's top three layers cost ten points of zero-shot accuracy.** Its letter readout scores
   0.583 at layer 29 and 0.485 at the top. It does not generalise: on Laya's public suite the same cut lowers the
   letters by 3.7 points on average, and the 12B keeps improving to full depth.
-- **Cut the served model where the decision is made.** `experiments/gguf_truncate.py` keeps the first 24 of 32 blocks: a probe on the served state scores 0.793 (full model 0.776) at 58 vs 84 ms, from a 3.53 GB file. The zero-shot letters gain 10 points on typed-decisions but lose 3.7 on average across Laya's public suite: cut for probes, validate per task for letters.
+- **Cut the served model where the decision is made.** `experiments/gguf_truncate.py` keeps the first 24 of 32 blocks: a probe on the served state scores 0.793 (full model 0.776) at 58 vs 84 ms, from a 3.53 GB file. The zero-shot letters gain 10 points on typed-decisions but lose 17.4 on average across Laya's public suite (3.7 at 29 blocks): cut for probes, validate per task for letters.
 - **On the 4B the most accurate readout is also the fastest.** Same prompts, caching off: a probe on the 24-block model decides in 58 ms (0.793), the full model's letters take 136 ms (0.483), the 12B's letters 207 ms (0.705).
 - **Decide first, bind later, measured.** A probe trained on the usual option order still works on reversed options
   up to layer 14 (no loss) and 18 (−2.4 points), but loses 20 points at layer 26: read at layer 18 if a schema
