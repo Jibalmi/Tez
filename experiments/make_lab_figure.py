@@ -220,16 +220,21 @@ def main():
     # m: pruned GGUFs served by llama.cpp
     ax = fig.add_subplot(gs[3, 0]); P = J("results/pruned_server_qwen35-4b.json")
     if P:
+        BD = J("results/latency_breakdown.json") or {}
+        nm = {"L20": "Qwen3.5-4B, 20 of 32 blocks", "L24": "Qwen3.5-4B, 24 of 32 blocks", "L29": "Qwen3.5-4B, 29 of 32 blocks", "L32": "Qwen3.5-4B, all 32 blocks"}
         for name, r in P.items():
-            n = int(name[1:])
-            ax.plot(r["ms_embed_p50"], r["probe_acc"], "o", color=COL["tez"], ms=5); ax.text(r["ms_embed_p50"], r["probe_acc"] + .01, f"{n} layers", fontsize=6.3, color=COL["tez"])
-            ax.plot(r["ms_letters_p50"], r["letters_acc"], "s", color=COL["blue"], ms=5); ax.text(r["ms_letters_p50"], r["letters_acc"] - .03, f"{n}", fontsize=6.3, color=COL["blue"])
+            n = int(name[1:]); b_ = BD.get(nm.get(name, ""), {})
+            lt = dict(ms_embed_p50=b_.get("embedding (probe readout)", {}).get("p50", r["ms_embed_p50"]), ms_letters_p50=b_.get("completion, n_probs 200", {}).get("p50", r["ms_letters_p50"]))
+            ax.plot(lt["ms_embed_p50"], r["probe_acc"], "o", color=COL["tez"], ms=5); ax.text(lt["ms_embed_p50"] + 3, r["probe_acc"] + .01, f"{n} blocks", fontsize=6.3, color=COL["tez"])
+            ax.plot(lt["ms_letters_p50"], r["letters_acc"], "s", color=COL["blue"], ms=5); ax.text(lt["ms_letters_p50"] + 3, r["letters_acc"] - .03, f"{n}", fontsize=6.3, color=COL["blue"])
         ax.plot([], [], "o", color=COL["tez"], label="probe on the served state"); ax.plot([], [], "s", color=COL["blue"], label="zero-shot letters (= logit lens at the cut)")
-        ax.plot(304, 0.7045, "D", color=COL["dark"], ms=5); ax.text(304, 0.715, "12B letters", fontsize=6.3, color=COL["dark"])
-        refs(ax, 5); ax.set_xlabel("ms per decision, llama.cpp, RTX 5080 laptop (p50)"); ax.set_ylabel("accuracy"); ax.set_ylim(.2, .85); ax.legend(fontsize=6.2, loc="lower right")
+        g12 = BD.get("Gemma 4 12B Q8")
+        if g12:
+            ax.plot(g12["completion, n_probs 200"]["p50"], 0.705, "D", color=COL["dark"], ms=5); ax.text(g12["completion, n_probs 200"]["p50"] - 3, 0.718, "12B letters", fontsize=6.3, ha="right", color=COL["dark"])
+        refs(ax, 40); ax.set_xlabel("ms per decision, llama.cpp, dedicated runs, caching off (p50)"); ax.set_ylabel("accuracy"); ax.set_ylim(.2, .85); ax.legend(fontsize=6.2, loc="lower right")
     else:
         empty(ax, "pruned GGUFs")
-    ax.set_title("m · Depth-pruned 4B GGUFs: accuracy vs latency")
+    ax.set_title("m · Cut the served 4B: the probe keeps its accuracy, faster")
 
     # n: pruned 4B on the public suite
     ax = fig.add_subplot(gs[3, 1]); A29 = J("results/h2h_q4b_L29/summary.json"); A32 = J("results/h2h_q4b_L32/summary.json")
@@ -242,12 +247,15 @@ def main():
                 return np.mean([Sx[k]["tez"]["accuracy"] for k in Sx if k.startswith("xnli:")])
             return Sx[t]["tez"]["accuracy"]
         x = np.arange(len(tasks)); w = .38
-        ax.bar(x - w / 2, [val(A32, t) for t in tasks], w, color=COL["blue"], label="4B, all 32 layers")
-        ax.bar(x + w / 2, [val(A29, t) for t in tasks], w, color=COL["tez"], label="4B cut to 29 layers")
+        A24 = J("results/h2h_q4b_L24/summary.json")
+        cols = [("4B, all 32 blocks", A32, COL["blue"]), ("cut to 29", A29, COL["light"])] + ([("cut to 24", A24, COL["tez"])] if A24 else [])
+        w = .8 / len(cols)
+        for j, (lab_, Sx, c_) in enumerate(cols):
+            ax.bar(x + (j - (len(cols) - 1) / 2) * w, [val(Sx, t) for t in tasks], w, color=c_, label=lab_)
         ax.set_xticks(x); ax.set_xticklabels([t.replace("_", "\n") for t in tasks], fontsize=6.2, rotation=0); ax.set_ylim(0, 1.05); ax.legend(fontsize=6.3, loc="upper right")
     else:
         empty(ax, "pruned 4B on the public suite")
-    ax.set_title("n · Removing the top 3 layers, on Laya's public tasks")
+    ax.set_title("n · The cut 4B on Laya's public suite (zero-shot)")
 
     # o: voice commit rule
     ax = fig.add_subplot(gs[3, 2])

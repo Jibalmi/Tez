@@ -229,6 +229,304 @@ Negative: every change is within ±2 points and costs up to a second pass. The 9
 
 One probe per question schema, fitted on the 6,000 train decisions (same data access as laya-typed-decisions, 0.766). Above Jev's 0.727 and our 12B's 0.704 / 0.725, from a 4B with untouched weights, reading 12 layers below the top.
 
+## 4c. Probe lab: experiments on cached hidden states (`experiments/probe_lab.py`)
+
+Every table reuses one cache: the last-token hidden state at every layer of the frozen Qwen3.5-4B (and layers 0–40 of Gemma 4 12B, NF4) for the 8,000 typed-decisions prompts, plus the letter logits. Test split, 2,000 decisions, unless stated. Closest prior work for each idea: `docs/research/novelty-check.md`; cross-disciplinary sources: `docs/research/abstract-methods-survey.md`. Figure: `docs/figures/tez_lab.png`.
+
+### Where to read: the zero-shot logit lens
+
+| model | readout | test acc |
+|---|---|---|
+| Qwen3.5-4B | letters at the final layer (32) | 0.485 |
+| Qwen3.5-4B | letters read at layer 29 through the final norm and head (layer chosen on the train split) | **0.583** |
+| Qwen3.5-4B | layer 24 / 27 / 28 / 30 / 31 | 0.576 / 0.572 / 0.572 / 0.561 / 0.507 |
+| Qwen3.5-4B | layer chosen per question on the train split (uses labels) | 0.629 |
+| Qwen3.5-4B | layer chosen without labels by confidence (picks layer 21) | 0.269 |
+| Qwen3.5-4B | DoLa, final minus layer M (best M = 16) | 0.523 |
+| Gemma 4 12B NF4 | letters read at layer 36 / 38 / 40 of 48 | 0.465 / 0.600 / 0.660 |
+| Gemma 4 12B Q8 | full depth, llama.cpp | 0.704 |
+
+### Choosing the layer without labels: intrinsic dimension (TwoNN, 2,000 unlabelled train states per layer)
+
+| Qwen3.5-4B layer | 2 | 6 | 10 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28 | 30 | 32 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| intrinsic dimension (no labels) | 8.9 | 11.1 | 12.0 | 12.7 | 12.1 | 11.1 | 9.9 | 9.8 | 9.2 | 9.3 | 9.3 | 9.8 | 10.6 |
+| probe accuracy (labels) | 0.483 | 0.528 | 0.551 | 0.661 | 0.737 | 0.777 | 0.790 | 0.792 | 0.791 | 0.793 | 0.790 | 0.787 | 0.772 |
+
+| Gemma 4 12B layer (of 48) | 6 | 14 | 18 | 22 | 26 | 28 | 30 | 32 | 34 | 36 | 38 | 40 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| intrinsic dimension (no labels) | 5.6 | 10.0 | 8.2 | 9.4 | 10.1 | 10.5 | 10.1 | 9.9 | 9.1 | 8.8 | 8.7 | 8.5 |
+| probe accuracy (labels, z-scored) | 0.600 | 0.634 | 0.646 | 0.674 | 0.714 | 0.750 | 0.761 | 0.775 | 0.787 | 0.782 | 0.782 | 0.776 |
+
+On the 4B the dimension peaks at layers 13–14 and bottoms out at layers 24–28, exactly the probe plateau. On the 12B it peaks at layer 28 and falls to the last cached layer (40) while the probe sits on its plateau (0.776–0.788): the rule "lowest dimension after the peak" lands on the plateau for both models, exactly for the 4B and 1.1 points below the best layer for the 12B.
+
+### Anytime depth: per-layer probes, stop when sure (gold-label probes, grid 12–28)
+
+| rule | accuracy | mean layers used (of 32) |
+|---|---|---|
+| fixed layer 20 | 0.790 | 20 |
+| fixed layer 26 | 0.793 | 26 |
+| stop when max p ≥ 0.6 | 0.775 | 16.7 |
+| stop when max p ≥ 0.7 | 0.787 | 19.2 |
+| stop when max p ≥ 0.8 | 0.789 | 22.0 |
+| stop when summed log-odds ≥ 2.0 | 0.777 | 18.1 |
+| stop when summed log-odds ≥ 3.0 | 0.788 | 19.8 |
+
+### Probe families on layer 26
+
+| probe | acc |
+|---|---|
+| logreg on mean of L20-28 | 0.793 |
+| logreg C=0.5 | 0.793 |
+| logreg on concat L18+22+26+30 | 0.785 |
+| logreg C=0.05 | 0.774 |
+| logreg C=5 | 0.774 |
+| shrinkage LDA | 0.757 |
+| kNN cosine k=15 | 0.750 |
+| MLP 256 (early stop) | 0.726 |
+| nearest centroid (cosine) | 0.700 |
+
+### How many numbers does a decision need? (one PCA on unlabelled train states, shared by all 20 questions)
+
+| numbers kept | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 2,560 (all) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| PCA | 0.668 | 0.711 | 0.729 | 0.750 | 0.771 | 0.790 | 0.794 | 0.791 | 0.791 | 0.793 |
+| random projection | 0.587 | 0.678 | 0.714 | 0.729 | 0.749 | 0.766 | 0.777 | 0.789 | 0.784 | |
+
+**Is the code universal?** PCA fitted on the unlabelled states of three workflows, applied unchanged to the fourth (probes still per question):
+
+| numbers kept | 8 | 16 | 32 | 64 | 128 |
+|---|---|---|---|---|---|
+| code fitted on the same workflow | 0.744 | 0.767 | 0.786 | 0.789 | 0.793 |
+| code fitted on the other three workflows | 0.738 | 0.752 | 0.773 | 0.782 | 0.790 |
+
+Full 2,560 features, same protocol: 0.793.
+
+### Few labels: which rows to label, and what to combine them with (layer 26, 3 seeds)
+
+| labelled rows per question | 5 | 10 | 25 | 50 |
+|---|---|---|---|---|
+| random rows, logistic probe | 0.592 | 0.669 | 0.707 | 0.741 |
+| most typical rows first (member nearest each k-means centre) | 0.640 | 0.679 | 0.734 | — |
+| random rows, mixed with the 12B's zero-shot answers (w = n/(n+10)) | 0.708 | 0.717 | 0.732 | 0.752 |
+| typical rows, mixed with the 12B's zero-shot answers | **0.705** | **0.713** | **0.753** | **0.766** |
+| LDA, covariance from unlabelled states | 0.445 | 0.482 | 0.514 | 0.552 |
+| PCA-64 from unlabelled states + logistic | 0.592 | 0.669 | 0.710 | 0.741 |
+
+The 12B alone scores 0.705 with no labels; 50 typical labels per question on top of it reach Laya's fully fine-tuned 0.766.
+
+### Calibration and decision types (ECE-15 and NLL as read, then after a 2-fold out-of-fold temperature)
+
+| readout | accuracy | ECE | ECE after temperature | NLL | choice (600) | yes/no (600) | score (800) |
+|---|---|---|---|---|---|---|---|
+| 12B letters (zero-shot) | 0.705 | 0.262 | 0.067 | 1.747 | 0.680 | 0.812 | 0.642 |
+| 4B letters (zero-shot) | 0.489 | 0.226 | 0.120 | 1.176 | 0.583 | 0.518 | 0.398 |
+| 4B lens layer 29 (zero-shot) | 0.583 | 0.161 | 0.051 | 1.087 | 0.602 | 0.692 | 0.487 |
+| 12B prior + 50 typical labels/question | 0.772 | 0.028 | 0.028 | 0.556 | 0.733 | 0.853 | 0.740 |
+| 4B probe L26 (all labels) | 0.793 | 0.023 | 0.011 | 0.516 | 0.767 | 0.873 | 0.752 |
+
+A logistic probe is fitted with a proper scoring rule, so it comes out calibrated (ECE 0.023 as read; Jev's published ECE is 0.246). The gain from labels is largest on ordinal score questions (+11 points over the 12B).
+
+### Where the remaining errors are: accuracy by how decided the benchmark's own soft label is
+
+| max of the benchmark's soft label | 0-0.5 | 0.5-0.6 | 0.6-0.8 | 0.8-1 |
+|---|---|---|---|---|
+| share of test decisions | 19 % | 25 % | 31 % | 25 % |
+| 4B probe | 0.560 | 0.709 | 0.849 | 0.980 |
+| 12B letters | 0.472 | 0.589 | 0.739 | 0.948 |
+
+Two backbones' probes averaged: 0.798 (4B 0.793, 12B 0.787); they agree on 83 % of decisions. Every supervised route converges on 0.79-0.80, and the errors sit where the benchmark's own labels are split.
+
+### No human labels: probes trained on zero-shot answers
+
+| teacher | teacher test acc | hard | soft | confident top 50 % | confident top 25 % | self-training (3 rounds) | cluster-then-label |
+|---|---|---|---|---|---|---|---|
+| Qwen3.5-4B's own letters | 0.489 | 0.487 | 0.484 | 0.483 | 0.476 | 0.483 | 0.490 |
+| Gemma 4 12B letters | 0.705 | 0.705 | 0.709 | 0.661 | 0.592 | 0.683 | 0.686 |
+| rows where the 4B and 12B agree | | 0.560 | | | | | |
+| Dawid–Skene label model (12B + 4B letters + lens29) | 0.617 | 0.609 | 0.613 | | | | |
+
+Best of layers 22 and 26 per cell. Gold-label probe for reference: 0.793. A probe trained on a teacher's answers matches the teacher; it never beats it by more than half a point.
+
+### Stacking readouts (per-question out-of-fold log-linear pool, gold labels)
+
+| pool | stacked logistic | geometric pool |
+|---|---|---|
+| probe L26 alone | 0.793 | |
+| probe L26 + 12B letters | 0.798 | 0.784 |
+| probe L26 + 4B letters | 0.792 | 0.785 |
+| probe L26 + L22 + lens + 4B + 12B | 0.795 | 0.786 |
+
+### Conformal selection: a bound on the error rate among the decisions it acts on (BH on conformal p-values; 50 random half/half calibration splits)
+
+| readout | accuracy | bound 5 %: acted / realised error | bound 10 % | bound 20 % |
+|---|---|---|---|---|
+| 4B probe L26 (gold labels) | 0.793 | 40 % / 5.2 % | 61 % / 9.9 % | 98 % / 20.2 % |
+| 12B letters (zero-shot) | 0.705 | 24 % / 5.2 % | 36 % / 10.2 % | 66 % / 20.5 % |
+| 4B probe L26 (12B pseudo-labels, no human labels) | 0.703 | 0 % / 0.0 % | 0 % / 0.4 % | 54 % / 20.0 % |
+
+The realised error tracks the bound. The pseudo-label probe has its teacher's accuracy but not a usable confidence.
+
+### Cold start: begin zero-shot, escalate, learn from the escalations (stream = the 6,000 train decisions; held-out = test split)
+
+Starting point: the 12B's zero-shot readout (0.705).
+
+| threshold | policy | human labels | automated share | automated accuracy | whole stream (human answers count as correct) | probe held-out | same number of random labels |
+|---|---|---|---|---|---|---|---|
+| 0.6 | escalate-only (audit 0.0) | 316 | 95 % | 0.707 | 0.723 | 0.719 | 0.712 |
+| 0.6 | escalate+audit (audit 0.05) | 972 | 84 % | 0.747 | 0.788 | 0.757 | 0.754 |
+| 0.6 | escalate+audit (audit 0.1) | 1,396 | 77 % | 0.777 | 0.829 | 0.770 | 0.768 |
+| 0.6 | audit-train (audit 0.1) | 1,337 | 78 % | 0.745 | 0.802 | 0.756 | 0.769 |
+| 0.6 | typical-seed (audit 0.05) | 1,279 | 80 % | 0.784 | 0.827 | 0.763 | 0.765 |
+| 0.8 | escalate-only (audit 0.0) | 2,059 | 66 % | 0.805 | 0.872 | 0.771 | 0.775 |
+| 0.8 | escalate+audit (audit 0.05) | 2,724 | 55 % | 0.850 | 0.918 | 0.783 | 0.789 |
+| 0.8 | escalate+audit (audit 0.1) | 2,990 | 50 % | 0.868 | 0.934 | 0.787 | 0.782 |
+| 0.8 | audit-train (audit 0.1) | 2,540 | 58 % | 0.811 | 0.891 | 0.756 | 0.783 |
+| 0.8 | typical-seed (audit 0.05) | 3,068 | 51 % | 0.888 | 0.943 | 0.785 | 0.778 |
+| 0.9 | escalate-only (audit 0.0) | 2,987 | 50 % | 0.835 | 0.917 | 0.775 | 0.783 |
+| 0.9 | escalate+audit (audit 0.05) | 3,679 | 39 % | 0.871 | 0.950 | 0.786 | 0.786 |
+| 0.9 | escalate+audit (audit 0.1) | 3,944 | 34 % | 0.897 | 0.965 | 0.790 | 0.784 |
+| 0.9 | audit-train (audit 0.1) | 3,473 | 42 % | 0.836 | 0.931 | 0.756 | 0.783 |
+| 0.9 | typical-seed (audit 0.05) | 4,173 | 32 % | 0.929 | 0.977 | 0.794 | 0.789 |
+
+With the 4B's own letters (0.489) as the starting point instead, labels gathered only from uncertain decisions train a worse probe than random labels: τ 0.6: 1,207 labels → 0.678 vs random 0.746; τ 0.8: 3,335 labels → 0.784 vs random 0.776; τ 0.9: 4,561 labels → 0.793 vs random 0.791; τ 0.95: 5,470 labels → 0.795 vs random 0.793.
+
+### One head for every question (letter-position classes, masked to k options)
+
+| layer | same workflows | unseen workflow (leave-one-workflow-out, mean of 4) | 4B letters on the same rows |
+|---|---|---|---|
+| 20 | 0.775 | 0.508 | 0.490 |
+| 26 | 0.778 | 0.521 | 0.490 |
+| 32 | 0.781 | 0.492 | 0.490 |
+
+### A universal "is this answer right?" probe (teacher-forced answer letter, one extra token per option)
+
+| features | same workflows | unseen workflow (mean of 4) |
+|---|---|---|
+| L12 | 0.513 | 0.340 |
+| L12_centred | 0.512 | 0.327 |
+| L16 | 0.636 | 0.464 |
+| L16_centred | 0.617 | 0.464 |
+| L20 | 0.688 | 0.512 |
+| L20_centred | 0.679 | 0.512 |
+| L24 | 0.694 | 0.602 |
+| L24_centred | 0.688 | 0.557 |
+| L26 | 0.711 | 0.622 |
+| L26_centred | 0.703 | 0.617 |
+| L28 | 0.707 | 0.606 |
+| L28_centred | 0.715 | 0.591 |
+| L30 | 0.718 | 0.595 |
+| L30_centred | 0.727 | 0.580 |
+| L32 | 0.750 | 0.534 |
+| L32_centred | 0.746 | 0.490 |
+
+### Select-and-copy attention readout (attention of the answer position to each option, full-attention layers 3, 7, …, 31)
+
+| attention to | top-1 head | top-3 | top-5 | top-10 | heads chosen on the other workflows (top-3, mean of 4) |
+|---|---|---|---|---|---|
+| attention to the option letter | 0.517 | 0.503 | 0.492 | 0.483 | 0.503 |
+| attention to the end of the option line | 0.526 | 0.470 | 0.475 | 0.468 | 0.470 |
+
+### Decide, then bind: the same probes on prompts with the options reversed
+
+| layer | 8 | 10 | 12 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28 | 30 | 32 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| options in the trained order | 0.544 | 0.551 | 0.574 | 0.661 | 0.737 | 0.777 | 0.790 | 0.792 | 0.791 | 0.793 | 0.790 | 0.787 | 0.772 |
+| options reversed, same probe | 0.543 | 0.551 | 0.574 | 0.660 | 0.700 | 0.753 | 0.680 | 0.690 | 0.612 | 0.589 | 0.564 | 0.562 | 0.536 |
+
+4B letters: 0.489 in the usual order, 0.560 reversed; reversal changes the option picked in 51 % of decisions. Probes are order-free up to layer 14 and lose 2.4 points at layer 18, 20 at layer 26: read at layer 18 when a schema may reorder its options.
+
+### Many decisions from one forward pass (400 test rows, 5 questions each)
+
+| layout | passes | tokens | probe L20 | probe L22 | probe L26 | zero-shot letters |
+|---|---|---|---|---|---|---|
+| one prompt per question (today) | 2,000 | 709,730 | 0.790 | 0.792 | 0.793 | 0.489 |
+| state first, all five questions, read at each "Answer n:" | 400 | 266,746 | 0.768 | 0.768 | 0.774 | 0.522 |
+| state only, one vector per row | 400 | 98,746 | 0.748 | 0.746 | 0.748 | — |
+
+### MASSIVE: one probe trained on English only (2,000 rows), used unchanged in 11 languages (layer 20, same 100 test rows per language as §1)
+
+| | en | de | fr | es | ja | zh-CN | ar | hi | th | ko | km | macro |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 4B probe, 20 options (Laya's protocol) | 0.910 | 0.850 | 0.840 | 0.840 | 0.880 | 0.900 | 0.740 | 0.750 | 0.670 | 0.860 | 0.590 | **0.803** |
+| 4B probe, all 60 intents | 0.850 | 0.760 | 0.760 | 0.730 | 0.770 | 0.810 | 0.620 | 0.630 | 0.520 | 0.800 | 0.480 | 0.703 |
+| 12B zero-shot letters | 0.900 | 0.870 | 0.870 | 0.890 | 0.930 | 0.910 | 0.870 | 0.900 | 0.890 | 0.910 | 0.790 | 0.885 |
+| laya-multilingual | 0.710 | 0.500 | 0.600 | 0.580 | 0.640 | 0.650 | 0.460 | 0.470 | 0.470 | 0.470 | 0.210 | 0.524 |
+| laya (English) | 0.830 | 0.420 | 0.590 | 0.510 | 0.520 | 0.620 | 0.120 | 0.090 | 0.080 | 0.110 | 0.000 | 0.354 |
+
+### Depth-pruned Qwen3.5-4B GGUFs served by llama.cpp (`gguf_truncate.py`, `pruned_server_bench.py`, `latency_breakdown.py`)
+
+| blocks kept | GGUF size | zero-shot letters (= logit lens at the cut) | probe on the served state | ms / decision, letters | ms / decision, probe (embedding) |
+|---|---|---|---|---|---|
+| 20 of 32 | 3.06 GB | 0.269 | 0.787 | 85 | 48 |
+| 24 of 32 | 3.53 GB | 0.580 | 0.793 | 104 | 58 |
+| 29 of 32 | 4.13 GB | 0.580 | 0.781 | 125 | 70 |
+| 32 of 32 | 4.48 GB | 0.483 | 0.776 | 136 | 84 |
+
+Latency: dedicated runs of 100 typed-decisions prompts per server, p50, prompt caching off (llama.cpp b11100 crashes on partial prefix reuse with this hybrid architecture). Letters use `/completion` with the top-200 log-probabilities; the probe uses `/embedding`.
+
+### Where a decision's latency goes (same 100 prompts, p50 / p90 ms)
+
+| model | completion, n_probs 0 | completion, n_probs 20 | completion, n_probs 200 | embedding (probe readout) |
+|---|---|---|---|---|
+| Qwen3.5-4B, 24 of 32 blocks | 112 / 121 | 100 / 117 | 104 / 114 | 58 / 89 |
+| Qwen3.5-4B, all 32 blocks | 128 / 148 | 130 / 139 | 136 / 159 | 84 / 109 |
+| Gemma 4 12B Q8 | 155 / 186 | 181 / 216 | 207 / 228 | 172 / 179 |
+| Qwen3.5-4B, 20 of 32 blocks | 87 / 111 | 80 / 86 | 85 / 92 | 48 / 50 |
+| Qwen3.5-4B, 29 of 32 blocks | 122 / 130 | 116 / 125 | 125 / 135 | 70 / 81 |
+
+### The cut 4B on Laya's public suite (zero-shot letters, same rows as §1, prompt caching off)
+
+| task | 32 blocks | 29 blocks | 24 blocks |
+|---|---|---|---|
+| ag_news | 0.797 | 0.760 | 0.762 |
+| emotion | 0.468 | 0.487 | 0.417 |
+| banking77 | 0.532 | 0.517 | 0.410 |
+| sst5 | 0.422 | 0.417 | 0.438 |
+| boolq | 0.755 | 0.613 | 0.487 |
+| prompt_injections | 0.647 | 0.586 | 0.647 |
+| typed_decisions | 0.483 | 0.580 | 0.580 |
+| massive:en | 0.810 | 0.720 | 0.490 |
+| massive:de | 0.640 | 0.590 | 0.410 |
+| massive:fr | 0.660 | 0.600 | 0.400 |
+| massive:es | 0.720 | 0.580 | 0.360 |
+| massive:ja | 0.760 | 0.650 | 0.410 |
+| massive:zh-CN | 0.770 | 0.630 | 0.420 |
+| massive:ar | 0.610 | 0.490 | 0.440 |
+| massive:hi | 0.710 | 0.620 | 0.440 |
+| massive:th | 0.670 | 0.590 | 0.500 |
+| massive:ko | 0.730 | 0.640 | 0.380 |
+| massive:km | 0.560 | 0.550 | 0.330 |
+| xnli:en | 0.790 | 0.780 | 0.690 |
+| xnli:de | 0.680 | 0.670 | 0.540 |
+| xnli:fr | 0.710 | 0.720 | 0.520 |
+| xnli:es | 0.740 | 0.770 | 0.560 |
+| xnli:ar | 0.700 | 0.740 | 0.520 |
+| xnli:hi | 0.650 | 0.670 | 0.530 |
+| xnli:th | 0.710 | 0.680 | 0.580 |
+| xnli:zh | 0.670 | 0.690 | 0.620 |
+| xnli:ru | 0.730 | 0.710 | 0.510 |
+| xnli:tr | 0.650 | 0.700 | 0.500 |
+| **mean change vs 32 blocks** | +0.0 | -3.7 | -17.4 |
+
+The cut helps the zero-shot letters on typed-decisions and hurts them on most public tasks: cut for probes, validate per task for letters.
+
+### Streaming voice: a collapsing commit bound vs the fixed threshold (`voice_ddm.py`, parameters chosen on one half of the 220 utterances, scored on the other)
+
+| log | policy | harmful / 198 | out-of-scope false / 22 | mean first-action word | first action at or before the human |
+|---|---|---|---|---|---|
+| partial, state last | default (τ 0.9, stability 2) | 1 | 4 | 3.87 | 0.50 |
+| partial, state last | best retuned fixed threshold | 3 | 4 | 3.37 | 0.72 |
+| partial, state last | best collapsing bound | 3 | 4 | 3.56 | 0.63 |
+| final, state last | default (τ 0.9, stability 2) | 1 | 2 | 3.62 | 0.52 |
+| final, state last | best retuned fixed threshold | 3 | 4 | 3.30 | 0.74 |
+| final, state last | best collapsing bound | 1 | 2 | 3.61 | 0.52 |
+| final, state first | default (τ 0.9, stability 2) | 2 | 4 | 3.57 | 0.52 |
+| final, state first | best retuned fixed threshold | 3 | 4 | 3.38 | 0.70 |
+| final, state first | best collapsing bound | 4 | 4 | 3.38 | 0.64 |
+
+Neither family is both earlier and as safe as the default; the default stays.
+
 ## 5. JevBench public tiers (leaderboard formulas, `experiments/bench_jevbench.py`)
 
 | tier (n) | Gemma 4 12B Q8: accuracy / intelligence / ECE / median s | Qwen3.5-9B Q8 |

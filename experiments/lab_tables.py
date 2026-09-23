@@ -236,25 +236,36 @@ def main():
                 w(f"| {lab} | " + " | ".join(f3(v) for v in vals) + f" | {f3(np.mean([v for v in vals if v is not None]))} |")
         w("")
 
-    P = J("results/pruned_server_qwen35-4b.json")
+    P, BD = J("results/pruned_server_qwen35-4b.json"), J("results/latency_breakdown.json")
     if P:
-        w("### Depth-pruned Qwen3.5-4B GGUFs served by llama.cpp (`gguf_truncate.py`, `pruned_server_bench.py`)\n")
-        w("| blocks kept | GGUF size | zero-shot letters (= logit lens at the cut) | probe on the served state | ms / decision, letters (p50) | ms / request, embedding (p50) |\n|---|---|---|---|---|---|")
+        nm = {"L20": "Qwen3.5-4B, 20 of 32 blocks", "L24": "Qwen3.5-4B, 24 of 32 blocks", "L29": "Qwen3.5-4B, 29 of 32 blocks", "L32": "Qwen3.5-4B, all 32 blocks"}
+        w("### Depth-pruned Qwen3.5-4B GGUFs served by llama.cpp (`gguf_truncate.py`, `pruned_server_bench.py`, `latency_breakdown.py`)" + chr(10))
+        w("| blocks kept | GGUF size | zero-shot letters (= logit lens at the cut) | probe on the served state | ms / decision, letters | ms / decision, probe (embedding) |" + chr(10) + "|---|---|---|---|---|---|")
         sizes = {"L20": "3.06 GB", "L24": "3.53 GB", "L29": "4.13 GB", "L32": "4.48 GB"}
         for n, r in P.items():
-            w(f"| {n[1:]} of 32 | {sizes.get(n, '')} | {f3(r['letters_acc'])} | {f3(r['probe_acc'])} | {r['ms_letters_p50']:.0f} | {r['ms_embed_p50']:.0f} |")
-        w("\nFor comparison, Gemma 4 12B Q8 letters: 0.705 at 304 ms p50 on the same prompts (typed-decisions, options first, state last).\n")
+            b_ = (BD or {}).get(nm[n], {})
+            ml = b_.get("completion, n_probs 200", {}).get("p50"); me = b_.get("embedding (probe readout)", {}).get("p50")
+            w(f"| {n[1:]} of 32 | {sizes.get(n, '')} | {f3(r['letters_acc'])} | {f3(r['probe_acc'])} | {ml:.0f} | {me:.0f} |" if ml and me else f"| {n[1:]} of 32 | {sizes.get(n, '')} | {f3(r['letters_acc'])} | {f3(r['probe_acc'])} | | |")
+        w(chr(10) + "Latency: dedicated runs of 100 typed-decisions prompts per server, p50, prompt caching off (llama.cpp b11100 crashes on partial prefix reuse with this hybrid architecture). Letters use `/completion` with the top-200 log-probabilities; the probe uses `/embedding`." + chr(10))
+    if BD:
+        w("### Where a decision's latency goes (same 100 prompts, p50 / p90 ms)" + chr(10))
+        cols = ["completion, n_probs 0", "completion, n_probs 20", "completion, n_probs 200", "embedding (probe readout)"]
+        w("| model | " + " | ".join(cols) + " |" + chr(10) + "|---|" + "---|" * len(cols))
+        for m, R in BD.items():
+            w(f"| {m} | " + " | ".join(f"{R[c]['p50']:.0f} / {R[c]['p90']:.0f}" for c in cols) + " |")
+        w("")
 
-    A29, A32 = J("results/h2h_q4b_L29/summary.json"), J("results/h2h_q4b_L32/summary.json")
-    if A29 and A32:
-        w("### Removing the top 3 layers of the 4B, on Laya's public suite (zero-shot letters, same rows as §1)\n")
-        tasks = [t for t in A32 if t in A29 and "tez" in A32[t] and "tez" in A29[t]]
-        w("| task | 4B, 32 layers | 4B, 29 layers | Δ |\n|---|---|---|---|")
-        d = []
+    A24, A29, A32 = J("results/h2h_q4b_L24/summary.json"), J("results/h2h_q4b_L29/summary.json"), J("results/h2h_q4b_L32/summary.json")
+    if A32 and (A29 or A24):
+        w("### The cut 4B on Laya's public suite (zero-shot letters, same rows as §1, prompt caching off)" + chr(10))
+        tasks = [t for t in A32 if (A29 is None or t in A29) and (A24 is None or t in A24)]
+        heads = [("32 blocks", A32)] + ([("29 blocks", A29)] if A29 else []) + ([("24 blocks", A24)] if A24 else [])
+        w("| task | " + " | ".join(h for h, _ in heads) + " |" + chr(10) + "|---|" + "---|" * len(heads))
         for t in tasks:
-            a, b = A32[t]["tez"]["accuracy"], A29[t]["tez"]["accuracy"]; d.append(b - a)
-            w(f"| {t} | {f3(a)} | {f3(b)} | {b - a:+.3f} |")
-        w(f"| **mean over {len(tasks)} tasks** | | | **{np.mean(d):+.3f}** |\n")
+            w(f"| {t} | " + " | ".join(f3(S_[t]['tez']['accuracy']) for _, S_ in heads) + " |")
+        means = [np.mean([S_[t]['tez']['accuracy'] - A32[t]['tez']['accuracy'] for t in tasks]) for _, S_ in heads]
+        w(f"| **mean change vs 32 blocks** | " + " | ".join(f"{100 * m:+.1f}" for m in means) + " |")
+        w(chr(10) + "The cut helps the zero-shot letters on typed-decisions and hurts them on most public tasks: cut for probes, validate per task for letters." + chr(10))
 
     VO = {v: J(f"results/voice_ddm_{v}.json") for v in ("partial_last", "final_last", "final_first")}
     if any(VO.values()):

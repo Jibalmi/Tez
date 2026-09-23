@@ -1,0 +1,38 @@
+{
+ "L20": {
+  "gguf": "tools/models/Qwen3.5-4B-Q8_0-L20.gguf",
+  "letters_acc": 0.269,
+  "probe_acc": 0.7875,
+  "probe_C": 0.05,
+  "ms_letters_p50": 127.08474999817554,
+  "ms_embed_p50": 108.53989999304758,
+  "dim": 2560
+ },
+ "L24": {
+  "gguf": "tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "letters_acc": 0.5795,
+  "probe_acc": 0.793,
+  "probe_C": 0.05,
+  "ms_letters_p50": 135.5445500012138,
+  "ms_embed_p50": 124.40855000022566,
+  "dim": 2560
+ },
+ "L29": {
+  "gguf": "tools/models/Qwen3.5-4B-Q8_0-L29.gguf",
+  "letters_acc": 0.58,
+  "probe_acc": 0.7815,
+  "probe_C": 0.05,
+  "ms_letters_p50": 160.7183499945677,
+  "ms_embed_p50": 148.56174999295035,
+  "dim": 2560
+ },
+ "L32": {
+  "gguf": "tools/models/Qwen3.5-4B-Q8_0.gguf",
+  "letters_acc": 0.483,
+  "probe_acc": 0.776,
+  "probe_C": 0.05,
+  "ms_letters_p50": 231.76949999469798,
+  "ms_embed_p50": 342.9821500030812,
+  "dim": 2560
+ }
+}

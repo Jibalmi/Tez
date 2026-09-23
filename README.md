@@ -95,6 +95,53 @@ Findings worth knowing before you build anything like this:
 - **A confident `none` on a partial transcript means "keep listening", never "do nothing"** — the one
   rule that makes early commit work.
 
+## The probe lab: reading decisions from the middle of the network
+
+![probe lab](docs/figures/tez_lab.png)
+
+A second round asked what makes the mid-depth probe usable on *any* schema, borrowing methods from other fields
+(two commissioned notes: `docs/research/abstract-methods-survey.md`, `docs/research/novelty-check.md`).
+Almost everything runs on one cache of every layer's hidden state (`experiments/probe_lab.py`); full tables in
+`BENCHMARKS.md` §4c, discussion in the paper's probe-lab section.
+
+What worked:
+
+- **The best layer can be found with no labels.** The intrinsic dimension of unlabelled states (TwoNN) bottoms
+  out at layers 24–28 of the 4B, exactly the probe's accuracy plateau (0.79); confidence, the obvious
+  alternative, picks the wrong layer.
+- **On typed-decisions, the 4B's top three layers cost ten points of zero-shot accuracy.** Its letter readout scores
+  0.583 at layer 29 and 0.485 at the top. It does not generalise: on Laya's public suite the same cut lowers the
+  letters by 3.7 points on average, and the 12B keeps improving to full depth.
+- **Cut the served model where the decision is made.** `experiments/gguf_truncate.py` keeps the first 24 of 32 blocks: a probe on the served state scores 0.793 (full model 0.776) at 58 vs 84 ms, from a 3.53 GB file. The zero-shot letters gain 10 points on typed-decisions but lose 3.7 on average across Laya's public suite: cut for probes, validate per task for letters.
+- **On the 4B the most accurate readout is also the fastest.** Same prompts, caching off: a probe on the 24-block model decides in 58 ms (0.793), the full model's letters take 136 ms (0.483), the 12B's letters 207 ms (0.705).
+- **Decide first, bind later, measured.** A probe trained on the usual option order still works on reversed options
+  up to layer 14 (no loss) and 18 (−2.4 points), but loses 20 points at layer 26: read at layer 18 if a schema
+  may reorder its options.
+- **A decision needs 64 numbers.** One PCA learned from unlabelled traffic keeps 0.790 of 0.793, and a PCA learned
+  on other workflows keeps 0.782 on a new one.
+- **Label the typical rows first, and keep the zero-shot prior.** 50 typical labels per question on top of the 12B's
+  zero-shot answers reach 0.766, the level of Laya's checkpoint fine-tuned on the whole train split.
+- **Calibrated as it comes.** A logistic probe is fitted with a proper scoring rule: ECE 0.023 as read, against 0.262
+  for the 12B's raw letters and 0.246 published for Jev.
+- **A guaranteed error rate.** Conformal selection acts on 40 % of decisions with at most 5 % wrong (realised 5.2 %).
+- **Cold start works when the prior is strong.** Starting from the 12B zero-shot, escalating the unsure 5 % and
+  learning from them automates 95 % at 0.707; with a 10 % random audit slice it automates 77 % at 0.777.
+- **Many decisions from one pass.** Five questions after one state, each read at its own marker: 2.7× fewer
+  tokens for 1.5 points; later questions are not hurt by earlier ones.
+- **Train in English, use in eleven languages.** A MASSIVE probe trained on English rows only scores 0.803 macro over
+  11 languages (Laya's multilingual model 0.524); within 1–5 points of the 12B zero-shot on European and CJK
+  languages, 13–22 below on Arabic, Hindi, Thai and Khmer.
+- **Deciding on a workflow it has never seen.** A single "is this answer right?" probe, read at a forced answer token
+  and trained on three workflows, scores 0.622 on the fourth (the 4B's own letters: 0.490; the 12B: 0.705);
+  a question-agnostic letter probe does not transfer (0.521).
+- **The benchmark is now the limit.** Every supervised route lands at 0.79–0.80. Where the benchmark's own label
+  distribution is decisive the probe is right 98 % of the time; where the benchmark's labels are split it is right 56 %.
+
+What did not: probes trained on zero-shot answers only match their teacher (0.709 vs 0.705); a Dawid–Skene label
+model over several readouts (0.617); uncertainty-only labelling from a weak prior (worse than random labels);
+batch calibration of the teacher; DoLa; adaptive depth (ties a fixed cut); LDA with an unlabelled covariance;
+select-and-copy attention heads (0.50–0.53, the letters' level); a collapsing commit bound for voice.
+
 ## Layout
 
 ```
@@ -127,6 +174,23 @@ experiments/fewshot_td.py        k worked examples in the cached prefix (zero tr
 experiments/think_td.py          "System 1.5": a seeded thinking budget before the readout
 experiments/backend.py           llama-server / Ollama backends (TEZ_BACKEND, TEZ_TEMPLATE, TEZ_OLLAMA_MODEL)
 docs/research/*-survey.md        commissioned literature surveys: speed, accuracy, models & landscape
+experiments/probe_lab.py         the probe lab on cached hidden states: label-free probes, anytime depth, probe families,
+                                 decision-code size, universal heads, cold start, logit lens, label model, few labels,
+                                 conformal selection, stacking, typicality, intrinsic dimension, code transfer, prior
+experiments/teacher_labels.py    the 12B's zero-shot answers on typed-decisions train+test (free pseudo-labels)
+experiments/probe_multiq.py      many decisions from one forward pass (markers) and a state-only pass
+experiments/probe_crosslingual.py  English-only MASSIVE probe applied to 11 languages
+experiments/probe_truth.py       universal "is this answer right?" probe, leave-one-workflow-out
+experiments/probe_order.py       decide-then-bind across depth: probes on reversed option order
+experiments/attn_readout.py      select-and-copy attention readout (negative)
+experiments/gguf_truncate.py     keep the first N blocks of a GGUF (depth pruning)
+experiments/pruned_server_bench.py  letters and served-embedding probes on the pruned GGUFs
+experiments/latency_breakdown.py where a decision's latency goes: /completion (n_probs 0/20/200) vs /embedding
+experiments/voice_ddm.py         collapsing commit bound for streaming voice (negative)
+experiments/make_lab_figure.py   the probe-lab figure (docs/figures/tez_lab.png)
+experiments/lab_tables.py        the probe-lab tables in BENCHMARKS.md, generated from results/
+docs/research/abstract-methods-survey.md  cross-disciplinary methods for the readout (verified ids)
+docs/research/novelty-check.md   closest prior work for every probe-lab experiment
 BENCHMARKS.md                    every number, consolidated
 experiments/probe_gemma.py       template / tokenizer / logit probe for a GGUF
 data/semif/                      SemIf's MIT fixtures and core.py (prompt construction), vendored
