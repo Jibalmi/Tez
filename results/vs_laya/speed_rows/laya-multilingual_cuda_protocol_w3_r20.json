@@ -1,0 +1,231 @@
+{
+ "system": "laya-multilingual",
+ "device": "cuda",
+ "dtype": "torch.bfloat16",
+ "autocast": true,
+ "threads": 24,
+ "laya_version": "0.3.5",
+ "info": {
+  "cuda_free_mib_before_load": 15045,
+  "cuda_total_mib": 16303,
+  "load_s": 30.25,
+  "cuda_free_mib_after_load": 13773,
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "cuda_max_allocated_mib": 1730
+ },
+ "sizes": {
+  "1": {
+   "n_questions": 1,
+   "reps": 20,
+   "p50_ms": 21.24,
+   "p95_ms": 29.27,
+   "mean_ms": 22.47,
+   "min_ms": 18.35,
+   "ms_per_question": 21.24,
+   "samples_ms": [
+    19.87,
+    19.67,
+    21.44,
+    28.09,
+    33.14,
+    20.55,
+    24.76,
+    19.02,
+    18.35,
+    24.95,
+    29.06,
+    21.5,
+    21.21,
+    21.13,
+    22.74,
+    21.15,
+    21.28,
+    20.13,
+    19.68,
+    21.58
+   ],
+   "input_tokens": 181,
+   "example_answers": {
+    "q0": {
+     "type": "choice",
+     "choice": "billing",
+     "probabilities": {
+      "billing": 0.9658,
+      "technical": 0.0326,
+      "sales": 0.0016
+     },
+     "confidence": 0.8583,
+     "action": {
+      "act_probability": 1.0
+     }
+    }
+   }
+  },
+  "5": {
+   "n_questions": 5,
+   "reps": 20,
+   "p50_ms": 24.05,
+   "p95_ms": 27.15,
+   "mean_ms": 24.25,
+   "min_ms": 21.38,
+   "ms_per_question": 4.81,
+   "samples_ms": [
+    29.72,
+    26.49,
+    24.0,
+    22.31,
+    23.03,
+    22.21,
+    24.33,
+    26.05,
+    22.42,
+    26.53,
+    27.01,
+    22.75,
+    23.27,
+    21.38,
+    24.63,
+    24.1,
+    22.22,
+    25.03,
+    23.12,
+    24.39
+   ],
+   "input_tokens": 929,
+   "example_answers": {
+    "q0": {
+     "type": "choice",
+     "choice": "billing",
+     "probabilities": {
+      "billing": 0.9658,
+      "technical": 0.0326,
+      "sales": 0.0016
+     },
+     "confidence": 0.8583,
+     "action": {
+      "act_probability": 1.0
+     }
+    },
+    "q1": {
+     "type": "noul",
+     "noul": 0.6225,
+     "confidence": 0.6225,
+     "action": {
+      "act_probability": 1.0
+     }
+    }
+   }
+  },
+  "10": {
+   "n_questions": 10,
+   "reps": 20,
+   "p50_ms": 29.97,
+   "p95_ms": 34.32,
+   "mean_ms": 30.62,
+   "min_ms": 28.19,
+   "ms_per_question": 3.0,
+   "samples_ms": [
+    30.33,
+    30.78,
+    30.92,
+    34.1,
+    30.1,
+    29.85,
+    31.49,
+    30.89,
+    38.52,
+    29.8,
+    29.82,
+    29.79,
+    28.98,
+    31.45,
+    29.12,
+    32.28,
+    28.61,
+    28.75,
+    28.63,
+    28.19
+   ],
+   "input_tokens": 1870,
+   "example_answers": {
+    "q0": {
+     "type": "choice",
+     "choice": "billing",
+     "probabilities": {
+      "billing": 0.9658,
+      "technical": 0.0326,
+      "sales": 0.0016
+     },
+     "confidence": 0.8582,
+     "action": {
+      "act_probability": 1.0
+     }
+    },
+    "q1": {
+     "type": "noul",
+     "noul": 0.6225,
+     "confidence": 0.6225,
+     "action": {
+      "act_probability": 1.0
+     }
+    }
+   }
+  },
+  "50": {
+   "n_questions": 50,
+   "reps": 20,
+   "p50_ms": 136.19,
+   "p95_ms": 139.83,
+   "mean_ms": 135.51,
+   "min_ms": 129.72,
+   "ms_per_question": 2.72,
+   "samples_ms": [
+    139.59,
+    138.82,
+    132.31,
+    131.5,
+    129.72,
+    132.37,
+    137.25,
+    137.11,
+    137.71,
+    137.76,
+    132.68,
+    130.73,
+    133.36,
+    131.68,
+    137.84,
+    139.3,
+    144.45,
+    135.74,
+    136.65,
+    133.66
+   ],
+   "input_tokens": 9350,
+   "example_answers": {
+    "q0": {
+     "type": "choice",
+     "choice": "billing",
+     "probabilities": {
+      "billing": 0.9659,
+      "technical": 0.0325,
+      "sales": 0.0016
+     },
+     "confidence": 0.8586,
+     "action": {
+      "act_probability": 1.0
+     }
+    },
+    "q1": {
+     "type": "noul",
+     "noul": 0.6225,
+     "confidence": 0.6225,
+     "action": {
+      "act_probability": 1.0
+     }
+    }
+   }
+  }
+ },
+ "date": "2026-09-23T23:31:28"
+}

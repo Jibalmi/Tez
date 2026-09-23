@@ -1,0 +1,13 @@
+{
+ "system": "laya",
+ "task": "guardrails_jailbreak",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 145.68,
+ "ms_per_case_batched": 364.2,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 512,
+ "head_max_len": 192
+}

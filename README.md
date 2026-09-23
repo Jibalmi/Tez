@@ -93,6 +93,14 @@ Laya's published numbers reproduce in our harness (its base 0.362, fine-tuned 0.
 so the comparison is controlled. Zero-shot Tez wins six of nine English tasks and every language;
 Laya wins where it was trained (AG News, NLI) and on single-question latency.
 
+**Laya's own charts, redrawn with Tez in Laya's place** (`docs/figures/vs/`, [BENCHMARKS.md §1b](BENCHMARKS.md)).
+On Laya's seven application workflows, same 400 rows each, zero-shot Tez wins the three held out of Laya's training
+(model routing 0.970 vs Laya's best 0.659, jailbreak guardrails 0.865 vs 0.805, toxicity 0.713 vs 0.535) and Laya wins
+the four in its training mix. Tez clears 3× random in all 51 MASSIVE languages (mean 0.816) against 48 for Laya's router
+(mean 0.403). Laya batches far better: 2.8–7.4 ms per question at 50 questions per call, against Tez's 93 ms.
+
+![Tez vs Jev, with Laya on the same rows](docs/figures/vs/tez_vs_jev.png)
+
 Findings worth knowing before you build anything like this:
 
 - **The frozen model knows more than its letter logits say.** A per-question linear probe on the frozen

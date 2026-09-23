@@ -1,0 +1,1060 @@
+{
+ "meta": {
+  "title": "Tez vs Laya on Laya's seven application workflows (same rows)",
+  "date": "2026-09-24",
+  "script": "experiments/vs_laya_apps.py",
+  "rows": "results/vs_laya/apps_cases.jsonl (frozen inputs); per-row predictions in results/vs_laya/apps_rows/",
+  "protocol": "Rows rebuilt exactly as Laya's research/scripts/bench_apps.py: same datasets/splits/filters, 400 cases per task (model routing 399 = 3 x 133, as in Laya's run), one random.Random(13) consumed in Laya's suite order, question wording verbatim, email states via laya 0.2.1's email_state (the version behind Laya's published file).",
+  "tez": {
+   "model": "Gemma 4 12B Q8_0 (GGUF), frozen, zero-shot letter readout",
+   "server": "llama.cpp llama-server",
+   "model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+   "llama_cpp_build": "b11100-7ab4ee7ba",
+   "server_flags": "-ngl 99 -c 4096 -b 512 -np 1 --swa-full --embeddings --pooling last",
+   "readout": "experiments/bench_h2h.py tez_decide: one /completion call, top-200 log-probs, softmax over the option letters, temperature 1 (as shipped); noul options rendered like the runtime (tez.schema.Question.options)"
+  },
+  "laya": {
+   "package": "laya 0.3.5 (pip)",
+   "checkpoints": "convaiinnovations/laya (root, multilingual, typed-decisions subfolders; weights bundled 2026-09-19, unchanged since)",
+   "scoring": "Laya's own harness (bench_local.score_cases): raw marker logits, softmax at the checkpoint's bucket temperature as served by the package (clamped to [0.5, 5] since laya 0.3; no app bucket is affected unless noted per system), CPU fp32 like Laya's published run",
+   "latency": "ms_p50 from a separate pass: one Agent.system_one call per case (see ms_source per system)"
+  },
+  "hardware": {
+   "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU 16 GB (WDDM)",
+   "cpu": "Intel Core Ultra 9 275HX (24 cores)",
+   "os": "Windows-11-10.0.26200-SP0"
+  },
+  "metrics": "accuracy; macro-F1 over the classes present; ECE with 15 equal-width confidence bins on the max probability; mean confidence = mean max probability; ms_p50 = median wall-clock per decision; ece_refit = ECE after a 2-fold out-of-fold temperature (BENCHMARKS.md)",
+  "laya_published_source": "github.com/NandhaKishorM/laya research/results/app_benchmark_results.json (laya 0.2.1, CPU, 2026-09-19); copy in results/vs_laya/laya_published/",
+  "reproduction_summary": {
+   "laya": {
+    "tasks": 7,
+    "identical_accuracy": 7,
+    "identical_accuracy_f1_ece_confidence": 7,
+    "max_abs_delta_accuracy": 0.0
+   },
+   "laya-multilingual": {
+    "tasks": 7,
+    "identical_accuracy": 2,
+    "identical_accuracy_f1_ece_confidence": 0,
+    "max_abs_delta_accuracy": 0.3183
+   },
+   "laya-typed-decisions": {
+    "tasks": 7,
+    "identical_accuracy": 7,
+    "identical_accuracy_f1_ece_confidence": 7,
+    "max_abs_delta_accuracy": 0.0
+   }
+  },
+  "notes": [
+   "laya: all 7 tasks reproduce Laya's published accuracy, macro-F1, ECE and mean confidence to 4 decimals (same rows, same scoring path).",
+   "laya-multilingual: does NOT reproduce Laya's published numbers: accuracy identical on 2/7 tasks, max |delta accuracy| 0.3183, confidences differ on every task; see tasks[].reproduction.",
+   "laya-typed-decisions: all 7 tasks reproduce Laya's published accuracy, macro-F1, ECE and mean confidence to 4 decimals (same rows, same scoring path).",
+   "laya-multilingual: the released weights (sha256 9d628fd9..., identical in the convaiinnovations/laya bundle and the standalone laya-multilingual repo) give the same answers here on CPU fp32 as our earlier CUDA bf16 runs (1,087 of 1,100 MASSIVE rows), and the English and typed-decisions checkpoints reproduce to the row through the same code, so the gap is in the multilingual checkpoint's environment, not the rows. Laya's published run loaded a local directory (~/laya_models/laya-multilingual) with laya 0.2.x; candidates are different local weights or a transformers-version difference for mmBERT (its encoder config is in the transformers 5 format, sliding-window layers). Not isolated. The same shift shows on MASSIVE (massive51.json).",
+   "Laya ms_p50: per-case Agent.system_one on the RTX 5080 Laptop GPU (bf16 autocast), llama-server idle, CPU jobs suspended; tez ms_p50: per-decision /completion round trip with the constant prefix cached."
+  ]
+ },
+ "tasks": [
+  {
+   "id": "email_spam",
+   "label": "Email spam",
+   "n": 400,
+   "held_out": false,
+   "laya_suite": "app.email_spam",
+   "rows_sha16": "3bec6f55e91b65e3",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.9675,
+     "macro_f1": 0.9673,
+     "ece": 0.0308,
+     "mean_confidence": 0.997,
+     "brier": 0.0596,
+     "nll": 0.1772,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0104,
+     "dropped": 0,
+     "ms_p50": 169.6621,
+     "ms_p95": 438.5232,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.9925,
+     "macro_f1": 0.9925,
+     "ece": 0.0133,
+     "mean_confidence": 0.9831,
+     "brier": 0.0119,
+     "nll": 0.023,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0046,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 610.2,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 33.7877,
+     "ms_p95": 49.4217,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9975
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.9925,
+     "macro_f1": 0.9925,
+     "ece": 0.0065,
+     "mean_confidence": 0.999,
+     "brier": 0.014,
+     "nll": 0.0348,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0054,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 2280.8,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 22.8847,
+     "ms_p95": 27.7108,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.9575,
+     "macro_f1": 0.9575,
+     "ece": 0.1085,
+     "mean_confidence": 0.849,
+     "brier": 0.0979,
+     "nll": 0.1927,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0153,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 622.0,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 31.2432,
+     "ms_p95": 50.846,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    }
+   },
+   "laya_published": {
+    "laya": 0.9925,
+    "laya-multilingual": 0.9925,
+    "laya-typed-decisions": 0.9575
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9925,
+      "ece": 0.0133,
+      "mean_confidence": 0.9831,
+      "ms_per_case": 272.0
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9925,
+      "ece": 0.0133,
+      "mean_confidence": 0.9831
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9925,
+      "ece": 0.0079,
+      "mean_confidence": 0.9976,
+      "ms_per_case": 158.6
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9925,
+      "ece": 0.0065,
+      "mean_confidence": 0.999
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.9575,
+      "macro_f1": 0.9575,
+      "ece": 0.1085,
+      "mean_confidence": 0.849,
+      "ms_per_case": 355.9
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.9575,
+      "macro_f1": 0.9575,
+      "ece": 0.1085,
+      "mean_confidence": 0.849
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "phishing",
+   "label": "Phishing",
+   "n": 400,
+   "held_out": false,
+   "laya_suite": "app.phishing",
+   "rows_sha16": "ea43d420fedacad1",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.8975,
+     "macro_f1": 0.8886,
+     "ece": 0.1014,
+     "mean_confidence": 0.9955,
+     "brier": 0.1998,
+     "nll": 0.7564,
+     "acc_at_50_coverage": 0.99,
+     "ece_refit": 0.0401,
+     "dropped": 0,
+     "ms_p50": 179.9537,
+     "ms_p95": 420.8762,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.98,
+     "macro_f1": 0.9789,
+     "ece": 0.0121,
+     "mean_confidence": 0.9738,
+     "brier": 0.0292,
+     "nll": 0.048,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0107,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 873.7,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 38.9394,
+     "ms_p95": 56.7183,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.9925,
+     "macro_f1": 0.9921,
+     "ece": 0.0063,
+     "mean_confidence": 0.9981,
+     "brier": 0.0138,
+     "nll": 0.0243,
+     "acc_at_50_coverage": 1.0,
+     "ece_refit": 0.0031,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 294.8,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 24.4554,
+     "ms_p95": 45.2303,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.94,
+     "macro_f1": 0.9353,
+     "ece": 0.0762,
+     "mean_confidence": 0.865,
+     "brier": 0.1062,
+     "nll": 0.2039,
+     "acc_at_50_coverage": 0.99,
+     "ece_refit": 0.0252,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 645.6,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 35.9998,
+     "ms_p95": 51.4085,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9975
+    }
+   },
+   "laya_published": {
+    "laya": 0.98,
+    "laya-multilingual": 0.9925,
+    "laya-typed-decisions": 0.94
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.98,
+      "macro_f1": 0.9789,
+      "ece": 0.0121,
+      "mean_confidence": 0.9738,
+      "ms_per_case": 297.0
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.98,
+      "macro_f1": 0.9789,
+      "ece": 0.0121,
+      "mean_confidence": 0.9738
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9921,
+      "ece": 0.0032,
+      "mean_confidence": 0.9949,
+      "ms_per_case": 170.6
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.9925,
+      "macro_f1": 0.9921,
+      "ece": 0.0063,
+      "mean_confidence": 0.9981
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.94,
+      "macro_f1": 0.9353,
+      "ece": 0.0762,
+      "mean_confidence": 0.865,
+      "ms_per_case": 360.1
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.94,
+      "macro_f1": 0.9353,
+      "ece": 0.0762,
+      "mean_confidence": 0.865
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "guardrails_jailbreak",
+   "label": "LLM guardrails (jailbreak)",
+   "n": 400,
+   "held_out": true,
+   "laya_suite": "app.guardrails_jailbreak",
+   "rows_sha16": "2199193eac519e64",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.865,
+     "macro_f1": 0.8317,
+     "ece": 0.1316,
+     "mean_confidence": 0.9942,
+     "brier": 0.2592,
+     "nll": 0.803,
+     "acc_at_50_coverage": 0.985,
+     "ece_refit": 0.0779,
+     "dropped": 0,
+     "ms_p50": 63.6374,
+     "ms_p95": 192.2388,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.7075,
+     "macro_f1": 0.684,
+     "ece": 0.2591,
+     "mean_confidence": 0.9657,
+     "brier": 0.5389,
+     "nll": 1.8576,
+     "acc_at_50_coverage": 0.83,
+     "ece_refit": 0.0194,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 364.2,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 29.2808,
+     "ms_p95": 46.546,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.995
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.805,
+     "macro_f1": 0.7667,
+     "ece": 0.1528,
+     "mean_confidence": 0.9578,
+     "brier": 0.3347,
+     "nll": 1.0979,
+     "acc_at_50_coverage": 0.845,
+     "ece_refit": 0.0911,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 97.1,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 26.5799,
+     "ms_p95": 40.7425,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.995
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.7625,
+     "macro_f1": 0.733,
+     "ece": 0.0869,
+     "mean_confidence": 0.841,
+     "brier": 0.3365,
+     "nll": 0.5061,
+     "acc_at_50_coverage": 0.885,
+     "ece_refit": 0.0374,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 218.7,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 35.1713,
+     "ms_p95": 54.2534,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    }
+   },
+   "laya_published": {
+    "laya": 0.7075,
+    "laya-multilingual": 0.755,
+    "laya-typed-decisions": 0.7625
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.7075,
+      "macro_f1": 0.684,
+      "ece": 0.2591,
+      "mean_confidence": 0.9657,
+      "ms_per_case": 126.7
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.7075,
+      "macro_f1": 0.684,
+      "ece": 0.2591,
+      "mean_confidence": 0.9657
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.755,
+      "macro_f1": 0.7208,
+      "ece": 0.1974,
+      "mean_confidence": 0.9454,
+      "ms_per_case": 57.8
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.805,
+      "macro_f1": 0.7667,
+      "ece": 0.1528,
+      "mean_confidence": 0.9578
+     },
+     "delta_accuracy": 0.05,
+     "delta_correct_rows": 20
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.7625,
+      "macro_f1": 0.733,
+      "ece": 0.0869,
+      "mean_confidence": 0.841,
+      "ms_per_case": 123.8
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.7625,
+      "macro_f1": 0.733,
+      "ece": 0.0869,
+      "mean_confidence": 0.841
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "moderation_toxicity",
+   "label": "Moderation (toxicity)",
+   "n": 400,
+   "held_out": true,
+   "laya_suite": "app.moderation_toxicity",
+   "rows_sha16": "054e3baaab723cfe",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.7125,
+     "macro_f1": 0.6921,
+     "ece": 0.2727,
+     "mean_confidence": 0.983,
+     "brier": 0.5496,
+     "nll": 2.0589,
+     "acc_at_50_coverage": 0.86,
+     "ece_refit": 0.1316,
+     "dropped": 0,
+     "ms_p50": 60.6857,
+     "ms_p95": 164.925,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.53,
+     "macro_f1": 0.4003,
+     "ece": 0.2961,
+     "mean_confidence": 0.8242,
+     "brier": 0.6015,
+     "nll": 0.8862,
+     "acc_at_50_coverage": 0.735,
+     "ece_refit": 0.1583,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 304.3,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 29.428,
+     "ms_p95": 50.3124,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.535,
+     "macro_f1": 0.4136,
+     "ece": 0.3729,
+     "mean_confidence": 0.9079,
+     "brier": 0.7377,
+     "nll": 1.2217,
+     "acc_at_50_coverage": 0.71,
+     "ece_refit": 0.1748,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 81.7,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 34.7019,
+     "ms_p95": 51.386,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.53,
+     "macro_f1": 0.3967,
+     "ece": 0.244,
+     "mean_confidence": 0.7553,
+     "brier": 0.5315,
+     "nll": 0.7305,
+     "acc_at_50_coverage": 0.72,
+     "ece_refit": 0.1385,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 194.7,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 28.8093,
+     "ms_p95": 39.5139,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    }
+   },
+   "laya_published": {
+    "laya": 0.53,
+    "laya-multilingual": 0.525,
+    "laya-typed-decisions": 0.53
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.53,
+      "macro_f1": 0.4003,
+      "ece": 0.2961,
+      "mean_confidence": 0.8242,
+      "ms_per_case": 113.8
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.53,
+      "macro_f1": 0.4003,
+      "ece": 0.2961,
+      "mean_confidence": 0.8242
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.525,
+      "macro_f1": 0.394,
+      "ece": 0.3809,
+      "mean_confidence": 0.9059,
+      "ms_per_case": 47.8
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.535,
+      "macro_f1": 0.4136,
+      "ece": 0.3729,
+      "mean_confidence": 0.9079
+     },
+     "delta_accuracy": 0.01,
+     "delta_correct_rows": 4
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.53,
+      "macro_f1": 0.3967,
+      "ece": 0.244,
+      "mean_confidence": 0.7553,
+      "ms_per_case": 109.1
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.53,
+      "macro_f1": 0.3967,
+      "ece": 0.244,
+      "mean_confidence": 0.7553
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "rag_relevance",
+   "label": "RAG passage relevance",
+   "n": 400,
+   "held_out": false,
+   "laya_suite": "app.rag_relevance",
+   "rows_sha16": "00dbedccb89f667a",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.61,
+     "macro_f1": 0.5805,
+     "ece": 0.3841,
+     "mean_confidence": 0.9931,
+     "brier": 0.7659,
+     "nll": 3.8084,
+     "acc_at_50_coverage": 0.685,
+     "ece_refit": 0.3155,
+     "dropped": 0,
+     "ms_p50": 110.6165,
+     "ms_p95": 155.5149,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.625,
+     "macro_f1": 0.6234,
+     "ece": 0.1175,
+     "mean_confidence": 0.7425,
+     "brier": 0.4656,
+     "nll": 0.671,
+     "acc_at_50_coverage": 0.72,
+     "ece_refit": 0.0468,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 380.3,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 41.3315,
+     "ms_p95": 56.1477,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9925
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.6725,
+     "macro_f1": 0.6712,
+     "ece": 0.1689,
+     "mean_confidence": 0.8376,
+     "brier": 0.4859,
+     "nll": 0.7745,
+     "acc_at_50_coverage": 0.76,
+     "ece_refit": 0.0399,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 96.9,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 28.2554,
+     "ms_p95": 44.097,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9975
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.625,
+     "macro_f1": 0.6239,
+     "ece": 0.0419,
+     "mean_confidence": 0.6433,
+     "brier": 0.4458,
+     "nll": 0.6367,
+     "acc_at_50_coverage": 0.73,
+     "ece_refit": 0.0796,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 236.3,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 31.7777,
+     "ms_p95": 56.413,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9975
+    }
+   },
+   "laya_published": {
+    "laya": 0.625,
+    "laya-multilingual": 0.6575,
+    "laya-typed-decisions": 0.625
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.625,
+      "macro_f1": 0.6234,
+      "ece": 0.1175,
+      "mean_confidence": 0.7425,
+      "ms_per_case": 130.0
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.625,
+      "macro_f1": 0.6234,
+      "ece": 0.1175,
+      "mean_confidence": 0.7425
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.6575,
+      "macro_f1": 0.6567,
+      "ece": 0.1718,
+      "mean_confidence": 0.8293,
+      "ms_per_case": 55.7
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.6725,
+      "macro_f1": 0.6712,
+      "ece": 0.1689,
+      "mean_confidence": 0.8376
+     },
+     "delta_accuracy": 0.015,
+     "delta_correct_rows": 6
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.625,
+      "macro_f1": 0.6239,
+      "ece": 0.0419,
+      "mean_confidence": 0.6433,
+      "ms_per_case": 132.0
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.625,
+      "macro_f1": 0.6239,
+      "ece": 0.0419,
+      "mean_confidence": 0.6433
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "support_triage",
+   "label": "Support triage (10-way queue)",
+   "n": 400,
+   "held_out": false,
+   "laya_suite": "app.support_triage",
+   "rows_sha16": "4e96612695c7c32f",
+   "systems": {
+    "tez": {
+     "n": 400,
+     "accuracy": 0.4075,
+     "macro_f1": 0.3841,
+     "ece": 0.5671,
+     "mean_confidence": 0.9746,
+     "brier": 1.1516,
+     "nll": 6.4941,
+     "acc_at_50_coverage": 0.505,
+     "ece_refit": 0.0873,
+     "dropped": 0,
+     "ms_p50": 87.4929,
+     "ms_p95": 115.4915,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 400,
+     "accuracy": 0.5025,
+     "macro_f1": 0.4802,
+     "ece": 0.0907,
+     "mean_confidence": 0.5065,
+     "brier": 0.6438,
+     "nll": 1.4237,
+     "acc_at_50_coverage": 0.595,
+     "ece_refit": 0.0636,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 590.4,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 41.1401,
+     "ms_p95": 55.8018,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-multilingual": {
+     "n": 400,
+     "accuracy": 0.54,
+     "macro_f1": 0.5418,
+     "ece": 0.0862,
+     "mean_confidence": 0.611,
+     "brier": 0.5721,
+     "nll": 1.2147,
+     "acc_at_50_coverage": 0.745,
+     "ece_refit": 0.0497,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 156.1,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 24.8055,
+     "ms_p95": 34.9487,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 1.0
+    },
+    "laya-typed-decisions": {
+     "n": 400,
+     "accuracy": 0.505,
+     "macro_f1": 0.4699,
+     "ece": 0.1149,
+     "mean_confidence": 0.4165,
+     "brier": 0.6603,
+     "nll": 1.4739,
+     "acc_at_50_coverage": 0.595,
+     "ece_refit": 0.0676,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 386.2,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 41.5449,
+     "ms_p95": 55.9183,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.995
+    }
+   },
+   "laya_published": {
+    "laya": 0.5025,
+    "laya-multilingual": 0.5225,
+    "laya-typed-decisions": 0.505
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.5025,
+      "macro_f1": 0.4802,
+      "ece": 0.0907,
+      "mean_confidence": 0.5065,
+      "ms_per_case": 227.2
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.5025,
+      "macro_f1": 0.4802,
+      "ece": 0.0907,
+      "mean_confidence": 0.5065
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.5225,
+      "macro_f1": 0.5159,
+      "ece": 0.0724,
+      "mean_confidence": 0.5949,
+      "ms_per_case": 89.3
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.54,
+      "macro_f1": 0.5418,
+      "ece": 0.0862,
+      "mean_confidence": 0.611
+     },
+     "delta_accuracy": 0.0175,
+     "delta_correct_rows": 7
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 400,
+      "accuracy": 0.505,
+      "macro_f1": 0.4699,
+      "ece": 0.1149,
+      "mean_confidence": 0.4165,
+      "ms_per_case": 225.7
+     },
+     "rerun": {
+      "n": 400,
+      "accuracy": 0.505,
+      "macro_f1": 0.4699,
+      "ece": 0.1149,
+      "mean_confidence": 0.4165
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  },
+  {
+   "id": "model_routing_domain",
+   "label": "Model routing (domain)",
+   "n": 399,
+   "held_out": true,
+   "laya_suite": "app.model_routing_domain",
+   "rows_sha16": "01ebea89cecaec18",
+   "systems": {
+    "tez": {
+     "n": 399,
+     "accuracy": 0.9699,
+     "macro_f1": 0.7363,
+     "ece": 0.0296,
+     "mean_confidence": 0.9928,
+     "brier": 0.0602,
+     "nll": 0.1944,
+     "acc_at_50_coverage": 0.995,
+     "ece_refit": 0.0113,
+     "dropped": 0,
+     "ms_p50": 64.0879,
+     "ms_p95": 89.9228,
+     "ms_source": "per decision, llama-server /completion round trip (prompt cache on), RTX 5080 Laptop"
+    },
+    "laya": {
+     "n": 399,
+     "accuracy": 0.6391,
+     "macro_f1": 0.3199,
+     "ece": 0.0889,
+     "mean_confidence": 0.7121,
+     "brier": 0.4938,
+     "nll": 1.089,
+     "acc_at_50_coverage": 0.8744,
+     "ece_refit": 0.081,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 1968.5,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 44.648,
+     "ms_p95": 64.1683,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.995
+    },
+    "laya-multilingual": {
+     "n": 399,
+     "accuracy": 0.4411,
+     "macro_f1": 0.2362,
+     "ece": 0.1957,
+     "mean_confidence": 0.6316,
+     "brier": 0.7607,
+     "nll": 1.7542,
+     "acc_at_50_coverage": 0.593,
+     "ece_refit": 0.087,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 92.2,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 33.7822,
+     "ms_p95": 51.9985,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.9875
+    },
+    "laya-typed-decisions": {
+     "n": 399,
+     "accuracy": 0.6591,
+     "macro_f1": 0.3426,
+     "ece": 0.1058,
+     "mean_confidence": 0.5909,
+     "brier": 0.503,
+     "nll": 1.0623,
+     "acc_at_50_coverage": 0.8342,
+     "ece_refit": 0.083,
+     "dropped": 0,
+     "cpu_batched_ms_per_case_not_a_speed_result": 236.8,
+     "scored_on": "cpu torch.float32, 12 threads, Laya's batched harness",
+     "ms_p50": 43.9184,
+     "ms_p95": 57.7451,
+     "ms_source": "per decision, one Agent.system_one call per case on cuda (RTX 5080 Laptop, bf16 autocast)",
+     "timing_pass_pred_agreement": 0.99
+    }
+   },
+   "laya_published": {
+    "laya": 0.6391,
+    "laya-multilingual": 0.1228,
+    "laya-typed-decisions": 0.6591
+   },
+   "reproduction": {
+    "laya": {
+     "published": {
+      "n": 399,
+      "accuracy": 0.6391,
+      "macro_f1": 0.3199,
+      "ece": 0.0889,
+      "mean_confidence": 0.7121,
+      "ms_per_case": 127.4
+     },
+     "rerun": {
+      "n": 399,
+      "accuracy": 0.6391,
+      "macro_f1": 0.3199,
+      "ece": 0.0889,
+      "mean_confidence": 0.7121
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    },
+    "laya-multilingual": {
+     "published": {
+      "n": 399,
+      "accuracy": 0.1228,
+      "macro_f1": 0.0912,
+      "ece": 0.4898,
+      "mean_confidence": 0.6126,
+      "ms_per_case": 54.9
+     },
+     "rerun": {
+      "n": 399,
+      "accuracy": 0.4411,
+      "macro_f1": 0.2362,
+      "ece": 0.1957,
+      "mean_confidence": 0.6316
+     },
+     "delta_accuracy": 0.3183,
+     "delta_correct_rows": 127
+    },
+    "laya-typed-decisions": {
+     "published": {
+      "n": 399,
+      "accuracy": 0.6591,
+      "macro_f1": 0.3426,
+      "ece": 0.1058,
+      "mean_confidence": 0.5909,
+      "ms_per_case": 133.6
+     },
+     "rerun": {
+      "n": 399,
+      "accuracy": 0.6591,
+      "macro_f1": 0.3426,
+      "ece": 0.1058,
+      "mean_confidence": 0.5909
+     },
+     "delta_accuracy": 0.0,
+     "delta_correct_rows": 0
+    }
+   }
+  }
+ ]
+}

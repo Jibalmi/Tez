@@ -78,6 +78,65 @@ Tez's per-decision time on these tasks is dominated by evaluating the **state** 
 
 ---
 
+<!-- vs_laya:start -->
+## 1b. On Laya's own benchmarks: Laya's charts, redrawn with Tez
+
+Laya publishes its comparison with Jev as a set of charts. `experiments/make_vs_figures.py` redraws each one with Tez in Laya's place (`docs/figures/vs/`, listed in its README); the measurements below fill the panels Tez had never been run on. Tez and every Laya checkpoint answered byte-identical rows; Laya's workflow scores come from Laya's own harness (CPU, fp32, as in its published run), Tez from the letter readout on the RTX 5080 laptop. Jev was never run here.
+
+![Tez vs Jev, with Laya on the same rows](docs/figures/vs/tez_vs_jev.png)
+
+### Laya's seven application workflows (400 rows each, Laya's sampling, seed 13; `experiments/vs_laya_apps.py`)
+
+| task | **Tez** | laya | laya-multilingual | laya-typed-decisions | Laya published (laya / multilingual / typed) |
+|---|---:|---:|---:|---:|---|
+| Email spam (in Laya's training) | 0.9675 | **0.9925** | **0.9925** | 0.9575 | 0.9925 / 0.9925 / 0.9575 |
+| Phishing (in Laya's training) | 0.8975 | 0.980 | **0.9925** | 0.940 | 0.980 / 0.9925 / 0.940 |
+| LLM guardrails (jailbreak) (held out) | **0.865** | 0.7075 | 0.805 | 0.7625 | 0.7075 / 0.755 / 0.7625 |
+| Moderation (toxicity) (held out) | **0.7125** | 0.530 | 0.535 | 0.530 | 0.530 / 0.525 / 0.530 |
+| RAG passage relevance (in Laya's training) | 0.610 | 0.625 | **0.6725** | 0.625 | 0.625 / 0.6575 / 0.625 |
+| Support triage (10-way queue) (in Laya's training) | 0.4075 | 0.5025 | **0.540** | 0.505 | 0.5025 / 0.5225 / 0.505 |
+| Model routing (domain) (held out), n = 399 | **0.9699** | 0.6391 | 0.4411 | 0.6591 | 0.6391 / 0.1228 / 0.6591 |
+
+Tez wins the three held-out workflows; Laya wins the four in its training mix. Our reruns of laya and laya-typed-decisions match Laya's published numbers to four decimals; the released laya-multilingual checkpoint does not reproduce its published row (higher here on five tasks, most on model routing), cause not found (`results/vs_laya/apps.json`, `meta` and `reproduction`).
+
+### MASSIVE intent in all 51 languages (20 options, 100 rows each; `experiments/vs_laya_massive51.py`)
+
+| system | languages above 3× random (of 51) | mean accuracy |
+|---|---:|---:|
+| **Tez** zero-shot | 51 | 0.816 |
+| laya routed (English checkpoint for en, multilingual otherwise) | 48 | 0.403 |
+| laya-multilingual | 48 | 0.401 |
+| laya (English) | 23 | 0.227 |
+
+Laya's own published run counts 45 usable languages with routing (laya-multilingual 45, laya 23); our rerun of the released multilingual checkpoint scores higher in some languages (see the file's `reproduction`).
+
+Tez beats Laya's router in every language (the smallest margin is English, 0.90 vs 0.82); its weakest are cy 0.33, is 0.62, sq 0.62, lv 0.65, hu 0.66.
+
+### Speed per call (one state, p50; `experiments/vs_laya_speed.py`)
+
+| system | 1 q / call | 5 q / call | 10 q / call | 50 q / call | ms per question at 50 |
+|---|---:|---:|---:|---:|---:|
+| **Tez** (tez serve, new ticket each call) | 139 ms | 549 ms | 1,039 ms | 4,666 ms | 93.3 ms |
+| laya (same GPU) | 36 ms | 50 ms | 75 ms | 370 ms | 7.4 ms |
+| laya-multilingual (same GPU) | 30 ms | 33 ms | 38 ms | 141 ms | 2.8 ms |
+
+Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass per question and the state is read again for each, so its cost per question stays near 90–140 ms (`experiments/probe_multiq.py` measures a state-first layout that would share it; the runtime does not use it yet).
+
+### Selective automation on typed-decisions (accuracy on the decisions acted on, most confident first; `experiments/vs_laya_selective.py`)
+
+| system | 30 % | 40 % | 50 % | 60 % | 70 % | 80 % | 90 % | 100 % |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Tez** letters (zero-shot) | 0.928 | 0.882 | 0.856 | 0.817 | 0.784 | 0.754 | 0.730 | 0.704 |
+| laya-typed-decisions (fine-tuned on it) | 0.965 | 0.938 | 0.904 | 0.873 | 0.848 | 0.820 | 0.796 | 0.766 |
+| laya | 0.413 | 0.430 | 0.426 | 0.422 | 0.409 | 0.386 | 0.376 | 0.362 |
+| laya-multilingual | 0.477 | 0.446 | 0.411 | 0.388 | 0.369 | 0.366 | 0.354 | 0.352 |
+
+Tez's letters ship over-confident (ECE-15 0.262; most answers sit in the top confidence bin); one out-of-fold temperature brings it to 0.048 on these rows (2-fold split of `bench_h2h.py`; §4c's 0.067 used the probe lab's split). laya-typed-decisions, fine-tuned on this benchmark, ranks its own errors better at every coverage.
+
+<!-- vs_laya:end -->
+
+---
+
 ## 2. SemIf's benchmark (authored144 · perturbations108), frozen models
 
 `experiments/run_direct.py`, `metrics.py`, `calibrate.py`, `perm_analysis.py`, `run_hf.py`. Mean-family balanced accuracy, classes keyed by option id, 95 % CI by source-group bootstrap.

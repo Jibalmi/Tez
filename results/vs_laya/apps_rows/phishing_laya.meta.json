@@ -1,0 +1,13 @@
+{
+ "system": "laya",
+ "task": "phishing",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 349.49,
+ "ms_per_case_batched": 873.7,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 512,
+ "head_max_len": 192
+}

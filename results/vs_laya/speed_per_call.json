@@ -1,0 +1,249 @@
+{
+ "meta": {
+  "title": "p50 latency per call at 1, 5, 10, 50 questions on one state",
+  "date": "2026-09-24",
+  "script": "experiments/vs_laya_speed.py",
+  "protocol": "Laya's latency protocol (build_benchmark_nb.py section 7 / bench_latency.py): Stripe payout ticket state, questions alternate a 3-option choice and a noul, warm-up calls then timed calls per size; p50 per call, p50/n per question. Main entries: 10 warm-up calls and 100 timed calls per size (30 at 50 questions), because single-question GPU calls on this laptop jitter (Laya 1 question: 25-97 ms over 20 calls). Laya's exact 3 warm-ups / 20 calls were run first and are in extras.",
+  "hardware": {
+   "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU 16 GB (Windows WDDM)",
+   "cpu": "Intel Core Ultra 9 275HX (24 cores)",
+   "os": "Windows-11-10.0.26200-SP0"
+  },
+  "device_per_system": {
+   "tez": "RTX 5080 Laptop GPU: Gemma 4 12B Q8_0 in llama-server :8091 (-ngl 99, all layers on the GPU), called through the `tez serve` runtime on :8787; a new ticket state in every call",
+   "laya": "cuda (torch.bfloat16, autocast=True), {'cuda_free_mib_before_load': 14492, 'cuda_total_mib': 16303, 'load_s': 13.22, 'cuda_free_mib_after_load': 13329, 'gpu': 'NVIDIA GeForce RTX 5080 Laptop GPU', 'cuda_max_allocated_mib': 2662}",
+   "laya-multilingual": "cuda (torch.bfloat16, autocast=True), {'cuda_free_mib_before_load': 15045, 'cuda_total_mib': 16303, 'load_s': 15.02, 'cuda_free_mib_after_load': 13773, 'gpu': 'NVIDIA GeForce RTX 5080 Laptop GPU', 'cuda_max_allocated_mib': 1730}"
+  },
+  "tez_note": "tez serve reads each question separately (one llama-server /completion per question; above 26 options a tournament), so a call costs about n x one decision, and the state is re-read for every question because it sits after the question in the prompt. systems['tez'] puts a new ticket id at the start of the subject and the message in every call: the state is never in llama.cpp's prompt cache (the instruction+options prefix is, as in production), i.e. the cost of deciding a new ticket. Laya's protocol repeats the identical call; an encoder pays that in full every time, but llama.cpp serves it from its prompt cache (at 1 question only the last token is recomputed: ~41 ms vs ~139 ms), so that measurement is kept in extras and is not a fair comparison.",
+  "laya_note": "Agent.system_one scores all questions of a call in one batched encoder forward pass.",
+  "gpu_sharing": "llama-server keeps ~14 GB of the 16 GB resident; Laya was timed on the same GPU while llama-server was idle (Windows WDDM pages the idle process's memory out; torch reported 13-14 GB free after the Laya load), see device_per_system. No other benchmark job ran during any timing run (the CPU scoring jobs were suspended).",
+  "noise": "Laptop GPU under Windows: the same Laya measurement moved by up to ~50% at 1 question between two sessions (laya 54 vs 36 ms, laya-multilingual 21 vs 30 ms); both sessions are kept (main = 100 calls, extras = Laya's 20 calls).",
+  "raw": "results/vs_laya/speed_rows/*.json (every timed sample)"
+ },
+ "questions_per_call": [
+  1,
+  5,
+  10,
+  50
+ ],
+ "systems": {
+  "tez": {
+   "p50_ms_per_call": [
+    138.75,
+    548.99,
+    1039.1,
+    4665.54
+   ],
+   "p50_ms_per_question": [
+    138.75,
+    109.8,
+    103.91,
+    93.31
+   ],
+   "p95_ms_per_call": [
+    184.23,
+    645.38,
+    1155.5,
+    4825.51
+   ],
+   "reps_per_size": [
+    100,
+    100,
+    100,
+    30
+   ]
+  },
+  "laya": {
+   "p50_ms_per_call": [
+    36.15,
+    49.58,
+    75.46,
+    370.27
+   ],
+   "p50_ms_per_question": [
+    36.15,
+    9.92,
+    7.55,
+    7.41
+   ],
+   "p95_ms_per_call": [
+    55.69,
+    62.53,
+    82.7,
+    388.34
+   ],
+   "reps_per_size": [
+    100,
+    100,
+    100,
+    30
+   ]
+  },
+  "laya-multilingual": {
+   "p50_ms_per_call": [
+    29.5,
+    33.41,
+    38.36,
+    141.1
+   ],
+   "p50_ms_per_question": [
+    29.5,
+    6.68,
+    3.84,
+    2.82
+   ],
+   "p95_ms_per_call": [
+    45.23,
+    49.22,
+    50.83,
+    153.28
+   ],
+   "reps_per_size": [
+    100,
+    100,
+    100,
+    30
+   ]
+  }
+ },
+ "extras": {
+  "laya-multilingual (3 warm-ups, 20 calls)": {
+   "device": "cuda",
+   "p50_ms_per_call": [
+    21.24,
+    24.05,
+    29.97,
+    136.19
+   ],
+   "p50_ms_per_question": [
+    21.24,
+    4.81,
+    3.0,
+    2.72
+   ],
+   "p95_ms_per_call": [
+    29.27,
+    27.15,
+    34.32,
+    139.83
+   ],
+   "reps_per_size": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  "laya (3 warm-ups, 20 calls)": {
+   "device": "cuda",
+   "p50_ms_per_call": [
+    53.97,
+    55.62,
+    75.77,
+    339.78
+   ],
+   "p50_ms_per_question": [
+    53.97,
+    11.12,
+    7.58,
+    6.8
+   ],
+   "p95_ms_per_call": [
+    91.89,
+    75.55,
+    92.69,
+    376.9
+   ],
+   "reps_per_size": [
+    20,
+    20,
+    20,
+    20
+   ]
+  },
+  "tez (identical call repeated, Laya's protocol verbatim; prompt-cache hits)": {
+   "device": "cuda (llama-server)",
+   "p50_ms_per_call": [
+    40.82,
+    362.48,
+    809.92,
+    4092.33
+   ],
+   "p50_ms_per_question": [
+    40.82,
+    72.5,
+    80.99,
+    81.85
+   ],
+   "p95_ms_per_call": [
+    47.2,
+    385.83,
+    850.16,
+    4316.56
+   ],
+   "reps_per_size": [
+    100,
+    100,
+    100,
+    30
+   ]
+  },
+  "tez (identical call repeated, 3 warm-ups, 20 calls)": {
+   "device": "cuda (llama-server)",
+   "p50_ms_per_call": [
+    42.28,
+    379.48,
+    921.87,
+    4599.02
+   ],
+   "p50_ms_per_question": [
+    42.28,
+    75.9,
+    92.19,
+    91.98
+   ],
+   "p95_ms_per_call": [
+    50.21,
+    389.33,
+    975.63,
+    4749.11
+   ],
+   "reps_per_size": [
+    20,
+    20,
+    20,
+    20
+   ]
+  }
+ },
+ "laya_published_t4": {
+  "laya": {
+   "p50_ms_per_call": [
+    39.5,
+    84.5,
+    158.6,
+    771.3
+   ],
+   "p50_ms_per_question": [
+    39.5,
+    16.89,
+    15.86,
+    15.43
+   ]
+  },
+  "laya-multilingual": {
+   "p50_ms_per_call": [
+    32.8,
+    40.1,
+    72.3,
+    337.4
+   ],
+   "p50_ms_per_question": [
+    32.83,
+    8.02,
+    7.23,
+    6.75
+   ]
+  }
+ }
+}

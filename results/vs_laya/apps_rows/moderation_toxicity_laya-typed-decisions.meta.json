@@ -1,0 +1,13 @@
+{
+ "system": "laya-typed-decisions",
+ "task": "moderation_toxicity",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 77.87,
+ "ms_per_case_batched": 194.7,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 1024,
+ "head_max_len": 256
+}

@@ -1,0 +1,13 @@
+{
+ "system": "laya",
+ "task": "model_routing_domain",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 785.45,
+ "ms_per_case_batched": 1968.5,
+ "dropped": 0,
+ "n": 399,
+ "max_len": 512,
+ "head_max_len": 192
+}

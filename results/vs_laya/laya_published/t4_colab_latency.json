@@ -1,0 +1,56 @@
+{
+ "source": "github.com/NandhaKishorM/laya research/results/t4_colab_benchmark.json (latency block and meta only)",
+ "meta": {
+  "timestamp": "2026-09-19 04:45:43",
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.17.0",
+  "seed": 13
+ },
+ "latency": {
+  "laya": {
+   "1_questions": {
+    "p50_ms": 39.5,
+    "p95_ms": 44.8,
+    "ms_per_question": 39.5
+   },
+   "5_questions": {
+    "p50_ms": 84.5,
+    "p95_ms": 86.0,
+    "ms_per_question": 16.89
+   },
+   "10_questions": {
+    "p50_ms": 158.6,
+    "p95_ms": 160.1,
+    "ms_per_question": 15.86
+   },
+   "50_questions": {
+    "p50_ms": 771.3,
+    "p95_ms": 806.7,
+    "ms_per_question": 15.43
+   }
+  },
+  "laya-multilingual": {
+   "1_questions": {
+    "p50_ms": 32.8,
+    "p95_ms": 38.8,
+    "ms_per_question": 32.83
+   },
+   "5_questions": {
+    "p50_ms": 40.1,
+    "p95_ms": 43.5,
+    "ms_per_question": 8.02
+   },
+   "10_questions": {
+    "p50_ms": 72.3,
+    "p95_ms": 74.4,
+    "ms_per_question": 7.23
+   },
+   "50_questions": {
+    "p50_ms": 337.4,
+    "p95_ms": 693.7,
+    "ms_per_question": 6.75
+   }
+  }
+ }
+}

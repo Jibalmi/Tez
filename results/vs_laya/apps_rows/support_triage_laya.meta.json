@@ -1,0 +1,13 @@
+{
+ "system": "laya",
+ "task": "support_triage",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 236.17,
+ "ms_per_case_batched": 590.4,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 512,
+ "head_max_len": 192
+}

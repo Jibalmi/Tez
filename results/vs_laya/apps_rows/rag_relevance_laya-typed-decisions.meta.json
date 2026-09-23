@@ -1,0 +1,13 @@
+{
+ "system": "laya-typed-decisions",
+ "task": "rag_relevance",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 94.53,
+ "ms_per_case_batched": 236.3,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 1024,
+ "head_max_len": 256
+}

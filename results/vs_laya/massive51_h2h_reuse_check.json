@@ -1,0 +1,101 @@
+[
+ {
+  "lang": "ar",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.07589267885977519,
+  "median_abs_prob_diff": 2.166839467651743e-05,
+  "reuse": true
+ },
+ {
+  "lang": "de",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.013201992767891135,
+  "median_abs_prob_diff": 3.438684855472065e-05,
+  "reuse": true
+ },
+ {
+  "lang": "en",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.04676078319948748,
+  "median_abs_prob_diff": 2.2627216043676884e-05,
+  "reuse": true
+ },
+ {
+  "lang": "es",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.03526672478229054,
+  "median_abs_prob_diff": 0.0006774814926719941,
+  "reuse": true
+ },
+ {
+  "lang": "ja",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.2169301362160171,
+  "median_abs_prob_diff": 1.3469225004114627e-05,
+  "reuse": true
+ },
+ {
+  "lang": "ko",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.025115178270116445,
+  "median_abs_prob_diff": 1.3993881858409551e-05,
+  "reuse": true
+ },
+ {
+  "lang": "th",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.11738946606537737,
+  "median_abs_prob_diff": 3.5704413539339175e-05,
+  "reuse": true
+ },
+ {
+  "lang": "zh-CN",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.15864725219549336,
+  "median_abs_prob_diff": 0.0002319031178474873,
+  "reuse": true
+ },
+ {
+  "lang": "fr",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 0.9,
+  "max_abs_prob_diff": 0.1641297936330186,
+  "median_abs_prob_diff": 2.4144090127827813e-05,
+  "reuse": true
+ },
+ {
+  "lang": "hi",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 0.8,
+  "max_abs_prob_diff": 0.2931844301431558,
+  "median_abs_prob_diff": 8.246291424220223e-05,
+  "reuse": true
+ },
+ {
+  "lang": "km",
+  "h2h_rows": 100,
+  "checked": 10,
+  "pred_agreement": 1.0,
+  "max_abs_prob_diff": 0.42762893129338686,
+  "median_abs_prob_diff": 0.00014542586484012077,
+  "reuse": true
+ }
+]

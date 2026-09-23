@@ -1,0 +1,13 @@
+{
+ "system": "laya",
+ "task": "email_spam",
+ "device": "cpu",
+ "dtype": "torch.float32",
+ "threads": 12,
+ "seconds": 244.1,
+ "ms_per_case_batched": 610.2,
+ "dropped": 0,
+ "n": 400,
+ "max_len": 512,
+ "head_max_len": 192
+}
