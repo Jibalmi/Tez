@@ -180,6 +180,26 @@ h2:hover > .heading-anchor, h3:hover > .heading-anchor, .heading-anchor:focus-vi
 .method-post { background: var(--accent-soft); color: var(--accent); }
 
 .params th:first-child, .params td:first-child { white-space: nowrap; }
+
+/* inline code: a flag like --n-ctx never breaks after its hyphens (build_docs.py wraps hyphenated tokens) */
+code .nobr { white-space: nowrap; }
+
+/* docs tables on phones: each row becomes a block of labelled cells instead of a table that scrolls sideways
+   (build_docs.py writes each cell's column header into data-label) */
+@media (max-width: 560px) {
+  .docs-page .table-wrap { overflow: visible; }
+  .docs-page .table-wrap table, .docs-page .table-wrap tbody, .docs-page .table-wrap tr,
+  .docs-page .table-wrap td, .docs-page .table-wrap tbody th { display: block; width: 100%; }
+  .docs-page .table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .docs-page .table-wrap tr { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .docs-page .table-wrap tbody tr:last-child { border-bottom: 0; }
+  .docs-page .table-wrap td, .docs-page .table-wrap tbody th { padding: 2px 0; border: 0; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+  .docs-page .table-wrap td + td, .docs-page .table-wrap th + td { margin-top: 6px; }
+  .docs-page .table-wrap [data-label]::before {
+    content: attr(data-label); display: block;
+    font-size: var(--fs-xs); font-weight: 520; line-height: 1.5; color: var(--text-muted);
+  }
+}
 .params td code, .params th code { font-size: 12.5px; }
 .params .type { color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; white-space: nowrap; }
 .params td { line-height: 1.5; }

@@ -115,11 +115,11 @@ print(snap["decisions"], snap["skipped"])                                  # 2 1
           <table class="table params">
             <thead><tr><th scope="col">Event</th><th scope="col">When</th><th scope="col">May</th></tr></thead>
             <tbody>
-              <tr><td><code>on_decide_start(ctx)</code></td><td>The request is valid, before any backend call</td><td>Replace <code>ctx.state</code>; answer with <code>ctx.skip(response)</code></td></tr>
-              <tr><td><code>on_question_end(ctx, qid, answer, meta)</code></td><td>After each question, in the order the questions are read (state-first questions first)</td><td>Read the answer and its <code>tez</code> block</td></tr>
-              <tr><td><code>on_decide_end(ctx)</code></td><td>The response is built (<code>ctx.response</code>), also after a skip</td><td>Edit <code>ctx.response</code></td></tr>
-              <tr><td><code>on_error(ctx)</code></td><td>The decision failed (<code>ctx.error</code>), including a request that could not be parsed</td><td>Observe only</td></tr>
-              <tr><td><code>on_feedback(row)</code></td><td>A <code>POST /v1/feedback</code> row is about to be written</td><td>Edit the row in place (<code>Redact</code> does)</td></tr>
+              <tr><td data-label="Event"><code>on_decide_start(ctx)</code></td><td data-label="When">The request is valid, before any backend call</td><td data-label="May">Replace <code>ctx.state</code>; answer with <code>ctx.skip(response)</code></td></tr>
+              <tr><td data-label="Event"><code>on_question_end(ctx, qid, answer, meta)</code></td><td data-label="When">After each question, in the order the questions are read (state-first questions first)</td><td data-label="May">Read the answer and its <code>tez</code> block</td></tr>
+              <tr><td data-label="Event"><code>on_decide_end(ctx)</code></td><td data-label="When">The response is built (<code>ctx.response</code>), also after a skip</td><td data-label="May">Edit <code>ctx.response</code></td></tr>
+              <tr><td data-label="Event"><code>on_error(ctx)</code></td><td data-label="When">The decision failed (<code>ctx.error</code>), including a request that could not be parsed</td><td data-label="May">Observe only</td></tr>
+              <tr><td data-label="Event"><code>on_feedback(row)</code></td><td data-label="When">A <code>POST /v1/feedback</code> row is about to be written</td><td data-label="May">Edit the row in place (<code>Redact</code> does)</td></tr>
             </tbody>
           </table>
         </div>
@@ -134,23 +134,23 @@ print(snap["decisions"], snap["skipped"])                                  # 2 1
           <table class="table params">
             <thead><tr><th scope="col">Field</th><th scope="col">Holds</th></tr></thead>
             <tbody>
-              <tr><td><code>run_id</code></td><td>32 hex characters, the <code>X-Tez-Run-Id</code> and <code>x-typesafe-request-id</code> headers of the HTTP response. A batch item's is <code>&lt;batch run id&gt;.&lt;index&gt;</code>, with <code>parent_run_id</code> and <code>index</code> set</td></tr>
-              <tr><td><code>request</code></td><td>The wire-format request body, as it arrived</td></tr>
-              <tr><td><code>engine</code></td><td>The <code>tez.Tez</code> deciding it</td></tr>
-              <tr><td><code>state</code>, <code>questions</code>, <code>schema</code></td><td>The parsed state, <code>{id: tez.schema.Question}</code> and the named <code>Schema</code>, or None</td></tr>
-              <tr><td><code>readout</code>, <code>abstain</code>, <code>alpha</code>, <code>model</code></td><td>The request's options; <code>alpha</code> after the schema's default gate</td></tr>
-              <tr><td><code>requested_layout</code>, <code>layout</code></td><td>The layout asked for (<code>auto</code>, ...) and the one the questions were read in: <code>question_first</code>, <code>state_first</code>, or <code>mixed</code> when they differ (the <code>X-Tez-Layout</code> header)</td></tr>
-              <tr><td><code>response</code>, <code>usage</code>, <code>latency_ms</code></td><td>Set when the decision is done</td></tr>
-              <tr><td><code>traces</code></td><td>Per question: <code>readout</code>, <code>layout</code>, <code>tokens</code>, <code>ms</code> and <code>calls</code>, one record per backend call with its <code>kind</code> (<code>letters</code> or <code>embed</code>), <code>tokens</code>, wall <code>ms</code> and llama.cpp's own <code>timings</code> (<code>prompt_n</code>, <code>cache_n</code>, <code>prompt_ms</code>, ...) when the server sends them</td></tr>
-              <tr><td><code>error</code></td><td>The exception, in <code>on_error</code></td></tr>
-              <tr><td><code>skipped</code></td><td>True after <code>ctx.skip()</code></td></tr>
-              <tr><td><code>data</code></td><td>A dict the hooks of this decision can share</td></tr>
-              <tr><td><code>hook_errors</code></td><td><code>(hook, event, exception)</code> for every hook failure swallowed under <code>hooks_raise=False</code></td></tr>
+              <tr><td data-label="Field"><code>run_id</code></td><td data-label="Holds">32 hex characters, the <code><span class="nobr">X-Tez-Run-Id</span></code> and <code><span class="nobr">x-typesafe-request-id</span></code> headers of the HTTP response. A batch item's is <code>&lt;batch run id&gt;.&lt;index&gt;</code>, with <code>parent_run_id</code> and <code>index</code> set</td></tr>
+              <tr><td data-label="Field"><code>request</code></td><td data-label="Holds">The wire-format request body, as it arrived</td></tr>
+              <tr><td data-label="Field"><code>engine</code></td><td data-label="Holds">The <code>tez.Tez</code> deciding it</td></tr>
+              <tr><td data-label="Field"><code>state</code>, <code>questions</code>, <code>schema</code></td><td data-label="Holds">The parsed state, <code>{id: tez.schema.Question}</code> and the named <code>Schema</code>, or None</td></tr>
+              <tr><td data-label="Field"><code>readout</code>, <code>abstain</code>, <code>alpha</code>, <code>model</code></td><td data-label="Holds">The request's options; <code>alpha</code> after the schema's default gate</td></tr>
+              <tr><td data-label="Field"><code>requested_layout</code>, <code>layout</code></td><td data-label="Holds">The layout asked for (<code>auto</code>, ...) and the one the questions were read in: <code>question_first</code>, <code>state_first</code>, or <code>mixed</code> when they differ (the <code><span class="nobr">X-Tez-Layout</span></code> header)</td></tr>
+              <tr><td data-label="Field"><code>response</code>, <code>usage</code>, <code>latency_ms</code></td><td data-label="Holds">Set when the decision is done</td></tr>
+              <tr><td data-label="Field"><code>traces</code></td><td data-label="Holds">Per question: <code>readout</code>, <code>layout</code>, <code>tokens</code>, <code>ms</code> and <code>calls</code>, one record per backend call with its <code>kind</code> (<code>letters</code> or <code>embed</code>), <code>tokens</code>, wall <code>ms</code> and llama.cpp's own <code>timings</code> (<code>prompt_n</code>, <code>cache_n</code>, <code>prompt_ms</code>, ...) when the server sends them</td></tr>
+              <tr><td data-label="Field"><code>error</code></td><td data-label="Holds">The exception, in <code>on_error</code></td></tr>
+              <tr><td data-label="Field"><code>skipped</code></td><td data-label="Holds">True after <code>ctx.skip()</code></td></tr>
+              <tr><td data-label="Field"><code>data</code></td><td data-label="Holds">A dict the hooks of this decision can share</td></tr>
+              <tr><td data-label="Field"><code>hook_errors</code></td><td data-label="Holds"><code>(hook, event, exception)</code> for every hook failure swallowed under <code>hooks_raise=False</code></td></tr>
             </tbody>
           </table>
         </div>
-        <p>After a request that could not be parsed, only <code>run_id</code>, <code>request</code> and <code>error</code> are set, and <code>on_error</code> hooks must allow for that. A batch refused as a whole (no <code>states</code>, a bad shared field, over <code>--max-batch</code>) reaches <code>on_error</code> once, with the batch's run id and no <code>index</code>; a state that fails inside a batch reaches it with its own <code>&lt;run id&gt;.&lt;index&gt;</code>.</p>
-        <p>Hooks see the requests that reached the engine. The server answers some before that, without any hook: a body that is not JSON, is nested too deeply or is over <code>--max-body-bytes</code> (422, 413), a missing API key (401), a <code>POST</code> from a browser origin that is not allowed (403), and a wrong route or method (404, 405). Those responses still carry <code>x-typesafe-request-id</code>.</p>
+        <p>After a request that could not be parsed, only <code>run_id</code>, <code>request</code> and <code>error</code> are set, and <code>on_error</code> hooks must allow for that. A batch refused as a whole (no <code>states</code>, a bad shared field, over <code><span class="nobr">--max-batch</span></code>) reaches <code>on_error</code> once, with the batch's run id and no <code>index</code>; a state that fails inside a batch reaches it with its own <code>&lt;run id&gt;.&lt;index&gt;</code>.</p>
+        <p>Hooks see the requests that reached the engine. The server answers some before that, without any hook: a body that is not JSON, is nested too deeply or is over <code><span class="nobr">--max-body-bytes</span></code> (422, 413), a missing API key (401), a <code>POST</code> from a browser origin that is not allowed (403), and a wrong route or method (404, 405). Those responses still carry <code><span class="nobr">x-typesafe-request-id</span></code>.</p>
       </section>
 
       <!-- ============================================================== order -->
@@ -181,18 +181,18 @@ print(order)                                   # ['process', 'engine', 'added', 
 set_default_hooks(None)</code></pre>
         </div>
         <p>Put <code>Redact</code> first, so every later hook, the cache key and the model see the redacted state. <code>ctx.request</code> keeps the body as it arrived, so a hook that records anything should read <code>ctx.state</code>, not <code>ctx.request["state"]</code>.</p>
-        <p>On <code>tez serve</code>, <code>--hook</code> is repeatable. A class is instantiated without arguments, a hook instance is used as it is, and any other callable is called and must return a hook. Hooks given on the command line run in the order given, and the <code>--decision-log</code> hook last.</p>
+        <p>On <code>tez serve</code>, <code><span class="nobr">--hook</span></code> is repeatable. A class is instantiated without arguments, a hook instance is used as it is, and any other callable is called and must return a hook. Hooks given on the command line run in the order given, and the <code><span class="nobr">--decision-log</span></code> hook last.</p>
       </section>
 
       <!-- ============================================================== failure rules -->
       <section class="doc-section" aria-labelledby="hook-failures">
         <h2 id="hook-failures">Failure rules</h2>
-        <p><code>Tez(hooks_raise=True)</code> is the default (<code>tez serve --hook-errors raise</code>):</p>
+        <p><code>Tez(hooks_raise=True)</code> is the default (<code>tez serve <span class="nobr">--hook-errors</span> raise</code>):</p>
         <ul>
           <li>An exception from <code>on_decide_start</code>, <code>on_question_end</code> or <code>on_decide_end</code> fails the decision. The caller gets that exception, after the <code>on_error</code> hooks have run with it in <code>ctx.error</code>. Over HTTP a <code>TezError</code> keeps its status and type, so a hook can refuse a request with <code>InvalidRequest</code> (422); anything else is a <code>500 internal_error</code>.</li>
           <li>An exception from <code>on_feedback</code> fails the feedback: nothing is written.</li>
         </ul>
-        <p><code>Tez(hooks_raise=False)</code> (<code>--hook-errors log</code>) is for hooks that must never fail a request, such as telemetry. An exception from any hook is logged (logger <code>tez</code>, warning), recorded in <code>ctx.hook_errors</code> and skipped; the decision and the other hooks go on. In this mode a hook cannot refuse a request.</p>
+        <p><code>Tez(hooks_raise=False)</code> (<code><span class="nobr">--hook-errors</span> log</code>) is for hooks that must never fail a request, such as telemetry. An exception from any hook is logged (logger <code>tez</code>, warning), recorded in <code>ctx.hook_errors</code> and skipped; the decision and the other hooks go on. In this mode a hook cannot refuse a request.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="python">from tez import BaseHook, Tez
@@ -218,7 +218,7 @@ print(ctx.hook_errors)                               # [('Broken', 'on_decide_en
         <h2 id="hook-builtin">Built-in hooks</h2>
         <p>All five are exported by <code>tez</code>.</p>
         <h3 id="hook-decisionlog">DecisionLog</h3>
-        <p><code>DecisionLog(path, sample=1.0, seed=None)</code> appends one JSON line per decision, or a random <code>sample</code> share of them, in the row format <code>tez fit</code> and <code>tez eval</code> read. <code>tez serve --decision-log PATH</code> installs one.</p>
+        <p><code>DecisionLog(path, sample=1.0, seed=None)</code> appends one JSON line per decision, or a random <code>sample</code> share of them, in the row format <code>tez fit</code> and <code>tez eval</code> read. <code>tez serve <span class="nobr">--decision-log</span> PATH</code> installs one.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">json · one row of decisions.jsonl, on several lines, illustrative values</span></div>
           <pre><code data-lang="json">{"state": "Refund to [EMAIL] please", "labels": {},
@@ -235,7 +235,7 @@ print(ctx.hook_errors)                               # [('Broken', 'on_decide_en
           <pre><code data-lang="bash">tez fit --schema schemas/support-triage.yaml --labels reviewed.jsonl \
   --backend http://127.0.0.1:8091 --template gemma4</code></pre>
         </div>
-        <p>A row's <code>run_id</code> is the decision's <code>X-Tez-Run-Id</code>, which <a href="./api.html#api-feedback"><code>POST /v1/feedback</code></a> also accepts, so a correction can be traced to the decision it corrects.</p>
+        <p>A row's <code>run_id</code> is the decision's <code><span class="nobr">X-Tez-Run-Id</span></code>, which <a href="./api.html#api-feedback"><code>POST /v1/feedback</code></a> also accepts, so a correction can be traced to the decision it corrects.</p>
         <h3 id="hook-redact">Redact</h3>
         <p><code>Redact(patterns=None, replacement=None)</code> replaces personal data in the state before the model reads it, and in feedback rows before they are written. The built-in patterns are <code>email</code>, <code>iban</code>, <code>card</code> (13 to 19 digits that pass the Luhn check) and <code>phone</code> (9 to 15 digits), all four by default; add regular expressions of your own. Built-ins become <code>[EMAIL]</code>, <code>[IBAN]</code>, <code>[CARD]</code> and <code>[PHONE]</code>, your patterns <code>[REDACTED]</code>, or all of them one fixed <code>replacement</code>. Strings inside object and array states are redacted and keys kept. Decisions are then made on the redacted text.</p>
         <div class="code">
@@ -310,7 +310,7 @@ tez = Tez(backend="http://127.0.0.1:8091", hooks=[OTelHook()])
 tez.decide("My invoice is wrong", questions={"billing": {"type": "noul", "instructions": "Is it about billing?"}})
 # prints one span, "tez.decide", with tez.run_id, tez.layout, tez.latency_ms, ... and a "tez.question" event</code></pre>
         </div>
-        <p><code>OTelHook()</code> uses the global tracer provider; pass <code>tracer=</code> to use another. On a server, load a small factory that sets up the provider and returns the hook, and run it with <code>--hook-errors log</code>, so that tracing can never fail a request:</p>
+        <p><code>OTelHook()</code> uses the global tracer provider; pass <code>tracer=</code> to use another. On a server, load a small factory that sets up the provider and returns the hook, and run it with <code><span class="nobr">--hook-errors</span> log</code>, so that tracing can never fail a request:</p>
         <div class="code">
           <div class="code-head"><span class="code-label">python · tracing.py</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="python"># tracing.py
@@ -369,10 +369,10 @@ class SlowQuestions(BaseHook):
         <p><code>tez serve</code> and <code>tez decide</code> take the same three flags.</p>
         <dl class="flag-list">
           <div><dt>--hook MODULE:OBJECT<span class="dflt">repeatable</span></dt><dd>Load a hook by name: a class is instantiated, a hook instance used as it is, any other callable called and must return a hook. Hooks run in the order given.</dd></div>
-          <div><dt>--decision-log PATH</dt><dd>Append every decision to this JSONL file, after the <code>--hook</code> hooks.</dd></div>
+          <div><dt>--decision-log PATH</dt><dd>Append every decision to this JSONL file, after the <code><span class="nobr">--hook</span></code> hooks.</dd></div>
           <div><dt>--hook-errors {raise,log}<span class="dflt">default raise</span></dt><dd><code>raise</code>: a hook that raises fails the decision. <code>log</code>: it is logged and skipped.</dd></div>
         </dl>
-        <p>The startup line lists the hooks it loaded, for example <code>hooks: RejectLongStates, SlowQuestions, DecisionLog</code>. <code>tez-mcp</code> takes no hook flags: when it forwards to <code>tez serve</code> (<code>TEZ_URL</code>), the server's hooks apply.</p>
+        <p>The startup line lists the hooks it loaded, for example <code>hooks: RejectLongStates, SlowQuestions, DecisionLog</code>. <code><span class="nobr">tez-mcp</span></code> takes no hook flags: when it forwards to <code>tez serve</code> (<code>TEZ_URL</code>), the server's hooks apply.</p>
       </section>
 
       <!-- docs-pager:start -->

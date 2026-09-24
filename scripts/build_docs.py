@@ -8,6 +8,9 @@ script owns and rewrites; everything else on a page is written by hand:
   <!-- docs-pager:start --> ... <!-- docs-pager:end -->   links to the previous and next page
 
 It also
+  - labels every table cell with its column's header (data-label), so tables reflow into labelled rows on phones;
+  - keeps hyphenated tokens in inline code on one line (a flag like --n-ctx never breaks after its hyphens; paths may
+    still break after a slash);
   - points each in-docs link (#id or ./page.html#id) at the page that now holds the id, so a section can move
     between pages without breaking links, and fails on a link whose target exists nowhere;
   - checks links from the docs to the rest of the site (../page.html#id);
@@ -59,6 +62,9 @@ SITE_LINK = re.compile(r'href="\.\./([a-z0-9-]+\.html)#([^"]+)"')
 OLD_DOCS_LINK = re.compile(r'href="\./docs\.html(?:#([^"]*))?"')
 NEW_DOCS_LINK = re.compile(r'href="\./docs/([a-z0-9-]+\.html)#([^"]+)"')
 MAP_REGION = re.compile(r"(/\* docs-map:start \*/)(.*?)(/\* docs-map:end \*/)", re.S)
+TABLE = re.compile(r'(<div class="table-wrap">\s*<table\b[^>]*>)(.*?)(</table>)', re.S)
+CELL = re.compile(r"<(t[dh])\b([^>]*)>")
+INLINE_CODE = re.compile(r"(?<!<pre>)<code>(.*?)</code>", re.S)   # inline only: a <pre> block scrolls instead
 
 
 def icon(paths: str, cls: str = "") -> str:
@@ -147,6 +153,47 @@ def pager_html(file: str) -> str:
     return "\n".join(parts)
 
 
+def label_tables(text: str) -> str:
+    """data-label on every body cell, from its column's header, for the phone layout in docs.css."""
+    def one(m: re.Match) -> str:
+        body = m.group(2)
+        head = re.search(r"<thead>(.*?)</thead>", body, re.S)
+        if not head or "colspan" in body:
+            return m.group(0)
+        labels = [text_of(x) for x in re.findall(r"<th\b[^>]*>(.*?)</th>", head.group(1), re.S)]
+
+        def row(rm: re.Match) -> str:
+            col = 0
+
+            def cell(cm: re.Match) -> str:
+                nonlocal col
+                attrs = re.sub(r'\sdata-label="[^"]*"', "", cm.group(2))
+                label = labels[col] if col < len(labels) else ""
+                col += 1
+                return f'<{cm.group(1)}{attrs} data-label="{html.escape(label, quote=True)}">' if label else f"<{cm.group(1)}{attrs}>"
+
+            return CELL.sub(cell, rm.group(0))
+
+        rest = re.sub(r"<tr\b[^>]*>.*?</tr>", row, body[head.end():], flags=re.S)
+        return m.group(1) + body[:head.end()] + rest + m.group(3)
+
+    return TABLE.sub(one, text)
+
+
+def nobr_code(text: str) -> str:
+    """Inline code: each hyphenated token in a no-wrap span (a <wbr> after every slash keeps paths breakable).
+    Code that already holds markup is left alone, which also makes this idempotent."""
+    def one(m: re.Match) -> str:
+        inner = m.group(1)
+        if "<" in inner or "-" not in inner:
+            return m.group(0)
+        parts = re.split(r"(\s+)", inner)
+        out = [f'<span class="nobr">{p.replace("/", "/<wbr>")}</span>' if "-" in p and not p.isspace() else p for p in parts]
+        return "<code>" + "".join(out) + "</code>"
+
+    return INLINE_CODE.sub(one, text)
+
+
 def ids_in(text: str) -> set[str]:
     return set(ID_ATTR.findall(text))
 
@@ -170,7 +217,7 @@ def build() -> tuple[dict[Path, str], list[str], dict[str, str]]:
         text = region(text, "docs-tabs", tabs_html(file), file)
         text = region(text, "docs-rail", rail_html(file, heads), file)
         text = region(text, "docs-pager", pager_html(file), file)
-        pages[file] = text
+        pages[file] = nobr_code(label_tables(text))
 
     # 2. which page holds which id (article ids only; they must be unique across the docs)
     owner: dict[str, str] = {}

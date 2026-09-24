@@ -117,7 +117,7 @@ with RemoteTez("http://127.0.0.1:8787", api_key=None, timeout=30) as tez:
         </div>
         <div>
           <dl class="flag-list">
-            <div><dt>RemoteTez(base_url="http://127.0.0.1:8787", api_key=None, timeout=30.0, session=None)</dt><dd>A bare <code>host:port</code> gets <code>http://</code>. <code>api_key</code> is sent as <code>Authorization: Bearer</code>; it is needed only when the server runs with <code>--api-key</code>. <code>timeout</code> covers connecting and the answer, in seconds. <code>session</code> is a <code>requests.Session</code> for proxies or certificates; without one, a local <code>base_url</code> never goes through proxy settings.</dd></div>
+            <div><dt>RemoteTez(base_url="http://127.0.0.1:8787", api_key=None, timeout=30.0, session=None)</dt><dd>A bare <code>host:port</code> gets <code>http://</code>. <code>api_key</code> is sent as <code>Authorization: Bearer</code>; it is needed only when the server runs with <code><span class="nobr">--api-key</span></code>. <code>timeout</code> covers connecting and the answer, in seconds. <code>session</code> is a <code>requests.Session</code> for proxies or certificates; without one, a local <code>base_url</code> never goes through proxy settings.</dd></div>
             <div><dt>decide(state, questions=None, schema=None, readout="auto", abstain=False, alpha=None, gate=None, model=None, *, layout=None)</dt><dd><code>POST /v1/systemone</code>, with the arguments of <code>Tez.decide</code>. Only the Tez extensions you set are sent, so a strict Jev-compatible server sees a plain request.</dd></div>
             <div><dt>decide_many(states, ...), decide_batch(states, ...), handle_batch(body)</dt><dd><code>POST /v1/systemone/batch</code>: the results list, the whole batch response, or a raw batch body (<a href="./guides.html#batch">Batch decisions</a>).</dd></div>
             <div><dt>extract(state, schema_or_model, *, alpha=None, return_details=False, readout="auto", layout=None)</dt><dd>A JSON schema or a pydantic model sent as <code>json_schema</code>, or a schema name; returns the object (<a href="./guides.html#extraction">Structured extraction</a>).</dd></div>
@@ -152,7 +152,7 @@ except TezError as err:              # 401, 404 and anything else
       <!-- ============================================================== typescript -->
       <section class="doc-section" aria-labelledby="typescript">
         <h2 id="typescript">TypeScript</h2>
-        <p><code>tez-client</code>, in <a href="https://github.com/Jibalmi/Tez/tree/main/clients/ts"><code>clients/ts</code></a>, is a dependency-free client for the same API, with answers typed per question. It runs in Node 18 or newer, browsers, Deno and Bun, and ships ES module and CommonJS builds with type declarations. It is not on npm: build it from a checkout and install it by path.</p>
+        <p><code><span class="nobr">tez-client</span></code>, in <a href="https://github.com/Jibalmi/Tez/tree/main/clients/ts"><code>clients/ts</code></a>, is a dependency-free client for the same API, with answers typed per question. It runs in Node 18 or newer, browsers, Deno and Bun, and ships ES module and CommonJS builds with type declarations. It is not on npm: build it from a checkout and install it by path.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">git clone https://github.com/Jibalmi/Tez
@@ -191,7 +191,7 @@ console.log(res.answers.is_urgent.noul);  // P(yes)
 console.log(res.answers.anger.score);     // expected level, 0 to 2
 console.log(res.tez?.questions["topic"]); // readout, plus the gate's fields when present</code></pre>
         </div>
-        <p>Answers are typed from the questions you pass: <code>topic.choice</code> is one of its labels or <code>"__none__"</code>. With only a <code>schema</code>, each answer is the <code>Answer</code> union; check its <code>type</code> before reading a field. From CommonJS: <code>const { TezClient } = require("tez-client")</code>.</p>
+        <p>Answers are typed from the questions you pass: <code>topic.choice</code> is one of its labels or <code>"__none__"</code>. With only a <code>schema</code>, each answer is the <code>Answer</code> union; check its <code>type</code> before reading a field. From CommonJS: <code>const { TezClient } = <span class="nobr">require("tez-client")</span></code>.</p>
         <div>
           <dl class="flag-list">
             <div><dt>new TezClient({ baseUrl, apiKey, timeoutMs, fetch })</dt><dd>Defaults: <code>http://127.0.0.1:8787</code> and 30000 ms. A bare <code>host:port</code> gets <code>http://</code>. <code>apiKey</code> is sent as <code>Authorization: Bearer</code>. <code>fetch</code> is any fetch-compatible function; the default is the global <code>fetch</code>.</dd></div>
@@ -215,13 +215,13 @@ try {
   console.log(err.status, err.type, err.message);   // 422 invalid_request ...
 }</code></pre>
         </div>
-        <p>The ES module and CommonJS builds are separate copies, so test <code>instanceof TezError</code> with the class from the module system that made the call. In a browser, only pages from allowed origins may call the server: by default pages served from this machine and the website's playground, whose CORS and private network preflights <code>tez serve</code> answers. Add your app's origin with <code>--cors-origins</code> (<a href="./api.html#api-cors">Browsers and CORS</a>); a <code>POST</code> from any other origin gets 403. Do not put an API key in browser code.</p>
+        <p>The ES module and CommonJS builds are separate copies, so test <code>instanceof TezError</code> with the class from the module system that made the call. In a browser, only pages from allowed origins may call the server: by default pages served from this machine and the website's playground, whose CORS and private network preflights <code>tez serve</code> answers. Add your app's origin with <code><span class="nobr">--cors-origins</span></code> (<a href="./api.html#api-cors">Browsers and CORS</a>); a <code>POST</code> from any other origin gets 403. Do not put an API key in browser code.</p>
       </section>
 
       <!-- ============================================================== langchain -->
       <section class="doc-section" aria-labelledby="langchain">
         <h2 id="langchain">LangChain and LangGraph</h2>
-        <p><code>tez.integrations.langchain</code> has four components: <code>TezRouter</code> for conditional edges, <code>TezGuard</code> to screen inputs, <code>TezTriage</code> to answer a schema's questions as a graph node, and <code>TezEvaluator</code> to score outputs. The <code>langchain</code> extra installs <code>langchain-core</code>; install <code>langgraph</code> yourself for graphs.</p>
+        <p><code>tez.integrations.langchain</code> has four components: <code>TezRouter</code> for conditional edges, <code>TezGuard</code> to screen inputs, <code>TezTriage</code> to answer a schema's questions as a graph node, and <code>TezEvaluator</code> to score outputs. The <code>langchain</code> extra installs <code><span class="nobr">langchain-core</span></code>; install <code>langgraph</code> yourself for graphs.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">pip install "tez-decisions[langchain] @ git+https://github.com/Jibalmi/Tez"
@@ -264,7 +264,7 @@ print(out["messages"][-1].content)
 r = route.decide("My card payment failed twice today.")
 print(r.label, r.answer_label, round(r.confidence, 3), r.reason)</code></pre>
         </div>
-        <p>The router returns the answer's label: the choice, <code>"true"</code> or <code>"false"</code> for a yes/no question, or the most likely level of a score. It returns <code>fallback</code> instead when the gate escalates, when <code>abstain=True</code> and no option fits, or when the confidence is below <code>min_confidence</code>. <code>schema="model-router", question_id="domain"</code> asks a schema's question with its probe, calibration and gate; a gate applies when <code>alpha</code> is set or the schema has a default, and <code>alpha=False</code> turns the default off. <code>decide(state)</code> returns the whole <code>Route</code>: <code>label</code>, <code>answer_label</code>, <code>confidence</code>, <code>decision</code>, <code>reason</code> and the answer.</p>
+        <p>The router returns the answer's label: the choice, <code>"true"</code> or <code>"false"</code> for a yes/no question, or the most likely level of a score. It returns <code>fallback</code> instead when the gate escalates, when <code>abstain=True</code> and no option fits, or when the confidence is below <code>min_confidence</code>. <code><span class="nobr">schema="model-router",</span> question_id="domain"</code> asks a schema's question with its probe, calibration and gate; a gate applies when <code>alpha</code> is set or the schema has a default, and <code>alpha=False</code> turns the default off. <code>decide(state)</code> returns the whole <code>Route</code>: <code>label</code>, <code>answer_label</code>, <code>confidence</code>, <code>decision</code>, <code>reason</code> and the answer.</p>
         <h3 id="langchain-guard">TezGuard</h3>
         <div class="code">
           <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
@@ -282,7 +282,7 @@ except TezGuardError as err:
     first = err.violations[0]
     print("blocked:", first["question"], round(first["probability"], 3))</code></pre>
         </div>
-        <p>The guard asks a schema's yes/no questions, by default every one in <code>prompt-injection-guard</code>, which the server must load: copy <a href="https://github.com/Jibalmi/Tez/blob/main/examples/usecases/prompt-injection-guard/schema.yaml"><code>examples/usecases/prompt-injection-guard/schema.yaml</code></a> into its <code>--schemas</code> directory. It flags an item when P(yes) reaches <code>threshold</code> (0.5) for any of them. <code>action="raise"</code> passes the input through or raises <code>TezGuardError</code> with the violations; <code>"filter"</code> drops flagged items from a list, and in a graph removes flagged messages that have ids; <code>"annotate"</code> never blocks and adds a report under <code>out_key</code>. <code>check(input)</code> returns the report without acting on it. Choose other questions with <code>schema</code> and <code>question_id</code>.</p>
+        <p>The guard asks a schema's yes/no questions, by default every one in <code><span class="nobr">prompt-injection-guard</span></code>, which the server must load: copy <a href="https://github.com/Jibalmi/Tez/blob/main/examples/usecases/prompt-injection-guard/schema.yaml"><code><span class="nobr">examples/<wbr>usecases/<wbr>prompt-injection-guard/<wbr>schema.yaml</span></code></a> into its <code><span class="nobr">--schemas</span></code> directory. It flags an item when P(yes) reaches <code>threshold</code> (0.5) for any of them. <code>action="raise"</code> passes the input through or raises <code>TezGuardError</code> with the violations; <code>"filter"</code> drops flagged items from a list, and in a graph removes flagged messages that have ids; <code>"annotate"</code> never blocks and adds a report under <code>out_key</code>. <code>check(input)</code> returns the report without acting on it. Choose other questions with <code>schema</code> and <code>question_id</code>.</p>
         <h3 id="langchain-triage">TezTriage</h3>
         <div class="code">
           <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
@@ -312,7 +312,7 @@ print(result["score"], result["value"])      # P(yes), and "true" or "false"</co
       <!-- ============================================================== MCP -->
       <section class="doc-section" aria-labelledby="mcp">
         <h2 id="mcp" data-rail-label="MCP server">MCP server</h2>
-        <p><code>tez-mcp</code> serves Tez to agents over the Model Context Protocol, on stdio. An agent asks typed questions about a state and gets calibrated answers, with an explicit <code>escalate</code> for the cases it should hand on. It needs the <code>mcp</code> extra and runs on the MCP Python SDK 1.x or 2.x.</p>
+        <p><code><span class="nobr">tez-mcp</span></code> serves Tez to agents over the Model Context Protocol, on stdio. An agent asks typed questions about a state and gets calibrated answers, with an explicit <code>escalate</code> for the cases it should hand on. It needs the <code>mcp</code> extra and runs on the MCP Python SDK 1.x or 2.x.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">pip install "tez-decisions[mcp] @ git+https://github.com/Jibalmi/Tez"
@@ -322,17 +322,17 @@ tez-mcp --version</code></pre>
           <table class="table params">
             <thead><tr><th scope="col">Tool</th><th scope="col">Does</th></tr></thead>
             <tbody>
-              <tr><td><code>tez_decide(state, questions=None, schema=None, readout="auto", abstain=False, alpha=None)</code></td><td>A <code>/v1/systemone</code> decision; returns the response</td></tr>
-              <tr><td><code>tez_schemas()</code></td><td>The loaded schemas, as <code>GET /v1/schemas</code></td></tr>
-              <tr><td><code>tez_schema(name)</code></td><td>One schema's questions and fit status, without the calibration tables</td></tr>
-              <tr><td><code>tez_feedback(schema, question, state, label)</code></td><td>Records a correct label, as <code>POST /v1/feedback</code></td></tr>
-              <tr><td><code>tez_status()</code></td><td>Version, in-process or remote, backend health and schema names</td></tr>
+              <tr><td data-label="Tool"><code>tez_decide(state, questions=None, schema=None, readout="auto", abstain=False, alpha=None)</code></td><td data-label="Does">A <code>/v1/systemone</code> decision; returns the response</td></tr>
+              <tr><td data-label="Tool"><code>tez_schemas()</code></td><td data-label="Does">The loaded schemas, as <code>GET /v1/schemas</code></td></tr>
+              <tr><td data-label="Tool"><code>tez_schema(name)</code></td><td data-label="Does">One schema's questions and fit status, without the calibration tables</td></tr>
+              <tr><td data-label="Tool"><code>tez_feedback(schema, question, state, label)</code></td><td data-label="Does">Records a correct label, as <code>POST /v1/feedback</code></td></tr>
+              <tr><td data-label="Tool"><code>tez_status()</code></td><td data-label="Does">Version, in-process or remote, backend health and schema names</td></tr>
             </tbody>
           </table>
         </div>
         <p>The tool descriptions tell the agent that a gate decision of <code>escalate</code> means: do not act on that answer yourself, hand the case to a person or to a larger model. A request Tez refuses comes back as a tool error.</p>
         <h3 id="mcp-config">In process, or forwarding to tez serve</h3>
-        <p><code>tez-mcp</code> takes its settings from the environment, which an MCP client's configuration sets. Without <code>TEZ_URL</code>, Tez runs inside the MCP process, from <code>TEZ_BACKEND</code>, <code>TEZ_TEMPLATE</code>, <code>TEZ_SCHEMAS</code>, <code>TEZ_DATA_DIR</code>, <code>TEZ_LAYOUT</code>, <code>TEZ_DEFAULT_TEMPERATURE</code> and <code>TEZ_PRESETS=1</code>, with <code>tez serve</code>'s request limits. In the common <code>mcpServers</code> format:</p>
+        <p><code><span class="nobr">tez-mcp</span></code> takes its settings from the environment, which an MCP client's configuration sets. Without <code>TEZ_URL</code>, Tez runs inside the MCP process, from <code>TEZ_BACKEND</code>, <code>TEZ_TEMPLATE</code>, <code>TEZ_SCHEMAS</code>, <code>TEZ_DATA_DIR</code>, <code>TEZ_LAYOUT</code>, <code>TEZ_DEFAULT_TEMPERATURE</code> and <code>TEZ_PRESETS=1</code>, with <code>tez serve</code>'s request limits. In the common <code>mcpServers</code> format:</p>
         <div class="code">
           <div class="code-head"><span class="code-label">json · MCP client configuration, in process</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="json">{"mcpServers": {"tez": {"command": "tez-mcp",
@@ -345,7 +345,7 @@ tez-mcp --version</code></pre>
           <pre><code data-lang="json">{"mcpServers": {"tez": {"command": "tez-mcp",
                         "env": {"TEZ_URL": "http://127.0.0.1:8787", "TEZ_API_KEY": "your-key"}}}}</code></pre>
         </div>
-        <p>If the client does not see the environment you installed Tez in, give <code>command</code> the full path of <code>tez-mcp</code>. Each variable can be read from a file instead (<code>TEZ_API_KEY_FILE</code>). To try the server from Python, use the MCP SDK's client:</p>
+        <p>If the client does not see the environment you installed Tez in, give <code>command</code> the full path of <code><span class="nobr">tez-mcp</span></code>. Each variable can be read from a file instead (<code>TEZ_API_KEY_FILE</code>). To try the server from Python, use the MCP SDK's client:</p>
         <div class="code">
           <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="python">import asyncio
@@ -385,7 +385,7 @@ tez = Tez(backend="http://127.0.0.1:8091", template="gemma4", hooks=[OTelHook()]
 
       <section class="doc-section" aria-labelledby="jev-clients">
         <h2 id="jev-clients">Clients written for Jev</h2>
-        <p>Tez serves TypeSafe's <code>/v1/systemone</code> wire format, so a client written for Jev's wire format works once its base URL points at <code>http://127.0.0.1:8787</code>. Any bearer token is accepted unless the server runs with <code>--api-key</code>.</p>
+        <p>Tez serves TypeSafe's <code>/v1/systemone</code> wire format, so a client written for Jev's wire format works once its base URL points at <code>http://127.0.0.1:8787</code>. Any bearer token is accepted unless the server runs with <code><span class="nobr">--api-key</span></code>.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone \
@@ -403,10 +403,10 @@ tez = Tez(backend="http://127.0.0.1:8091", template="gemma4", hooks=[OTelHook()]
           <li><strong>Endpoints.</strong> <code>POST /v1/systemone</code> and <code>GET /v1/models</code>, as in Jev's format. Tez adds <code>/healthz</code>, <code>/v1/schemas</code> and <code>/v1/feedback</code>.</li>
           <li><strong>Answers.</strong> The three answer shapes are Jev's. The extra <code>tez</code> block holds the latency and how each answer was read; strict clients ignore it. <code>usage.output_tokens</code> is always 0.</li>
           <li><strong>Question types.</strong> <code>noul</code>, <code>choice</code> (2 to 255 options) and <code>score</code> (2 to 10 levels). Any other type gets 422 <code>invalid_request</code>.</li>
-          <li><strong>Keys.</strong> With <code>tez serve --api-key</code>, send <code>Authorization: Bearer &lt;key&gt;</code> or an <code>x-api-key</code> header; <code>/healthz</code> needs no key.</li>
+          <li><strong>Keys.</strong> With <code>tez serve <span class="nobr">--api-key</span></code>, send <code>Authorization: Bearer &lt;key&gt;</code> or an <code><span class="nobr">x-api-key</span></code> header; <code>/healthz</code> needs no key.</li>
           <li><strong>Errors.</strong> 401 without a valid key when the server has one, 422 for an invalid request, 503 when the model server is down, with the body <code>{"error": {"type": ..., "message": ...}}</code>. See <a href="./api.html#errors">Errors</a>.</li>
         </ul>
-        <p>The repository's runner for JevBench's public tiers is such a client, written with the standard library only. Point it at Tez with <code>--endpoint</code>, from a checkout, since it reads <code>data/jevbench/</code>:</p>
+        <p>The repository's runner for JevBench's public tiers is such a client, written with the standard library only. Point it at Tez with <code><span class="nobr">--endpoint</span></code>, from a checkout, since it reads <code>data/jevbench/</code>:</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">python release/jevbench/run_public.py --endpoint http://127.0.0.1:8787/v1/systemone \
@@ -427,8 +427,8 @@ docker compose up -d --build
 docker compose ps    # llama is healthy once the model has loaded; tez starts after it
 curl http://127.0.0.1:8787/healthz</code></pre>
         </div>
-        <p>The first start loads the model: the <code>llama</code> service allows ten minutes before a failed health check counts, and Tez starts once llama.cpp reports healthy (<code>docker compose logs -f llama</code> shows the progress). Only Tez is published, and only on the host's loopback address. The model file is the public equivalent of the weights behind the Gemma numbers on this site, and has not been separately measured; <code>hf</code> comes with <code>huggingface_hub</code> (<a href="./index.html#install-weights">Model weights</a>).</p>
-        <p>The <code>llama</code> service runs with <code>-np 1</code>, <code>--swa-full</code> and <code>--cache-ram 0</code>. With llama.cpp's host-memory prompt cache on (8 GiB by default), a request that keeps less than half of the slot's cached tokens first copies the slot to host RAM, which every new state does; Tez gains nothing from that cache, so the compose files switch it off. With llama's port published, <code>tez doctor --backend http://127.0.0.1:8080</code> checks these settings.</p>
+        <p>The first start loads the model: the <code>llama</code> service allows ten minutes before a failed health check counts, and Tez starts once llama.cpp reports healthy (<code>docker compose logs <span class="nobr">-f</span> llama</code> shows the progress). Only Tez is published, and only on the host's loopback address. The model file is the public equivalent of the weights behind the Gemma numbers on this site, and has not been separately measured; <code>hf</code> comes with <code>huggingface_hub</code> (<a href="./index.html#install-weights">Model weights</a>).</p>
+        <p>The <code>llama</code> service runs with <code><span class="nobr">-np</span> 1</code>, <code><span class="nobr">--swa-full</span></code> and <code><span class="nobr">--cache-ram</span> 0</code>. With llama.cpp's host-memory prompt cache on (8 GiB by default), a request that keeps less than half of the slot's cached tokens first copies the slot to host RAM, which every new state does; Tez gains nothing from that cache, so the compose files switch it off. With llama's port published, <code>tez doctor <span class="nobr">--backend</span> http://127.0.0.1:8080</code> checks these settings.</p>
         <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>The compose files are checked against the Compose specification, and CI builds the Tez image and runs it against the offline fake backend. The GPU stack has not been run end to end, and no number on this site was measured in a container. The measured llama.cpp build, b11100, has no published image, so the compose files pin b11096, the closest published build before it.</p></div></div>
         <h3 id="docker-cpu">CPU only</h3>
         <div class="code">
@@ -442,11 +442,11 @@ curl http://127.0.0.1:8787/healthz</code></pre>
           <table class="table params">
             <thead><tr><th scope="col">Variable</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
             <tbody>
-              <tr><td><code>TEZ_MODELS_DIR</code></td><td><code>./models</code></td><td>Host directory mounted read-only at <code>/models</code></td></tr>
-              <tr><td><code>TEZ_GGUF</code></td><td><code>gemma-4-12b-it-Q8_0.gguf</code></td><td>Model file inside it</td></tr>
-              <tr><td><code>TEZ_TEMPLATE</code></td><td><code>gemma4</code></td><td>Prompt template of the model: <code>gemma4</code> or <code>qwen3</code></td></tr>
-              <tr><td><code>TEZ_HOST_PORT</code></td><td><code>8787</code></td><td>Host port for Tez, bound to 127.0.0.1</td></tr>
-              <tr><td><code>LLAMA_IMAGE</code></td><td><code>ghcr.io/ggml-org/llama.cpp:server-cuda-b11096</code></td><td>llama.cpp image; <code>server-b11096</code> in <code>compose.cpu.yaml</code></td></tr>
+              <tr><td data-label="Variable"><code>TEZ_MODELS_DIR</code></td><td data-label="Default"><code>./models</code></td><td data-label="Meaning">Host directory mounted read-only at <code>/models</code></td></tr>
+              <tr><td data-label="Variable"><code>TEZ_GGUF</code></td><td data-label="Default"><code><span class="nobr">gemma-4-12b-it-Q8_0.gguf</span></code></td><td data-label="Meaning">Model file inside it</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_TEMPLATE</code></td><td data-label="Default"><code>gemma4</code></td><td data-label="Meaning">Prompt template of the model: <code>gemma4</code> or <code>qwen3</code></td></tr>
+              <tr><td data-label="Variable"><code>TEZ_HOST_PORT</code></td><td data-label="Default"><code>8787</code></td><td data-label="Meaning">Host port for Tez, bound to 127.0.0.1</td></tr>
+              <tr><td data-label="Variable"><code>LLAMA_IMAGE</code></td><td data-label="Default"><code><span class="nobr">ghcr.io/<wbr>ggml-org/<wbr>llama.cpp:server-cuda-b11096</span></code></td><td data-label="Meaning">llama.cpp image; <code><span class="nobr">server-b11096</span></code> in <code>compose.cpu.yaml</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -455,23 +455,23 @@ curl http://127.0.0.1:8787/healthz</code></pre>
           <table class="table params">
             <thead><tr><th scope="col">Variable</th><th scope="col">Default in the image</th><th scope="col">Meaning</th></tr></thead>
             <tbody>
-              <tr><td><code>TEZ_BACKEND</code></td><td><code>http://127.0.0.1:8080</code>; compose sets <code>http://llama:8080</code></td><td>llama-server URL, or <code>fake</code> for the offline stand-in</td></tr>
-              <tr><td><code>TEZ_TEMPLATE</code></td><td><code>gemma4</code></td><td>Prompt template</td></tr>
-              <tr><td><code>TEZ_SCHEMAS</code></td><td>unset</td><td>Directory of <code>*.yaml</code> schemas, with fitted artefacts in <code>&lt;dir&gt;/.tez/</code></td></tr>
-              <tr><td><code>TEZ_DATA_DIR</code></td><td><code>/data</code></td><td>Where <code>POST /v1/feedback</code> writes</td></tr>
-              <tr><td><code>TEZ_PORT</code></td><td><code>8787</code></td><td>Listening port</td></tr>
-              <tr><td><code>TEZ_HOST</code></td><td><code>0.0.0.0</code></td><td>Listening address inside the container</td></tr>
-              <tr><td><code>TEZ_API_KEY</code></td><td>unset</td><td>Require <code>Authorization: Bearer &lt;key&gt;</code>; <code>/healthz</code> stays open</td></tr>
-              <tr><td><code>TEZ_PRESETS</code></td><td>unset</td><td><code>1</code> also loads the built-in preset schemas</td></tr>
-              <tr><td><code>TEZ_CORS_ORIGINS</code></td><td><code>http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io</code></td><td>Browser origins CORS allows (<code>*</code> for any); POSTs from any other origin get 403</td></tr>
-              <tr><td><code>TEZ_LOG_LEVEL</code></td><td><code>info</code></td><td><code>critical</code>, <code>error</code>, <code>warning</code>, <code>info</code> or <code>debug</code></td></tr>
-              <tr><td><code>TEZ_LAYOUT</code></td><td><code>auto</code></td><td>Default prompt layout (<a href="./guides.html#layouts">Prompt layouts</a>)</td></tr>
-              <tr><td><code>TEZ_DEFAULT_TEMPERATURE</code></td><td><code>auto</code></td><td>Temperature for letters answers no fit calibrates: <code>auto</code>, <code>off</code> or a number (<a href="./guides.html#default-temperature">Default temperature</a>)</td></tr>
-              <tr><td><code>TEZ_EMBED_BACKEND</code></td><td>unset</td><td>Separate llama-server for probe features</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_BACKEND</code></td><td data-label="Default in the image"><code>http://127.0.0.1:8080</code>; compose sets <code>http://llama:8080</code></td><td data-label="Meaning">llama-server URL, or <code>fake</code> for the offline stand-in</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_TEMPLATE</code></td><td data-label="Default in the image"><code>gemma4</code></td><td data-label="Meaning">Prompt template</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_SCHEMAS</code></td><td data-label="Default in the image">unset</td><td data-label="Meaning">Directory of <code>*.yaml</code> schemas, with fitted artefacts in <code>&lt;dir&gt;/.tez/</code></td></tr>
+              <tr><td data-label="Variable"><code>TEZ_DATA_DIR</code></td><td data-label="Default in the image"><code>/data</code></td><td data-label="Meaning">Where <code>POST /v1/feedback</code> writes</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_PORT</code></td><td data-label="Default in the image"><code>8787</code></td><td data-label="Meaning">Listening port</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_HOST</code></td><td data-label="Default in the image"><code>0.0.0.0</code></td><td data-label="Meaning">Listening address inside the container</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_API_KEY</code></td><td data-label="Default in the image">unset</td><td data-label="Meaning">Require <code>Authorization: Bearer &lt;key&gt;</code>; <code>/healthz</code> stays open</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_PRESETS</code></td><td data-label="Default in the image">unset</td><td data-label="Meaning"><code>1</code> also loads the built-in preset schemas</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_CORS_ORIGINS</code></td><td data-label="Default in the image"><code>http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io</code></td><td data-label="Meaning">Browser origins CORS allows (<code>*</code> for any); POSTs from any other origin get 403</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_LOG_LEVEL</code></td><td data-label="Default in the image"><code>info</code></td><td data-label="Meaning"><code>critical</code>, <code>error</code>, <code>warning</code>, <code>info</code> or <code>debug</code></td></tr>
+              <tr><td data-label="Variable"><code>TEZ_LAYOUT</code></td><td data-label="Default in the image"><code>auto</code></td><td data-label="Meaning">Default prompt layout (<a href="./guides.html#layouts">Prompt layouts</a>)</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_DEFAULT_TEMPERATURE</code></td><td data-label="Default in the image"><code>auto</code></td><td data-label="Meaning">Temperature for letters answers no fit calibrates: <code>auto</code>, <code>off</code> or a number (<a href="./guides.html#default-temperature">Default temperature</a>)</td></tr>
+              <tr><td data-label="Variable"><code>TEZ_EMBED_BACKEND</code></td><td data-label="Default in the image">unset</td><td data-label="Meaning">Separate llama-server for probe features</td></tr>
             </tbody>
           </table>
         </div>
-        <p>Each of these can be read from a file instead, for Docker secrets: <code>TEZ_API_KEY_FILE=/run/secrets/tez_api_key</code>. Setting both <code>X</code> and <code>X_FILE</code> is an error. Arguments given to the container are appended to <code>tez serve</code> (for example <code>--log-level warning</code> or <code>--max-batch 128</code>), and the process runs as user 10001, not root.</p>
+        <p>Each of these can be read from a file instead, for Docker secrets: <code>TEZ_API_KEY_FILE=/run/secrets/tez_api_key</code>. Setting both <code>X</code> and <code>X_FILE</code> is an error. Arguments given to the container are appended to <code>tez serve</code> (for example <code><span class="nobr">--log-level</span> warning</code> or <code><span class="nobr">--max-batch</span> 128</code>), and the process runs as user 10001, not root.</p>
         <h3 id="docker-schemas">Schemas, feedback and an API key</h3>
         <p>Uncomment the matching lines in <code>compose.yaml</code>, or put them in a <code>compose.override.yaml</code> next to it, which Compose merges on top:</p>
         <div class="code">

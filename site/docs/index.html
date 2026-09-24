@@ -124,26 +124,26 @@ tez serve --backend http://127.0.0.1:8091 --template gemma4</code></pre>
             <p>The answer comes back in Jev's wire format: the chosen option, a probability for every option and a <code>confidence</code>. Nothing is generated, so <code>usage.output_tokens</code> is always 0. Windows users can send the same request from PowerShell: see <a href="#first-request">First request</a>.</p>
           </li>
         </ol>
-        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>No model yet? <code>tez serve --backend fake</code> starts an offline stand-in so you can wire up a client. It answers from keyword overlap; it is not a model and its answers mean nothing.</p></div></div>
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>No model yet? <code>tez serve <span class="nobr">--backend</span> fake</code> starts an offline stand-in so you can wire up a client. It answers from keyword overlap; it is not a model and its answers mean nothing.</p></div></div>
       </section>
 
       <!-- ============================================================== install -->
       <section class="doc-section" aria-labelledby="install">
         <h2 id="install">Install</h2>
-        <p>Three pieces run on your machine: llama.cpp's <code>llama-server</code> hosts the model, a GGUF file holds the weights, and Tez reads each decision out of the server's next-token distribution or hidden state.</p>
+        <p>Three pieces run on your machine: llama.cpp's <code><span class="nobr">llama-server</span></code> hosts the model, a GGUF file holds the weights, and Tez reads each decision out of the server's next-token distribution or hidden state.</p>
 
         <h3 id="install-llamacpp">llama.cpp</h3>
-        <p>Every number on this site was measured with llama.cpp release <a href="https://github.com/ggml-org/llama.cpp/releases/tag/b11100">b11100</a>, the Windows <code>win-cuda-13.4</code> build. Download the build for your platform and put <code>llama-server</code> on your <code>PATH</code>. Other builds may work; they have not been measured.</p>
-        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>Use the official release binaries. Tez talks to <code>llama-server</code> over HTTP and needs no Python bindings; the prebuilt <code>llama-cpp-python</code> wheels we tried were compiled with AVX-512 and crashed on a CPU without it.</p></div></div>
+        <p>Every number on this site was measured with llama.cpp release <a href="https://github.com/ggml-org/llama.cpp/releases/tag/b11100">b11100</a>, the Windows <code><span class="nobr">win-cuda-13.4</span></code> build. Download the build for your platform and put <code><span class="nobr">llama-server</span></code> on your <code>PATH</code>. Other builds may work; they have not been measured.</p>
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><p>Use the official release binaries. Tez talks to <code><span class="nobr">llama-server</span></code> over HTTP and needs no Python bindings; the prebuilt <code><span class="nobr">llama-cpp-python</span></code> wheels we tried were compiled with AVX-512 and crashed on a CPU without it.</p></div></div>
 
         <h3 id="install-weights">Model weights</h3>
         <div class="table-wrap">
           <table class="table params">
             <thead><tr><th scope="col">Role</th><th scope="col">File</th><th scope="col">Status</th></tr></thead>
             <tbody>
-              <tr><td>Zero-shot letters, the default</td><td>Hugging Face <code>unsloth/gemma-4-12b-it-GGUF</code>, file <code>gemma-4-12b-it-Q8_0.gguf</code></td><td>Public equivalent of the measured weights; not separately measured</td></tr>
-              <tr><td>The weights we measured</td><td>Ollama <code>gemma4:12b-it-q8_0</code> (GGUF blob <code>sha256-047dae1d…</code>)</td><td>Behind every Gemma 4 12B Q8_0 number on this site</td></tr>
-              <tr><td>Probe backbone, optional</td><td><code>unsloth/Qwen3.5-4B-GGUF</code>, file <code>Qwen3.5-4B-Q8_0.gguf</code>, cut to its first 24 of 32 blocks</td><td>Needs labels; see <a href="./guides.html#fit">Fit a schema</a></td></tr>
+              <tr><td data-label="Role">Zero-shot letters, the default</td><td data-label="File">Hugging Face <code><span class="nobr">unsloth/<wbr>gemma-4-12b-it-GGUF</span></code>, file <code><span class="nobr">gemma-4-12b-it-Q8_0.gguf</span></code></td><td data-label="Status">Public equivalent of the measured weights; not separately measured</td></tr>
+              <tr><td data-label="Role">The weights we measured</td><td data-label="File">Ollama <code><span class="nobr">gemma4:12b-it-q8_0</span></code> (GGUF blob <code><span class="nobr">sha256-047dae1d…</span></code>)</td><td data-label="Status">Behind every Gemma 4 12B Q8_0 number on this site</td></tr>
+              <tr><td data-label="Role">Probe backbone, optional</td><td data-label="File"><code><span class="nobr">unsloth/<wbr>Qwen3.5-4B-GGUF</span></code>, file <code><span class="nobr">Qwen3.5-4B-Q8_0.gguf</span></code>, cut to its first 24 of 32 blocks</td><td data-label="Status">Needs labels; see <a href="./guides.html#fit">Fit a schema</a></td></tr>
             </tbody>
           </table>
         </div>
@@ -154,7 +154,7 @@ hf download unsloth/gemma-4-12b-it-GGUF gemma-4-12b-it-Q8_0.gguf --local-dir mod
 # optional, for probes
 hf download unsloth/Qwen3.5-4B-GGUF Qwen3.5-4B-Q8_0.gguf --local-dir models</code></pre>
         </div>
-        <p>If you already use Ollama, <code>ollama pull gemma4:12b-it-q8_0</code> stores the exact file we measured; point <code>llama-server -m</code> at its blob in Ollama's <code>models/blobs</code> directory. Serve it with <code>llama-server</code>, not through Ollama's API: Ollama caps the returned log-probabilities at 20 and its OpenAI-compatible endpoint drops them, which is enough for the top answer but not for calibrated probabilities.</p>
+        <p>If you already use Ollama, <code>ollama pull <span class="nobr">gemma4:12b-it-q8_0</span></code> stores the exact file we measured; point <code><span class="nobr">llama-server</span> <span class="nobr">-m</span></code> at its blob in Ollama's <code>models/blobs</code> directory. Serve it with <code><span class="nobr">llama-server</span></code>, not through Ollama's API: Ollama caps the returned log-probabilities at 20 and its OpenAI-compatible endpoint drops them, which is enough for the top answer but not for calibrated probabilities.</p>
         <p>To make the probe file, cut the 4B with <code>tez truncate</code> (it needs the <code>truncate</code> extra, below). The cut keeps the output norm and head, so the file's last-token state is what a mid-depth probe reads. The measured file is 3.53 GB.</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
@@ -192,10 +192,10 @@ tez --version</code></pre>
           <div><dt>--no-webui</dt><dd>No chat interface.</dd></div>
           <div><dt>--swa-full</dt><dd>Keep the full sliding-window cache, so Gemma can reuse the cached options prefix (below).</dd></div>
         </dl>
-        <p>Add <code>--embeddings --pooling last</code> only when the same server also serves embeddings for probes. Before trusting any number, check which file the server loaded: <code>model_path</code> in <code>curl http://127.0.0.1:8091/props</code>. Our harness asserts it before every run, after a stale server once answered for the wrong model.</p>
+        <p>Add <code><span class="nobr">--embeddings</span> <span class="nobr">--pooling</span> last</code> only when the same server also serves embeddings for probes. Before trusting any number, check which file the server loaded: <code>model_path</code> in <code>curl http://127.0.0.1:8091/props</code>. Our harness asserts it before every run, after a stale server once answered for the wrong model.</p>
 
-        <h3 id="swa-full">Why <code>--swa-full</code> matters</h3>
-        <p>Tez puts the constant part of every prompt first (instructions and options) and the state last, so the server can reuse the cached prefix and evaluate only the new tokens. Gemma uses sliding-window attention, and llama.cpp can only roll that cache back to a shared prefix when the full cache is kept. Without <code>--swa-full</code> the server silently re-evaluates the whole prompt on every request: in the voice loop that was 205 ms per streamed word, with <code>--swa-full</code> 30 ms (11 tokens evaluated per word instead of 394).</p>
+        <h3 id="swa-full">Why <code><span class="nobr">--swa-full</span></code> matters</h3>
+        <p>Tez puts the constant part of every prompt first (instructions and options) and the state last, so the server can reuse the cached prefix and evaluate only the new tokens. Gemma uses sliding-window attention, and llama.cpp can only roll that cache back to a shared prefix when the full cache is kept. Without <code><span class="nobr">--swa-full</span></code> the server silently re-evaluates the whole prompt on every request: in the voice loop that was 205 ms per streamed word, with <code><span class="nobr">--swa-full</span></code> 30 ms (11 tokens evaluated per word instead of 394).</p>
         <p>To confirm reuse, send two requests that share a prefix to llama-server's <code>/completion</code> and read <code>timings.prompt_n</code> in the second response: it should count only the new tokens.</p>
 
         <h3 id="probe-server">The probe server</h3>
@@ -204,8 +204,8 @@ tez --version</code></pre>
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
           <pre><code data-lang="bash">llama-server -m Qwen3.5-4B-Q8_0-L24.gguf -ngl 99 -c 4096 --port 8092 --embeddings --pooling last</code></pre>
         </div>
-        <div class="callout callout-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><p>Prompt caching must stay off for this hybrid model on llama.cpp b11100: reusing part of a cached prompt crashes the server. Tez switches caching off by itself for any backend whose model name matches Qwen3.5, and logs a warning. <code>tez serve --no-cache-prompt</code> forces it off for every backend, including a Gemma letters server, which then loses its cached prefix.</p></div></div>
-        <p>The measured probe runs also passed <code>-b 512 -np 1 --host 127.0.0.1 --no-webui</code>. On the RTX 5080 laptop GPU a probe on this file decides in 58 ms (p50) at 0.793 accuracy on typed-decisions; see <a href="../benchmarks.html#latency">latency and depth-pruned models</a>.</p>
+        <div class="callout callout-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><p>Prompt caching must stay off for this hybrid model on llama.cpp b11100: reusing part of a cached prompt crashes the server. Tez switches caching off by itself for any backend whose model name matches Qwen3.5, and logs a warning. <code>tez serve <span class="nobr">--no-cache-prompt</span></code> forces it off for every backend, including a Gemma letters server, which then loses its cached prefix.</p></div></div>
+        <p>The measured probe runs also passed <code><span class="nobr">-b</span> 512 <span class="nobr">-np</span> 1 <span class="nobr">--host</span> 127.0.0.1 <span class="nobr">--no-webui</span></code>. On the RTX 5080 laptop GPU a probe on this file decides in 58 ms (p50) at 0.793 accuracy on typed-decisions; see <a href="../benchmarks.html#latency">latency and depth-pruned models</a>.</p>
       </section>
 
       <!-- ============================================================== start tez -->
@@ -219,7 +219,7 @@ tez --version</code></pre>
           <div class="code-head"><span class="code-label">output</span></div>
           <pre><code>tez 0.1.0 on http://127.0.0.1:8787  backend http://127.0.0.1:8091 (gemma4), 0 schema(s), 0 probe(s)</code></pre>
         </div>
-        <p>Tez listens on <code>http://127.0.0.1:8787</code>. <code>--template</code> must match the model behind <code>--backend</code>: <code>gemma4</code> for Gemma 4, <code>qwen3</code> for Qwen3 and Qwen3.5. Without <code>--backend</code>, Tez uses the <code>TEZ_BACKEND</code> environment variable or llama-server's own default address, <code>http://127.0.0.1:8080</code>.</p>
+        <p>Tez listens on <code>http://127.0.0.1:8787</code>. <code><span class="nobr">--template</span></code> must match the model behind <code><span class="nobr">--backend</span></code>: <code>gemma4</code> for Gemma 4, <code>qwen3</code> for Qwen3 and Qwen3.5. Without <code><span class="nobr">--backend</span></code>, Tez uses the <code>TEZ_BACKEND</code> environment variable or llama-server's own default address, <code>http://127.0.0.1:8080</code>.</p>
         <p>With schemas and the probe server:</p>
         <div class="code">
           <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
@@ -227,7 +227,7 @@ tez --version</code></pre>
   --embed-backend http://127.0.0.1:8092 --embed-template qwen3 \
   --schemas schemas</code></pre>
         </div>
-        <p><code>--schemas</code> loads every <code>*.yaml</code> in the directory, with the probes and calibrations <code>tez fit</code> wrote next to them. <code>GET /healthz</code> shows what was loaded. When other machines can reach the server, require a key with <code>--api-key</code> (or <code>TEZ_API_KEY</code>).</p>
+        <p><code><span class="nobr">--schemas</span></code> loads every <code>*.yaml</code> in the directory, with the probes and calibrations <code>tez fit</code> wrote next to them. <code>GET /healthz</code> shows what was loaded. When other machines can reach the server, require a key with <code><span class="nobr">--api-key</span></code> (or <code>TEZ_API_KEY</code>).</p>
       </section>
 
       <!-- ============================================================== first request -->
@@ -246,7 +246,7 @@ tez serve  --backend inproc:gemma-4-12b-it-Q8_0.gguf --llama-lib ./llama.cpp --t
 
       <section class="doc-section" aria-labelledby="first-request">
         <h2 id="first-request">First request</h2>
-        <p>One state and any number of typed questions: here a yes/no, a choice and a score question about one customer message. A client written for Jev's wire format works by pointing its base URL at <code>http://127.0.0.1:8787</code>; any bearer token is accepted unless the server was started with <code>--api-key</code>.</p>
+        <p>One state and any number of typed questions: here a yes/no, a choice and a score question about one customer message. A client written for Jev's wire format works by pointing its base URL at <code>http://127.0.0.1:8787</code>; any bearer token is accepted unless the server was started with <code><span class="nobr">--api-key</span></code>.</p>
         <div class="code-tabs">
           <div class="tabs" role="tablist" aria-label="First request examples">
             <button type="button" role="tab" id="tab-req-curl" aria-controls="panel-req-curl" aria-selected="true" tabindex="0">curl</button>
