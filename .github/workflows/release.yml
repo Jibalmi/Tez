@@ -1,0 +1,75 @@
+name: Release
+
+# Push a tag v<version> (for example v0.2.0) whose version matches tez/_version.py and pyproject.toml. The whole CI
+# workflow runs first; then the distributions are built, checked, published to PyPI by trusted publishing (no stored
+# token) and attached to a GitHub release. One-time PyPI and GitHub setup: docs/RELEASING.md.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    name: Build the release
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The tag must match tez/_version.py and pyproject.toml
+        run: python scripts/check_version.py "$GITHUB_REF_NAME"
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - run: python scripts/check_dist.py dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/tez-decisions/
+    permissions:
+      id-token: write          # trusted publishing: an OIDC token is exchanged for a short-lived PyPI token
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: GitHub release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Create the release with the distributions attached
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          pre=""
+          if [[ "$GITHUB_REF_NAME" =~ (a|b|rc)[0-9]+$ ]]; then pre="--prerelease"; fi
+          gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --verify-tag \
+            --title "Tez ${GITHUB_REF_NAME#v}" --generate-notes $pre

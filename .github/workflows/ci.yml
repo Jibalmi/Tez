@@ -1,0 +1,133 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:        # release.yml runs this whole workflow before it publishes anything
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: pytest (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install Tez with the test and langchain extras (and LangGraph for the graph tests)
+        run: python -m pip install -e ".[test,langchain]" langgraph
+      - name: Run the tests (live tests need a llama-server and are excluded)
+        run: python -m pytest -q -m "not live"
+
+  test-minimal:
+    name: pytest without optional extras
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[test]"
+      - name: Run the tests (the LangChain tests must skip, not fail)
+        run: python -m pytest -q -m "not live" -rs
+
+  lint:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "ruff~=0.15.0"
+      - run: ruff check --output-format=github .
+
+  build:
+    name: Build and check the distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - name: The wheel holds only tez/ and the licence, at the version in tez/_version.py
+        run: python scripts/check_dist.py dist
+
+  ts-client:
+    name: TypeScript client (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    defaults:
+      run:
+        working-directory: clients/ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: clients/ts/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - name: What npm would publish
+        run: npm pack --dry-run
+
+  docker:
+    name: Docker image (offline fake backend)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate the compose files
+        run: |
+          docker compose -f compose.yaml config --quiet
+          docker compose -f compose.cpu.yaml config --quiet
+      - name: Build the image
+        run: docker build -f docker/Dockerfile -t tez:ci .
+      - name: Run it with the fake backend and an API key from a secret file
+        run: |
+          printf 'ci-secret\n' > "$RUNNER_TEMP/tez_api_key"
+          chmod 644 "$RUNNER_TEMP/tez_api_key"
+          docker run -d --name tez -p 127.0.0.1:8787:8787 -e TEZ_BACKEND=fake \
+            -e TEZ_API_KEY_FILE=/run/secrets/tez_api_key -v "$RUNNER_TEMP/tez_api_key:/run/secrets/tez_api_key:ro" tez:ci
+          for _ in $(seq 1 30); do curl -fsS http://127.0.0.1:8787/healthz && break; sleep 1; done
+          echo
+          test "$(docker exec tez id -u)" = 10001
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8787/v1/models)" = 401
+          curl -fsS http://127.0.0.1:8787/v1/systemone -H 'Authorization: Bearer ci-secret' \
+            -H 'Content-Type: application/json' \
+            -d '{"state": "My invoice is wrong", "questions": {"topic": {"type": "choice", "instructions": "Topic?",
+                 "criteria": {"billing": "invoices", "technical": null}}}}' | tee response.json
+          grep -q '"choice"' response.json
+      - name: The container healthcheck passes
+        run: |
+          for _ in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' tez)" = healthy ] && exit 0
+            sleep 3
+          done
+          docker inspect -f '{{json .State.Health}}' tez
+          exit 1
+      - name: Container logs
+        if: always()
+        run: docker logs tez || true

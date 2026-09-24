@@ -1,0 +1,72 @@
+# Tez in front of llama.cpp on an NVIDIA GPU. Quickstart, options and caveats: docs/DOCKER.md
+#
+#   1. Put the model in ./models (or point TEZ_MODELS_DIR at the directory that holds it):
+#        hf download unsloth/gemma-4-12b-it-GGUF gemma-4-12b-it-Q8_0.gguf --local-dir models
+#   2. docker compose up -d --build       (the first start loads the model; `docker compose ps` shows health)
+#   3. curl http://127.0.0.1:8787/healthz
+#
+# Needs the NVIDIA driver and the NVIDIA Container Toolkit. Without a GPU: docker compose -f compose.cpu.yaml up -d
+name: tez
+
+services:
+  llama:
+    # llama.cpp's official server image, CUDA 12.8, build b11096. The numbers in BENCHMARKS.md were measured with
+    # build b11100 (the Windows win-cuda-13.4 binary), which has no published image; b11096 is the closest build
+    # before it. This image is not separately measured. CUDA 13: ghcr.io/ggml-org/llama.cpp:server-cuda13-b11096.
+    image: ${LLAMA_IMAGE:-ghcr.io/ggml-org/llama.cpp:server-cuda-b11096}
+    command: ["-m", "/models/${TEZ_GGUF:-gemma-4-12b-it-Q8_0.gguf}", "-ngl", "99", "-c", "4096", "-b", "512",
+              "-np", "1", "--swa-full", "--no-webui", "--host", "0.0.0.0", "--port", "8080"]
+    volumes:
+      - ${TEZ_MODELS_DIR:-./models}:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health"]    # 503 while the model loads
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10m
+    restart: unless-stopped
+
+  tez:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: tez:local
+    init: true
+    environment:
+      TEZ_BACKEND: http://llama:8080
+      TEZ_TEMPLATE: ${TEZ_TEMPLATE:-gemma4}
+      TEZ_PORT: "8787"
+      # Schemas and their fitted artefacts (<dir>/.tez/): mount the directory below and uncomment.
+      # TEZ_SCHEMAS: /schemas
+      # Require an API key, read from a secret file rather than the environment (see secrets: at the end).
+      # TEZ_API_KEY_FILE: /run/secrets/tez_api_key
+    # volumes:
+    #   - ./schemas:/schemas:ro
+    #   - tez-data:/data                  # rows recorded by POST /v1/feedback
+    # secrets:
+    #   - tez_api_key
+    ports:
+      - "127.0.0.1:${TEZ_HOST_PORT:-8787}:8787"
+    depends_on:
+      llama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.build_opener(u.ProxyHandler({})).open('http://127.0.0.1:8787/healthz', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+# volumes:
+#   tez-data:
+# secrets:
+#   tez_api_key:
+#     file: ./secrets/tez_api_key.txt

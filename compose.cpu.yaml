@@ -1,0 +1,59 @@
+# Tez in front of llama.cpp on the CPU: no GPU and no NVIDIA Container Toolkit needed. A standalone file:
+#
+#   docker compose -f compose.cpu.yaml up -d --build
+#
+# Same services and settings as compose.yaml, with llama.cpp's CPU server image and no GPU reservation. A 12B model on
+# the CPU answers far more slowly than on a GPU; no CPU setup has been measured (docs/DOCKER.md).
+name: tez
+
+services:
+  llama:
+    # llama.cpp's official CPU server image, build b11096 (the closest published build before b11100). Not measured.
+    image: ${LLAMA_IMAGE:-ghcr.io/ggml-org/llama.cpp:server-b11096}
+    command: ["-m", "/models/${TEZ_GGUF:-gemma-4-12b-it-Q8_0.gguf}", "-c", "4096", "-b", "512", "-np", "1",
+              "--swa-full", "--no-webui", "--host", "0.0.0.0", "--port", "8080"]
+    volumes:
+      - ${TEZ_MODELS_DIR:-./models}:/models:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health"]    # 503 while the model loads
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10m
+    restart: unless-stopped
+
+  tez:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: tez:local
+    init: true
+    environment:
+      TEZ_BACKEND: http://llama:8080
+      TEZ_TEMPLATE: ${TEZ_TEMPLATE:-gemma4}
+      TEZ_PORT: "8787"
+      # TEZ_SCHEMAS: /schemas
+      # TEZ_API_KEY_FILE: /run/secrets/tez_api_key
+    # volumes:
+    #   - ./schemas:/schemas:ro
+    #   - tez-data:/data
+    # secrets:
+    #   - tez_api_key
+    ports:
+      - "127.0.0.1:${TEZ_HOST_PORT:-8787}:8787"
+    depends_on:
+      llama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.build_opener(u.ProxyHandler({})).open('http://127.0.0.1:8787/healthz', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+# volumes:
+#   tez-data:
+# secrets:
+#   tez_api_key:
+#     file: ./secrets/tez_api_key.txt

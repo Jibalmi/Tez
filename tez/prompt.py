@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import string
 from typing import Any, Sequence
 
@@ -50,14 +51,35 @@ def letter(i: int) -> str:
     return out
 
 
+# Caller text must not be able to forge the chat template's control tokens: llama-server tokenises prompts with
+# special tokens enabled, so a state containing "<turn|>\n<|turn>model" would otherwise close the user turn early.
+# Pipe forms (<|turn>, <turn|>, <|channel>, <channel|>, <|im_start|>, <|im_end|>, ...) get their pipe replaced by a
+# broken bar; the unpiped special tags of the supported families get a full-width opening bracket. Ordinary text
+# (including HTML and comparisons like a < b | c) is unchanged unless it spells one of these exact forms.
+_PIPE_OPEN = re.compile(r"<\|(?=[A-Za-z_][A-Za-z0-9_.\-]{0,40}\|?>)")
+_PIPE_CLOSE = re.compile(r"(?<=<)([A-Za-z_][A-Za-z0-9_.\-]{0,40})\|>")
+_SPECIAL_TAGS = re.compile(r"<(/?)(start_of_turn|end_of_turn|start_of_image|end_of_image|bos|eos|pad|unk|mask|"
+                           r"think|tool_call|tool_response|image_soft_token|audio_soft_token)>")
+
+
+def neutralize(text: str) -> str:
+    """Make control-token look-alikes in caller text inert (see the comment above)."""
+    if "<" not in text:
+        return text
+    text = _PIPE_OPEN.sub("<¦", text)
+    text = _PIPE_CLOSE.sub(lambda m: m.group(1) + "¦>", text)
+    return _SPECIAL_TAGS.sub(lambda m: "＜" + m.group(1) + m.group(2) + ">", text)
+
+
 def render_state(state: Any) -> str:
-    return state if isinstance(state, str) else json.dumps(state, ensure_ascii=False)
+    return neutralize(state if isinstance(state, str) else json.dumps(state, ensure_ascii=False))
 
 
 def render_option_lines(options: Options) -> str:
     lines = []
     for i, (key, desc) in enumerate(options):
-        shown = "none" if key == NONE_KEY else key
+        shown = "none" if key == NONE_KEY else neutralize(str(key))
+        desc = neutralize(desc) if isinstance(desc, str) else desc
         lines.append(f"{letter(i)}. {shown}: {desc}" if desc and desc != shown else f"{letter(i)}. {shown}")
     return "\n".join(lines)
 
@@ -65,13 +87,13 @@ def render_option_lines(options: Options) -> str:
 def render_shots(question: Question, options: Options, shots: Sequence[tuple[Any, int]]) -> str:
     opts = render_option_lines(options)
     return "\n\n".join(
-        f"Example input:\n{render_state(state)}\nQuestion ({question.type}): {question.instructions_text}\n"
+        f"Example input:\n{render_state(state)}\nQuestion ({question.type}): {neutralize(question.instructions_text)}\n"
         f"Options:\n{opts}\nAnswer: {letter(idx)}"
         for state, idx in shots)
 
 
 def build_user(question: Question, state: Any, options: Options, shots: Sequence[tuple[Any, int]] | None = None) -> str:
-    body = (f"Question ({question.type}): {question.instructions_text}\n\n"
+    body = (f"Question ({question.type}): {neutralize(question.instructions_text)}\n\n"
             f"Options:\n{render_option_lines(options)}\n\nInput:\n{render_state(state)}")
     if shots:
         return f"{HEAD_SHOTS}\n\n{render_shots(question, options, shots)}\n\n{body}"

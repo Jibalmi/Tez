@@ -1,0 +1,59 @@
+{
+  "name": "tez-client",
+  "version": "0.1.0",
+  "description": "Dependency-free TypeScript client for Tez's /v1/systemone decision API (the Jev wire format)",
+  "license": "MIT",
+  "author": "Miguel Villax",
+  "homepage": "https://jibalmi.github.io/Tez/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jibalmi/Tez.git",
+    "directory": "clients/ts"
+  },
+  "bugs": "https://github.com/Jibalmi/Tez/issues",
+  "keywords": [
+    "tez",
+    "llm",
+    "classification",
+    "decisions",
+    "systemone",
+    "jev",
+    "llama.cpp"
+  ],
+  "sideEffects": false,
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "node scripts/clean.mjs && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/write-dist-packages.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "npm run typecheck && node --test test/client.test.mjs test/cjs.test.cjs",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}

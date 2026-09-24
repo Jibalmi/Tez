@@ -1,0 +1,47 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"      # Mondays: advisories published since the last change
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  banned-calls:
+    name: No pickle, torch.load, unsafe yaml.load, eval or exec in tez/
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Syntax-tree check (comments and docstrings do not count). Allowed: the SafeLoader subclass in tez/schema.py
+      # and np.load(..., allow_pickle=False) in tez/artifacts.py. Details in the script's docstring.
+      - run: python scripts/check_banned_calls.py tez
+
+  pip-audit:
+    name: pip-audit (dependencies of Tez and every extra)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve Tez with every extra in a clean environment
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/audit"
+          "$RUNNER_TEMP/audit/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/audit/bin/python" -m pip install ".[all]"
+          "$RUNNER_TEMP/audit/bin/python" -m pip freeze | grep -v -i -E '^tez[-_.]decisions' > "$RUNNER_TEMP/requirements.txt"
+          cat "$RUNNER_TEMP/requirements.txt"
+      - name: Audit the resolved versions
+        shell: bash
+        run: |
+          python -m pip install pip-audit
+          pip-audit --strict --no-deps --disable-pip --progress-spinner off -r "$RUNNER_TEMP/requirements.txt"

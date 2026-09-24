@@ -1,0 +1,13 @@
+# `ruff check .` (CI: .github/workflows/ci.yml, job "lint"). A conservative rule set: mistakes that break code or hide
+# bugs (pyflakes, pycodestyle errors and warnings, bugbear), not formatting or style. Research scripts in experiments/
+# and the vendored SemIf code in data/ are not linted.
+target-version = "py310"
+line-length = 140
+extend-exclude = ["experiments", "data", "tools", "results", "site", "clients", "docs", "onepass"]
+
+[lint]
+select = ["E4", "E7", "E9", "F", "W", "B"]
+ignore = ["B905"]   # zip() without strict=: left to the author
+
+[lint.per-file-ignores]
+"scripts/capture_site.py" = ["E702"]

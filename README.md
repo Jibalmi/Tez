@@ -40,6 +40,22 @@ curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '
 - Learn from labels: `tez suggest` picks the most typical rows to label first; `tez fit` trains per-question probes,
   temperatures and conformal thresholds; `tez eval` reports accuracy and ECE.
 
+### Install and integrate
+
+- **pip** (Python 3.10+): `pip install "tez-decisions @ git+https://github.com/Jibalmi/Tez"`. Extras: `fit`
+  (scikit-learn, for `tez fit` and `tez suggest`), `truncate` (gguf), `langchain` (langchain-core); `otel` and `mcp` add
+  the OpenTelemetry API and the MCP SDK; `all` installs every extra.
+- **Docker**: `docker compose up -d --build` runs llama.cpp (CUDA) and Tez on `127.0.0.1:8787`. The model download,
+  settings, secrets and the CPU variant (`compose.cpu.yaml`) are in [`docs/DOCKER.md`](docs/DOCKER.md).
+- **TypeScript / JavaScript**: [`clients/ts`](clients/ts/) is `tez-client`, a dependency-free client with answers typed
+  per question (ES module and CommonJS builds).
+- **LangChain / LangGraph**: `tez.integrations.langchain` provides `TezRouter` (a conditional edge that returns a
+  fallback when the gate escalates or confidence is low), `TezGuard`, `TezTriage` and `TezEvaluator`, in-process
+  (`tez=Tez(...)`) or against any `/v1/systemone` server (`base_url=...`); `tez.integrations.RemoteTez` is the Python
+  API over HTTP.
+- Working on Tez: [`CONTRIBUTING.md`](CONTRIBUTING.md), [`AGENTS.md`](AGENTS.md); releases:
+  [`docs/RELEASING.md`](docs/RELEASING.md); third-party material: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
 ## What we measured
 
 Frozen models, zero training, SemIf's exact prompt and public fixtures (144 three-option decisions),

@@ -1,0 +1,10 @@
+# The image needs only the package sources. Everything else (GGUFs and llama.cpp binaries in tools/, results/,
+# data/, the site, clients) stays out of the build context.
+*
+!pyproject.toml
+!README.md
+!LICENSE
+!tez/
+!docker/entrypoint.py
+**/__pycache__
+**/*.pyc
