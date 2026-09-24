@@ -1,5 +1,6 @@
-export { DEFAULT_BASE_URL, DEFAULT_TIMEOUT_MS, NONE_LABEL, TezClient } from "./client.js";
+export { DEFAULT_BASE_URL, DEFAULT_TIMEOUT_MS, NONE_LABEL, requestBody, TezClient } from "./client.js";
 export type {
+  BodyOptions,
   DecideOptions,
   FetchInitLike,
   FetchLike,

@@ -4,13 +4,20 @@ import { responseMeta, withMeta } from "./meta.js";
 import type { HeadersLike, ResponseMeta, WithMeta } from "./meta.js";
 import type {
   AnswersFor,
+  BatchRequest,
+  BatchResponse,
+  BatchResult,
   DecideRequest,
   DecideResponse,
   FeedbackRequest,
   FeedbackResponse,
   GateOptions,
   HealthResponse,
+  JsonSchema,
+  LayoutOption,
   ModelsResponse,
+  PlanRequest,
+  PlanResponse,
   Questions,
   ReadoutOption,
   SchemaDetail,
@@ -61,9 +68,12 @@ export interface RequestOptions {
   signal?: AbortSignal;
 }
 
-export interface DecideOptions<Q extends Questions = Questions> extends RequestOptions {
+/** What `requestBody` turns into a wire-format body (everything `decide` takes except `signal`). */
+export interface BodyOptions<Q extends Questions = Questions> {
   /** Question id -> question. Optional when `schema` names a loaded schema (its questions are used). */
   questions?: Q;
+  /** Tez: in place of `questions`, a JSON schema of the object to extract; the object comes back in `tez.values`. */
+  jsonSchema?: JsonSchema;
   /** Tez: a loaded schema. Questions with the same id and definition use its probes and calibration. */
   schema?: string;
   /** Tez: auto (default), letters or probe. */
@@ -74,9 +84,13 @@ export interface DecideOptions<Q extends Questions = Questions> extends RequestO
   alpha?: number;
   /** Tez: the raw `tez.gate`; `{}` uses the schema's default alpha, null or false turns a schema's default gate off. */
   gate?: GateOptions | null | false;
+  /** Tez: the prompt layout, auto, question_first or state_first. Default: the schema's, else the server's. */
+  layout?: LayoutOption;
   /** Any string; the server's default is "tez-latest". Sent only when given. */
   model?: string;
 }
+
+export interface DecideOptions<Q extends Questions = Questions> extends BodyOptions<Q>, RequestOptions {}
 
 const STATUS_TYPES: Record<number, TezErrorType> = {
   401: "unauthorized",
@@ -103,18 +117,33 @@ function describe(err: unknown): string {
   return String(err);
 }
 
-function decideBody(state: State, options: DecideOptions<Questions>): DecideRequest {
-  const body: DecideRequest = { state };
+/** The fields a decision and a batch share, Tez's extensions only when set. */
+function sharedFields(options: BodyOptions<Questions>): Omit<DecideRequest, "state"> {
+  const body: Omit<DecideRequest, "state"> = {};
   if (options.model !== undefined) body.model = options.model;
   if (options.questions !== undefined) body.questions = options.questions;
+  if (options.jsonSchema !== undefined) body.json_schema = options.jsonSchema;
   if (options.schema !== undefined) body.schema = options.schema;
   const tez: TezOptions = {};
   if (options.readout !== undefined && options.readout !== "auto") tez.readout = options.readout;
   if (options.abstain) tez.abstain = true;
   if (options.alpha !== undefined) tez.gate = { alpha: options.alpha };
   else if (options.gate !== undefined) tez.gate = options.gate;
+  if (options.layout !== undefined) tez.layout = options.layout;
   if (Object.keys(tez).length > 0) body.tez = tez;
   return body;
+}
+
+/**
+ * The /v1/systemone body that `decide(state, options)` sends: Tez's extensions only when set, so a Jev-only server
+ * sees a plain request. Useful with `plan`, which takes the same body (`state` may be left out there).
+ */
+export function requestBody(state: State, options?: BodyOptions<Questions>): DecideRequest;
+export function requestBody(state: State | undefined, options?: BodyOptions<Questions>): PlanRequest;
+export function requestBody(state: State | undefined, options: BodyOptions<Questions> = {}): PlanRequest {
+  const body: PlanRequest = {};
+  if (state !== undefined) body.state = state;
+  return Object.assign(body, sharedFields(options));
 }
 
 /**
@@ -128,8 +157,8 @@ function decideBody(state: State, options: DecideOptions<Questions>): DecideRequ
  *     res.meta.runId;                                    // the X-Tez-Run-Id header
  *
  * Every method resolves to the response body exactly as the wire format defines it, with the response's status and
- * headers in a non-enumerable `meta` property. Tez's extensions (`schema` and the `tez` options) are sent only when
- * set, so a Jev-only server sees a plain request. Redirects are never followed.
+ * headers in a non-enumerable `meta` property. Tez's extensions (`schema`, `json_schema` and the `tez` options) are
+ * sent only when set, so a Jev-only server sees a plain request. Redirects are never followed.
  */
 export class TezClient {
   readonly baseUrl: string;
@@ -161,7 +190,7 @@ export class TezClient {
     state: State,
     options: DecideOptions<Q> = {},
   ): Promise<WithMeta<DecideResponse<AnswersFor<Q>>>> {
-    return this.request("POST", "/v1/systemone", decideBody(state, options), options.signal);
+    return this.request("POST", "/v1/systemone", requestBody(state, options), options.signal);
   }
 
   /** POST a raw wire-format body to /v1/systemone. */
@@ -169,12 +198,55 @@ export class TezClient {
     return this.request("POST", "/v1/systemone", body, options.signal);
   }
 
-  /** The schemas the server loaded (GET /v1/schemas). */
+  /**
+   * Decide many states against the same questions in one request (POST /v1/systemone/batch). `results` has one entry
+   * per state, in order: the state's response, or `{ error: { type, message } }` for a state that failed (the others
+   * are still decided). A bad shared option fails the whole batch with a TezError.
+   */
+  async decideBatch<Q extends Questions = Questions>(
+    states: readonly State[],
+    options: DecideOptions<Q> = {},
+  ): Promise<WithMeta<BatchResponse<AnswersFor<Q>>>> {
+    if (!Array.isArray(states)) throw new TypeError("states must be an array of states");
+    const body: BatchRequest = { states: [...states], ...sharedFields(options) };
+    return this.request("POST", "/v1/systemone/batch", body, options.signal);
+  }
+
+  /** The `results` of `decideBatch`: one per state, in order, each a response or `{ error: { type, message } }`. */
+  async decideMany<Q extends Questions = Questions>(
+    states: readonly State[],
+    options: DecideOptions<Q> = {},
+  ): Promise<BatchResult<AnswersFor<Q>>[]> {
+    const res = await this.decideBatch(states, options);
+    if (!Array.isArray(res.results)) {
+      throw new TezError(res.meta.status, "invalid_response", `${this.baseUrl}/v1/systemone/batch answered without results`, {
+        body: res,
+        meta: res.meta,
+      });
+    }
+    return res.results;
+  }
+
+  /** POST a raw wire-format batch body to /v1/systemone/batch. */
+  systemoneBatch(body: BatchRequest, options: RequestOptions = {}): Promise<WithMeta<BatchResponse>> {
+    return this.request("POST", "/v1/systemone/batch", body, options.signal);
+  }
+
+  /**
+   * What a /v1/systemone request would do, without calling the model (POST /v1/plan): per question the readout, the
+   * fit, the layout, the backend calls and a token estimate. `requestBody(state, options)` builds the body from
+   * decide's options; `state` may be left out.
+   */
+  plan(body: PlanRequest, options: RequestOptions = {}): Promise<WithMeta<PlanResponse>> {
+    return this.request("POST", "/v1/plan", body, options.signal);
+  }
+
+  /** The schemas the server loaded (GET /v1/schemas); `builtin` marks the presets. */
   schemas(options: RequestOptions = {}): Promise<WithMeta<SchemasResponse>> {
     return this.request("GET", "/v1/schemas", undefined, options.signal);
   }
 
-  /** One schema: questions, probe status, calibration (GET /v1/schemas/{name}). */
+  /** One schema: questions, layout, probe status, calibration (GET /v1/schemas/{name}). */
   schema(name: string, options: RequestOptions = {}): Promise<WithMeta<SchemaDetail>> {
     return this.request("GET", `/v1/schemas/${encodeURIComponent(name)}`, undefined, options.signal);
   }
@@ -187,7 +259,7 @@ export class TezClient {
     return this.request("POST", "/v1/feedback", body, options.signal);
   }
 
-  /** Liveness, backend and readout status (GET /healthz; never needs the API key). */
+  /** Liveness, backend, readout and layout status (GET /healthz; never needs the API key). */
   health(options: RequestOptions = {}): Promise<WithMeta<HealthResponse>> {
     return this.request("GET", "/healthz", undefined, options.signal);
   }
