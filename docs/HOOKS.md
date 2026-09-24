@@ -61,7 +61,8 @@ that.
 For one call: the process-wide hooks (`tez.set_default_hooks([...])`, read at call time), then the engine's
 (`Tez(hooks=[...])`, `tez.add_hook(h)`, `tez.remove_hook(h)`), then the call's own (`decide(..., hooks=[...])`,
 `handle(body, hooks=...)`, `decide_many(..., hooks=...)`). Within each list, the order given. Put `Redact` first so
-every later hook, the cache key and the model see the redacted state.
+every later hook, the cache key and the model see the redacted state (`ctx.request` keeps the body as it arrived, so a
+hook that records anything should read `ctx.state`, not `ctx.request["state"]`).
 
 `tez serve --hook package.module:object` (repeatable) loads a hook by name: a class is instantiated without arguments,
 a hook instance is used as it is, any other callable is called and must return a hook. `--decision-log PATH` adds a

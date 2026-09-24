@@ -102,6 +102,8 @@ class StubServer:
                 return 200, self.engine.handle(body)
             if method == "POST" and path == "/v1/systemone/batch":
                 return 200, self.engine.handle_batch(body)
+            if method == "POST" and path == "/v1/plan":
+                return 200, self.engine.plan(body)
             if method == "POST" and path == "/v1/feedback":
                 return 200, self.engine.record_feedback(body)
             if method == "GET" and path == "/v1/models":

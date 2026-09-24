@@ -95,6 +95,16 @@ def test_plan_endpoint_and_cli(tmp_path: Path, capsys):
     assert set(json.loads(capsys.readouterr().out)["questions"]) == {"topic", "urgent", "frustration"}
 
 
+def test_remote_plan_matches_in_process():
+    from stub_http import StubServer
+    from tez.integrations import RemoteTez
+    engine = Tez(backend="fake")
+    body = {"state": STATE, "questions": QUESTIONS}
+    with StubServer(engine) as srv:
+        assert RemoteTez(srv.url).plan(body) == engine.plan(body)
+    assert srv.requests[0]["path"] == "/v1/plan"
+
+
 # ---------------------------------------------------------------------------------------------- doctor
 def test_detect_template():
     assert detect_template("<|turn>user") == "gemma4" and detect_template(QWEN_TEMPLATE) == "qwen3"

@@ -8,7 +8,7 @@ format (docs/API.md): `tez serve` on this machine or another one, or a Jev-compa
                                     "criteria": {"billing": None, "technical": None}}})
 
 The method names and return values match the in-process engine (tez.Tez): decide, handle, decide_many,
-decide_batch, handle_batch, extract, health, models, schema_summaries, schema_detail and record_feedback, so every
+decide_batch, handle_batch, extract, plan, health, models, schema_summaries, schema_detail and record_feedback, so every
 integration accepts either. Error responses raise the
 TezError subclasses the engine raises (InvalidRequest 422, NotFound 404, Unauthorized 401, BackendUnavailable 503);
 a server that cannot be reached, times out or answers with something other than JSON raises BackendUnavailable.
@@ -214,6 +214,10 @@ class RemoteTez:
         extraction, fields = prepare(schema_or_model, loaded)
         body = {**self.request_body(state, None, None, readout, False, alpha, None, None, layout), **fields}
         return finish(extraction, self.handle(body), alpha, return_details)
+
+    def plan(self, body: Any) -> dict:
+        """POST /v1/plan: what a /v1/systemone request body would do, without calling the model (tez.Tez.plan)."""
+        return self._request("POST", "/v1/plan", body)
 
     def handle_batch(self, body: Any) -> dict:
         """POST a wire-format batch body to /v1/systemone/batch and return the batch response."""
