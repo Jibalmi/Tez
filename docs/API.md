@@ -156,12 +156,25 @@ llama.cpp settings for Tez: `-np 1`, `--swa-full` for Gemma (sliding-window mode
 and `--cache-ram 0`: with host-memory prompt caching on (the default, 8 GiB) a request that keeps less than half of the
 slot's cached tokens first copies the slot to host RAM, which is what a new state does. `tez doctor` checks these.
 
+### Response headers
+
+Every response (errors and CORS preflights included) carries:
+
+- `x-typesafe-request-id`: 32 hex characters. For a decision it is the run id that hooks see (`ctx.run_id`), that a
+  `DecisionLog` row records and that `POST /v1/feedback` accepts as `run_id`; for other routes a fresh id.
+- `server-timing`: `total;dur=<ms>` for every response; decisions add `tez;dur=<ms>` (the engine) and
+  `backend;dur=<ms>` (time spent in model calls), e.g. `tez;dur=212.4, backend;dur=205.1, total;dur=214.0`.
+
+Decisions (`/v1/systemone`, successful or not) also carry `X-Tez-Run-Id` (the same id) and, when they got that far,
+`X-Tez-Layout` (`question_first`, `state_first` or `mixed`). Browsers can read all four (CORS `Expose-Headers`).
+
 ### Errors
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
 than the model's context, with llama.cpp's message), `503` backend unavailable. Also `404` for an unknown route or
-schema and `405` for a wrong method. Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are
-`unauthorized`, `invalid_request`, `not_found`, `method_not_allowed` and `backend_unavailable`.
+schema, `405` for a wrong method and `500` for an unexpected failure (a hook that raised, for example). Body:
+`{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`, `invalid_request`,
+`not_found`, `method_not_allowed`, `backend_unavailable` and `internal_error`.
 
 ## `GET /v1/models`
 
@@ -194,11 +207,19 @@ request that names none gets), `calibration_id`, `probes` (per question: `probe`
 ## `POST /v1/feedback`
 
 ```json
-{"schema": "support-triage", "question": "topic", "state": "...", "label": "billing"}
+{"schema": "support-triage", "question": "topic", "state": "...", "label": "billing", "run_id": "5f0c..."}
 ```
 
 Appends to `<data-dir>/feedback/<schema>.jsonl` (default data dir: `<schemas>/.tez`) and returns
 `{"ok": true, "schema": ..., "question": ..., "label": ...}`. `tez fit` trains from these rows plus any labelled file.
+`run_id` (optional) is the decision's `X-Tez-Run-Id`; it is stored with the row. `on_feedback` hooks see the row first
+(`Redact` removes personal data from its state; docs/HOOKS.md).
+
+## Hooks
+
+Hooks run in the engine around every decision (docs/HOOKS.md): `tez serve --hook package.module:object` (repeatable),
+`--decision-log PATH` (a JSONL row per decision, the format `tez fit` reads once labels are filled in) and
+`--hook-errors raise|log` (whether a failing hook fails the request).
 
 ## Schema files (`schemas/*.yaml`)
 

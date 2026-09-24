@@ -45,3 +45,24 @@ class BackendRequestError(TezError):
 
     status = 422
     type = "invalid_request"
+
+
+class Forbidden(TezError):
+    """The request comes from a browser origin that is not allowed to do this (tez serve --cors-origins): 403."""
+
+    status = 403
+    type = "forbidden"
+
+
+class PayloadTooLarge(TezError):
+    """The request is over one of the server's limits (body size, questions, state length, batch size): 413."""
+
+    status = 413
+    type = "payload_too_large"
+
+
+class InternalError(TezError):
+    """An unexpected failure (for example a hook that raised with hooks_raise on): 500."""
+
+    status = 500
+    type = "internal_error"

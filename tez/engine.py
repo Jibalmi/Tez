@@ -31,6 +31,7 @@ from .backends import DEFAULT_N_PROBS, Backend, make_backend
 from .errors import BackendRequestError, BackendUnavailable, InvalidRequest, NotFound
 from .gate import decide as gate_decide
 from .gate import lookup
+from .hooks import DecisionContext, HookSet, default_hooks, new_run_id, normalise_hooks
 from .prompt import (QUESTION_FIRST, STATE_FIRST, TOURNAMENT_NONE, build_prompt, fingerprint, needs_tournament,
                      pick_finalists, resolve_layout, tournament_plan)
 from .readout import assemble, blend, softmax, temper
@@ -76,15 +77,20 @@ class Tez:
     embed_backend  optional separate server for probe features (default: the letters backend)
     layout         default prompt layout: auto (default) | question_first | state_first
     n_probs        next-token log-probabilities a letter readout asks llama-server for (default 200)
+    hooks          hooks run on every decision (tez.hooks; docs/HOOKS.md); hooks_raise=False logs a failing hook
+                   instead of failing the decision
     """
 
     def __init__(self, backend: Any = None, template: str = "gemma4", schemas: Any = None, embed_backend: Any = None,
                  embed_template: str | None = None, cache_prompt: bool = True, data_dir: str | Path | None = None,
                  model_name: str | None = None, embed_model_name: str | None = None, *, layout: str = "auto",
-                 n_probs: int = DEFAULT_N_PROBS):
+                 n_probs: int = DEFAULT_N_PROBS, hooks: Any = None, hooks_raise: bool = True):
         if layout not in LAYOUTS:
             raise ValueError(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
         self.layout = layout
+        self.hooks: list = normalise_hooks(hooks)
+        self.hooks_raise = bool(hooks_raise)
+        self._hooks_lock = threading.Lock()
         self.backend: Backend = make_backend(backend, template, cache_prompt, model_name, n_probs)
         self.template = self.backend.template
         if embed_backend is None:
@@ -104,6 +110,26 @@ class Tez:
 
     def __repr__(self) -> str:
         return f"Tez(backend={self.backend!r}, schemas={sorted(self.schemas)})"
+
+    # ---------------------------------------------------------------------------------- hooks
+    def add_hook(self, hook: Any) -> Tez:
+        """Install one hook (or a list) after the engine's current ones. Returns the engine."""
+        items = normalise_hooks(hook)
+        with self._hooks_lock:
+            self.hooks = self.hooks + items
+        return self
+
+    def remove_hook(self, hook: Any) -> bool:
+        """Remove a hook by identity; True when it was installed."""
+        with self._hooks_lock:
+            kept = [h for h in self.hooks if h is not hook]
+            removed = len(kept) != len(self.hooks)
+            self.hooks = kept
+        return removed
+
+    def hookset(self, hooks: Any = None) -> HookSet:
+        """The hooks of one call: process-wide defaults, the engine's, then the call's own."""
+        return HookSet(default_hooks() + list(self.hooks) + normalise_hooks(hooks), self.hooks_raise)
 
     # ---------------------------------------------------------------------------------- schemas
     def add_schemas(self, source: Any) -> list[str]:
@@ -295,13 +321,46 @@ class Tez:
         return DecideRequest(state=state, questions=questions, schema=schema, readout=readout, abstain=abstain,
                              alpha=alpha, model=model, layout=layout)
 
-    def handle(self, body: Any) -> dict:
+    def execute(self, body: Any, *, run_id: str | None = None, hooks: Any = None, parent_run_id: str | None = None,
+                index: int | None = None) -> DecisionContext:
+        """Validate a wire-format request, decide it and return the whole DecisionContext (response, per-question
+        traces with backend timings, usage, latency). Hooks run around it; on failure on_error runs and the error
+        is raised (TezError subclasses carry their HTTP status)."""
+        hs = self.hookset(hooks)
+        ctx = DecisionContext(run_id=run_id or new_run_id(), request=body, engine=self, parent_run_id=parent_run_id,
+                              index=index)
+        try:
+            req = self.parse_request(body)
+            self._load_context(ctx, req)
+            hs.emit("on_decide_start", ctx)
+            if ctx.skipped:
+                ctx.latency_ms = round((time.perf_counter() - ctx.started) * 1000.0, 1)
+                if isinstance(ctx.response.get("tez"), dict):
+                    ctx.response["tez"]["latency_ms"] = ctx.latency_ms
+                ctx.usage = ctx.response.get("usage")
+            else:
+                req.state = ctx.state
+                self._run(req, ctx, hs)
+            hs.emit("on_decide_end", ctx)
+            return ctx
+        except Exception as exc:
+            ctx.error = exc
+            hs.emit("on_error", ctx)
+            raise
+
+    def _load_context(self, ctx: DecisionContext, req: DecideRequest) -> None:
+        ctx.state, ctx.questions, ctx.schema = req.state, req.questions, req.schema
+        ctx.readout, ctx.abstain, ctx.alpha, ctx.model = req.readout, req.abstain, req.alpha, req.model
+        ctx.requested_layout = req.layout
+        ctx.layout = resolve_layout(req.layout, len(req.questions))
+
+    def handle(self, body: Any, *, run_id: str | None = None, hooks: Any = None) -> dict:
         """Validate a wire-format request and decide it. Raises TezError subclasses (422 / 503)."""
-        return self.run(self.parse_request(body))
+        return self.execute(body, run_id=run_id, hooks=hooks).response
 
     def decide(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str = DEFAULT_MODEL_ALIAS,
-               *, layout: str | None = None) -> dict:
+               *, layout: str | None = None, hooks: Any = None, run_id: str | None = None) -> dict:
         """Decide one state. Returns the wire-format response dict (answers, usage, tez block).
 
         questions  {id: {type, instructions, criteria}} (or Question objects); optional when schema is given
@@ -311,8 +370,10 @@ class Tez:
         alpha      gate: target error rate among acted decisions (needs a fitted schema); gate=False disables
                    a schema's default gate
         layout     prompt layout: auto | question_first | state_first (default: the schema's, else the engine's)
+        hooks      hooks for this call only, after the process-wide and the engine's
         """
-        return self.handle(self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout))
+        body = self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout)
+        return self.handle(body, run_id=run_id, hooks=hooks)
 
     def request_body(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                      abstain: bool = False, alpha: float | None = None, gate: Any = None,
@@ -338,6 +399,12 @@ class Tez:
         return body
 
     def run(self, req: DecideRequest) -> dict:
+        """Decide a parsed request without hooks (execute() is the hooked path)."""
+        ctx = DecisionContext(run_id=new_run_id(), engine=self)
+        self._load_context(ctx, req)
+        return self._run(req, ctx, HookSet([]))
+
+    def _run(self, req: DecideRequest, ctx: DecisionContext, hs: HookSet) -> dict:
         t0 = time.perf_counter()
         n = len(req.questions)
         base = resolve_layout(req.layout, n)
@@ -347,19 +414,36 @@ class Tez:
                 [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
         results: dict[str, QuestionResult] = {}
         for qid in order:
-            results[qid] = self.decide_question(req.questions[qid], req.state, schema=req.schema, readout=req.readout,
-                                                abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n)
+            calls: list = []
+            tq = time.perf_counter()
+            r = self.decide_question(req.questions[qid], req.state, schema=req.schema, readout=req.readout,
+                                     abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n, trace=calls)
+            if r.layout != base:
+                r.meta = {**r.meta, "layout": r.layout}
+            results[qid] = r
+            ctx.traces[qid] = {"readout": r.readout, "layout": r.layout, "tokens": int(r.tokens),
+                               "ms": round((time.perf_counter() - tq) * 1000.0, 3), "calls": calls}
+            if hs:
+                hs.emit("on_question_end", ctx, qid, r.answer, r.meta)
         answers, metas, used, tokens = {}, {}, [], 0
         for qid in req.questions:
             r = results[qid]
             answers[qid] = r.answer
-            metas[qid] = r.meta if r.layout == base else {**r.meta, "layout": r.layout}
+            metas[qid] = r.meta
             tokens += r.tokens
             used.append(r.readout)
+        if len({r.layout for r in results.values()}) > 1:
+            ctx.layout = "mixed"
         latency = (time.perf_counter() - t0) * 1000.0
-        return {"model": self.model_label(used), "answers": answers,
-                "usage": {"input_tokens": int(tokens), "output_tokens": 0},
-                "tez": {"latency_ms": round(latency, 1), "questions": metas}}
+        response = {"model": self.model_label(used), "answers": answers,
+                    "usage": {"input_tokens": int(tokens), "output_tokens": 0},
+                    "tez": {"latency_ms": round(latency, 1), "questions": metas}}
+        ctx.response, ctx.usage, ctx.latency_ms = response, response["usage"], round(latency, 1)
+        return response
+
+    def backend_ms(self, ctx: DecisionContext) -> float:
+        """Wall time spent in backend calls during a decision (from its traces)."""
+        return round(sum(c.get("ms") or 0.0 for t in ctx.traces.values() for c in t.get("calls", [])), 3)
 
     # ---------------------------------------------------------------------------------- readouts
     def letter_logits(self, q: Question, state: Any, options: list | None = None, shots: list | None = None, *,
@@ -548,8 +632,9 @@ class Tez:
         base = self.data_dir if self.data_dir is not None else schema.base_dir / ".tez"
         return base / "feedback" / f"{schema.name}.jsonl"
 
-    def record_feedback(self, body: Any) -> dict:
-        """Append a corrected label for a past decision to <data-dir>/feedback/<schema>.jsonl (read by tez fit)."""
+    def record_feedback(self, body: Any, *, hooks: Any = None) -> dict:
+        """Append a corrected label for a past decision to <data-dir>/feedback/<schema>.jsonl (read by tez fit).
+        on_feedback hooks see (and may edit) the row before it is written; `run_id` links it to the decision."""
         if not isinstance(body, dict):
             raise InvalidRequest("the request body must be a JSON object")
         name = body.get("schema")
@@ -567,8 +652,14 @@ class Tez:
         if "label" not in body:
             raise InvalidRequest("label is required")
         label = schema.questions[qid].canonical_label(body["label"], allow_none=True)
+        run_id = body.get("run_id")
+        if run_id is not None and (not isinstance(run_id, str) or not 0 < len(run_id) <= 128):
+            raise InvalidRequest("run_id must be the decision's run id (a string of at most 128 characters)")
         row = {"schema": name, "question": qid, "state": state, "label": label,
                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+        if run_id is not None:
+            row["run_id"] = run_id
+        self.hookset(hooks).emit("on_feedback", row)
         path = self.feedback_path(schema)
         with self._feedback_lock:
             path.parent.mkdir(parents=True, exist_ok=True)

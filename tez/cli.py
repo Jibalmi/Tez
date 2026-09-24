@@ -48,13 +48,35 @@ def _layout_arg(p: argparse.ArgumentParser, what: str) -> None:
     p.add_argument("--layout", choices=LAYOUTS, default=None, help=what)
 
 
+def _hook_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--hook", action="append", default=[], metavar="MODULE:OBJECT",
+                   help="load a hook (docs/HOOKS.md): a class is instantiated, a hook instance used as is, a factory "
+                        "called (repeatable; they run in the order given)")
+    p.add_argument("--decision-log", metavar="PATH",
+                   help="append every decision to this JSONL file (rows tez fit reads once labels are filled in)")
+    p.add_argument("--hook-errors", choices=["raise", "log"], default="raise",
+                   help="a hook that raises fails the decision (raise, the default) or is logged and skipped (log)")
+
+
+def _hooks(args: argparse.Namespace) -> list:
+    from .hooks import DecisionLog, load_hook
+    try:
+        hooks = [load_hook(spec) for spec in getattr(args, "hook", None) or []]
+    except (ValueError, TypeError) as exc:
+        raise TezError(str(exc)) from exc
+    if getattr(args, "decision_log", None):
+        hooks.append(DecisionLog(args.decision_log))
+    return hooks
+
+
 def _make_tez(args: argparse.Namespace, schemas: Any = None, layout: str = "auto"):
     from .engine import Tez
     try:
         return Tez(backend=args.backend, template=args.template, schemas=schemas,
                    embed_backend=getattr(args, "embed_backend", None), embed_template=getattr(args, "embed_template", None),
                    cache_prompt=not args.no_cache_prompt, data_dir=getattr(args, "data_dir", None),
-                   model_name=args.model_name, n_probs=args.n_probs, layout=layout)
+                   model_name=args.model_name, n_probs=args.n_probs, layout=layout, hooks=_hooks(args),
+                   hooks_raise=getattr(args, "hook_errors", "raise") == "raise")
     except ValueError as exc:
         raise TezError(str(exc)) from exc
 
@@ -96,7 +118,9 @@ def cmd_serve(args: argparse.Namespace) -> int:
     probes = sum(len(v) for v in tez.probe_index().values())
     print(f"tez {__version__} on http://{args.host}:{args.port}  backend {tez.backend.url} ({tez.template})"
           + (f", embeddings {tez.embedder.url} ({tez.embedder.template})" if tez.embedder is not tez.backend else "")
-          + f", {len(tez.schemas)} schema(s), {probes} probe(s)" + (", API key required" if args.api_key else ""),
+          + f", {len(tez.schemas)} schema(s), {probes} probe(s), layout {tez.layout}"
+          + (f", hooks: {', '.join(type(h).__name__ for h in tez.hooks)}" if tez.hooks else "")
+          + (", API key required" if args.api_key else ""),
           file=sys.stderr, flush=True)
     uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level)
     return 0
@@ -217,6 +241,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--log-level", default="info", choices=["critical", "error", "warning", "info", "debug"])
     _layout_arg(p, "default prompt layout for requests and schemas that name none: auto (state_first for 2+ questions, "
                    "question_first for one), question_first or state_first (default auto)")
+    _hook_args(p)
     p.set_defaults(func=cmd_serve)
 
     p = sub.add_parser("decide", help="decide one state and print the wire-format JSON")
@@ -231,6 +256,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--alpha", type=float, default=None, help="gate: target error rate among acted decisions")
     p.add_argument("--compact", action="store_true", help="one-line JSON")
     _layout_arg(p, "prompt layout (default: the schema's, else auto)")
+    _hook_args(p)
     p.set_defaults(func=cmd_decide)
 
     p = sub.add_parser("fit", help="train probes, temperatures and gate thresholds for a schema")

@@ -7,7 +7,8 @@
     GET  /v1/schemas/{name} one schema: questions, probe status, calibration
     POST /v1/feedback       record a correct label for a past decision
 
-Errors: {"error": {"type": ..., "message": ...}} with 401 (only with an API key), 404, 422 or 503.
+Every response carries x-typesafe-request-id and server-timing; decisions also carry X-Tez-Run-Id (the id hooks see).
+Errors: {"error": {"type": ..., "message": ...}} with 401 (only with an API key), 404, 422, 500 or 503.
 """
 from __future__ import annotations
 
@@ -15,25 +16,61 @@ import hmac
 import inspect
 import json
 import logging
-from typing import Any
+import time
+from typing import Any, Callable
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
+from starlette.datastructures import MutableHeaders
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ._version import __version__
 from .engine import Tez
-from .errors import InvalidRequest, TezError, Unauthorized
+from .errors import InternalError, InvalidRequest, TezError, Unauthorized
+from .hooks import DecisionContext, new_run_id
 
 log = logging.getLogger("tez")
-_HTTP_TYPES = {404: "not_found", 405: "method_not_allowed", 413: "invalid_request", 422: "invalid_request"}
+_HTTP_TYPES = {404: "not_found", 405: "method_not_allowed", 413: "payload_too_large", 422: "invalid_request"}
+EXPOSED_HEADERS = ["x-tez-run-id", "x-typesafe-request-id", "x-tez-layout", "server-timing"]
 
 
 def _error(status: int, type_: str, message: str) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": {"type": type_, "message": message}})
+
+
+class _RequestMeta:
+    """Outermost: every response gets x-typesafe-request-id (a decision's run id, a fresh id for anything else) and
+    server-timing (`total`, plus `tez` and `backend` for decisions); decision endpoints add X-Tez-Run-Id and
+    X-Tez-Layout. The id is in request.state.tez_run_id before the endpoint runs."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+        state = scope.setdefault("state", {})
+        rid = new_run_id()
+        state["tez_run_id"] = rid
+        t0 = time.perf_counter()
+
+        async def send_with_meta(message):
+            if message["type"] == "http.response.start":
+                headers = MutableHeaders(scope=message)
+                headers["x-typesafe-request-id"] = rid
+                timing = list(state.get("tez_timing") or [])
+                timing.append(f"total;dur={(time.perf_counter() - t0) * 1000.0:.1f}")
+                headers["server-timing"] = ", ".join(timing)
+                if state.get("tez_decision"):
+                    headers["x-tez-run-id"] = rid
+                    if state.get("tez_layout"):
+                        headers["x-tez-layout"] = state["tez_layout"]
+            await send(message)
+
+        return await self.app(scope, receive, send_with_meta)
 
 
 class _PrivateNetworkAccess:
@@ -70,11 +107,12 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
 
     if cors:
         kwargs: dict[str, Any] = dict(allow_origins=["*"], allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"],
-                                      expose_headers=["*"], max_age=600)
+                                      expose_headers=EXPOSED_HEADERS, max_age=600)
         if "allow_private_network" in inspect.signature(CORSMiddleware.__init__).parameters:
             kwargs["allow_private_network"] = True     # otherwise Starlette rejects a preflight that asks for it
         app.add_middleware(CORSMiddleware, **kwargs)
-        app.add_middleware(_PrivateNetworkAccess)       # outermost, so it also sees the preflights CORS answers
+        app.add_middleware(_PrivateNetworkAccess)       # outside CORS, so it also sees the preflights CORS answers
+    app.add_middleware(_RequestMeta)                    # outermost: every response, preflights included
 
     @app.exception_handler(TezError)
     async def _tez_error(request: Request, exc: TezError):
@@ -110,6 +148,26 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise InvalidRequest(f"the request body is not valid JSON ({exc.__class__.__name__})") from exc
 
+    async def call(fn: Callable, *args: Any, **kwargs: Any) -> Any:
+        """Run an engine call in the thread pool. A failure that is not a TezError (a hook raising, say) becomes a
+        500 internal_error answered inside the app, so it still carries CORS and request-id headers."""
+        try:
+            return await run_in_threadpool(fn, *args, **kwargs)
+        except TezError:
+            raise
+        except Exception as exc:
+            log.exception("unexpected error in %s", getattr(fn, "__name__", fn))
+            raise InternalError(f"{exc.__class__.__name__}: {exc}") from exc
+
+    def decided(request: Request, ctx: DecisionContext) -> dict:
+        request.state.tez_decision = True
+        request.state.tez_layout = ctx.layout
+        timing = [f"tez;dur={ctx.latency_ms or 0.0:.1f}"]
+        if ctx.traces:
+            timing.append(f"backend;dur={tez.backend_ms(ctx):.1f}")
+        request.state.tez_timing = timing
+        return ctx.response
+
     @app.get("/", include_in_schema=False)
     def index():
         return {"name": "tez", "version": __version__,
@@ -121,16 +179,18 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
         """Decide one state against many typed questions (Jev's wire format; Tez extensions in `schema` and `tez`)."""
         authorize(request)
         body = await read_json(request)
-        return await run_in_threadpool(tez.handle, body)
+        request.state.tez_decision = True
+        ctx = await call(tez.execute, body, run_id=request.state.tez_run_id)
+        return decided(request, ctx)
 
     @app.get("/v1/models")
     async def models(request: Request):
         authorize(request)
-        return await run_in_threadpool(tez.models)
+        return await call(tez.models)
 
     @app.get("/healthz")
     async def healthz():
-        return await run_in_threadpool(tez.health)
+        return await call(tez.health)
 
     @app.get("/v1/schemas")
     async def schemas(request: Request):
@@ -146,6 +206,6 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
     async def feedback(request: Request):
         authorize(request)
         body = await read_json(request)
-        return await run_in_threadpool(tez.record_feedback, body)
+        return await call(tez.record_feedback, body)
 
     return app
