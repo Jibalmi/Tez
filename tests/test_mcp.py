@@ -124,8 +124,8 @@ def test_mcp_server_wiring(tools):
     assert json.loads(content_of(out)[0].text)["answers"]["topic"]["choice"] == "technical"
     try:
         failed = asyncio.run(server.call_tool("tez_decide", {"state": "x", "schema": "nope"}))
-    except Exception as exc:                        # the SDK raises the tool's error ...
-        message = f"{exc} {exc.__cause__}"
+    except Exception as exc:                        # the SDK raises the tool's error (its text is what the client gets) ...
+        message = str(exc)
     else:                                           # ... or returns it as an error result
         assert field(failed, "is_error", "isError")
         message = content_of(failed)[0].text
@@ -151,9 +151,12 @@ def test_stdio_transport(schema_dir):
                 result = await session.call_tool("tez_decide", {"state": "Help! My payouts have been failing",
                                                                 "schema": "support-triage", "alpha": 0.05})
                 status = await session.call_tool("tez_status", {})
-                return names, result, status
+                failed = await session.call_tool("tez_decide", {"state": "x", "schema": "nope"})
+                return names, result, status, failed
 
-    names, result, status = asyncio.run(asyncio.wait_for(session_run(), timeout=60))
+    names, result, status, failed = asyncio.run(asyncio.wait_for(session_run(), timeout=60))
+    assert field(failed, "is_error", "isError")                  # Tez's error type and message reach the client
+    assert "invalid_request: unknown schema 'nope'" in content_of(failed)[0].text
     assert "tez_decide" in names and not field(result, "is_error", "isError")
     body = json.loads(content_of(result)[0].text)
     assert body["answers"]["topic"]["choice"] == "billing"

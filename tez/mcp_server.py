@@ -131,9 +131,22 @@ def _server_class() -> Any:
         raise ImportError('the Tez MCP server needs the MCP SDK: pip install "tez-decisions[mcp]"') from exc
 
 
+def _tool_error_class(server_class: Any) -> Any:
+    """The SDK's ToolError, from the package of its server class. mcp 2.x passes only a ToolError's message on to the
+    client (any other exception reaches it as "Error executing tool <name>", nothing more); 1.x passes on any exception's
+    message, after "Error executing tool <name>: "."""
+    import importlib
+    package = server_class.__module__.rsplit(".", 1)[0]
+    try:
+        return importlib.import_module(f"{package}.exceptions").ToolError
+    except (ImportError, AttributeError):
+        return RuntimeError
+
+
 def build_server(tools: TezTools) -> Any:
     """The MCP server around the tools (imports the MCP SDK, 1.x or 2.x)."""
     FastMCP = _server_class()               # noqa: N806 - a class chosen at run time
+    ToolError = _tool_error_class(FastMCP)  # noqa: N806
     from typing import Annotated, Literal, Optional, Union
 
     from pydantic import Field
@@ -145,7 +158,7 @@ def build_server(tools: TezTools) -> Any:
             try:
                 return fn(*args, **kwargs)
             except TezError as exc:          # the tool result carries the wire format's error type and message
-                raise RuntimeError(f"{exc.type}: {exc.message}") from exc
+                raise ToolError(f"{exc.type}: {exc.message}") from exc
         return run
 
     State = Union[str, dict, list]          # noqa: N806 - a type alias
