@@ -12,8 +12,9 @@ from email.parser import Parser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ("tez/__init__.py", "tez/cli.py", "tez/server.py", "tez/integrations/__init__.py",
-            "tez/integrations/langchain.py", "tez/integrations/remote.py")
+REQUIRED = ("tez/__init__.py", "tez/cli.py", "tez/server.py", "tez/hooks.py", "tez/integrations/__init__.py",
+            "tez/integrations/langchain.py", "tez/integrations/remote.py", "tez/presets/__init__.py",
+            "tez/presets/support-triage.yaml", "tez/presets/prompt-injection-guard.yaml")
 EXTRAS = ("fit", "truncate", "langchain", "otel", "mcp", "all")
 
 

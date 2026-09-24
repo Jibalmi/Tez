@@ -16,6 +16,11 @@ docs/paper/build*.log
 *.tmp
 INVALID_*
 
+# python -m build outputs
+/build/
+/dist/
+*.egg-info/
+
 # feature caches (large binaries)
 *.npy
 *.npz

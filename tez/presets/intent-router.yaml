@@ -1,0 +1,48 @@
+# Tez schema (format: docs/API.md, "Schema files"). Gallery example for a digital-banking assistant.
+# More than 26 options: zero-shot letters run a chunked tournament (several passes); a trained probe answers in one pass.
+name: intent-router
+description: Send each assistant request to one of many intents or tools, and flag whether it needs the user's own account.
+state: "One user request to an in-app assistant, as text."
+questions:
+  intent:
+    type: choice
+    instructions: Which intent or tool should handle this request?
+    criteria:
+      card_not_arrived: A new or replacement card has not arrived yet.
+      activate_card: How to activate a card that has arrived.
+      card_lost_or_stolen: The card is lost, stolen or may be compromised.
+      card_payment_declined: A card payment was declined or failed.
+      card_payment_not_recognised: A card payment the user does not recognise.
+      contactless_not_working: Contactless or tap-to-pay does not work.
+      change_pin: Change, reset or unblock the card PIN.
+      atm_cash_problem: An ATM withdrawal went wrong, such as no cash or the wrong amount.
+      top_up_failed: Adding money to the account failed.
+      top_up_pending: A top-up is still pending or has not arrived.
+      transfer_not_received: A sent transfer has not reached the recipient.
+      transfer_failed: A transfer failed or came back.
+      cancel_transfer: Cancel a transfer that was already sent.
+      add_payee: Add, edit or trust a payee or beneficiary.
+      exchange_rate: The exchange rate applied or offered.
+      fee_question: Why a fee was charged, or what a service costs.
+      refund_not_showing: A merchant refund has not appeared yet.
+      request_refund: The user wants money back from a merchant.
+      direct_debit_issue: An unknown, failed or wrong direct debit.
+      verify_identity: Identity checks, documents or selfie verification.
+      update_personal_details: Change name, address, phone number or email.
+      close_account: Close the account.
+      statement_request: A statement, proof of balance or transaction export.
+      balance_not_updated: The balance did not update after a transfer or deposit.
+      mobile_wallet: Apple Pay, Google Pay or paying with a phone or watch.
+      virtual_card: Create or use a virtual or disposable card.
+      spending_limits: Card or account limits and how to change them.
+      savings_interest: Savings accounts, interest rates or savings pots.
+      fraud_or_scam: The user thinks they were scammed or someone else used their account.
+      app_login_problem: Cannot log in to the app, passcode or new-device problems.
+      talk_to_human: The user asks for a person or an agent.
+      other: None of the above.
+  needs_account_access:
+    type: noul
+    instructions: Does handling this request require looking at or changing the user's own account, cards or transactions?
+    criteria:
+      "true": The request is about the user's own money, cards, payments or personal data.
+      "false": A general question that public product information can answer.

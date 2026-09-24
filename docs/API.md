@@ -232,8 +232,10 @@ Python: `Tez.decide_many(states, questions=None, schema=None, ...)` returns the 
 
 ```json
 {"schemas": [{"name": "support-triage", "description": "...", "questions": {"topic": "choice", "is_urgent": "noul"},
-              "calibration_id": "support-triage@2026-09-24", "probes": ["topic"]}]}
+              "calibration_id": "support-triage@2026-09-24", "probes": ["topic"], "builtin": false}]}
 ```
+
+`builtin` is true for a preset loaded with `tez serve --presets` (see "Presets").
 
 One schema returns its questions in wire form plus `layout` (the schema's own, or null), `served_layout` (what a
 request that names none gets), `calibration_id`, `probes` (per question: `probe` = `ready`, `stale` or `none`,
@@ -306,8 +308,23 @@ examples:              # optional labelled rows: the first 4 per question (26 op
 ```
 
 Trained artefacts live next to the schema in `schemas/.tez/<name>/`: `probes.npz` (per-question logistic weights on
-the embedding backend's features), `calibration.json` (temperature per question, conformal thresholds per alpha),
-and `manifest.json` (backend, template, layer/cut, label counts, date).
+the embedding backend's features), `calibration.json` (temperature per question, conformal thresholds per alpha,
+the layout it was fitted under), and `manifest.json` (backend, template, layer/cut, label counts, date).
+
+### Presets
+
+The ten worked use cases of `examples/usecases/` ship inside the package as ready-made schemas: `agent-trace-review`,
+`intent-router`, `invoice-routing`, `multilingual-intent`, `passage-check`, `prompt-injection-guard`,
+`security-triage`, `support-triage`, `topic-news` and `voice-commands`.
+
+- `tez serve --presets` loads all of them next to `--schemas` (a schema of your own with the same name wins); they are
+  listed with `"builtin": true`.
+- `tez decide "My card was declined" --preset intent-router` decides with one; `tez presets` lists them and
+  `tez presets --show NAME` prints one.
+- Python: `tez.presets.names()`, `tez.presets.load(name)` (a `Schema`), `Tez.add_presets()`.
+
+A preset is zero-shot: it never loads fitted artefacts and `tez fit` refuses it. To fit one, copy it into your schema
+directory first (`tez presets --show support-triage > schemas/support-triage.yaml`).
 
 ## Readouts
 

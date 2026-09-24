@@ -1,0 +1,19 @@
+# Tez schema (format: docs/API.md, "Schema files"). Gallery example: one decision per retrieved passage.
+name: passage-check
+description: Filter retrieved passages before they reach the answer step of a RAG pipeline.
+state: "An object with the user's `question` and one retrieved `passage`."
+questions:
+  answers_question:
+    type: noul
+    instructions: Does `passage` contain the information needed to answer `question`?
+    criteria:
+      "true": The passage states the answer, or facts that directly give it, even if the answer is "no".
+      "false": The passage is off-topic or only related, or it leaves the question open.
+  relevance:
+    type: score
+    instructions: How useful is `passage` for answering `question`?
+    criteria:
+      - "Unrelated: a different topic."
+      - "Related: the same topic, but no answer."
+      - "Partial: part of the answer, or an answer that needs another source to confirm."
+      - "Complete: the passage answers the question on its own."

@@ -39,6 +39,9 @@ tez = "tez.cli:main"
 [tool.setuptools.packages.find]
 include = ["tez", "tez.*"]
 
+[tool.setuptools.package-data]
+"tez.presets" = ["*.yaml"]      # the ten use-case schemas (tez.presets), copies of examples/usecases/*/schema.yaml
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

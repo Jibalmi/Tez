@@ -1,4 +1,4 @@
-"""Command line: tez serve | decide | fit | suggest | eval | truncate."""
+"""Command line: tez serve | decide | fit | suggest | eval | presets | truncate."""
 from __future__ import annotations
 
 import argparse
@@ -124,6 +124,8 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
     from .server import create_app
     tez = _make_tez(args, schemas=args.schemas, layout=args.layout or "auto")
+    if args.presets:
+        tez.add_presets()
     limits = Limits(*(v or None for v in (args.max_body_bytes, args.max_questions, args.max_state_chars, args.max_batch)))
     app = create_app(tez, api_key=args.api_key, cors=not args.no_cors, limits=limits)
     probes = sum(len(v) for v in tez.probe_index().values())
@@ -138,13 +140,16 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
 
 def cmd_decide(args: argparse.Namespace) -> int:
+    from . import presets
     from .schema import load_schema
-    if not args.schema and not args.questions:
-        raise TezError("give --schema FILE and/or --questions FILE")
+    if not args.schema and not args.preset and not args.questions:
+        raise TezError("give --schema FILE, --preset NAME and/or --questions FILE")
+    if args.schema and args.preset:
+        raise TezError("give --schema or --preset, not both")
     given = [x for x in (args.text, args.state, args.state_file, args.states_file) if x is not None]
     if len(given) != 1:
         raise TezError("give the state once: as TEXT, --state, --state-file or --states-file")
-    schema = load_schema(args.schema) if args.schema else None
+    schema = load_schema(args.schema) if args.schema else (presets.load(args.preset) if args.preset else None)
     questions = None
     if args.questions:
         try:
@@ -256,6 +261,19 @@ def cmd_eval(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_presets(args: argparse.Namespace) -> int:
+    from . import presets
+    if args.show:
+        sys.stdout.write(presets.text(args.show))
+        return 0
+    rows = [["preset", "questions", "description"]]
+    for s in presets.load_all():
+        kinds = ", ".join(f"{qid} ({q.type})" for qid, q in s.questions.items())
+        rows.append([s.name, kinds, s.description])
+    print(_table(rows))
+    return 0
+
+
 def cmd_truncate(args: argparse.Namespace) -> int:
     from .truncate import truncate_gguf
     info = truncate_gguf(args.src, args.n, args.dst)
@@ -273,6 +291,8 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("serve", help="run the HTTP server (Jev-compatible /v1/systemone)")
     _backend_args(p)
     p.add_argument("--schemas", help="directory of *.yaml schemas (trained artefacts in <dir>/.tez/)")
+    p.add_argument("--presets", action="store_true",
+                   help="also load the built-in presets (tez presets); a schema of the same name in --schemas wins")
     p.add_argument("--data-dir", help="where POST /v1/feedback writes (default: <schemas>/.tez)")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8787)
@@ -295,6 +315,7 @@ def build_parser() -> argparse.ArgumentParser:
     _backend_args(p)
     p.add_argument("text", nargs="?", help="the state as text (or use --state, --state-file or --states-file)")
     p.add_argument("--schema", help="schema YAML file (its fitted probes and calibration are used)")
+    p.add_argument("--preset", metavar="NAME", help="a built-in preset schema (tez presets lists them)")
     p.add_argument("--questions", help="JSON file with Jev questions ({id: {type, instructions, criteria}})")
     g = p.add_mutually_exclusive_group()
     g.add_argument("--state", help="the state as text")
@@ -346,6 +367,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", help="also write the results as JSON")
     _layout_arg(p, "prompt layout (default: the schema's, else auto for a request with all of its questions)")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("presets", help="list the built-in preset schemas, or print one (--show NAME)")
+    p.add_argument("--show", metavar="NAME", help="print this preset's YAML (redirect it into a schema file to fit it)")
+    p.set_defaults(func=cmd_presets)
 
     p = sub.add_parser("truncate", help="keep the first N transformer blocks of a GGUF (needs the gguf package)")
     p.add_argument("src", help="input .gguf")

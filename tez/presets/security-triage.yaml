@@ -1,0 +1,32 @@
+# Tez schema (format: docs/API.md, "Schema files"). Gallery example: a first pass before an analyst, not a replacement.
+name: security-triage
+description: First-pass triage of security alerts from endpoint, identity, cloud and email tools before an analyst picks them up.
+state: "One security alert as a JSON object: the rule that fired, the evidence, the account or host involved, and context such as asset criticality and change windows."
+questions:
+  category:
+    type: choice
+    instructions: What kind of activity does this alert describe?
+    criteria:
+      malware: Malicious or suspicious code running on, or found on, an endpoint.
+      credential_abuse: Stolen or misused credentials, suspicious sign-ins, MFA fatigue or impossible travel.
+      data_exfiltration: Unusual transfer or download of data out of the organisation.
+      phishing: A malicious email, link or attachment that was delivered or reported.
+      misconfiguration: A risky change to cloud, network or access settings.
+      benign_activity: Expected, explainable activity such as an approved admin task or an authorised scanner.
+  severity:
+    type: score
+    instructions: How severe is the potential impact if this alert is real?
+    criteria:
+      - "Negligible: no access to anything sensitive."
+      - "Low: limited access, easily reversed."
+      - "Moderate: internal systems or non-public data."
+      - "High: production systems, secrets, employee or customer data."
+      - "Critical: active compromise of crown-jewel systems."
+  escalate:
+    type: noul
+    instructions: Should the on-call analyst look at this alert now instead of leaving it in the queue?
+    criteria:
+      "true": Plausibly malicious and touching sensitive assets, or an attack may still be in progress.
+      "false": Benign, already contained, or low impact; the normal queue is fine.
+gate:
+  alpha: 0.05   # conformal gate (docs/API.md): needs a fitted schema (tez fit); answers then carry act or escalate

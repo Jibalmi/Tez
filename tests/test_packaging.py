@@ -214,6 +214,17 @@ def test_version_check():
     assert check.main([f"v{__version__}"]) == 0 and check.main(["v99.0.0"]) == 1
 
 
+def test_presets_are_package_data():
+    tomllib = pytest.importorskip("tomllib")
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["setuptools"]
+    assert config["package-data"]["tez.presets"] == ["*.yaml"]
+    assert "tez.*" in config["packages"]["find"]["include"]
+    shipped = sorted(p.name for p in (ROOT / "tez" / "presets").glob("*.yaml"))
+    assert len(shipped) == 10
+    required = load_script("scripts/check_dist.py").REQUIRED
+    assert "tez/presets/__init__.py" in required and any(r.startswith("tez/presets/") and r.endswith(".yaml") for r in required)
+
+
 def test_extras():
     tomllib = pytest.importorskip("tomllib")
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]

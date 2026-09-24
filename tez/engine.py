@@ -179,6 +179,19 @@ class Tez:
             self.reload_fitted(name)
         return list(loaded)
 
+    def add_presets(self, names: Any = None) -> list[str]:
+        """Load the built-in presets (tez.presets; all of them by default). A preset whose name is already loaded is
+        skipped: your own schema of that name wins. Returns the names added."""
+        from . import presets
+        wanted = presets.names() if names is None else list(names)
+        added = []
+        for name in wanted:
+            if name in self.schemas:
+                log.info("preset %s skipped: a schema of that name is already loaded", name)
+                continue
+            added += self.add_schemas(presets.load(name))
+        return added
+
     def reload_fitted(self, name: str) -> Fitted | None:
         schema = self.schemas[name]
         self.fitted.pop(name, None)
