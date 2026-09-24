@@ -253,6 +253,18 @@ def test_redact_patterns():
         Redact(["(unclosed"])
 
 
+@pytest.mark.parametrize("kind", ["letters", "dotted", "digits", "iban-like", "spaced-digits", "parentheses"])
+def test_redact_is_linear_on_long_runs(kind):
+    """A server state can be 50,000 characters of anything: no pattern may backtrack quadratically (the email pattern
+    once took seconds on a run of letters)."""
+    import time
+    text = {"letters": "a" * 50_000, "dotted": "a." * 25_000, "digits": "1" * 50_000 + "x",
+            "iban-like": "DE" + "1" * 50_000, "spaced-digits": "1 " * 25_000 + "x", "parentheses": "(" * 50_000}[kind]
+    t0 = time.perf_counter()
+    Redact().redact(text)
+    assert time.perf_counter() - t0 < 1.0
+
+
 def test_redact_runs_before_the_model_reads_the_state():
     fb = FakeBackend()
     Tez(backend=fb, hooks=[Redact(["email"])]).decide("Write to ana@example.com", questions={"q": QUESTIONS["is_urgent"]})

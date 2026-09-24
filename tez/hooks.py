@@ -280,8 +280,12 @@ def _luhn(digits: str) -> bool:
     return total % 10 == 0
 
 
+# Every pattern runs over untrusted text (up to tez serve's 50,000-character states), so each is linear: a match can only
+# start at the beginning of a run (the lookbehinds) and every repeat is bounded (an address's local part is at most 64
+# characters, a domain label 63). Without that, a long run of letters costs quadratic backtracking in the email pattern.
 _BUILTIN = {
-    "email": (re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}"), None),
+    "email": (re.compile(r"(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63}){0,8}"
+                         r"\.[A-Za-z]{2,24}(?![A-Za-z])"), None),
     "iban": (re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,4})?\b"), None),
     "card": (re.compile(r"(?<![\w-])\d(?:[ -]?\d){12,18}(?![\w-])"), lambda s: _luhn(re.sub(r"\D", "", s))),
     "phone": (re.compile(r"(?<![\w+])\+?\(?\d[\d ().-]{7,}\d(?!\w)"), lambda s: 9 <= len(re.sub(r"\D", "", s)) <= 15),
