@@ -3,8 +3,14 @@
 Letter probabilities read at temperature 1 are overconfident on most tasks. For the model and prompt template listed
 in DEFAULTS, one temperature per question type was fitted on 13,610 labelled decisions from 19 tasks and checked
 leave-one-task-out (results/calibration/default_temperature.md): mean expected calibration error 0.218 -> 0.132 and
-NLL 2.16 -> 0.92, with no answer changed. Easy tasks read under-confident until they are fitted. Any other model or
-template keeps temperature 1, since nothing was measured for it.
+NLL 2.16 -> 0.92. Easy tasks read under-confident until they are fitted. Any other model or template keeps temperature
+1, since nothing was measured for it.
+
+What a default temperature (all of them above 1) changes: no argmax ever changes, so a choice's `choice` and a score's
+most probable level stay the same. Everything read from the probabilities moves: a yes/no probability moves towards
+0.5 without crossing it, a choice's `confidence` drops, and a score's expected level (`score` = sum of i * p_i over the
+tempered probabilities) moves towards the middle of the scale (two separate peaks can first pull it outwards). Callers
+that need an integer level take the argmax of `probabilities`, or switch the default off.
 
 A choice question's bucket is the number of options it actually showed the model, __none__ included; a tournament
 counts the finalists of its last round.

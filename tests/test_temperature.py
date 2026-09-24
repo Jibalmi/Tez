@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from tez import Tez
+from tez import FakeBackend, Tez
 from tez.cli import build_parser
 from tez.readout import fit_temperature_logits
 from tez.temperature import CHOICE_SPLIT, parse, pick, table_for
@@ -57,7 +57,7 @@ def test_unfitted_answers_are_tempered_for_the_measured_model_only():
 
     assert other["answers"] == raw["answers"] and "temperature" not in other["tez"]["questions"]["topic"]
     a, b = raw["answers"]["topic"], tempered["answers"]["topic"]
-    assert a["choice"] == b["choice"]                                        # the answer never changes
+    assert a["choice"] == b["choice"]                                        # the argmax never changes
     assert max(b["probabilities"].values()) < max(a["probabilities"].values())
     assert b["confidence"] < a["confidence"]
     assert tempered["tez"]["questions"]["topic"]["temperature"] == 4.71
@@ -65,6 +65,24 @@ def test_unfitted_answers_are_tempered_for_the_measured_model_only():
     # yes/no moves towards 0.5 without crossing it
     assert (raw["answers"]["urgent"]["noul"] - 0.5) * (tempered["answers"]["urgent"]["noul"] - 0.5) > 0
     assert abs(tempered["answers"]["urgent"]["noul"] - 0.5) <= abs(raw["answers"]["urgent"]["noul"] - 0.5)
+
+
+def test_a_score_keeps_its_most_probable_level_while_its_expected_level_moves_towards_the_middle():
+    """What docs/API.md ("Default temperature") says: the argmax stays, `score` (the expected level over the tempered
+    probabilities it is returned with) moves towards the middle of the scale."""
+    q = {"severity": {"type": "score", "instructions": "How severe is the incident?",
+                      "criteria": ["none", "low", "medium", "high", "critical"]}}
+
+    def engine(mode):
+        backend = FakeBackend(model=GEMMA, letters_fn=lambda prompt, k: [-1.0 * i for i in range(k)])
+        return Tez(backend=backend, default_temperature=mode)
+
+    raw = engine("off").decide(STATE, questions=q)["answers"]["severity"]
+    tempered = engine("auto").decide(STATE, questions=q)["answers"]["severity"]
+    top = [max(a["probabilities"], key=a["probabilities"].get) for a in (raw, tempered)]
+    assert top == ["0", "0"]                                                  # the most probable level stays
+    assert raw["score"] < tempered["score"] < 2                               # the expected level moves to the middle
+    assert tempered["score"] == pytest.approx(sum(int(k) * p for k, p in tempered["probabilities"].items()))
 
 
 def test_a_fixed_default_temperature_applies_to_any_model():

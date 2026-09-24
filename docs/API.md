@@ -152,9 +152,21 @@ Letter probabilities read at temperature 1 are overconfident on most tasks. For 
 template, a letters answer that no fit calibrates is read at a default temperature per question type: yes/no 6.01,
 choice with up to 10 options shown 4.71, choice with more (a tournament counts its finalists) 2.66, score 5.18. They
 were fitted on 13,610 labelled decisions from 19 tasks and checked leave-one-task-out: mean expected calibration error
-0.218 to 0.132, NLL 2.16 to 0.92, and no answer changes, only its probabilities and `confidence`
-(`results/calibration/default_temperature.md`). Easy questions read under-confident until they are fitted; the gate
-is unaffected, because it only acts on fitted questions. Any other model or template is read at temperature 1.
+0.218 to 0.132, NLL 2.16 to 0.92 (`results/calibration/default_temperature.md`).
+
+No argmax changes: the most probable option or level was the same on all 13,610 decisions, and a temperature never
+reorders them. The numbers around it do move, since all of them are read from the tempered probabilities:
+
+- a yes/no probability (`noul`) moves towards 0.5 without crossing it;
+- a choice's `probabilities` flatten and its `confidence` drops;
+- a score's expected level (`score` = Σ i·p_i) moves towards the middle of the scale while its most probable level
+  stays the same (as the probabilities flatten; a score whose probabilities have two separate peaks can first move
+  outwards).
+
+Where you need an integer level, take the most probable level (the argmax of `probabilities`), or run with
+`--default-temperature off`. The `tez` block carries `temperature` for every answer read at a default. Easy questions
+read under-confident until they are fitted; the gate is unaffected, because it only acts on fitted questions. Any other
+model or template is read at temperature 1.
 `--default-temperature off` (env `TEZ_DEFAULT_TEMPERATURE`) restores temperature 1, and a number sets one temperature
 for every unfitted question. `tez fit` centres its temperature search on the same default, which makes a handful of
 labels help rather than hurt.
