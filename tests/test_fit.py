@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 
 from conftest import FILLER, SYNTH_SCHEMA_YAML, TOPICS, VOCAB, synth_rows, synth_state, write_jsonl
+from stub_llama import StubLlama
 from tez import FakeBackend, InvalidRequest, Tez
 from tez.artifacts import load_artifacts, save_artifacts
 from tez.fit import collect_rows, evaluate, fit, suggest
@@ -144,6 +145,38 @@ def test_edited_schema_makes_the_fit_stale(fitted, tmp_path):
     assert res["tez"]["questions"]["topic"] == {"readout": "letters", "layout": "state_first"}
     with pytest.raises(InvalidRequest, match="prompt changed"):
         tez.decide("invoice refund", schema="synth", readout="probe")
+
+
+def test_a_fit_made_at_one_n_probs_is_stale_at_another(tmp_path):
+    d = tmp_path / "schemas"
+    d.mkdir()
+    (d / "tri.yaml").write_text('name: tri\nquestions:\n  topic: {type: choice, instructions: "Topic?", '
+                                'criteria: {billing: null, technical: null, sales: null}}\n', encoding="utf-8")
+    labels = write_jsonl(tmp_path / "labels.jsonl", [{"state": f"s{i}", "labels": {"topic": ["billing", "technical"][i % 2]}}
+                                                     for i in range(30)])
+    with StubLlama() as stub:
+        schema = load_schema(d / "tri.yaml")
+        cal = fit(Tez(backend=stub.url, schemas=[schema]), schema, [labels], min_labels=1000, **QUIET)
+        assert cal["questions"]["topic"]["letters"]["n_probs"] == 200
+        same = Tez(backend=stub.url, schemas=d)
+        assert same.schema_detail("tri")["probes"]["topic"]["letters_calibrated"] is True
+        assert "calibration_id" in same.decide("anything", schema="tri")["tez"]["questions"]["topic"]
+
+        other = Tez(backend=stub.url, schemas=d, n_probs=1)          # letters past the first read the floor
+        detail = other.schema_detail("tri")["probes"]["topic"]
+        assert detail["letters_calibrated"] is False and "n_probs" in detail["note"]
+        fit_status = other.plan({"schema": "tri"})["questions"]["topic"]["fit"]
+        assert fit_status["status"] == "stale" and "n_probs" in fit_status["reason"]
+        meta = other.decide("anything", schema="tri", alpha=0.3)["tez"]["questions"]["topic"]
+        assert "calibration_id" not in meta and meta["decision"] == "escalate"
+
+        path = d / ".tez" / "tri" / "calibration.json"                   # a fit from before n_probs was recorded
+        data = json.loads(path.read_text(encoding="utf-8"))
+        del data["questions"]["topic"]["letters"]["n_probs"]
+        path.write_text(json.dumps(data), encoding="utf-8")
+        assert Tez(backend=stub.url, schemas=d).schema_detail("tri")["probes"]["topic"]["letters_calibrated"] is True
+        assert Tez(backend=stub.url, schemas=d, n_probs=1).schema_detail("tri")["probes"]["topic"]["letters_calibrated"] \
+            is False
 
 
 def test_other_model_does_not_use_the_calibration(fitted):

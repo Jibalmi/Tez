@@ -143,8 +143,9 @@ the schema default; any other alpha uses the largest precomputed value at or bel
 
 `tez.readout: "probe"` is strict: a request fails with 422 if a requested question has no usable probe. `auto` falls
 back to letters question by question. A fit is used only while the question's prompt (instructions, options,
-few-shot examples, template, layout) and the model still match what `tez fit` saw; otherwise the question falls back
-to uncalibrated letters and `GET /v1/schemas/{name}` marks it `stale`.
+few-shot examples, template, layout), the model and `--n-probs` still match what `tez fit` saw; otherwise the question
+falls back to uncalibrated letters and `GET /v1/schemas/{name}` and `/v1/plan` mark it `stale` with the reason (a fit
+made before `n_probs` was recorded counts as the default, 200).
 
 ### Default temperature
 
@@ -577,7 +578,8 @@ examples:              # optional labelled rows: the first 4 per question (26 op
 
 Trained artefacts live next to the schema in `schemas/.tez/<name>/`: `probes.npz` (per-question logistic weights on
 the embedding backend's features), `calibration.json` (temperature per question, conformal thresholds per alpha,
-the layout it was fitted under), and `manifest.json` (backend, template, layer/cut, label counts, date).
+the layout it was fitted under, the letters' `n_probs`), and `manifest.json` (backend, template, `n_probs`, layer/cut,
+label counts, date).
 
 ### Presets
 
@@ -604,7 +606,8 @@ directory first (`tez presets --show support-triage > schemas/support-triage.yam
 
 Letters are answered with a single option letter (layouts above); more than 26 options run as a chunked tournament. A
 letter outside the top `n_probs` next-token log-probabilities gets a floor (the smallest listed log-probability
-minus 2); `--n-probs` changes how many are asked for (default 200, the measured setting). Hybrid Qwen3.5 GGUFs need
+minus 2); `--n-probs` changes how many are asked for (default 200, the measured setting), and a letters calibration
+fitted at another `n_probs` is not used (`stale`). Hybrid Qwen3.5 GGUFs need
 prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically when the model name matches Qwen3.5;
 `--no-cache-prompt` forces it).
 

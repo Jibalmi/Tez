@@ -213,6 +213,12 @@ class Tez:
     def __repr__(self) -> str:
         return f"Tez(backend={self.backend!r}, schemas={sorted(self.schemas)})"
 
+    @property
+    def n_probs(self) -> int:
+        """How many next-token log-probabilities a letter readout reads: the backend's setting (200 for a backend
+        without one). A letters calibration is valid only at the n_probs it was fitted with."""
+        return int(getattr(self.backend, "n_probs", DEFAULT_N_PROBS))
+
     # ---------------------------------------------------------------------------------- hooks
     def add_hook(self, hook: Any) -> Tez:
         """Install one hook (or a list) after the engine's current ones. Returns the engine."""
@@ -297,6 +303,9 @@ class Tez:
                 reasons.append(f"letters were calibrated with the {fq.letters.template} template")
             elif fq.letters.prompt_sha != fingerprint(sq, self.backend.template, sq.options(), shots, fq.letters.layout):
                 reasons.append("the prompt changed since tez fit (instructions, options or examples)")
+            elif fq.letters.n_probs != self.n_probs:
+                reasons.append(f"letters were calibrated reading {fq.letters.n_probs} log-probabilities (n_probs), "
+                               f"the engine reads {self.n_probs}")
             else:
                 out["letters"] = True
         if fq.probe is not None and fq.probe_cal is not None:
@@ -304,6 +313,9 @@ class Tez:
                 reasons.append(f"the probe was fitted with the {fq.probe_cal.template} template")
             elif fq.probe_cal.prompt_sha != fingerprint(sq, self.embedder.template, sq.options(), shots, fq.probe_cal.layout):
                 reasons.append("the probe prompt changed since tez fit (instructions, options or examples)")
+            elif fq.blend and fq.letters is not None and fq.letters.n_probs != self.n_probs:
+                reasons.append(f"the probe blends letters read with n_probs {fq.letters.n_probs}, the engine reads "
+                               f"{self.n_probs}")
             else:
                 out["probe"] = True
         out["reason"] = "; ".join(dict.fromkeys(reasons)) or fq.note

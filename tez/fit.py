@@ -292,6 +292,7 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
             m = _measure(softmax_rows(Zl[cal_idx], t_letters), y[cal_idx], alphas)
             raw = softmax_rows(Zl[cal_idx], 1.0)
             entry["letters"] = {"model": letters_model, "template": tez.backend.template, "layout": layout,
+                                "n_probs": tez.n_probs,
                                 "prompt_sha": fingerprint(q, tez.backend.template, q.options(), shots, layout),
                                 "temperature": round(t_letters, 4), "n_fit": int(len(fit_idx)), "n_held_out": int(len(cal_idx)),
                                 "accuracy": m["accuracy"], "ece": m["ece"],
@@ -350,7 +351,7 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
                    "questions": questions}
     manifest = {"schema": schema.name, "calibration_id": cal_id, "created": created, "tez_version": __version__,
                 "backend": tez.backend.url, "template": tez.backend.template, "model": letters_model, "layout": layout,
-                "embed_backend": tez.embedder.url, "embed_template": tez.embedder.template, "embed_model": embed_model,
+                "n_probs": tez.n_probs, "embed_backend": tez.embedder.url, "embed_template": tez.embedder.template, "embed_model": embed_model,
                 "embed_dim": embed_dim, "layer": "last-token state (llama-server --embeddings --pooling last)",
                 "cut": _cut(embed_model), "label_counts": counts, "sources": data.sources, "problems": dict(data.problems),
                 "probes": list(probes), "skipped": skipped,

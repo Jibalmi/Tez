@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 
+from .backends import DEFAULT_N_PROBS
 from .readout import Probe
 
 log = logging.getLogger("tez")
@@ -30,6 +31,7 @@ class ReadoutCal:
     thresholds: dict
     info: dict = field(default_factory=dict)
     layout: str = "question_first"      # the prompt layout the fit read (fits made before layouts: question_first)
+    n_probs: int = DEFAULT_N_PROBS      # letters: log-probabilities read per call (fits made before it was recorded: 200)
 
     @classmethod
     def from_json(cls, d: dict | None) -> "ReadoutCal | None":
@@ -37,7 +39,7 @@ class ReadoutCal:
             return None
         return cls(model=str(d.get("model", "")), template=str(d.get("template", "")), prompt_sha=str(d.get("prompt_sha", "")),
                    temperature=float(d.get("temperature", 1.0)), thresholds=dict(d.get("thresholds") or {}), info=d,
-                   layout=str(d.get("layout") or "question_first"))
+                   layout=str(d.get("layout") or "question_first"), n_probs=int(d.get("n_probs") or DEFAULT_N_PROBS))
 
 
 @dataclass
