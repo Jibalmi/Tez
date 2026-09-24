@@ -110,13 +110,13 @@
     "evidence": [
       {"metric": "deepset/prompt-injections test split (116 rows, held out from Laya's training): Gemma 4 12B Q8_0 zero-shot letters", "value": 0.759, "source": "BENCHMARKS.md §1 (experiments/bench_h2h.py)", "proxy": true},
       {"metric": "same rows and GPU: best Laya checkpoint (laya)", "value": 0.672, "source": "BENCHMARKS.md §1 (experiments/bench_h2h.py)", "proxy": true},
-      {"metric": "same rows: ECE-15 as shipped, 12B letters", "value": 0.240, "source": "results/h2h/summary.json", "proxy": true},
+      {"metric": "same rows: ECE-15 as shipped, 12B letters at the default temperature fitted without the task (0.240 at T = 1)", "value": 0.167, "source": "results/calibration/default_temperature.json (loto.per_task.prompt_injections); T = 1: results/h2h/summary.json", "proxy": true},
       {"metric": "same rows: NLL after out-of-fold Batch Calibration (2.89 before)", "value": 1.03, "source": "BENCHMARKS.md §4; results/batch_calibration.json", "proxy": true},
       {"metric": "same rows: accuracy after out-of-fold Batch Calibration (0.759 before)", "value": 0.784, "source": "results/batch_calibration.json (h2h/prompt_injections, bc_oof_acc)", "proxy": true},
       {"metric": "ms per decision, p50, same rows, RTX 5080 laptop", "value": 64, "source": "results/h2h/summary.json", "proxy": true},
       {"metric": "typed-decisions (2,000), a different task: 12B zero-shot prior mixed with a 4B probe on 50 typical labels per question, the closest measurement of the learning step", "value": 0.766, "source": "BENCHMARKS.md §4c, Few labels; results/probe_lab_prior_qwen35-4b.json", "proxy": true}
     ],
-    "limits": "Measured on 116 rows of one public dataset with an ECE of 0.240 as shipped; the technique question, new attack styles and the gain from learning on this task are not measured, so use it as one layer of defence."
+    "limits": "Measured on 116 rows of one public dataset with an ECE of 0.167 as shipped (0.240 at T = 1); the technique question, new attack styles and the gain from learning on this task are not measured, so use it as one layer of defence."
   },
   {
     "id": "multilingual-intent",
@@ -132,7 +132,7 @@
       {"metric": "same protocol, weakest language (Khmer)", "value": 0.790, "source": "BENCHMARKS.md §1, Languages", "proxy": true},
       {"metric": "same rows: Qwen3.5-4B probe trained on 2,000 English rows only, used unchanged in all 11 languages, macro accuracy", "value": 0.803, "source": "BENCHMARKS.md §4c, MASSIVE English-only probe; results/probe_crosslingual_qwen35-4b.json", "proxy": true},
       {"metric": "same rows and GPU: laya-multilingual, macro accuracy", "value": 0.524, "source": "BENCHMARKS.md §1, Languages", "proxy": true},
-      {"metric": "macro ECE-15 as shipped, 12B letters", "value": 0.099, "source": "BENCHMARKS.md §1, Languages", "proxy": true},
+      {"metric": "macro ECE-15 as shipped, 12B letters at the default temperature fitted without the task (0.099 at T = 1)", "value": 0.146, "source": "BENCHMARKS.md §1, Languages; results/calibration/default_temperature.json (anchor_28)", "proxy": true},
       {"metric": "ms per decision, p50, MASSIVE English, RTX 5080 laptop", "value": 174, "source": "results/h2h/summary.json", "proxy": true}
     ],
     "limits": "Measured with 20 candidate intents per utterance (gold plus 19 sampled) on 100 rows per language, not with a fixed intent list like this one, and Khmer is the weakest language at 0.790."
@@ -171,7 +171,7 @@
       {"metric": "AG News (400 test rows), the same four labels, descriptions and instruction as this schema: Gemma 4 12B Q8_0 zero-shot letters", "value": 0.880, "source": "BENCHMARKS.md §1 (experiments/bench_h2h.py)", "proxy": false},
       {"metric": "same rows and GPU: laya (AG News is in its training mix)", "value": 0.932, "source": "BENCHMARKS.md §1 (experiments/bench_h2h.py)", "proxy": false},
       {"metric": "AG News: Jev, published figure (closed API, never run here)", "value": 0.910, "source": "BENCHMARKS.md §1", "proxy": false},
-      {"metric": "ECE-15 as shipped, 12B letters", "value": 0.114, "source": "results/h2h/summary.json", "proxy": false},
+      {"metric": "ECE-15 as shipped, 12B letters at the default temperature fitted without the task (0.114 at T = 1)", "value": 0.051, "source": "results/calibration/default_temperature.json (loto.per_task.ag_news); T = 1: results/h2h/summary.json", "proxy": false},
       {"metric": "option-order flip rate: share of answers that change when the options are reversed", "value": 0.03, "source": "BENCHMARKS.md §1, Calibration, order robustness, latency", "proxy": false},
       {"metric": "ms per decision, p50, RTX 5080 laptop", "value": 65, "source": "results/h2h/summary.json", "proxy": false}
     ],
