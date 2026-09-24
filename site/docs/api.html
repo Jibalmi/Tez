@@ -53,20 +53,26 @@
   <div class="container doc-shell">
     <!-- docs-rail:start -->
     <nav class="doc-nav" data-toc aria-label="On this page">
-      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">Base URL and authentication</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">Base URL, keys and CORS</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="toc-panel" id="toc-panel">
         <p class="toc-heading">On this page</p>
         <ul class="toc-list">
-          <li><a href="#api-auth">Base URL and authentication</a></li>
+          <li><a href="#api-auth">Base URL, keys and CORS</a></li>
+          <li class="toc-sub"><a href="#api-cors">Browsers and CORS</a></li>
           <li><a href="#api-systemone">POST /v1/systemone</a></li>
+          <li><a href="#api-headers">Response headers</a></li>
           <li><a href="#answer-shapes">Answer shapes</a></li>
           <li><a href="#tez-block">The tez block</a></li>
           <li><a href="#errors">Errors</a></li>
+          <li><a href="#api-extraction">Structured extraction</a></li>
+          <li><a href="#api-batch">POST /v1/systemone/batch</a></li>
+          <li><a href="#api-plan">POST /v1/plan</a></li>
           <li><a href="#api-other">Other endpoints</a></li>
           <li class="toc-sub"><a href="#api-models">GET /v1/models</a></li>
           <li class="toc-sub"><a href="#api-healthz">GET /healthz</a></li>
           <li class="toc-sub"><a href="#api-schemas">GET /v1/schemas and /v1/schemas/{name}</a></li>
           <li class="toc-sub"><a href="#api-feedback">POST /v1/feedback</a></li>
+          <li><a href="#api-limits">Limits</a></li>
         </ul>
         <a class="rail-edit" href="https://github.com/Jibalmi/Tez/edit/main/site/docs/api.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Edit this page</span></a>
       </div>
@@ -79,24 +85,52 @@
         <p class="lead">Tez speaks TypeSafe's <code>/v1/systemone</code> wire format, so a client written for Jev's wire format, JevBench's own runner included, can point its base URL at a Tez server. Everything Tez adds lives in optional fields that strict clients ignore.</p>
       </header>
 
+      <!-- ============================================================== base URL, authentication, CORS -->
       <section class="doc-section is-first" aria-labelledby="api-auth">
-        <h2 id="api-auth">Base URL and authentication</h2>
-        <p>Default address: <code>http://127.0.0.1:8787</code>. Without <code>--api-key</code> any <code>Authorization: Bearer &lt;token&gt;</code> is accepted and none is required. With <code>--api-key</code>, every endpoint except <code>/healthz</code> needs <code>Authorization: Bearer &lt;key&gt;</code> or an <code>x-api-key</code> header. CORS is open by default (<code>--no-cors</code> turns it off), and preflights answer <code>Access-Control-Allow-Private-Network: true</code>, so a web page, such as this site's playground, can call a server on your machine.</p>
+        <h2 id="api-auth" data-rail-label="Base URL, keys and CORS">Base URL and authentication</h2>
+        <p>Default address: <code>http://127.0.0.1:8787</code>. Without <code>--api-key</code> any <code>Authorization: Bearer &lt;token&gt;</code> is accepted and none is required. With <code>--api-key</code> (or <code>TEZ_API_KEY</code>), every endpoint except <code>/healthz</code> needs <code>Authorization: Bearer &lt;key&gt;</code> or an <code>x-api-key</code> header.</p>
         <div class="table-wrap">
           <table class="table params">
             <thead><tr><th scope="col">Method</th><th scope="col">Path</th><th scope="col">Purpose</th></tr></thead>
             <tbody>
               <tr><td><span class="method method-post">POST</span></td><td><a href="#api-systemone"><code>/v1/systemone</code></a></td><td>Decide: one state, many typed questions (Jev-compatible)</td></tr>
+              <tr><td><span class="method method-post">POST</span></td><td><a href="#api-batch"><code>/v1/systemone/batch</code></a></td><td>Tez: many states against the same questions, in one request</td></tr>
+              <tr><td><span class="method method-post">POST</span></td><td><a href="#api-plan"><code>/v1/plan</code></a></td><td>Tez: what a <code>/v1/systemone</code> request would do, without calling the model</td></tr>
               <tr><td><span class="method">GET</span></td><td><a href="#api-models"><code>/v1/models</code></a></td><td>List model aliases (Jev-compatible)</td></tr>
               <tr><td><span class="method">GET</span></td><td><a href="#api-healthz"><code>/healthz</code></a></td><td>Liveness, backend and readout status</td></tr>
-              <tr><td><span class="method">GET</span></td><td><a href="#api-schemas"><code>/v1/schemas</code></a></td><td>Tez: schemas loaded from <code>--schemas</code></td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#api-schemas"><code>/v1/schemas</code></a></td><td>Tez: schemas loaded from <code>--schemas</code> and <code>--presets</code></td></tr>
               <tr><td><span class="method">GET</span></td><td><a href="#api-schemas"><code>/v1/schemas/{name}</code></a></td><td>Tez: one schema (questions, probe status, calibration)</td></tr>
               <tr><td><span class="method method-post">POST</span></td><td><a href="#api-feedback"><code>/v1/feedback</code></a></td><td>Tez: record a correct label for a past decision (feeds <code>tez fit</code>)</td></tr>
             </tbody>
           </table>
         </div>
+        <h3 id="api-cors">Browsers and CORS</h3>
+        <p>Browsers may call the server only from listed origins. The defaults are pages served from this machine on any port, <code>http://127.0.0.1:*</code> and <code>http://localhost:*</code>, and the website's playground, <code>https://jibalmi.github.io</code>. Requests without an <code>Origin</code> header (curl, SDKs, other servers) are not affected.</p>
+        <ul>
+          <li>A CORS preflight from an allowed origin is answered with the allowed methods and headers, and with <code>Access-Control-Allow-Private-Network: true</code>, which Chrome's Private Network Access needs before a public page reaches a server on your machine. A preflight from any other origin gets 403.</li>
+          <li>Every <code>POST</code> (<code>/v1/systemone</code>, <code>/v1/systemone/batch</code>, <code>/v1/plan</code>, <code>/v1/feedback</code>) from an origin that is not allowed gets <code>403 forbidden</code> before anything runs. A page elsewhere could not read the answer anyway, but a plain cross-site form or <code>text/plain</code> POST would otherwise still use the model, run the hooks or write training labels.</li>
+          <li>Browsers send <code>Origin</code> on every <code>POST</code>, so a browser app behind a same-origin reverse proxy still needs its origin in the list.</li>
+          <li>A page reached through DNS rebinding sends its own origin, so its POSTs are refused too, but it can read the <code>GET</code> routes (schemas, models, health). Beyond this machine, run with <code>--api-key</code>.</li>
+        </ul>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone -H "Origin: https://example.org" \
+  -H "Content-Type: application/json" \
+  -d '{"state": "hi", "questions": {"q": {"type": "noul", "instructions": "Is this a greeting?"}}}'</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · 403 response</span></div>
+          <pre><code data-lang="json">{"error": {"type": "forbidden", "message": "origin https://example.org may not request decisions (allowed: http://127.0.0.1:*, http://localhost:*, https://jibalmi.github.io; tez serve --cors-origins)"}}</code></pre>
+        </div>
+        <p><code>--cors-origins LIST</code> (or <code>TEZ_CORS_ORIGINS</code>) replaces the list: comma-separated origins, <code>host:*</code> for any port, <code>https://*.domain</code> for its subdomains (not the bare domain), <code>null</code> for <code>file://</code> pages, or <code>*</code> for any origin. <code>--no-cors</code> sends no CORS headers and allows no origin. Keep <code>https://jibalmi.github.io</code> in a list of your own if you use the playground.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez serve --backend http://127.0.0.1:8091 --template gemma4 \
+  --cors-origins "http://localhost:*,https://jibalmi.github.io,https://*.example.com"</code></pre>
+        </div>
       </section>
 
+      <!-- ============================================================== POST /v1/systemone -->
       <section class="doc-section" aria-labelledby="api-systemone">
         <h2 id="api-systemone" class="endpoint"><span class="method method-post">POST</span> <code>/v1/systemone</code></h2>
         <p>Decide one state against many typed questions. The request body:</p>
@@ -104,16 +138,18 @@
           <table class="table params">
             <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
             <tbody>
-              <tr><td><code>state</code></td><td class="type">string, object, array</td><td>Required. The input to decide on. Objects and arrays are serialised as JSON.</td></tr>
-              <tr><td><code>questions</code></td><td class="type">object</td><td>Map of question id to question. Required unless <code>schema</code> names a loaded schema, whose questions are then used.</td></tr>
-              <tr><td><code>questions.{id}.type</code></td><td class="type">string</td><td><code>noul</code> (yes/no), <code>choice</code> (2 to 255 options) or <code>score</code> (2 to 10 ordered levels).</td></tr>
-              <tr><td><code>questions.{id}.instructions</code></td><td class="type">string, object, array</td><td>Required. What to decide.</td></tr>
-              <tr><td><code>questions.{id}.criteria</code></td><td class="type">object or array</td><td><code>choice</code>: label to description or <code>null</code>. <code>score</code>: a list of level descriptions, level <i>i</i> = index <i>i</i>. <code>noul</code>: optional <code>{"true": …, "false": …}</code>.</td></tr>
-              <tr><td><code>model</code></td><td class="type">string</td><td>Any string; <code>tez-latest</code> is the default alias.</td></tr>
-              <tr><td><code>schema</code></td><td class="type">string</td><td>Tez. Name of a loaded schema. Questions with the same id use that schema's trained probe and calibration.</td></tr>
-              <tr><td><code>tez.readout</code></td><td class="type">string</td><td>Tez. <code>auto</code> (default: the probe when one is trained and current for the question, otherwise letters), <code>letters</code> or <code>probe</code>.</td></tr>
-              <tr><td><code>tez.abstain</code></td><td class="type">boolean</td><td>Tez. Adds an implicit <code>__none__</code> option ("none of these fits") to every <code>choice</code> question. Default <code>false</code>.</td></tr>
-              <tr><td><code>tez.gate.alpha</code></td><td class="type">number</td><td>Tez. Target error rate among acted decisions, between 0 and 1. Each answer then gets <code>act</code> or <code>escalate</code>; see <a href="./guides.html#gate">The gate</a>.</td></tr>
+              <tr><td><code>state</code></td><td><span class="type">string, object, array</span></td><td>Required. The input to decide on. Objects and arrays are serialised as JSON, and may nest at most 100 levels of objects and arrays. <code>tez serve</code> caps a state at 50,000 characters (<a href="#api-limits">Limits</a>).</td></tr>
+              <tr><td><code>questions</code></td><td><span class="type">object</span></td><td>Map of question id to question. Required unless <code>schema</code> names a loaded schema, whose questions are then used, or <code>json_schema</code> is given.</td></tr>
+              <tr><td><code>questions.{id}.type</code></td><td><span class="type">string</span></td><td><code>noul</code> (yes/no), <code>choice</code> (2 to 255 options) or <code>score</code> (2 to 10 ordered levels).</td></tr>
+              <tr><td><code>questions.{id}.instructions</code></td><td><span class="type">string, object, array</span></td><td>Required. What to decide.</td></tr>
+              <tr><td><code>questions.{id}.criteria</code></td><td><span class="type">object or array</span></td><td><code>choice</code>: label to description or <code>null</code>. <code>score</code>: a list of level descriptions, level <i>i</i> = index <i>i</i>. <code>noul</code>: optional <code>{"true": …, "false": …}</code>.</td></tr>
+              <tr><td><code>model</code></td><td><span class="type">string</span></td><td>Any string; <code>tez-latest</code> is the default alias, and <code>jev-latest</code> is listed too.</td></tr>
+              <tr><td><code>schema</code></td><td><span class="type">string</span></td><td>Tez. Name of a loaded schema. Questions with the same id and definition use that schema's trained probe and calibration.</td></tr>
+              <tr><td><code>json_schema</code></td><td><span class="type">object</span></td><td>Tez. A JSON schema of the object you want back, in place of <code>questions</code>; see <a href="#api-extraction">Structured extraction</a>.</td></tr>
+              <tr><td><code>tez.readout</code></td><td><span class="type">string</span></td><td>Tez. <code>auto</code> (default: the probe when one is trained and current for the question, otherwise letters), <code>letters</code> or <code>probe</code>.</td></tr>
+              <tr><td><code>tez.abstain</code></td><td><span class="type">boolean</span></td><td>Tez. Adds an implicit <code>__none__</code> option ("none of these fits") to every <code>choice</code> question. Default <code>false</code>.</td></tr>
+              <tr><td><code>tez.gate.alpha</code></td><td><span class="type">number</span></td><td>Tez. Target error rate among acted decisions, between 0 and 1. Each answer then gets <code>act</code> or <code>escalate</code>; see <a href="./guides.html#gate">The gate</a>.</td></tr>
+              <tr><td><code>tez.layout</code></td><td><span class="type">string</span></td><td>Tez. <code>auto</code>, <code>question_first</code> or <code>state_first</code>. Default: the schema's <code>layout:</code>, else the server's <code>--layout</code>, else <code>auto</code>; see <a href="./guides.html#layouts">Prompt layouts</a>.</td></tr>
             </tbody>
           </table>
         </div>
@@ -125,7 +161,8 @@
   "tez": {
     "readout": "auto",
     "abstain": false,
-    "gate": {"alpha": 0.05}
+    "gate": {"alpha": 0.05},
+    "layout": "auto"
   }
 }</code></pre>
         </div>
@@ -154,9 +191,9 @@
   "tez": {
     "latency_ms": 212.4,
     "questions": {
-      "is_urgent": {"readout": "letters", "decision": "escalate"},
+      "is_urgent": {"readout": "letters", "decision": "escalate", "temperature": 6.01},
       "topic": {"readout": "probe", "decision": "act", "p_correct": 0.94, "calibration_id": "support-triage@2026-09-24"},
-      "anger": {"readout": "letters", "decision": "escalate"}
+      "anger": {"readout": "letters", "decision": "escalate", "temperature": 5.18}
     }
   }
 }</code></pre>
@@ -165,17 +202,46 @@
           <table class="table params">
             <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
             <tbody>
-              <tr><td><code>model</code></td><td class="type">string</td><td><code>tez-&lt;version&gt; (&lt;model&gt;, &lt;readouts used&gt;)</code>.</td></tr>
-              <tr><td><code>answers.{id}</code></td><td class="type">object</td><td>One answer per question, in Jev's shapes (<a href="#answer-shapes">below</a>).</td></tr>
-              <tr><td><code>usage.input_tokens</code></td><td class="type">integer</td><td>Prompt tokens across all questions, cached prefix included.</td></tr>
-              <tr><td><code>usage.output_tokens</code></td><td class="type">integer</td><td>Always 0: nothing is generated.</td></tr>
-              <tr><td><code>tez.latency_ms</code></td><td class="type">number</td><td>Wall time for the whole request.</td></tr>
-              <tr><td><code>tez.questions.{id}.readout</code></td><td class="type">string</td><td><code>letters</code> or <code>probe</code>: how this answer was read.</td></tr>
-              <tr><td><code>tez.questions.{id}.decision</code></td><td class="type">string</td><td><code>act</code> or <code>escalate</code>, present only when a gate applies.</td></tr>
-              <tr><td><code>tez.questions.{id}.p_correct</code></td><td class="type">number</td><td>The calibrated probability of the chosen answer, present when a fitted calibration exists.</td></tr>
-              <tr><td><code>tez.questions.{id}.calibration_id</code></td><td class="type">string</td><td>The fit it came from, for example <code>support-triage@2026-09-24</code>.</td></tr>
+              <tr><td><code>model</code></td><td><span class="type">string</span></td><td><code>tez-&lt;version&gt; (&lt;model&gt;, &lt;readouts used&gt;)</code>.</td></tr>
+              <tr><td><code>answers.{id}</code></td><td><span class="type">object</span></td><td>One answer per question, in Jev's shapes (<a href="#answer-shapes">below</a>).</td></tr>
+              <tr><td><code>usage.input_tokens</code></td><td><span class="type">integer</span></td><td>Prompt tokens across all questions, cached prefix included.</td></tr>
+              <tr><td><code>usage.output_tokens</code></td><td><span class="type">integer</span></td><td>Always 0: nothing is generated.</td></tr>
+              <tr><td><code>tez.latency_ms</code></td><td><span class="type">number</span></td><td>Wall time for the whole request.</td></tr>
+              <tr><td><code>tez.questions.{id}.readout</code></td><td><span class="type">string</span></td><td><code>letters</code> or <code>probe</code>: how this answer was read.</td></tr>
+              <tr><td><code>tez.questions.{id}.decision</code></td><td><span class="type">string</span></td><td><code>act</code> or <code>escalate</code>, present only when a gate applies.</td></tr>
+              <tr><td><code>tez.questions.{id}.p_correct</code></td><td><span class="type">number</span></td><td>The calibrated probability of the chosen answer, present when a fitted calibration exists.</td></tr>
+              <tr><td><code>tez.questions.{id}.calibration_id</code></td><td><span class="type">string</span></td><td>The fit it came from, for example <code>support-triage@2026-09-24</code>.</td></tr>
+              <tr><td><code>tez.questions.{id}.temperature</code></td><td><span class="type">number</span></td><td>Present when an unfitted letters answer was read at a <a href="./guides.html#default-temperature">default temperature</a>.</td></tr>
+              <tr><td><code>tez.questions.{id}.layout</code></td><td><span class="type">string</span></td><td>Present on every question when the request's questions were not all read in the same layout (<code>X-Tez-Layout: mixed</code>).</td></tr>
+              <tr><td><code>tez.values</code></td><td><span class="type">object</span></td><td>The extracted object, present when the request carried <code>json_schema</code>.</td></tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- ============================================================== response headers -->
+      <section class="doc-section" aria-labelledby="api-headers">
+        <h2 id="api-headers">Response headers</h2>
+        <p>Every response, errors and CORS preflights included, carries:</p>
+        <ul>
+          <li><code>x-typesafe-request-id</code>: 32 hex characters. For a decision it is the run id that hooks see (<code>ctx.run_id</code>), that a <code>DecisionLog</code> row records and that <code>POST /v1/feedback</code> accepts as <code>run_id</code>; for other routes a fresh id.</li>
+          <li><code>server-timing</code>: <code>total;dur=&lt;ms&gt;</code>. A decision adds <code>tez;dur</code> (the engine) and <code>backend;dur</code> (time in model calls): <code>tez;dur=0.9, backend;dur=0.4, total;dur=2.4</code>. A batch adds <code>tez;dur</code> only.</li>
+        </ul>
+        <p>Decisions that reach the engine, successful or not, also carry <code>X-Tez-Run-Id</code>, the same id. A 401, a 403, and a body over <code>--max-body-bytes</code> or not JSON are answered before that, without it. A single decision that got that far carries <code>X-Tez-Layout</code> too: <code>question_first</code>, <code>state_first</code>, or <code>mixed</code> when its questions were read in different layouts. Browsers from allowed origins can read all four headers.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s -D - -o /dev/null http://127.0.0.1:8787/v1/systemone \
+  -H "Content-Type: application/json" \
+  -d '{"state": "My invoice is wrong and I need it fixed today.", "schema": "support-triage"}'</code></pre>
+        </div>
+        <div class="code is-output">
+          <div class="code-head"><span class="code-label">output, abridged</span></div>
+          <pre><code>HTTP/1.1 200 OK
+content-type: application/json
+x-typesafe-request-id: 7218d0bce2514605b08f520278062bb8
+server-timing: tez;dur=0.9, backend;dur=0.4, total;dur=2.4
+x-tez-run-id: 7218d0bce2514605b08f520278062bb8
+x-tez-layout: state_first</code></pre>
         </div>
       </section>
 
@@ -195,29 +261,35 @@
         <p>With <code>tez.abstain</code>, a choice answer can be <code>__none__</code>, with its own probability.</p>
       </section>
 
+      <!-- ============================================================== the tez block -->
       <section class="doc-section" aria-labelledby="tez-block">
         <h2 id="tez-block">The tez block</h2>
-        <p><code>latency_ms</code>, and per question the <code>readout</code> used, a <code>decision</code> when a gate applies, and <code>p_correct</code> with <code>calibration_id</code> when a fitted calibration exists.</p>
+        <p><code>latency_ms</code>, and per question the <code>readout</code> used, a <code>decision</code> when a gate applies, <code>p_correct</code> with <code>calibration_id</code> when a fitted calibration exists, <code>temperature</code> when a default temperature was used and <code>layout</code> when the layouts are mixed.</p>
         <ul>
           <li>The gate never acts without evidence: <code>act</code> always comes with <code>p_correct</code> and <code>calibration_id</code>. A question with no usable fitted calibration, and any <code>__none__</code> answer, gets <code>escalate</code> whenever a gate is requested.</li>
           <li><code>tez.gate: null</code> or <code>false</code> turns a schema's default gate off; <code>tez.gate: {}</code> uses the schema's default alpha.</li>
           <li>Thresholds are precomputed for alpha 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3 and the schema's default; any other alpha uses the largest precomputed value at or below it.</li>
           <li><code>tez.readout: "probe"</code> is strict: the request fails with 422 if a requested question has no usable probe. <code>auto</code> falls back to letters question by question.</li>
-          <li>A fit is used only while the question's prompt (instructions, options, few-shot examples, template) and the model still match what <code>tez fit</code> saw. Otherwise the question falls back to uncalibrated letters and <code>GET /v1/schemas/{name}</code> marks it <code>stale</code>.</li>
+          <li>A fit is used only while the question's prompt (instructions, options, few-shot examples, template, layout) and the model still match what <code>tez fit</code> saw. Otherwise the question falls back to uncalibrated letters and <code>GET /v1/schemas/{name}</code> marks it <code>stale</code>. Under <code>auto</code> a fitted question is read in the layout it was fitted under.</li>
+          <li>An unfitted letters answer of Gemma 4 12B Q8_0 is read at a default temperature. No argmax changes, but a yes/no probability moves towards 0.5 without crossing it, and a score question's <code>score</code> moves towards the middle of the scale while its most probable level stays the same. For an integer level, take the most probable level from <code>probabilities</code>, or run with <code>--default-temperature off</code>.</li>
         </ul>
       </section>
 
+      <!-- ============================================================== errors -->
       <section class="doc-section" aria-labelledby="errors">
         <h2 id="errors">Errors</h2>
-        <p>The same codes as Jev, with one body shape: <code>{"error": {"type": "…", "message": "…"}}</code>. Messages name the offending field.</p>
+        <p>The same codes as Jev, and a few more, with one body shape: <code>{"error": {"type": "…", "message": "…"}}</code>. Messages name the offending field or limit.</p>
         <div class="table-wrap">
           <table class="table params">
             <thead><tr><th scope="col">Status</th><th scope="col">type</th><th scope="col">When</th></tr></thead>
             <tbody>
               <tr><td>401</td><td><code>unauthorized</code></td><td>The server runs with <code>--api-key</code> and the request has no valid key.</td></tr>
+              <tr><td>403</td><td><code>forbidden</code></td><td>A <code>POST</code>, or a CORS preflight, from a browser origin that is not allowed (<a href="#api-cors">Browsers and CORS</a>).</td></tr>
               <tr><td>404</td><td><code>not_found</code></td><td>Unknown route, or <code>GET /v1/schemas/{name}</code> for a schema that is not loaded.</td></tr>
               <tr><td>405</td><td><code>method_not_allowed</code></td><td>Wrong method for a route.</td></tr>
-              <tr><td>422</td><td><code>invalid_request</code></td><td>The request does not match the contract, <code>tez.readout: "probe"</code> for a question without a usable probe, or a prompt longer than the model's context (with llama.cpp's message).</td></tr>
+              <tr><td>413</td><td><code>payload_too_large</code></td><td>A request over the server's <a href="#api-limits">limits</a>: body size, questions, state length or batch size.</td></tr>
+              <tr><td>422</td><td><code>invalid_request</code></td><td>The request does not match the contract, <code>tez.readout: "probe"</code> for a question without a usable probe, a <code>json_schema</code> Tez cannot decide, a state nested more than 100 levels, or a prompt longer than the model's context (with llama.cpp's message).</td></tr>
+              <tr><td>500</td><td><code>internal_error</code></td><td>An unexpected failure, for example a hook that raised something other than a <code>TezError</code>.</td></tr>
               <tr><td>503</td><td><code>backend_unavailable</code></td><td>The model server is unreachable, still loading or failed.</td></tr>
             </tbody>
           </table>
@@ -228,33 +300,154 @@
         </div>
       </section>
 
+      <!-- ============================================================== extraction -->
+      <section class="doc-section" aria-labelledby="api-extraction">
+        <h2 id="api-extraction">Structured extraction</h2>
+        <p>In place of <code>questions</code>, a request may carry <code>json_schema</code>, a JSON schema of the object you want back. Tez turns its fields into questions (enums into choices, booleans into yes/no, small integer ranges into scores), decides them like any others and returns the object in <code>tez.values</code>. The answers are in <code>answers</code> too, keyed by each field's dotted path.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone \
+  -H "Content-Type: application/json" \
+  -d '{
+  "state": "Charged twice for invoice 4411, please fix it today!",
+  "json_schema": {"type": "object", "properties": {
+    "department": {"enum": ["billing", "technical", "sales"], "description": "Which team should handle it?"},
+    "urgent": {"type": "boolean", "description": "Does it need a reply today?"},
+    "priority": {"type": "integer", "minimum": 1, "maximum": 3, "description": "How important is it?"},
+    "refund": {"anyOf": [{"enum": ["full", "partial"]}, {"type": "null"}],
+               "description": "Which refund does the customer ask for?"}}}
+}'</code></pre>
+        </div>
+        <p>The response's <code>tez.values</code> for that request has this shape (which values come back depends on the model):</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · tez.values</span></div>
+          <pre><code data-lang="json">{"department": "billing", "urgent": true, "priority": 3, "refund": null}</code></pre>
+        </div>
+        <p><code>json_schema</code> and <code>questions</code> cannot both be given; <code>schema</code> may name a loaded schema whose identical questions then use its fits. A schema Tez cannot decide in one pass (free strings, arrays, integer ranges over 10 values) is refused with a 422 that names the path. The mapping, the Python helpers and the gate are in <a href="./guides.html#extraction">Structured extraction</a>.</p>
+      </section>
+
+      <!-- ============================================================== batch -->
+      <section class="doc-section" aria-labelledby="api-batch">
+        <h2 id="api-batch" class="endpoint" data-rail-label="POST /v1/systemone/batch"><span class="method method-post">POST</span> <code>/v1/systemone/batch</code></h2>
+        <p>Many states against the same questions. The body is a <code>/v1/systemone</code> request with <code>states</code>, an array, in place of <code>state</code>; <code>questions</code> (or <code>schema</code> or <code>json_schema</code>), <code>model</code> and <code>tez</code> apply to every state.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/systemone/batch \
+  -H "Content-Type: application/json" \
+  -d '{"states": ["My invoice is wrong", {"text": "the app crashes on start", "plan": "Business"}],
+       "schema": "support-triage"}'</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response, abridged</span></div>
+          <pre><code data-lang="json">{"model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+ "results": [{"model": "...", "answers": {"...": "..."}, "usage": {"...": "..."}, "tez": {"...": "..."}},
+             {"error": {"type": "invalid_request", "message": "state must be a string, object or array"}}],
+ "usage": {"input_tokens": 991, "output_tokens": 0},
+ "tez": {"latency_ms": 431.6, "run_id": "7dff261d74b04edcbe80578818697177"}}</code></pre>
+        </div>
+        <ul>
+          <li><code>results</code> has one entry per state, in input order: the state's <code>/v1/systemone</code> response, or <code>{"error": {"type", "message"}}</code> for a state that failed. One state's error never fails the others; a state over <code>--max-state-chars</code> is that state's 413 error.</li>
+          <li>A bad shared field fails the whole batch with 422, and more states than <code>--max-batch</code> or more questions than <code>--max-questions</code> with 413. When the backend is unavailable before any state was decided the batch fails with 503; once some states are decided, the ones not yet tried get a <code>backend_unavailable</code> error without calling the backend again.</li>
+          <li>Each state's questions run back to back (state first with two or more questions), so the prompt cache keeps the state between them. States are decided one after another.</li>
+          <li><code>usage</code> sums the decided states. <code>tez.run_id</code> is the batch's run id, also <code>X-Tez-Run-Id</code>; state <i>i</i> is decided with run id <code>&lt;run_id&gt;.&lt;i&gt;</code>.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================== plan -->
+      <section class="doc-section" aria-labelledby="api-plan">
+        <h2 id="api-plan" class="endpoint" data-rail-label="POST /v1/plan"><span class="method method-post">POST</span> <code>/v1/plan</code></h2>
+        <p>The body of a <code>/v1/systemone</code> request, <code>state</code> optional; nothing is sent to the model. Per question: the readout it would use, its fit (<code>ready</code>, <code>stale</code> or <code>none</code>, with the reason, the fit's layout and calibration id), the number of options, the backend calls, the layout, the prompt hash (<code>prompt_sha</code>, what <code>tez fit</code> records) and a token estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it. The top-level <code>layout</code> is the one the questions share, or <code>mixed</code>; <code>order</code> is the order they would be read in.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/plan \
+  -H "Content-Type: application/json" \
+  -d '{"state": "My invoice is wrong and I need it fixed today.", "schema": "support-triage"}'</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · response, abridged</span></div>
+          <pre><code data-lang="json">{"backend": "http://127.0.0.1:8091", "template": "gemma4", "model": null, "schema": "support-triage",
+ "readout": "auto", "requested_layout": "auto", "layout": "state_first", "state_tokens": 12,
+ "order": ["topic", "urgent", "frustration"],
+ "questions": {"topic": {"type": "choice", "options": 7, "layout": "state_first", "readout": "letters",
+                         "fit": {"status": "none", "reason": "not fitted (tez fit --schema support-triage)"},
+                         "calls": {"letters": 1, "embed": 0}, "prompt_sha": "2bf4e9664164e25b",
+                         "prompt_tokens": 214, "cached_tokens": 0},
+               "urgent": {"type": "noul", "options": 2, "layout": "state_first", "readout": "letters",
+                          "fit": {"status": "none", "reason": "not fitted (tez fit --schema support-triage)"},
+                          "calls": {"letters": 1, "embed": 0}, "prompt_sha": "c87a390957050bb8",
+                          "prompt_tokens": 135, "cached_tokens": 59},
+               "frustration": {"...": "..."}},
+ "totals": {"calls": {"letters": 3, "embed": 0}, "prompt_tokens": 503, "cached_tokens": 118, "evaluated_tokens": 385},
+ "notes": ["state first: 3 questions read back to back, each after the first reusing the prefix it shares with the one before (cached_tokens; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)",
+           "model names not checked (the plan does not call the backend): a fit made on another model would not be used"]}</code></pre>
+        </div>
+        <p>A question that would fail (<code>tez.readout: "probe"</code> without a usable probe) has <code>"readout": null</code> and an <code>error</code> instead of failing the plan. Model names are compared only once the server knows them (<code>model</code> is null until a decision has asked the backend), and a note says so. <code>tez plan</code> prints the same as a table (<code>--json</code> for this body).</p>
+      </section>
+
+      <!-- ============================================================== other endpoints -->
       <section class="doc-section" aria-labelledby="api-other">
         <h2 id="api-other">Other endpoints</h2>
         <h3 id="api-models" class="endpoint"><span class="method">GET</span> <code>/v1/models</code></h3>
         <div class="code">
           <div class="code-head"><span class="code-label">json · response</span></div>
-          <pre><code data-lang="json">{"models": [{"name": "tez-latest", "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)", "release_date": "2026-09-24"}]}</code></pre>
+          <pre><code data-lang="json">{"models": [{"name": "tez-latest", "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)",
+             "release_date": "2026-09-24"},
+            {"name": "jev-latest", "description": "Alias of tez-latest: Tez local decision engine (gemma-4-12b-q8_0, letters)",
+             "release_date": "2026-09-24"}]}</code></pre>
         </div>
+        <p><code>jev-latest</code> is listed so that clients written for TypeSafe's SDK, which look a model up by that name, find it. Every alias, and any other <code>model</code> string, is decided by the same engine.</p>
         <h3 id="api-healthz" class="endpoint"><span class="method">GET</span> <code>/healthz</code></h3>
         <div class="code">
           <div class="code-head"><span class="code-label">json · response</span></div>
           <pre><code data-lang="json">{"status": "ok", "version": "0.1.0", "backend": "http://127.0.0.1:8091", "template": "gemma4", "backend_status": "ok",
- "model": "gemma-4-12b-q8_0", "embed_backend": null, "schemas": ["support-triage"], "probes": {"support-triage": ["topic"]}}</code></pre>
+ "model": "gemma-4-12b-q8_0", "embed_backend": null, "schemas": ["support-triage"], "probes": {"support-triage": ["topic"]},
+ "layout": "auto"}</code></pre>
         </div>
-        <p><code>status</code> is <code>degraded</code> when the backend is unreachable (<code>backend_status: "unreachable"</code>). With a separate embedding backend, <code>embed_template</code> and <code>embed_backend_status</code> are added. <code>/healthz</code> needs no key.</p>
+        <p><code>status</code> is <code>degraded</code> when the backend is unreachable (<code>backend_status: "unreachable"</code>). With a separate embedding backend, <code>embed_template</code> and <code>embed_backend_status</code> are added. <code>layout</code> is the server's default prompt layout (<code>--layout</code>). <code>/healthz</code> needs no key.</p>
         <h3 id="api-schemas" class="endpoint"><span class="method">GET</span> <code>/v1/schemas</code> and <code>/v1/schemas/{name}</code></h3>
         <div class="code">
           <div class="code-head"><span class="code-label">json · GET /v1/schemas</span></div>
-          <pre><code data-lang="json">{"schemas": [{"name": "support-triage", "description": "...", "questions": {"topic": "choice", "is_urgent": "noul"},
-              "calibration_id": "support-triage@2026-09-24", "probes": ["topic"]}]}</code></pre>
+          <pre><code data-lang="json">{"schemas": [{"name": "support-triage", "description": "...", "questions": {"topic": "choice", "urgent": "noul"},
+              "calibration_id": "support-triage@2026-09-24", "probes": ["topic"], "builtin": false}]}</code></pre>
         </div>
-        <p>One schema returns its questions in wire form plus <code>calibration_id</code>, <code>probes</code> (per question: <code>probe</code> is <code>ready</code>, <code>stale</code> or <code>none</code>, with <code>letters_calibrated</code>, <code>n_labels</code> and a <code>note</code>), <code>calibration</code> and <code>manifest</code>.</p>
+        <p><code>builtin</code> is true for a preset loaded with <code>tez serve --presets</code>. One schema returns its questions in wire form plus <code>layout</code> (the schema's own, or null), <code>served_layout</code> (what a request that names none gets), <code>calibration_id</code>, <code>probes</code> (per question: <code>probe</code> is <code>ready</code>, <code>stale</code> or <code>none</code>, with <code>letters_calibrated</code>, <code>n_labels</code>, a <code>note</code> and the <code>layout</code> it was fitted under), <code>calibration</code> and <code>manifest</code>.</p>
         <h3 id="api-feedback" class="endpoint"><span class="method method-post">POST</span> <code>/v1/feedback</code></h3>
         <div class="code">
-          <div class="code-head"><span class="code-label">json · request</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
-          <pre><code data-lang="json">{"schema": "support-triage", "question": "topic", "state": "Help! My payouts have been failing for 3 days.", "label": "billing"}</code></pre>
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">curl -s http://127.0.0.1:8787/v1/feedback \
+  -H "Content-Type: application/json" \
+  -d '{"schema": "support-triage", "question": "topic", "label": "billing",
+       "state": "Help! My payouts have been failing for 3 days.",
+       "run_id": "7218d0bce2514605b08f520278062bb8"}'</code></pre>
         </div>
-        <p>Records the correct label for a past decision. Tez appends the row to <code>&lt;data-dir&gt;/feedback/&lt;schema&gt;.jsonl</code> (the data dir defaults to <code>&lt;schemas&gt;/.tez</code>) and answers <code>{"ok": true, "schema": …, "question": …, "label": …}</code>. <code>tez fit</code> trains from these rows plus any labelled file.</p>
+        <p>Records the correct label for a past decision. <code>run_id</code> is optional: the decision's <code>X-Tez-Run-Id</code>, stored with the row. Tez appends the row to <code>&lt;data-dir&gt;/feedback/&lt;schema&gt;.jsonl</code> (by default the schema file's directory plus <code>/.tez</code>; for a preset, the first <code>--schemas</code> directory's <code>.tez</code>, else <code>./.tez</code>) and answers <code>{"ok": true, "schema": …, "question": …, "label": …}</code>. <code>on_feedback</code> hooks see the row first (<a href="./hooks.html#hook-redact">Redact</a> removes personal data from its state). <code>tez fit</code> trains from these rows plus any labelled file.</p>
+      </section>
+
+      <!-- ============================================================== limits -->
+      <section class="doc-section" aria-labelledby="api-limits">
+        <h2 id="api-limits">Limits</h2>
+        <p><code>tez serve</code> refuses oversized requests with <code>413 payload_too_large</code>:</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Flag</th><th scope="col">Default</th><th scope="col">Limit</th></tr></thead>
+            <tbody>
+              <tr><td><code>--max-body-bytes</code></td><td>2 MiB (2,097,152)</td><td>Request body. A <code>Content-Length</code> over it is refused before reading, a chunked body as soon as it passes it.</td></tr>
+              <tr><td><code>--max-questions</code></td><td>64</td><td>Questions per request, and per batch</td></tr>
+              <tr><td><code>--max-state-chars</code></td><td>50,000</td><td>Characters per state; an object or array counts as its JSON</td></tr>
+              <tr><td><code>--max-batch</code></td><td>64</td><td>States per <code>/v1/systemone/batch</code> request</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez serve --backend http://127.0.0.1:8091 --template gemma4 \
+  --max-state-chars 20000 --max-batch 16</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · 413 response to a 25,000-character state</span></div>
+          <pre><code data-lang="json">{"error": {"type": "payload_too_large", "message": "state is too large: 25,000 characters (the limit is 20,000; tez serve --max-state-chars)"}}</code></pre>
+        </div>
+        <p><code>0</code> switches a limit off. A state may also nest at most 100 levels of objects and arrays (422). The MCP server applies the same defaults. In Python, <code>Tez.handle</code>, <code>execute</code>, <code>handle_batch</code> and <code>plan</code> apply none unless given <code>limits=tez.config.Limits(...)</code>, while <code>tez.server.create_app</code> applies these defaults unless given other limits.</p>
       </section>
 
       <!-- docs-pager:start -->
