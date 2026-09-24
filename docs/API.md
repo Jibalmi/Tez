@@ -172,7 +172,8 @@ Every question is one prompt that ends where the model answers with an option le
 (streaming, when it comes, stays `question_first`). Measured on typed-decisions with Gemma 4 12B Q8_0: the same
 accuracy (0.7015 state first vs 0.705, McNemar p = 0.74) for about half the evaluated tokens. State-first questions of a
 request run back to back, so with llama.cpp prompt caching on one slot each question after the first evaluates only its
-own tail. Worked examples (a schema's `examples`) come before the input in both layouts, so a question with examples
+own tail; the in-process backend reads them in one batched decode instead (see "In-process backend"). Worked
+examples (a schema's `examples`) come before the input in both layouts, so a question with examples
 shares only the instructions with the other questions about its state.
 
 A fit records its layout (`tez fit --layout`, default the schema's `layout:` or `question_first`). Under `auto` a fitted
@@ -322,6 +323,9 @@ For the schema file below (`support-triage`, with its one worked example) and th
 Worked examples come before the input, so here the questions share only the instructions; without examples each
 question after the first reuses the whole state.
 
+With the in-process backend a question read in a batched call has `"batch"` (`state`: the prompts that share the
+state; `rest`: the others), `totals.batches` counts the batched calls, and a note describes each.
+
 A question that would fail (`tez.readout: "probe"` without a usable probe) has `"readout": null` and an `error`
 instead of failing the plan. Model names are compared only when the server already knows them (`model` is null
 until a decision has asked the backend); a note says so. CLI: `tez plan "text" --schema FILE` (a table; `--json` for
@@ -336,6 +340,96 @@ with the option letters among them; that a repeated prompt is served from the pr
 the same state reuses it (timings `prompt_n` and `cache_n`; the fix for Gemma is `--swa-full`); whether `/embedding`
 works (fitted probes need `--embeddings --pooling last`); one slot (`-np 1`); and the `--cache-ram 0` recommendation.
 It sends a few tiny prompts and changes nothing on the server. `--json` prints the checks.
+
+`tez doctor --backend inproc:model.gguf --llama-lib DIR` checks an in-process model instead, loading it in the
+doctor's own process: the library and its build (b11100 is the tested one), that a GPU backend loaded and holds the
+layers (and the memory left free), the model, hybrid memory, the chat template, that the option letters are single
+tokens holding most of the probability, that two questions about one state read in one batched decode match the
+same questions read one by one, and embeddings.
+
+## In-process backend (`inproc:`)
+
+`--backend inproc:PATH.gguf` (Python: `Tez(backend="inproc:PATH.gguf")`, or `tez.InprocBackend(PATH, ...)` for every
+setting) runs the model inside the Tez process through llama.cpp's own C library: no llama-server, no HTTP between Tez
+and the model.
+
+```
+tez doctor --backend inproc:gemma-4-12b-it-Q8_0.gguf --llama-lib /opt/llama.cpp
+tez serve  --backend inproc:gemma-4-12b-it-Q8_0.gguf --llama-lib /opt/llama.cpp --template gemma4 --presets
+```
+
+- **The library.** Unpack the llama.cpp release archive for your platform and GPU into a directory (Tez was tested with
+  release b11100; for CUDA on Windows unpack the release's CUDA runtime (cudart) archive into the same directory) and
+  point `--llama-lib` or `TEZ_LLAMA_LIB` at the directory that holds `llama.dll`, `libllama.so` or `libllama.dylib`.
+  Without either, Tez looks next to `llama-server` on `PATH`. Tez binds the library with `ctypes`: nothing is compiled
+  and there is no new Python dependency.
+- **Settings.** `--n-ctx N` (`TEZ_N_CTX`, default 4096: the KV cache, shared by the questions of a request),
+  `--n-batch N` (`TEZ_N_BATCH`, default `--n-ctx`: tokens per decode) and `--n-gpu-layers N` (`TEZ_N_GPU_LAYERS`,
+  default -1, all layers; 0 runs on the CPU). If no GPU backend loads (on Windows `ggml-cuda.dll` fails with error 126
+  when the CUDA runtime DLLs are not beside it, and llama.cpp would carry on on the CPU), Tez stops with the reason
+  instead, unless `--n-gpu-layers 0`. `tez serve` loads the model at start-up; the Python API loads it on first use,
+  and `tez plan` never loads it.
+- **Readouts.** Letters are the log-probabilities of the option letters over the whole vocabulary (nothing is floored,
+  so `--n-probs` does not apply; the normaliser sums the tokens within 25 nats of the top one, which moves it by less
+  than 4e-6 nats for a 262,144-token vocabulary). Probe features are the last token's hidden state after the output norm,
+  what `llama-server --embeddings --pooling last` returns, and the model name is derived the same way as over HTTP
+  (`gemma-4-12b-q8_0`): fits made over HTTP apply in process, and the other way round.
+- **Many questions in one pass.** A request with two or more questions is read in one batched call: the prompts'
+  common prefix (the instructions and the state, state first) is evaluated once and copied to one sequence per
+  question (`llama_memory_seq_cp`; the unified KV cache shares the cells rather than copying them), and every
+  question's suffix goes into one `llama_decode`, with an output at each suffix end. Questions read question first, or
+  with worked examples before the state, form a second batch that shares only the instructions; a question with more
+  than 26 options runs its tournament on its own. Each state of `/v1/systemone/batch` is read the same way. Answers,
+  temperatures and gate decisions are computed exactly as when questions are read one at a time. `tez plan` marks the
+  batched reads (`batch` per question, `totals.batches`); hooks see the batched calls in `ctx.batches`
+  ([`HOOKS.md`](HOOKS.md)).
+- **One process per GPU.** The model and its KV cache live in the Tez process. A llama-server or a second Tez process
+  holding the same model needs its memory again (the production llama-server with Gemma 4 12B Q8_0 held 14.2 GB of the
+  laptop's 16 GB; loaded in process, the 12B left 1.1 GB free), so run one Tez process per GPU and stop a llama-server
+  serving the same model first. Calls take turns on one context under a lock, as they
+  do on llama-server's single slot.
+- **Hybrid models** (Qwen3.5) cannot roll back their recurrent state. In process a shared prefix is reused only through
+  sequence copies, or when a prompt extends the previous one, so `--no-cache-prompt` is not needed.
+
+When to use which:
+
+| | In process (`inproc:`) | llama-server (`http://...`) |
+|---|---|---|
+| Many questions about one state | one batched decode for all of them (below) | question after question, each reusing the state from the prompt cache |
+| One question | no HTTP hop to the model and no top-200 list: a little faster | the voice loop's measured baseline |
+| Memory | the model in the Tez process: one Tez process per GPU; restarting Tez reloads it (47 s for the 12B in the `tez doctor` run, `results/speed/inproc_runtime_doctor.txt`) | the model in llama-server: several Tez processes or clients share it, and Tez restarts without reloading it |
+| Setup | a llama.cpp release directory | a running llama-server; also the Docker images (`compose.yaml`), Ollama's GGUFs or a GPU on another machine |
+
+Measured with `tez serve` on the laptop's RTX 5080 (16 GB), Gemma 4 12B Q8_0, llama.cpp b11100: Laya's protocol with
+distinct questions (a new ticket per call, 3-option choice and yes/no questions alternating; the speed study's pacing),
+p50 / p95 per call in ms, from `experiments/inproc_runtime_bench.py` (`results/speed/inproc_runtime_*laya.json`,
+`results/speed/http_runtime_laya.json`):
+
+| `tez serve` backend | 1 question | 5 | 10 | 50 | ms per question at 50 | CPU load from other processes |
+|---|---:|---:|---:|---:|---:|---|
+| in process, run 1 | 80 / 88 | 182 / 191 | 347 / 436 | 1,652 / 1,805 | 33.0 | not recorded |
+| in process, run 2 | 87 / 139 | 231 / 316 | 381 / 675 | 1,807 / 1,905 | 36.1 | not recorded |
+| in process, run 3 | 81 / 114 | 180 / 288 | 318 / 770 | 1,832 / 2,912 | 36.6 | 88-100 % |
+| llama-server (the production settings above, `-np 1`), state first | 155 / 215 | 627 / 1,132 | 2,234 / 3,373 | 10,832 / 13,593 | 216.7 | 100 % |
+
+Other sessions kept the laptop's CPU at 80-100 % during most of these runs, and llama.cpp's threads meet at barriers
+even with every layer on the GPU, so they are slower and noisier than an idle machine gives: in the speed study, on an
+idle CPU, the same llama-server answered state-first questions sent straight to `/completion` in 752 / 4,255 ms at 10 /
+50 questions, and its in-process batched arm took 1,357 ms at 50 (`results/speed/tables.md`); within this session the
+engine called directly and through `tez serve` took the same time (medians 1,821 and 1,617 ms at 10 questions over
+llama-server, interleaved). Measured instead in one process on one loaded model, interleaved call by call so the load
+hits every arm alike, the runtime adds 1-3 % to the study's batched arm at 50 questions: 1,436 ms p50 for the study's
+logic, 1,443-1,486 for the backend's batched read, 1,451-1,470 for the whole engine (`experiments/inproc_ab.py`,
+`results/speed/inproc_runtime_ab.json`; the same letters).
+
+The answers match: on the typed-decisions test split (400 rows x 5 questions, one call per row, state first) the
+in-process runtime scored 0.702 (choice 0.658, yes/no 0.823, score 0.644) against 0.7015 for llama-server state first,
+and gave the same decision on 99.3 % of the 2,000 (McNemar p = 1.0; `results/speed/inproc_runtime_td.json`). The
+letters differ by 0.12 nats at the median (0.67 at p95, for letters within 10 nats of the top one): llama.cpp's
+numbers depend a little on how a prompt's tokens are split into decodes, which is also why a prompt read from
+llama-server's prompt cache differs slightly from the same prompt read fresh. Against a llama-server serving the same
+Qwen3.5-4B Q8_0 GGUF the in-process letters gave the same answer on 18 of 18 prompts, letter probabilities within 0.031
+(`experiments/inproc_parity.py`, `results/speed/inproc_parity_qwen35_4b.json`).
 
 ## `GET /v1/models`
 
@@ -489,8 +583,8 @@ directory first (`tez presets --show support-triage > schemas/support-triage.yam
 
 | Readout | Needs | Backend call | Measured (typed-decisions) |
 |---|---|---|---|
-| `letters` | nothing (zero-shot) | `/completion`, one token, top-`n_probs` log-probs (200) | Gemma 4 12B Q8: 0.704 |
-| `probe` | ≥ 25–50 labels per question (`tez fit`) | `/embedding` (last-token state) | Qwen3.5-4B cut to 24 blocks: 0.793 |
+| `letters` | nothing (zero-shot) | `/completion`, one token, top-`n_probs` log-probs (200); in process, the letter tokens' logits | Gemma 4 12B Q8: 0.704 |
+| `probe` | ≥ 25–50 labels per question (`tez fit`) | `/embedding` (last-token state); in process, the same state | Qwen3.5-4B cut to 24 blocks: 0.793 |
 | blend | a few labels | both | 12B letters + 50 typical labels per question: 0.766 |
 
 Letters are answered with a single option letter (layouts above); more than 26 options run as a chunked tournament. A
@@ -502,11 +596,13 @@ prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically w
 ## Server defaults
 
 `tez serve` listens on `127.0.0.1:8787`. The backend defaults to `http://127.0.0.1:8080` (llama-server's own default);
-`--backend fake` runs an offline demo backend whose answers mean nothing. `tez fit` needs at least 20 labels per
+`--backend inproc:PATH.gguf` runs the model in process (see "In-process backend"); `--backend fake` runs an offline
+demo backend whose answers mean nothing. `tez fit` needs at least 20 labels per
 question to train a probe; with fewer it calibrates the letters only and says so.
 
 The CLI reads its settings from the environment too (a flag wins): `TEZ_BACKEND`, `TEZ_TEMPLATE`, `TEZ_EMBED_BACKEND`
-and `TEZ_DEFAULT_TEMPERATURE` for the commands that talk to a model (`TEZ_DATA_DIR` for `tez fit` too); for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
+and `TEZ_DEFAULT_TEMPERATURE` for the commands that talk to a model (`TEZ_DATA_DIR` for `tez fit` too), with
+`TEZ_LLAMA_LIB`, `TEZ_N_CTX`, `TEZ_N_BATCH` and `TEZ_N_GPU_LAYERS` for an in-process model; for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
 `TEZ_API_KEY`, `TEZ_LOG_LEVEL`, `TEZ_CORS_ORIGINS`, `TEZ_PRESETS` (`1` = `--presets`) and `TEZ_LAYOUT`. Each can be read
 from a file instead, for Docker and Compose secrets: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key` (surrounding
 whitespace stripped; setting both `X` and `X_FILE` is an error).

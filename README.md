@@ -18,7 +18,8 @@ Full tables: [`BENCHMARKS.md`](BENCHMARKS.md). Individual figures: `docs/figures
 
 ## Use it
 
-Tez sits in front of a local [llama.cpp](https://github.com/ggml-org/llama.cpp) server. The numbers below were
+Tez sits in front of a local [llama.cpp](https://github.com/ggml-org/llama.cpp) server, or runs the model in its own
+process through llama.cpp's library (`--backend inproc:`, below). The numbers below were
 measured with release b11100 and Gemma 4 12B Q8_0 (Ollama's `gemma4:12b-it-q8_0`; the public equivalent is
 `unsloth/gemma-4-12b-it-GGUF` / `gemma-4-12b-it-Q8_0.gguf`, not separately measured).
 
@@ -48,6 +49,13 @@ curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '
 - Prompt layout: two or more questions about one state are read state first, so llama.cpp's prompt cache reads the
   state once (same measured accuracy, about half the tokens); `tez plan` shows the layout, calls and tokens of a
   request without calling the model.
+- In process: `tez serve --backend inproc:gemma-4-12b-it-Q8_0.gguf --llama-lib DIR` runs the model inside Tez through
+  llama.cpp's own library (the release archive for your platform; tested with b11100), with no llama-server. The
+  questions of a request are read in one pass: the state once, every question's tail in one decode. With 50 distinct
+  questions per call, `tez serve` answered in 1.65-1.83 s in process against 10.8 s with llama-server behind it, in one
+  session with the laptop's CPU busy with other work, and gave the same decision as llama-server on 99.3 % of the
+  typed-decisions test split. The model lives in the Tez process: one Tez process per GPU
+  ([`docs/API.md`](docs/API.md#in-process-backend-inproc); `tez doctor --backend inproc:...` checks the setup).
 - Hooks ([`docs/HOOKS.md`](docs/HOOKS.md)): a decision log to review and fit from (`tez serve --decision-log`),
   redaction of personal data before the model reads it, a cache, metrics and OpenTelemetry spans.
 - Agents: `tez-mcp` serves Tez over the Model Context Protocol (`pip install "tez-decisions[mcp]"`); a gate decision of

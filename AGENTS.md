@@ -12,6 +12,7 @@ How to work in this repository: for coding agents, and for people.
 | `tez/extract.py` | JSON schema / pydantic model -> questions, answers -> values (`Tez.extract`, the wire's `json_schema`) |
 | `tez/presets/` | The ten use-case schemas as package data (copies of `examples/usecases/*/schema.yaml`; a test keeps them equal) |
 | `tez/mcp_server.py` | The MCP server (`tez-mcp`, the `mcp` extra) |
+| `tez/inproc.py` | The in-process backend (`--backend inproc:PATH.gguf`): llama.cpp's library through ctypes, batched reads of a request's questions with sequence copies; `tests/stub_libllama.py` stands in for the library |
 | `tez/doctor.py`, `tez/config.py`, `tez/state.py` | `tez doctor`; server defaults (limits, CORS origins, `TEZ_*` environment); email state helpers (adapted from Laya, Apache-2.0) |
 | `tez/integrations/` | `RemoteTez` (the Python API over HTTP) and the LangChain / LangGraph components |
 | `tests/` | pytest suite; `test_live.py` needs a running llama-server; `stub_http.py` and `stub_llama.py` stand in for servers |
@@ -48,6 +49,10 @@ calling the model.
   `http://127.0.0.1:8091` (override with `TEZ_LIVE_BACKEND`) serving Gemma 4 12B with template `gemma4`, started with
   `--embeddings --pooling last`. They skip themselves when nothing answers there; CI never runs them.
 - Run them on purpose: `python -m pytest -q -m live`.
+- `tests/test_inproc_live.py` loads a model in the test process: it skips unless `TEZ_TEST_GGUF` (a GGUF) and
+  `TEZ_LLAMA_LIB` (a llama.cpp release directory) are set, and checks letter parity with a llama-server serving the
+  same GGUF when `TEZ_TEST_LLAMA_URL` is set too (the GPU then holds the model twice: use a small one). Take the GPU
+  first: a llama-server or `tez serve` already holding the model leaves no room for it.
 - They are read-only. Never restart, reload or reconfigure a llama-server you did not start: someone may be measuring
   on it. Check which model it serves (`curl http://127.0.0.1:8091/props`, `model_path`) before trusting any result.
 
