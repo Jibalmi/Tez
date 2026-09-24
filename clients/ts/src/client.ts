@@ -14,6 +14,7 @@ import type {
   SchemaDetail,
   SchemasResponse,
   State,
+  TezOptions,
 } from "./types.js";
 
 export const DEFAULT_BASE_URL = "http://127.0.0.1:8787";
@@ -77,8 +78,10 @@ export interface DecideOptions<Q extends Questions = Questions> extends RequestO
 
 const STATUS_TYPES: Record<number, TezErrorType> = {
   401: "unauthorized",
+  403: "forbidden",
   404: "not_found",
   405: "method_not_allowed",
+  413: "payload_too_large",
   422: "invalid_request",
   500: "internal_error",
   502: "backend_unavailable",
@@ -103,7 +106,7 @@ function decideBody(state: State, options: DecideOptions<Questions>): DecideRequ
   if (options.model !== undefined) body.model = options.model;
   if (options.questions !== undefined) body.questions = options.questions;
   if (options.schema !== undefined) body.schema = options.schema;
-  const tez: NonNullable<DecideRequest["tez"]> = {};
+  const tez: TezOptions = {};
   if (options.readout !== undefined && options.readout !== "auto") tez.readout = options.readout;
   if (options.abstain) tez.abstain = true;
   if (options.alpha !== undefined) tez.gate = { alpha: options.alpha };

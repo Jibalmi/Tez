@@ -3,10 +3,15 @@
  */
 export type TezErrorType =
   | "unauthorized"
+  /** A POST (or a CORS preflight) from a browser origin the server does not allow (403). */
+  | "forbidden"
   | "invalid_request"
   | "not_found"
   | "method_not_allowed"
+  /** A request over the server's limits: body size, questions, state length, batch size (413). */
+  | "payload_too_large"
   | "backend_unavailable"
+  /** An unexpected failure on the server, such as a hook that raised (500). */
   | "internal_error"
   /** No answer within timeoutMs (status 0). */
   | "timeout"
