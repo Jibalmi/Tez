@@ -4,13 +4,15 @@ from __future__ import annotations
 import json as _json
 import math
 import socket
+import time
 
 import numpy as np
 import pytest
 import requests
 
-from tez.backends import (FakeBackend, LlamaCppBackend, derive_model_name, letters_from_response, make_backend,
-                          prompt_tokens)
+from tez import Tez
+from tez.backends import (FakeBackend, LlamaCppBackend, common_prefix, derive_model_name, letters_from_response,
+                          make_backend, prompt_tokens)
 from tez.errors import BackendRequestError, BackendUnavailable
 
 
@@ -164,3 +166,37 @@ def test_fake_backend_is_deterministic_and_class_dependent():
     assert np.linalg.norm(v1 - v2) > 1.0
     with pytest.raises(BackendUnavailable):
         FakeBackend(fail=True).letters("p", 2)
+
+
+def _naive_prefix(a: str, b: str) -> int:
+    i = 0
+    while i < min(len(a), len(b)) and a[i] == b[i]:
+        i += 1
+    return i
+
+
+@pytest.mark.parametrize("a, b", [("", ""), ("abc", ""), ("abc", "abc"), ("abc", "abd"), ("abc", "abcdef"), ("xbc", "abc"),
+                                  ("héllo wörld", "héllo world"), ("a" * 1000 + "x", "a" * 1000 + "y")])
+def test_common_prefix(a, b):
+    assert common_prefix(a, b) == common_prefix(b, a) == _naive_prefix(a, b)
+
+
+def test_common_prefix_on_random_strings():
+    rng = np.random.default_rng(0)
+    for _ in range(300):
+        a = "".join(rng.choice(list("ab"), size=int(rng.integers(0, 40))))
+        b = a[: int(rng.integers(0, len(a) + 1))] + "".join(rng.choice(list("ab"), size=int(rng.integers(0, 5))))
+        assert common_prefix(a, b) == _naive_prefix(a, b)
+
+
+def test_common_prefix_compares_in_c_and_plan_stays_fast():
+    a = "w " * 2_500_000
+    t0 = time.perf_counter()
+    assert common_prefix(a, a + "x") == len(a) and common_prefix(a[:-1] + "yx", a) == len(a) - 1
+    assert time.perf_counter() - t0 < 0.25                  # one Python step per character took seconds here
+    crit = {f"o{i}": None for i in range(255)}
+    body = {"state": "w " * 24_999, "questions": {f"q{j}": {"type": "choice", "instructions": f"Which? {j}",
+                                                            "criteria": crit} for j in range(16)}}
+    t0 = time.perf_counter()
+    plan = Tez(backend="fake").plan(body)
+    assert plan["totals"]["calls"]["letters"] == 16 * 14 and time.perf_counter() - t0 < 1.5

@@ -356,12 +356,20 @@ def _split_prompt(prompt: str, template: str) -> tuple[list[tuple[str, str]], st
 
 
 def common_prefix(a: str, b: str) -> int:
-    """Length of the longest common prefix of two strings."""
+    """Length of the longest common prefix of two strings. A binary search over slices, so the characters are compared
+    in C (linear overall) rather than one by one in Python: a /v1/plan of 64 questions over a 50,000-character state
+    compares hundreds of prompts this way."""
     n = min(len(a), len(b))
-    i = 0
-    while i < n and a[i] == b[i]:
-        i += 1
-    return i
+    if a[:n] == b[:n]:
+        return n
+    lo, hi = 0, n                      # a[:lo] == b[:lo] and a[:hi] != b[:hi]
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        if a[lo:mid] == b[lo:mid]:
+            lo = mid
+        else:
+            hi = mid
+    return lo
 
 
 class FakeBackend(Backend):
