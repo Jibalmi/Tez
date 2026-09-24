@@ -76,12 +76,23 @@ def test_states_match_between_single_and_batched_reads(backend):
         assert cos > 0.995                                  # the same split-dependent numerics as the letters
 
 
-def test_engine_decides_the_docs_request(backend):
+def test_engine_reads_a_request_in_one_batch_like_question_by_question(backend):
     tez = Tez(backend=backend, template=TEMPLATE)
     res = tez.handle(DOCS_REQUEST)
-    assert res["answers"]["topic"]["choice"] == "billing"
+    backend.batched = False
+    try:
+        one_by_one = tez.handle(DOCS_REQUEST)
+    finally:
+        backend.batched = True
+    for qid, a in res["answers"].items():
+        b = one_by_one["answers"][qid]
+        if a["type"] == "noul":
+            assert (a["noul"] >= 0.5) == (b["noul"] >= 0.5) and abs(a["noul"] - b["noul"]) < 0.05
+        else:
+            assert a[a["type"]] == b[b["type"]] or a["type"] == "score"
+            assert max(abs(a["probabilities"][k] - b["probabilities"][k]) for k in a["probabilities"]) < 0.05
     assert abs(sum(res["answers"]["topic"]["probabilities"].values()) - 1) < 1e-9
-    assert res["usage"]["input_tokens"] > 100
+    assert res["usage"] == one_by_one["usage"] and res["usage"]["input_tokens"] > 100
 
 
 @pytest.mark.skipif(not URL, reason="set TEZ_TEST_LLAMA_URL to a llama-server serving the same GGUF")

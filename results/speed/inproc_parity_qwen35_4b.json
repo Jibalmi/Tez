@@ -1,0 +1,453 @@
+{
+ "meta": {
+  "script": "experiments/inproc_parity.py",
+  "date": "2026-09-24T22:58:25",
+  "args": {
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0.gguf",
+   "lib": "C:/temp/llamacpp",
+   "template": "qwen3",
+   "url": "http://127.0.0.1:8095",
+   "tag": "qwen35_4b"
+  },
+  "inproc": {
+   "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0.gguf",
+   "model_alias": null,
+   "ftype": "Q8_0",
+   "n_params": 4205751296,
+   "n_embd": 2560,
+   "n_ctx": 4096,
+   "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev"
+  },
+  "http": {
+   "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0.gguf",
+   "model_alias": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0.gguf",
+   "ftype": "Q8_0",
+   "n_params": 4205751296,
+   "n_embd": 2560,
+   "n_ctx": 4096,
+   "build": "b11100-7ab4ee7ba"
+  }
+ },
+ "n": 18,
+ "same_answer": 18,
+ "prob_gap_http_max": 0.031385089815460065,
+ "prob_gap_http_median": 0.003991229348049378,
+ "prob_gap_batch_max": 0.048792478102376635,
+ "logprob_gap_top_letter_http_max": 0.047167750666826436,
+ "rows": [
+  {
+   "layout": "question_first",
+   "question": "is_urgent",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -0.18171211071847537,
+    -1.7969388563239441
+   ],
+   "inproc_batch": [
+    -0.24194947516624055,
+    -1.5390304688185843
+   ],
+   "http": [
+    -0.21999311447143555,
+    -1.6235688924789429
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.031385089815460065,
+   "prob_gap_batch": 0.048792478102376635,
+   "logprob_gap_top_http": 0.038281003752960174
+  },
+  {
+   "layout": "question_first",
+   "question": "topic",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -0.023563919760270835,
+    -3.8106847388520677,
+    -6.875864563681169
+   ],
+   "inproc_batch": [
+    -0.024464171803721513,
+    -3.7696233209736434,
+    -6.916502517140636
+   ],
+   "http": [
+    -0.026810847222805023,
+    -3.673541307449341,
+    -6.95748233795166
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.003253631248055496,
+   "prob_gap_batch": 0.0009276656914378317,
+   "logprob_gap_top_http": 0.003246927462534188
+  },
+  {
+   "layout": "question_first",
+   "question": "anger",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -2.000962885688036,
+    -0.8769604290229971,
+    -0.802203806708544
+   ],
+   "inproc_batch": [
+    -2.0444189861543016,
+    -0.929699595285161,
+    -0.7433134868867235
+   ],
+   "http": [
+    -2.0058257579803467,
+    -0.9286124110221863,
+    -0.7550360560417175
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.021637351009823225,
+   "prob_gap_batch": 0.0271722925434415,
+   "logprob_gap_top_http": 0.047167750666826436
+  },
+  {
+   "layout": "question_first",
+   "question": "is_urgent",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -0.7901221092993431,
+    -0.6058150109106712
+   ],
+   "inproc_batch": [
+    -0.8761842235723414,
+    -0.5395200237432398
+   ],
+   "http": [
+    -0.7631509900093079,
+    -0.6288393139839172
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.012419251766254025,
+   "prob_gap_batch": 0.03743320640356984,
+   "logprob_gap_top_http": 0.02302430307324599
+  },
+  {
+   "layout": "question_first",
+   "question": "topic",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -3.5556282508645225,
+    -0.031935166147725624,
+    -5.910719345835226
+   ],
+   "inproc_batch": [
+    -3.6087950241290656,
+    -0.029964305134924984,
+    -6.08163056490055
+   ],
+   "http": [
+    -3.40441632270813,
+    -0.03683200478553772,
+    -5.886954307556152
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.00472882744804326,
+   "prob_gap_batch": 0.00190522559420081,
+   "logprob_gap_top_http": 0.004896838637812095
+  },
+  {
+   "layout": "question_first",
+   "question": "anger",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -3.0785080270522798,
+    -0.3039032296889985,
+    -1.5332466439956391
+   ],
+   "inproc_batch": [
+    -2.9377637592144055,
+    -0.32837159307671016,
+    -1.4840512958354992
+   ],
+   "http": [
+    -2.9416236877441406,
+    -0.2917271554470062,
+    -1.6091729402542114
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.015786312349866494,
+   "prob_gap_batch": 0.017842615827382224,
+   "logprob_gap_top_http": 0.012176074241992296
+  },
+  {
+   "layout": "question_first",
+   "question": "is_urgent",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -0.04365749382377615,
+    -3.170469475024948
+   ],
+   "inproc_batch": [
+    -0.04884922621602783,
+    -3.060546995381067
+   ],
+   "http": [
+    -0.045359641313552856,
+    -3.135838508605957
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.001486969234058777,
+   "prob_gap_batch": 0.0048854599973992,
+   "logprob_gap_top_http": 0.0017021474897767064
+  },
+  {
+   "layout": "question_first",
+   "question": "topic",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -3.608170637960434,
+    -5.1127654408168794,
+    -0.03418458449363726
+   ],
+   "inproc_batch": [
+    -3.604707130546295,
+    -5.10429705059024,
+    -0.03437364971133405
+   ],
+   "http": [
+    -3.601814031600952,
+    -5.094245910644531,
+    -0.03447512164711952
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.00028532166193095954,
+   "prob_gap_batch": 0.0001465382661152148,
+   "logprob_gap_top_http": 0.00029053715348226206
+  },
+  {
+   "layout": "question_first",
+   "question": "anger",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -0.19655964107332125,
+    -1.9146058294278134,
+    -3.4808976385098447
+   ],
+   "inproc_batch": [
+    -0.2032698759172824,
+    -1.8811587461565402,
+    -3.46520415631279
+   ],
+   "http": [
+    -0.20743222534656525,
+    -1.855013370513916,
+    -3.4854226112365723
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.009048979636687549,
+   "prob_gap_batch": 0.0055007021390565125,
+   "logprob_gap_top_http": 0.010872584273244001
+  },
+  {
+   "layout": "state_first",
+   "question": "is_urgent",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -2.784190017689671,
+    -0.06388362120529578
+   ],
+   "inproc_batch": [
+    -2.680144352193036,
+    -0.07114128517643437
+   ],
+   "http": [
+    -2.7520244121551514,
+    -0.0660427063703537
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.002019926093981314,
+   "prob_gap_batch": 0.006775538466526565,
+   "logprob_gap_top_http": 0.002159085165057917
+  },
+  {
+   "layout": "state_first",
+   "question": "topic",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -2.93215940720847,
+    -0.055122358868626264,
+    -8.15179060227683
+   ],
+   "inproc_batch": [
+    -2.8248351918887167,
+    -0.06153143517484949,
+    -8.155048738641646
+   ],
+   "http": [
+    -3.080420732498169,
+    -0.04741017892956734,
+    -8.113802909851074
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.00734219410651811,
+   "prob_gap_batch": 0.006037553552226134,
+   "logprob_gap_top_http": 0.007712179939058927
+  },
+  {
+   "layout": "state_first",
+   "question": "anger",
+   "state": "Help! My payouts have been failing for 3 days.",
+   "inproc": [
+    -2.8691011631788115,
+    -0.2044931614698271,
+    -2.0576063359083037
+   ],
+   "inproc_batch": [
+    -2.718988069459133,
+    -0.17611087219350807,
+    -2.3523842181407737
+   ],
+   "http": [
+    -2.6646568775177,
+    -0.22704997658729553,
+    -2.016547441482544
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.01822611125271356,
+   "prob_gap_batch": 0.0326351088920024,
+   "logprob_gap_top_http": 0.02255681511746843
+  },
+  {
+   "layout": "state_first",
+   "question": "is_urgent",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -1.7588489837665655,
+    -0.18930895996285457
+   ],
+   "inproc_batch": [
+    -1.835950220613789,
+    -0.1739819894126171
+   ],
+   "http": [
+    -1.7200307846069336,
+    -0.1975889354944229
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.006820251250384435,
+   "prob_gap_batch": 0.012784012639346143,
+   "logprob_gap_top_http": 0.00827997553156834
+  },
+  {
+   "layout": "state_first",
+   "question": "topic",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -5.277361296603878,
+    -0.005197905490597066,
+    -9.725836180637081
+   ],
+   "inproc_batch": [
+    -4.984179542274372,
+    -0.006981895179645647,
+    -9.349230811805622
+   ],
+   "http": [
+    -5.1473069190979,
+    -0.005932249128818512,
+    -9.459108352661133
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.0007274442442501972,
+   "prob_gap_batch": 0.0017668952209518585,
+   "logprob_gap_top_http": 0.0007343436382214463
+  },
+  {
+   "layout": "state_first",
+   "question": "anger",
+   "state": "The app crashes every time I open the invoices page, since this morning's update. We cannot bill anyone.",
+   "inproc": [
+    -2.6645980638143563,
+    -0.24743040024013752,
+    -1.9019866746542
+   ],
+   "inproc_batch": [
+    -2.6641819155328115,
+    -0.2804882204644521,
+    -1.7450401461236318
+   ],
+   "http": [
+    -2.6690125465393066,
+    -0.2491879165172577,
+    -1.8906331062316895
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.0017009022418267294,
+   "prob_gap_batch": 0.02540138000318748,
+   "logprob_gap_top_http": 0.0017575162771201747
+  },
+  {
+   "layout": "state_first",
+   "question": "is_urgent",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -0.0012791967946910177,
+    -6.760154089983168
+   ],
+   "inproc_batch": [
+    -0.0015726364373627177,
+    -6.543042210411972
+   ],
+   "http": [
+    -0.0011343234218657017,
+    -6.8767828941345215
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.0001276264168570821,
+   "prob_gap_batch": 0.0002811009621728135,
+   "logprob_gap_top_http": 0.00014487337282531598
+  },
+  {
+   "layout": "state_first",
+   "question": "topic",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -7.928737061105863,
+    -10.836202042184965,
+    -0.0004476476537149665
+   ],
+   "inproc_batch": [
+    -7.900016612635387,
+    -10.805213756190074,
+    -0.00046140633655866736
+   ],
+   "http": [
+    -7.952165126800537,
+    -10.861488342285156,
+    -0.0004440936027094722
+   ],
+   "same_answer": true,
+   "prob_gap_http": 8.83154436903677e-06,
+   "prob_gap_batch": 1.1117290941053959e-05,
+   "logprob_gap_top_http": 3.5540510054943297e-06
+  },
+  {
+   "layout": "state_first",
+   "question": "anger",
+   "state": "ticket (JSON)",
+   "inproc": [
+    -0.021570948029488335,
+    -5.0240009101876915,
+    -4.233467844391793
+   ],
+   "inproc_batch": [
+    -0.024645886054763366,
+    -4.792590221992263,
+    -4.148184857002029
+   ],
+   "http": [
+    -0.021312983706593513,
+    -5.010035037994385,
+    -4.257593154907227
+   ],
+   "same_answer": true,
+   "prob_gap_http": 0.00034575928034294087,
+   "prob_gap_batch": 0.003004644511848009,
+   "logprob_gap_top_http": 0.0002579643228948214
+  }
+ ]
+}
