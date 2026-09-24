@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-23T12:00:00Z",
+  "generatedAt": "2026-09-25T12:00:00Z",
   "title": "Design System: Tez",
   "extensions": {
     "colorMeta": {
@@ -51,9 +51,10 @@
     "motion": [
       { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The one easing curve for every state transition." },
       { "name": "t-fast", "value": "120ms", "purpose": "Hover, colour changes, and the probability bar fill reveal." },
-      { "name": "t-med", "value": "200ms", "purpose": "The final-answer strip changing tone." },
-      { "name": "t-slow", "value": "320ms", "purpose": "Reserved longer transitions." },
+      { "name": "t-med", "value": "200ms", "purpose": "The final-answer strip changing tone; the page cross-fade between reading pages." },
+      { "name": "t-slow", "value": "320ms", "purpose": "The docs tab underline sliding to the new tab across a page change (cross-document view transition)." },
       { "name": "replay-pace", "value": "280ms per word", "purpose": "Reading pace of the hero panel's recorded-run replay." },
+      { "name": "page-transition", "value": "@view-transition { navigation: auto }", "purpose": "Same-origin moves between reading pages cross-fade; the header and docs tab strip hold still; the tab underline (view-transition-name docs-tab-mark) slides. Off under reduced motion." },
       { "name": "reduced-motion", "value": "final state", "purpose": "Under prefers-reduced-motion, replays and bars land on the final state; transitions collapse to 0.01ms." }
     ],
     "breakpoints": [
@@ -61,6 +62,7 @@
       { "name": "split-stack", "value": "960px" },
       { "name": "nav-collapse", "value": "860px" },
       { "name": "phone", "value": "720px" },
+      { "name": "reading-table-reflow", "value": "560px" },
       { "name": "narrow", "value": "480px" }
     ]
   },
@@ -114,6 +116,30 @@
       "css": ".ds-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--bg-inset, #eef0f3); font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-seg button { appearance: none; border: 0; background: transparent; height: 30px; padding-inline: 12px; border-radius: 6px; font: inherit; font-size: 0.875rem; font-weight: 520; color: var(--text-muted, #5b6270); cursor: pointer; transition: background-color 120ms cubic-bezier(0.16,1,0.3,1), color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-seg button:hover { color: var(--text, #0b0d10); } .ds-seg button[aria-pressed=\"true\"] { background: var(--bg, #fff); color: var(--text, #0b0d10); box-shadow: 0 1px 2px rgba(16,24,40,0.06); } .ds-seg button:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: -2px; }"
     },
     {
+      "name": "Docs Section Tabs",
+      "kind": "nav",
+      "refersTo": "docs-tab",
+      "description": "Sticky tab strip under the header, one tab per docs page; the current tab carries a 2px blue underline that slides between pages.",
+      "html": "<nav class=\"ds-dtabs\"><a href=\"#\" aria-current=\"page\">Start<span class=\"ds-dtab-mark\"></span></a><a href=\"#\">Guides</a><a href=\"#\">Recipes</a><a href=\"#\">Hooks</a><a href=\"#\">Integrations</a><a href=\"#\">API</a><a href=\"#\">Reference</a></nav>",
+      "css": ".ds-dtabs { display: flex; gap: 2px; height: 48px; padding-inline: 4px; background: var(--bg, #fff); border-bottom: 1px solid var(--border, #e4e7ec); font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-dtabs a { position: relative; display: flex; align-items: center; padding: 0 12px; font-size: 0.875rem; font-weight: 520; color: var(--text-muted, #5b6270); text-decoration: none; white-space: nowrap; transition: color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-dtabs a:hover, .ds-dtabs a[aria-current=\"page\"] { color: var(--text, #0b0d10); } .ds-dtabs a:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: -4px; } .ds-dtab-mark { position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px; border-radius: 2px 2px 0 0; background: var(--accent, #2f5bd8); }"
+    },
+    {
+      "name": "Page Map Rail",
+      "kind": "nav",
+      "refersTo": "rail-link",
+      "description": "Right-hand 'On this page' rail on the reading pages; scroll-spy marks the section being read.",
+      "html": "<nav class=\"ds-rail\"><p class=\"ds-rail-h\">On this page</p><a href=\"#\" aria-current=\"true\">Quickstart</a><a href=\"#\">Install</a><a href=\"#\" class=\"ds-rail-sub\">Model weights</a><a href=\"#\">First request</a></nav>",
+      "css": ".ds-rail { display: grid; gap: 1px; width: 224px; font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-rail-h { margin: 0 0 6px; padding-inline: 10px; font-size: 12.5px; font-weight: 600; color: var(--text, #0b0d10); } .ds-rail a { display: block; padding: 5px 10px; border-radius: 6px; font-size: 13.5px; line-height: 1.4; color: var(--text-muted, #5b6270); text-decoration: none; transition: color 120ms cubic-bezier(0.16,1,0.3,1), background-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-rail a.ds-rail-sub { padding-left: 22px; font-size: 13px; } .ds-rail a:hover { color: var(--text, #0b0d10); background: var(--bg-subtle, #f6f7f9); } .ds-rail a[aria-current=\"true\"] { color: var(--accent, #2f5bd8); background: var(--accent-soft, #eaf0fe); font-weight: 540; } .ds-rail a:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; }"
+    },
+    {
+      "name": "Pager",
+      "kind": "card",
+      "refersTo": "pager-link",
+      "description": "Previous and next docs page, two bordered cards under a hairline.",
+      "html": "<nav class=\"ds-pager\"><a class=\"ds-pg\" href=\"#\"><span class=\"ds-pg-t\">&larr; Start</span><span class=\"ds-pg-d\">Install and first decision</span></a><a class=\"ds-pg ds-pg-next\" href=\"#\"><span class=\"ds-pg-t\">Recipes &rarr;</span><span class=\"ds-pg-d\">Tool calling, routing, guardrails</span></a></nav>",
+      "css": ".ds-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 560px; padding-top: 32px; border-top: 1px solid var(--border, #e4e7ec); font-family: var(--font-sans, Geist, system-ui, sans-serif); } .ds-pg { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--border, #e4e7ec); border-radius: 12px; color: var(--text, #0b0d10); text-decoration: none; transition: border-color 120ms cubic-bezier(0.16,1,0.3,1), background-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-pg:hover { border-color: var(--border-strong, #cdd2da); background: var(--bg-subtle, #f6f7f9); } .ds-pg:focus-visible { outline: 2px solid var(--accent, #2f5bd8); outline-offset: 2px; } .ds-pg-next { text-align: right; } .ds-pg-t { font-weight: 600; } .ds-pg-d { font-size: 0.875rem; line-height: 1.45; color: var(--text-muted, #5b6270); }"
+    },
+    {
       "name": "Probability Rows",
       "kind": "custom",
       "refersTo": "prob-bar-track",
@@ -155,15 +181,17 @@
       "Do set every measured number in Geist Mono with tabular figures, and put a source line (12px, Ink Faint) under any figure or table of results.",
       "Do separate sections with a single hairline and generous padding, and split section bodies 5:7 copy against evidence.",
       "Do keep bar motion at 120 ms on the shared ease-out curve, and land on the final state under reduced motion.",
-      "Do give every sideways-scrolling code block the right-edge fade, and let tables reflow into labelled cells on phones rather than scroll.",
+      "Do give every sideways-scrolling code block and tab strip the edge fade, and let tables reflow into labelled cells on phones rather than scroll: on the reading pages below 560px, with each cell labelled in the sans face and a highlighted row keeping one fill across its cells.",
+      "Do put reading-page navigation in the sticky tab strip (between pages) and the right-hand rail (within a page), with the reading column aligned under the tabs.",
       "Do ship light first, follow the system into dark, and respect a stored theme choice."
     ],
     "donts": [
       "Don't introduce a second accent hue or use blue for decision states; act, escalate and danger keep their own colours.",
       "Don't lift anything except the product panel; cards, tables and code blocks stay flat with hairlines.",
       "Don't set labels, pills or headings in uppercase or add small overline text above headings.",
-      "Don't use glows, gradient fills or gradient text; the only gradients in the build are the scrubber's progress track and the scroll-edge mask.",
-      "Don't break a command inside a flag or token when it wraps.",
+      "Don't use glows, gradient fills or gradient text; the only gradients in the build are the scrubber's progress track and the scroll-edge masks on code blocks and the docs tab strip.",
+      "Don't break a command, or a flag in inline code, inside a flag or token when it wraps.",
+      "Don't give the reading pages a left-hand sidebar tree; page-to-page navigation is the tab strip and in-page navigation is the right rail.",
       "Don't hard-code colours outside the token set; figures that must sit on white (the research PNGs) are framed as paper deliberately."
     ]
   }

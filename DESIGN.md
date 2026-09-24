@@ -174,6 +174,25 @@ components:
   nav-link-current:
     backgroundColor: "{colors.paper-inset}"
     textColor: "{colors.ink}"
+  docs-tab:
+    textColor: "{colors.ink-muted}"
+    padding: "0 12px"
+    height: "48px"
+    typography: "{typography.label}"
+  docs-tab-current:
+    textColor: "{colors.ink}"
+  rail-link:
+    textColor: "{colors.ink-muted}"
+    rounded: "{rounded.sm}"
+    padding: "5px 10px"
+  rail-link-current:
+    backgroundColor: "{colors.signal-blue-wash}"
+    textColor: "{colors.signal-blue}"
+  pager-link:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.lg}"
+    padding: "14px 16px"
 ---
 
 # Design System: Tez
@@ -256,15 +275,20 @@ A neutral, cool-grey palette with a single saturated blue and three semantic sta
 
 A 1200px container with a fluid gutter (16 to 32px) and a 64px sticky header. Sections have fluid block padding (56 to 104px) and are divided by a single hairline. A section opens with a heading block capped at 720px, then a two-column body split 5:7, copy on the left and evidence (code, table, bars, panel) on the right, with 48px row and 56px column gaps. The landing hero uses a 12-column grid with copy in five columns and the product panel in seven.
 
+### Reading pages
+The docs, benchmarks and research pages share one reading shell instead of the landing page's 5:7 split: a single reading column (capped at 780px on the docs, full width on the benchmarks and research pages) beside a 224px page-map rail on the right, 64px apart. The docs are split by job into seven pages (Start, Guides, Recipes, Hooks, Integrations, API, Reference), reached from a 48px section tab strip that sticks directly under the 64px header; the reading column starts at the tab strip's left edge, so text sits under the tabs. The rail sticks under all sticky chrome and scrolls on its own when it is taller than the viewport. Each docs page ends with a previous/next pager. Benchmarks and research use the same shell and rail with no tab strip. Sections inside a reading page are divided by a hairline with 48px above the heading and 64px between sections; running prose is 1rem at 1.65.
+
 Spacing follows a 4px base scale (4, 8, 12, 16, 24, 32, 48, 64, 96). Component interiors use 8 to 24px; section-level separations use 32 to 64px.
 
 Responsive behaviour, as built:
 - **Below 1080px** the hero stacks to one column; the copy caps at 640px.
-- **Below 960px** every 5:7 split and the use-case grid collapse to one column.
+- **Below 960px** every 5:7 split and the use-case grid collapse to one column. On the reading pages the tab strip (44px here) stops sticking and scrolls away with the page, and the rail becomes a 48px disclosure that sticks under the header, naming the current section; it opens to a panel of at most 70% of the viewport and closes on a link, Escape or an outside tap. When the tab strip is wider than the screen it scrolls sideways with no scrollbar, the current tab is centred on load, and the side that has more tabs fades out over 40px.
 - **Below 860px** the nav collapses behind a toggle into a full-width dropdown sheet.
 - **Below 720px** the hero reorders so the product panel comes before the install block; the head-to-head table reflows into stacked rows with each cell carrying its own column label; command blocks wrap, but only between whole tokens, with continuation lines hanging under the prompt; the footer goes to two columns.
+- **Below 560px** every table in a reading column reflows into stacked rows: the header row is visually hidden, each row becomes a block with 12px by 14px padding and a hairline under it, and each cell sits under its own column label (sans, 12px, weight 520, Ink Muted), wrapping anywhere rather than scrolling. A reference row keeps a Paper Subtle fill and a highlighted row a Signal Blue Wash fill across all its stacked cells. The pager and definition lists go to one column at the same width.
 - **Below 480px** probability rows put the label on its own line above the bar and value, except inside the hero panel, where rows stay on one line and a long label wraps within its column.
 - Any code block that scrolls sideways fades out at its right edge (40px mask) until scrolled to the end.
+- Inline code never breaks inside a hyphenated token: a flag such as `--n-ctx` stays on one line, and paths may still break after each slash.
 
 ## Elevation & Depth
 
@@ -281,7 +305,7 @@ Flat by default, with borders doing the separating. Surfaces are distinguished b
 
 ## Shapes
 
-Gently rounded, never soft. Corners step with the size of the object: 6px for small controls (nav links, icon buttons, segment options), 8px for buttons, inputs, message boxes and segmented troughs, 12px for cards, code blocks, tables and notes, 16px for the product panel and playground cards. Pills and every bar are fully rounded. Borders are always 1px hairlines; the only 2px strokes are the selected-tab underline and the focus outline. Bars are 8px tall with a rounded track; the fill is revealed by a rounded clip, so the bar never changes width, only how much of it shows.
+Gently rounded, never soft. Corners step with the size of the object: 6px for small controls (nav links, icon buttons, segment options), 8px for buttons, inputs, message boxes and segmented troughs, 12px for cards, code blocks, tables and notes, 16px for the product panel and playground cards. Pills and every bar are fully rounded. Borders are always 1px hairlines; the only 2px strokes are the selected-tab underline (which on the docs tab strip has 2px rounded top corners and sits over the strip's bottom hairline) and the focus outline. Bars are 8px tall with a rounded track; the fill is revealed by a rounded clip, so the bar never changes width, only how much of it shows.
 
 ## Components
 
@@ -314,13 +338,31 @@ Compact and confident, the category's standard.
 - **States:** hover fills Paper Subtle and inks the label; the current page sits on Paper Inset in Ink.
 - **Mobile:** below 860px a toggle opens a full-width sheet with 16px links and the medium shadow.
 
+### Docs Section Tabs
+A text tab strip under the header, one tab per docs page, on Paper with a bottom hairline.
+- **Style:** 48px tall (44px below 960px), 14px labels at weight 520, 12px side padding, 2px gaps; tabs are plain links, so they work without JavaScript.
+- **States:** Ink Muted at rest, Ink on hover; the current page is Ink with a 2px Signal Blue underline inset 12px from each side. Focus uses the standard outline, inset 4px.
+- **Motion:** moving between docs pages, the underline slides from the old tab to the new one over 320 ms on the shared ease-out while the page cross-fades over 200 ms; the header and tab strip stay still. Browsers without cross-document view transitions just load the page, and reduced motion turns the whole transition off.
+
+### Page Map Rail
+"On this page", built from the page's h2 and h3 headings.
+- **Style:** group headings 12.5px at weight 600 in Ink; links 13.5px (13px and further indented for h3 entries) in Ink Muted, 5px by 10px padding, 6px radius, 1px gaps. An "Edit this page" link with a 14px pencil icon closes the rail.
+- **States:** hover fills Paper Subtle and inks the label. Scroll-spy marks the section being read in Signal Blue on Signal Blue Wash at weight 540, keeps it in view inside the rail, and at the very bottom of the page picks the last section on screen.
+- **Mobile:** see Layout: a sticky disclosure naming the current section, with a chevron that turns over when it opens.
+
+### Pager
+Previous and next page at the foot of every docs page, below a hairline.
+- **Style:** two equal bordered cards (12px radius, 14px by 16px padding), title at weight 600 with a 16px Signal Blue arrow, a one-line 14px Ink Muted description; the next card aligns right.
+- **Hover:** the border strengthens, the card fills Paper Subtle, and the arrow nudges 2px in its direction.
+
 ### Tabs and Segmented Controls
-- **Tabs:** text tabs on a hairline, 14px at 520, selected tab gets a 2px Signal Blue underline and Ink label.
+- **Tabs:** text tabs on a hairline, 14px at 520, selected tab gets a 2px Signal Blue underline and Ink label. The docs section tabs are the page-level form of the same tab (see above).
 - **Segmented:** a Paper Inset trough with 3px padding; the pressed option is a Paper chip with the small shadow. Counts inside options are mono.
 
 ### Code Blocks
 - **Style:** Paper Subtle, hairline border, 12px radius, a mono 12px header with the title and a quiet copy button. Syntax colour is restrained: keys in Ink, strings teal, numbers blue, punctuation and comments muted.
 - **Commands:** one command per line with a non-selectable prompt; long lines scroll on wide screens and wrap between whole tokens on phones.
+- **Inline code:** on Paper Inset in running text; hyphenated tokens (flags, model names) never break, so a flag is always read whole.
 
 ### Probability Row (signature)
 The unit of the whole system: a label, an 8px rounded bar, and a mono percentage, in a three-column grid.
@@ -341,13 +383,15 @@ A lifted 16px panel that replays recorded runs. A Paper Subtle toolbar holds a s
 - **Do** set every measured number in Geist Mono with tabular figures, and put a source line (12px, Ink Faint) under any figure or table of results.
 - **Do** separate sections with a single hairline and generous padding, and split section bodies 5:7 copy against evidence.
 - **Do** keep bar motion at 120 ms on the shared ease-out curve, and land on the final state under reduced motion.
-- **Do** give every sideways-scrolling code block the right-edge fade, and let tables reflow into labelled cells on phones rather than scroll.
+- **Do** give every sideways-scrolling code block and tab strip the edge fade, and let tables reflow into labelled cells on phones rather than scroll: on the reading pages below 560px, with each cell labelled in the sans face and a highlighted row keeping one fill across its cells.
+- **Do** put reading-page navigation in the sticky tab strip (between pages) and the right-hand rail (within a page), with the reading column aligned under the tabs.
 - **Do** ship light first, follow the system into dark, and respect a stored theme choice.
 
 ### Don't:
 - **Don't** introduce a second accent hue or use blue for decision states; act, escalate and danger keep their own colours.
 - **Don't** lift anything except the product panel; cards, tables and code blocks stay flat with hairlines.
 - **Don't** set labels, pills or headings in uppercase or add small overline text above headings.
-- **Don't** use glows, gradient fills or gradient text; the only gradients in the build are the scrubber's progress track and the scroll-edge mask.
-- **Don't** break a command inside a flag or token when it wraps.
+- **Don't** use glows, gradient fills or gradient text; the only gradients in the build are the scrubber's progress track and the scroll-edge masks on code blocks and the docs tab strip.
+- **Don't** break a command, or a flag in inline code, inside a flag or token when it wraps.
+- **Don't** give the reading pages a left-hand sidebar tree; page-to-page navigation is the tab strip and in-page navigation is the right rail.
 - **Don't** hard-code colours outside the token set; figures that must sit on white (the research PNGs) are framed as paper deliberately.
