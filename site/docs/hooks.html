@@ -53,10 +53,23 @@
   <div class="container doc-shell">
     <!-- docs-rail:start -->
     <nav class="doc-nav" data-toc aria-label="On this page">
-      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">On this page</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">Quick start</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="toc-panel" id="toc-panel">
         <p class="toc-heading">On this page</p>
         <ul class="toc-list">
+          <li><a href="#hooks-start">Quick start</a></li>
+          <li><a href="#hook-events">Events</a></li>
+          <li><a href="#hook-context">The context</a></li>
+          <li><a href="#hook-order">Order</a></li>
+          <li><a href="#hook-failures">Failure rules</a></li>
+          <li><a href="#hook-builtin">Built-in hooks</a></li>
+          <li class="toc-sub"><a href="#hook-decisionlog">DecisionLog</a></li>
+          <li class="toc-sub"><a href="#hook-redact">Redact</a></li>
+          <li class="toc-sub"><a href="#hook-cache">Cache</a></li>
+          <li class="toc-sub"><a href="#hook-metrics">Metrics</a></li>
+          <li class="toc-sub"><a href="#hook-otel">OpenTelemetry</a></li>
+          <li><a href="#hook-writing">Writing your own</a></li>
+          <li><a href="#hook-serve">Hooks on tez serve</a></li>
         </ul>
         <a class="rail-edit" href="https://github.com/Jibalmi/Tez/edit/main/site/docs/hooks.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Edit this page</span></a>
       </div>
@@ -66,10 +79,301 @@
     <article class="doc-main prose">
       <header class="page-head">
         <h1>Hooks</h1>
-        <p class="lead">Hooks run your code around every decision.</p>
+        <p class="lead">Hooks run your own code around every decision: log decisions for review, redact personal data before the model reads it, answer repeats from a cache, count, and trace with OpenTelemetry. They run in the engine, so they apply to the Python API, the CLI, <code>tez serve</code>, batches and the MCP server alike.</p>
       </header>
 
+      <!-- ============================================================== quick start -->
+      <section class="doc-section is-first" aria-labelledby="hooks-start">
+        <h2 id="hooks-start">Quick start</h2>
+        <p>A hook is an object with one or more of the event methods below. Give an engine a list of them; they run in that order, around every decision it makes.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import Cache, DecisionLog, Metrics, Redact, Tez
 
+metrics = Metrics()
+tez = Tez(backend="http://127.0.0.1:8091", template="gemma4", schemas="schemas",
+          hooks=[Redact(), Cache(maxsize=4096), DecisionLog("decisions.jsonl", sample=0.1), metrics])
+tez.decide("Refund to ana@example.com please", schema="support-triage")
+tez.decide("Refund to ana@example.com please", schema="support-triage")   # answered by the cache
+snap = metrics.snapshot()
+print(snap["decisions"], snap["skipped"])                                  # 2 1</code></pre>
+        </div>
+        <p><code>Redact</code> comes first, so the cache key, the decision log and the model all see <code>[EMAIL]</code> instead of the address. The second decision is answered from the cache without a backend call.</p>
+        <p><code>tez serve</code> loads hooks by name, <code>module:object</code>, and has a flag for the decision log. The module must be importable: the <code>tez</code> command does not put the working directory on Python's path, so set <code>PYTHONPATH</code> for a module of your own (<code>myhooks.py</code> is in <a href="#hook-writing">Writing your own</a>).</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">PYTHONPATH=. tez serve --backend http://127.0.0.1:8091 --template gemma4 --schemas schemas \
+  --decision-log decisions.jsonl --hook myhooks:RejectLongStates</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================== events -->
+      <section class="doc-section" aria-labelledby="hook-events">
+        <h2 id="hook-events">Events</h2>
+        <p>A hook implements any of these methods. Subclass <code>tez.BaseHook</code> to override only the ones you need.</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Event</th><th scope="col">When</th><th scope="col">May</th></tr></thead>
+            <tbody>
+              <tr><td><code>on_decide_start(ctx)</code></td><td>The request is valid, before any backend call</td><td>Replace <code>ctx.state</code>; answer with <code>ctx.skip(response)</code></td></tr>
+              <tr><td><code>on_question_end(ctx, qid, answer, meta)</code></td><td>After each question, in the order the questions are read (state-first questions first)</td><td>Read the answer and its <code>tez</code> block</td></tr>
+              <tr><td><code>on_decide_end(ctx)</code></td><td>The response is built (<code>ctx.response</code>), also after a skip</td><td>Edit <code>ctx.response</code></td></tr>
+              <tr><td><code>on_error(ctx)</code></td><td>The decision failed (<code>ctx.error</code>), including a request that could not be parsed</td><td>Observe only</td></tr>
+              <tr><td><code>on_feedback(row)</code></td><td>A <code>POST /v1/feedback</code> row is about to be written</td><td>Edit the row in place (<code>Redact</code> does)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><code>ctx.skip(response)</code> in <code>on_decide_start</code> makes <code>response</code> the decision's answer without calling the backend, and sets its <code>tez.latency_ms</code> to the time actually spent. Every <code>on_decide_start</code> hook still runs (<code>ctx.skipped</code> is then true), no <code>on_question_end</code> fires, and <code>on_decide_end</code> runs as usual. <code>Cache</code> answers this way.</p>
+      </section>
+
+      <!-- ============================================================== context -->
+      <section class="doc-section" aria-labelledby="hook-context">
+        <h2 id="hook-context">The context</h2>
+        <p><code>tez.DecisionContext</code> is shared by the hooks of one decision.</p>
+        <div class="table-wrap">
+          <table class="table params">
+            <thead><tr><th scope="col">Field</th><th scope="col">Holds</th></tr></thead>
+            <tbody>
+              <tr><td><code>run_id</code></td><td>32 hex characters, the <code>X-Tez-Run-Id</code> and <code>x-typesafe-request-id</code> headers of the HTTP response. A batch item's is <code>&lt;batch run id&gt;.&lt;index&gt;</code>, with <code>parent_run_id</code> and <code>index</code> set</td></tr>
+              <tr><td><code>request</code></td><td>The wire-format request body, as it arrived</td></tr>
+              <tr><td><code>engine</code></td><td>The <code>tez.Tez</code> deciding it</td></tr>
+              <tr><td><code>state</code>, <code>questions</code>, <code>schema</code></td><td>The parsed state, <code>{id: tez.schema.Question}</code> and the named <code>Schema</code>, or None</td></tr>
+              <tr><td><code>readout</code>, <code>abstain</code>, <code>alpha</code>, <code>model</code></td><td>The request's options; <code>alpha</code> after the schema's default gate</td></tr>
+              <tr><td><code>requested_layout</code>, <code>layout</code></td><td>The layout asked for (<code>auto</code>, ...) and the one the questions were read in: <code>question_first</code>, <code>state_first</code>, or <code>mixed</code> when they differ (the <code>X-Tez-Layout</code> header)</td></tr>
+              <tr><td><code>response</code>, <code>usage</code>, <code>latency_ms</code></td><td>Set when the decision is done</td></tr>
+              <tr><td><code>traces</code></td><td>Per question: <code>readout</code>, <code>layout</code>, <code>tokens</code>, <code>ms</code> and <code>calls</code>, one record per backend call with its <code>kind</code> (<code>letters</code> or <code>embed</code>), <code>tokens</code>, wall <code>ms</code> and llama.cpp's own <code>timings</code> (<code>prompt_n</code>, <code>cache_n</code>, <code>prompt_ms</code>, ...) when the server sends them</td></tr>
+              <tr><td><code>error</code></td><td>The exception, in <code>on_error</code></td></tr>
+              <tr><td><code>skipped</code></td><td>True after <code>ctx.skip()</code></td></tr>
+              <tr><td><code>data</code></td><td>A dict the hooks of this decision can share</td></tr>
+              <tr><td><code>hook_errors</code></td><td><code>(hook, event, exception)</code> for every hook failure swallowed under <code>hooks_raise=False</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>After a request that could not be parsed, only <code>run_id</code>, <code>request</code> and <code>error</code> are set, and <code>on_error</code> hooks must allow for that. A batch refused as a whole (no <code>states</code>, a bad shared field, over <code>--max-batch</code>) reaches <code>on_error</code> once, with the batch's run id and no <code>index</code>; a state that fails inside a batch reaches it with its own <code>&lt;run id&gt;.&lt;index&gt;</code>.</p>
+        <p>Hooks see the requests that reached the engine. The server answers some before that, without any hook: a body that is not JSON, is nested too deeply or is over <code>--max-body-bytes</code> (422, 413), a missing API key (401), a <code>POST</code> from a browser origin that is not allowed (403), and a wrong route or method (404, 405). Those responses still carry <code>x-typesafe-request-id</code>.</p>
+      </section>
+
+      <!-- ============================================================== order -->
+      <section class="doc-section" aria-labelledby="hook-order">
+        <h2 id="hook-order">Order</h2>
+        <p>For one call, the process-wide hooks run first (<code>tez.set_default_hooks([...])</code>, read at call time), then the engine's (<code>Tez(hooks=[...])</code>, <code>add_hook</code>, <code>remove_hook</code>), then the call's own (<code>decide(..., hooks=[...])</code>, <code>handle(body, hooks=...)</code>, <code>decide_many(..., hooks=...)</code>). Within each list, the order given.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import BaseHook, Tez, set_default_hooks
+
+order = []
+
+
+class Tag(BaseHook):
+    def __init__(self, name):
+        self.name = name
+
+    def on_decide_start(self, ctx):
+        order.append(self.name)
+
+
+set_default_hooks([Tag("process")])            # every engine in this process
+tez = Tez(backend="http://127.0.0.1:8091", hooks=[Tag("engine")])
+tez.add_hook(Tag("added"))
+tez.decide("hello", questions={"greeting": {"type": "noul", "instructions": "Is this a greeting?"}},
+           hooks=[Tag("call")])                # this call only
+print(order)                                   # ['process', 'engine', 'added', 'call']
+set_default_hooks(None)</code></pre>
+        </div>
+        <p>Put <code>Redact</code> first, so every later hook, the cache key and the model see the redacted state. <code>ctx.request</code> keeps the body as it arrived, so a hook that records anything should read <code>ctx.state</code>, not <code>ctx.request["state"]</code>.</p>
+        <p>On <code>tez serve</code>, <code>--hook</code> is repeatable. A class is instantiated without arguments, a hook instance is used as it is, and any other callable is called and must return a hook. Hooks given on the command line run in the order given, and the <code>--decision-log</code> hook last.</p>
+      </section>
+
+      <!-- ============================================================== failure rules -->
+      <section class="doc-section" aria-labelledby="hook-failures">
+        <h2 id="hook-failures">Failure rules</h2>
+        <p><code>Tez(hooks_raise=True)</code> is the default (<code>tez serve --hook-errors raise</code>):</p>
+        <ul>
+          <li>An exception from <code>on_decide_start</code>, <code>on_question_end</code> or <code>on_decide_end</code> fails the decision. The caller gets that exception, after the <code>on_error</code> hooks have run with it in <code>ctx.error</code>. Over HTTP a <code>TezError</code> keeps its status and type, so a hook can refuse a request with <code>InvalidRequest</code> (422); anything else is a <code>500 internal_error</code>.</li>
+          <li>An exception from <code>on_feedback</code> fails the feedback: nothing is written.</li>
+        </ul>
+        <p><code>Tez(hooks_raise=False)</code> (<code>--hook-errors log</code>) is for hooks that must never fail a request, such as telemetry. An exception from any hook is logged (logger <code>tez</code>, warning), recorded in <code>ctx.hook_errors</code> and skipped; the decision and the other hooks go on. In this mode a hook cannot refuse a request.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import BaseHook, Tez
+
+
+class Broken(BaseHook):
+    def on_decide_end(self, ctx):
+        raise RuntimeError("the telemetry backend is down")
+
+
+GREETING = {"greeting": {"type": "noul", "instructions": "Is this a greeting?"}}
+
+tez = Tez(backend="http://127.0.0.1:8091", hooks=[Broken()], hooks_raise=False)
+ctx = tez.execute({"state": "hello", "questions": GREETING})
+print(ctx.response["answers"]["greeting"]["noul"])   # the decision went through
+print(ctx.hook_errors)                               # [('Broken', 'on_decide_end', RuntimeError(...))]</code></pre>
+        </div>
+        <p>In both modes an exception raised by an <code>on_error</code> hook is logged and skipped, so it never replaces the original error. Hooks run on the server's worker threads, several decisions at a time: the built-in hooks lock their own state, and yours should too.</p>
+      </section>
+
+      <!-- ============================================================== built-in hooks -->
+      <section class="doc-section" aria-labelledby="hook-builtin">
+        <h2 id="hook-builtin">Built-in hooks</h2>
+        <p>All five are exported by <code>tez</code>.</p>
+        <h3 id="hook-decisionlog">DecisionLog</h3>
+        <p><code>DecisionLog(path, sample=1.0, seed=None)</code> appends one JSON line per decision, or a random <code>sample</code> share of them, in the row format <code>tez fit</code> and <code>tez eval</code> read. <code>tez serve --decision-log PATH</code> installs one.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">json · one row of decisions.jsonl, on several lines, illustrative values</span></div>
+          <pre><code data-lang="json">{"state": "Refund to [EMAIL] please", "labels": {},
+ "predicted": {"topic": "refund", "urgent": "false", "frustration": 1},
+ "decisions": {"topic": {"confidence": 0.91, "readout": "letters"},
+               "urgent": {"confidence": 0.62, "readout": "letters"},
+               "frustration": {"confidence": 0.48, "readout": "letters"}},
+ "schema": "support-triage", "run_id": "8c91f54cfbf648bfa9ec531ea92182f1",
+ "ts": "2026-09-24T19:24:54+00:00", "model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)", "cached": false}</code></pre>
+        </div>
+        <p><code>labels</code> is empty on purpose. Review the rows, fill in the correct labels (the model's are in <code>predicted</code>), and pass the file to <code>tez fit</code>; rows left unlabelled are ignored. Fitting the model's own answers would measure the model against itself, and the gate's guarantee would rest on nothing.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">tez fit --schema schemas/support-triage.yaml --labels reviewed.jsonl \
+  --backend http://127.0.0.1:8091 --template gemma4</code></pre>
+        </div>
+        <p>A row's <code>run_id</code> is the decision's <code>X-Tez-Run-Id</code>, which <a href="./api.html#api-feedback"><code>POST /v1/feedback</code></a> also accepts, so a correction can be traced to the decision it corrects.</p>
+        <h3 id="hook-redact">Redact</h3>
+        <p><code>Redact(patterns=None, replacement=None)</code> replaces personal data in the state before the model reads it, and in feedback rows before they are written. The built-in patterns are <code>email</code>, <code>iban</code>, <code>card</code> (13 to 19 digits that pass the Luhn check) and <code>phone</code> (9 to 15 digits), all four by default; add regular expressions of your own. Built-ins become <code>[EMAIL]</code>, <code>[IBAN]</code>, <code>[CARD]</code> and <code>[PHONE]</code>, your patterns <code>[REDACTED]</code>, or all of them one fixed <code>replacement</code>. Strings inside object and array states are redacted and keys kept. Decisions are then made on the redacted text.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import Redact
+
+redact = Redact()                                    # email, iban, card and phone
+print(redact.redact("Card 4111 1111 1111 1111, mail ana@example.com, call +44 20 7946 0958"))
+# Card [CARD], mail [EMAIL], call [PHONE]
+
+orders = Redact(["email", r"ORD-\d{6}"])            # a built-in and a pattern of your own
+print(orders.redact({"text": "Order ORD-123456 for ana@example.com", "channel": "email"}))
+# {'text': 'Order [REDACTED] for [EMAIL]', 'channel': 'email'}</code></pre>
+        </div>
+        <h3 id="hook-cache">Cache</h3>
+        <p><code>Cache(maxsize=1024)</code> answers a repeated decision from memory, keeping at most <code>maxsize</code> answers and dropping the least recently used. The key covers the state, every question's definition, the schema and its calibration id, the readout, abstain, the gate's alpha, the requested layout, the model alias, and the backend's URL and template, so a new fit never serves an old answer. A cached response has <code>tez.cached: true</code> and zero usage. <code>stats()</code> returns the size, hits and misses; <code>clear()</code> empties it.</p>
+        <h3 id="hook-metrics">Metrics</h3>
+        <p><code>Metrics(window=10000)</code> counts decisions, errors by type, cached decisions, questions by readout, layout and gate decision, input tokens and feedback rows, with latency percentiles over the last <code>window</code> decisions. <code>snapshot()</code> returns a dict and <code>prometheus()</code> the Prometheus text format.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from tez import Metrics, Tez
+
+metrics = Metrics(window=10_000)
+tez = Tez(backend="http://127.0.0.1:8091", hooks=[metrics])
+tez.decide("hello", questions={"greeting": {"type": "noul", "instructions": "Is this a greeting?"}})
+snap = metrics.snapshot()
+print(snap["decisions"], snap["readouts"], snap["latency_ms"]["count"])   # 1 {'letters': 1} 1
+print(metrics.prometheus().splitlines()[1])                               # tez_decisions_total 1</code></pre>
+        </div>
+        <p><code>tez serve</code> has no metrics route. To scrape one, run the same application yourself: <code>tez.server.create_app</code> returns it, and a route of your own can serve the counters.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python · app.py</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python"># app.py
+from fastapi.responses import PlainTextResponse
+from tez import Metrics, Tez
+from tez.server import create_app
+
+metrics = Metrics()
+tez = Tez(backend="http://127.0.0.1:8091", template="gemma4", schemas="schemas", hooks=[metrics])
+app = create_app(tez)                  # the application tez serve runs
+
+
+@app.get("/metrics")                   # no API key check: keep this server on 127.0.0.1
+def prometheus():
+    return PlainTextResponse(metrics.prometheus())</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">uvicorn app:app --host 127.0.0.1 --port 8787
+curl -s http://127.0.0.1:8787/metrics</code></pre>
+        </div>
+        <p><code>create_app</code> applies <code>tez serve</code>'s default request limits unless you pass <code>limits=</code>; see the <a href="./reference.html#python">Python API</a>.</p>
+        <h3 id="hook-otel">OpenTelemetry</h3>
+        <p><code>OTelHook(tracer=None)</code> opens one OpenTelemetry span per decision, <code>tez.decide</code>, with the attributes <code>tez.run_id</code>, <code>tez.questions</code>, <code>tez.schema</code>, <code>tez.readout</code>, <code>tez.layout</code>, <code>tez.latency_ms</code>, <code>tez.input_tokens</code> and <code>tez.model</code>, and a <code>tez.question</code> event per question (readout, layout, gate decision, confidence, tokens). A batch item's span also carries <code>tez.parent_run_id</code> and <code>tez.index</code>. Failures are recorded on the span. The state is never recorded.</p>
+        <p>The <code>otel</code> extra installs the OpenTelemetry API only; without a tracer provider the spans go nowhere. Install the SDK, or your vendor's distribution, to export them:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">pip install "tez-decisions[otel] @ git+https://github.com/Jibalmi/Tez" opentelemetry-sdk</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python">from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
+from tez import OTelHook, Tez
+
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
+trace.set_tracer_provider(provider)
+
+tez = Tez(backend="http://127.0.0.1:8091", hooks=[OTelHook()])
+tez.decide("My invoice is wrong", questions={"billing": {"type": "noul", "instructions": "Is it about billing?"}})
+# prints one span, "tez.decide", with tez.run_id, tez.layout, tez.latency_ms, ... and a "tez.question" event</code></pre>
+        </div>
+        <p><code>OTelHook()</code> uses the global tracer provider; pass <code>tracer=</code> to use another. On a server, load a small factory that sets up the provider and returns the hook, and run it with <code>--hook-errors log</code>, so that tracing can never fail a request:</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python · tracing.py</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python"># tracing.py
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from tez import OTelHook
+
+
+def make_hook():
+    provider = TracerProvider()
+    provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))   # or your OTLP exporter
+    trace.set_tracer_provider(provider)
+    return OTelHook()</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">PYTHONPATH=. tez serve --backend http://127.0.0.1:8091 --template gemma4 \
+  --hook tracing:make_hook --hook-errors log</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================== writing your own -->
+      <section class="doc-section" aria-labelledby="hook-writing">
+        <h2 id="hook-writing">Writing your own</h2>
+        <p>Subclass <code>BaseHook</code> and override the events you need. One hook refuses long states with a 422; the other prints the llama.cpp timings of slow questions from <code>ctx.traces</code>.</p>
+        <div class="code">
+          <div class="code-head"><span class="code-label">python · myhooks.py</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="python"># myhooks.py
+from tez import BaseHook, InvalidRequest
+
+
+class RejectLongStates(BaseHook):
+    def on_decide_start(self, ctx):
+        if len(str(ctx.state)) &gt; 20_000:
+            raise InvalidRequest("state too long for this deployment")      # 422 with hooks_raise on
+
+
+class SlowQuestions(BaseHook):
+    def on_question_end(self, ctx, qid, answer, meta):
+        trace = ctx.traces[qid]
+        if trace["ms"] &gt; 500:
+            print(ctx.run_id, qid, trace["layout"], [c.get("timings") for c in trace["calls"]])</code></pre>
+        </div>
+        <div class="code">
+          <div class="code-head"><span class="code-label">bash</span><button class="copy-btn" type="button" data-copy><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span data-copy-label>Copy</span></button></div>
+          <pre><code data-lang="bash">PYTHONPATH=. tez serve --backend http://127.0.0.1:8091 --template gemma4 --schemas schemas \
+  --hook myhooks:RejectLongStates --hook myhooks:SlowQuestions --decision-log decisions.jsonl</code></pre>
+        </div>
+        <p>A hook object serves every decision, on several threads at once: keep per-decision values in <code>ctx.data</code>, and lock anything the hook itself holds.</p>
+      </section>
+
+      <!-- ============================================================== tez serve -->
+      <section class="doc-section" aria-labelledby="hook-serve">
+        <h2 id="hook-serve">Hooks on tez serve</h2>
+        <p><code>tez serve</code> and <code>tez decide</code> take the same three flags.</p>
+        <dl class="flag-list">
+          <div><dt>--hook MODULE:OBJECT<span class="dflt">repeatable</span></dt><dd>Load a hook by name: a class is instantiated, a hook instance used as it is, any other callable called and must return a hook. Hooks run in the order given.</dd></div>
+          <div><dt>--decision-log PATH</dt><dd>Append every decision to this JSONL file, after the <code>--hook</code> hooks.</dd></div>
+          <div><dt>--hook-errors {raise,log}<span class="dflt">default raise</span></dt><dd><code>raise</code>: a hook that raises fails the decision. <code>log</code>: it is logged and skipped.</dd></div>
+        </dl>
+        <p>The startup line lists the hooks it loaded, for example <code>hooks: RejectLongStates, SlowQuestions, DecisionLog</code>. <code>tez-mcp</code> takes no hook flags: when it forwards to <code>tez serve</code> (<code>TEZ_URL</code>), the server's hooks apply.</p>
+      </section>
 
       <!-- docs-pager:start -->
       <nav class="pager" aria-label="Previous and next page">
