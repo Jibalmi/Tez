@@ -55,9 +55,9 @@ curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '
 - Email: `tez.state.email_state(subject, body)` strips quoted history, signatures and disclaimers first.
 - Learn from labels: `tez suggest` picks the most typical rows to label first; `tez fit` trains per-question probes,
   temperatures and conformal thresholds; `tez eval` reports accuracy and ECE.
-- Safe defaults: web pages on other sites cannot read its answers or write feedback (the website playground and pages
-  on this machine can; `--cors-origins` changes the list), oversized requests get `413`, and every setting can come
-  from `TEZ_*` environment variables.
+- Safe defaults: web pages on other sites can neither read its answers nor make it decide or write feedback (their
+  POSTs get `403`; the website playground and pages on this machine are allowed, `--cors-origins` changes the list),
+  oversized requests get `413`, and every setting can come from `TEZ_*` environment variables.
 
 ### Install and integrate
 

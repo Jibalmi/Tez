@@ -50,6 +50,32 @@ def test_add_presets_and_the_schema_listing(schema_dir: Path):
     assert Tez(backend="fake").add_presets(["topic-news"]) == ["topic-news"]
 
 
+def test_preset_feedback_goes_where_the_copied_preset_will_find_it(schema_dir: Path, tmp_path: Path, monkeypatch):
+    """A preset has no file of its own: its feedback goes to --data-dir, else the --schemas directory's .tez (where tez
+    fit reads it once the preset is copied there to be fitted), else ./.tez."""
+    body = {"schema": "voice-commands", "question": "action", "state": "open spotify", "label": "open_spotify"}
+    tez = Tez(backend="fake", schemas=schema_dir)
+    tez.add_presets(["voice-commands"])
+    assert TestClient(create_app(tez)).post("/v1/feedback", json=body).status_code == 200
+    written = schema_dir / ".tez" / "feedback" / "voice-commands.jsonl"
+    assert json.loads(written.read_text(encoding="utf-8"))["label"] == "open_spotify"
+    (schema_dir / "voice-commands.yaml").write_text(presets.text("voice-commands"), encoding="utf-8")
+    copied = Tez(backend="fake", schemas=schema_dir)                     # the copy is an ordinary schema now
+    assert copied.schemas["voice-commands"].builtin is False
+    assert copied.feedback_path(copied.schemas["voice-commands"]) == written
+    with_data = Tez(backend="fake", schemas=schema_dir / "support-triage.yaml", data_dir=tmp_path / "data")
+    with_data.add_presets(["topic-news"])
+    assert with_data.feedback_path(with_data.schemas["topic-news"]) == tmp_path / "data" / "feedback" / "topic-news.jsonl"
+    one_file = Tez(backend="fake", schemas=schema_dir / "support-triage.yaml")     # a schema file: its directory
+    one_file.add_presets(["topic-news"])
+    assert one_file.feedback_path(one_file.schemas["topic-news"]) == schema_dir / ".tez" / "feedback" / "topic-news.jsonl"
+    monkeypatch.chdir(tmp_path)
+    bare = Tez(backend="fake")
+    bare.add_presets(["voice-commands"])
+    bare.record_feedback(body)
+    assert (tmp_path / ".tez" / "feedback" / "voice-commands.jsonl").is_file()
+
+
 def test_presets_never_load_artefacts_and_cannot_be_fitted(tmp_path: Path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     stray = tmp_path / ".tez" / "support-triage"

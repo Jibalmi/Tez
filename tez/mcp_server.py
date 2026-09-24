@@ -22,7 +22,7 @@ from typing import Any, Mapping
 
 from ._version import __version__
 from .config import Env, Limits
-from .engine import Tez
+from .engine import Tez, check_state_depth
 from .errors import TezError
 
 ESCALATE = ("A gate decision of `escalate` means: do not act on that answer yourself; hand the case to a person or to "
@@ -97,6 +97,8 @@ class TezTools:
     def tez_feedback(self, schema: str, question: str, state: Any, label: Any) -> dict:
         body = {"schema": schema, "question": question, "state": state, "label": label}
         if not self.remote:
+            if isinstance(state, (dict, list)):
+                check_state_depth(state)
             self.limits.check_state(state)
         return self.engine.record_feedback(body)
 

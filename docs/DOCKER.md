@@ -74,7 +74,7 @@ The Tez image itself (`docker/Dockerfile`) is configured by environment, which `
 | `TEZ_PORT` | `8787` | Listening port |
 | `TEZ_HOST` | `0.0.0.0` | Listening address inside the container |
 | `TEZ_API_KEY` | unset | Require `Authorization: Bearer <key>` (`/healthz` stays open) |
-| `TEZ_CORS_ORIGINS` | `http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io` | Browser origins CORS allows (`*` for any) |
+| `TEZ_CORS_ORIGINS` | `http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io` | Browser origins CORS allows (`*` for any); POSTs from any other origin get `403` |
 | `TEZ_LOG_LEVEL` | `info` | `critical`, `error`, `warning`, `info` or `debug` |
 | `TEZ_LAYOUT` | `auto` | Default prompt layout (docs/API.md, "Prompt layout") |
 | `TEZ_EMBED_BACKEND` | unset | Separate llama-server for probe features |

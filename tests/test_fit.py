@@ -139,7 +139,9 @@ def test_edited_schema_makes_the_fit_stale(fitted, tmp_path):
     detail = tez.schema_detail("synth")
     assert detail["probes"]["topic"]["probe"] == "stale" and "prompt changed" in detail["probes"]["topic"]["note"]
     res = tez.decide("invoice refund", schema="synth")
-    assert res["tez"]["questions"]["topic"] == {"readout": "letters"}
+    # the stale fit is not used: uncalibrated letters, read with auto's state_first (is_urgent keeps its fit's
+    # question_first, so the request is mixed and every question names its layout)
+    assert res["tez"]["questions"]["topic"] == {"readout": "letters", "layout": "state_first"}
     with pytest.raises(InvalidRequest, match="prompt changed"):
         tez.decide("invoice refund", schema="synth", readout="probe")
 

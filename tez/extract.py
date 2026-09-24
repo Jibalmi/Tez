@@ -168,8 +168,9 @@ class _Converter:
     def fail(self, where: str, message: str) -> InvalidRequest:
         return InvalidRequest(f"{where}: {message}")
 
-    def resolve(self, node: Any, where: str, seen: tuple = ()) -> dict:
-        """The node with local $refs followed (siblings of a $ref win) and a one-element allOf merged."""
+    def resolve(self, node: Any, where: str, seen: tuple = (), followed: list | None = None) -> dict:
+        """The node with local $refs followed (siblings of a $ref win) and a one-element allOf merged; every $ref
+        followed is appended to `followed`."""
         if not isinstance(node, dict):
             raise self.fail(where, f"a schema must be an object, got {type(node).__name__}")
         if "$ref" in node:
@@ -184,12 +185,23 @@ class _Converter:
                 if not isinstance(target, dict) or part not in target:
                     raise self.fail(where, f"{ref} does not resolve inside the schema")
                 target = target[part]
-            merged = {**self.resolve(target, where, seen + (ref,)), **{k: v for k, v in node.items() if k != "$ref"}}
+            if followed is not None:
+                followed.append(ref)
+            merged = {**self.resolve(target, where, seen + (ref,), followed),
+                      **{k: v for k, v in node.items() if k != "$ref"}}
             return merged
         if isinstance(node.get("allOf"), list) and len(node["allOf"]) == 1:
-            inner = self.resolve(node["allOf"][0], f"{where}.allOf[0]", seen)
+            inner = self.resolve(node["allOf"][0], f"{where}.allOf[0]", seen, followed)
             return {**inner, **{k: v for k, v in node.items() if k != "allOf"}}
         return node
+
+    def enter(self, refs: tuple, followed: list, where: str) -> tuple:
+        """The $refs open along a path after following `followed`: meeting an open one again means the schema contains
+        itself (siblings that share a definition are fine)."""
+        for ref in followed:
+            if ref in refs:
+                raise self.fail(where, f"{ref} contains itself: a recursive schema cannot be decided in one pass")
+        return refs + tuple(dict.fromkeys(followed))
 
     def instructions(self, node: dict, default: str) -> Any:
         desc = node.get("description")
@@ -208,20 +220,16 @@ class _Converter:
         self.consts.append(Field(qid=".".join(path), path=path, kind="const", values=[value]))
 
     def convert(self, node: Any, path: tuple[str, ...], where: str, nullable: bool = False, refs: tuple = ()) -> None:
-        """Add the questions for one field. `refs` are the $refs being expanded along this path: meeting one again
-        means the schema contains itself (siblings that share a definition are fine)."""
-        open_refs = refs
-        for branch in [node] + (list(node.get("anyOf") or []) + list(node.get("oneOf") or []) if isinstance(node, dict) else []):
-            ref = branch.get("$ref") if isinstance(branch, dict) else None
-            if isinstance(ref, str):
-                if ref in open_refs:
-                    raise self.fail(where, f"{ref} contains itself: a recursive schema cannot be decided in one pass")
-                refs = refs + (ref,)
-        node = self.resolve(node, where)
+        """Add the questions for one field. `refs` are the $refs being expanded along this path (through $ref, a
+        one-element allOf or a union's branch): meeting one again means the schema contains itself."""
+        followed: list[str] = []
+        node = self.resolve(node, where, followed=followed)
+        refs = self.enter(refs, followed, where)
         dotted = ".".join(path)
         for key in ("anyOf", "oneOf"):
             if isinstance(node.get(key), list):
-                branches = [self.resolve(b, f"{where}.{key}[{i}]") for i, b in enumerate(node[key])]
+                in_branches: list[str] = []
+                branches = [self.resolve(b, f"{where}.{key}[{i}]", followed=in_branches) for i, b in enumerate(node[key])]
                 real = [b for b in branches if not _is_null(b)]
                 has_null = len(real) < len(branches)
                 if real and all("const" in b for b in real):
@@ -229,7 +237,8 @@ class _Converter:
                     return self.choice(node, path, where, options, nullable or has_null)
                 if len(real) == 1:
                     rest = {k: v for k, v in node.items() if k not in ("anyOf", "oneOf")}
-                    return self.convert({**real[0], **rest}, path, where, nullable or has_null, refs)
+                    return self.convert({**real[0], **rest}, path, where, nullable or has_null,
+                                        self.enter(refs, in_branches, where))
                 raise self.fail(where, "a union of different types cannot be decided in one pass; use one enum")
         jtype = node.get("type")
         if isinstance(jtype, list):
@@ -336,11 +345,16 @@ def schema_from_json_schema(json_schema: Any, name: str = "extract") -> Schema:
     if not isinstance(json_schema, dict):
         raise InvalidRequest(f"{name}: a JSON schema must be an object, got {type(json_schema).__name__}")
     conv = _Converter(json_schema, name)
-    root = conv.resolve(json_schema, name)
-    if root.get("type") not in (None, "object") or not isinstance(root.get("properties"), dict) or not root["properties"]:
-        raise InvalidRequest(f"{name}: the top level must be an object with properties")
-    for key, sub in root["properties"].items():
-        conv.convert(sub, (str(key),), f"{name}.properties.{key}")
+    try:
+        followed: list[str] = []
+        root = conv.resolve(json_schema, name, followed=followed)
+        if root.get("type") not in (None, "object") or not isinstance(root.get("properties"), dict) or not root["properties"]:
+            raise InvalidRequest(f"{name}: the top level must be an object with properties")
+        top = conv.enter((), followed, name)
+        for key, sub in root["properties"].items():
+            conv.convert(sub, (str(key),), f"{name}.properties.{key}", refs=top)
+    except RecursionError as exc:
+        raise InvalidRequest(f"{name}: the schema is nested too deeply to be decided") from exc
     if not conv.questions:
         raise InvalidRequest(f"{name}: every field has a single possible value; there is nothing to decide")
     desc = root.get("description") if isinstance(root.get("description"), str) else ""

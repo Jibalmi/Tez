@@ -10,11 +10,16 @@ needed locally, and `--api-key` on `tez serve` makes one required (`/healthz` st
 Browsers: CORS allows only listed origins, by default `http://127.0.0.1:*` and `http://localhost:*` (pages served
 from this machine, any port) and `https://jibalmi.github.io` (the website playground). `--cors-origins LIST` (or
 `TEZ_CORS_ORIGINS`) replaces the list: origins, `host:*` for any port, `https://*.domain`, `null`, or `*` for any
-origin; `--no-cors` sends no CORS headers. A preflight from an allowed origin is answered with
+origin; `--no-cors` sends no CORS headers and allows no origin. A preflight from an allowed origin is answered with
 `Access-Control-Allow-Private-Network: true` (Chrome's Private Network Access, which the playground needs to reach a
-server on your machine); from any other origin it gets `403`. `POST /v1/feedback` refuses a request from an origin
-that is not allowed (`403 forbidden`), so a web page elsewhere cannot write training labels. Requests without an
-`Origin` header (curl, SDKs, other servers) are not affected.
+server on your machine); from any other origin it gets `403`. Every `POST` (`/v1/systemone`, `/v1/systemone/batch`,
+`/v1/plan`, `/v1/feedback`) from an origin that is not allowed gets `403 forbidden` before anything runs: a web page
+elsewhere could not read the answer anyway, but a plain cross-site form or `text/plain` POST would otherwise still use
+the model, run the hooks (a `DecisionLog` row) or write training labels. Browsers send `Origin` on every `POST`, so a
+browser app behind a same-origin reverse proxy still needs its origin in the list. Requests without an `Origin` header
+(curl, SDKs, other servers) are not affected. A page reached through DNS rebinding sends its own origin, so its POSTs
+are refused too, but it can read the `GET` routes (schemas, models, health); beyond this machine, run with
+`--api-key`.
 
 ## Endpoints
 
@@ -57,7 +62,7 @@ that is not allowed (`403 forbidden`), so a web page elsewhere cannot write trai
 }
 ```
 
-- `state`: string, object or array (objects are serialised as JSON).
+- `state`: string, object or array (objects are serialised as JSON; at most 100 levels of nested objects and arrays).
 - `questions`: map of id → question. `type` is `noul` (yes/no), `choice` (2–255 options; `criteria` maps label → description or `null`),
   or `score` (2–10 ordered levels; `criteria` is a list, level *i* = index *i*). `instructions` may be a string, object or array.
 - `model`: any string; `tez-latest` is the default alias.
@@ -127,7 +132,8 @@ The three answer shapes are exactly Jev's:
 
 The `tez` block: `latency_ms`, and per question the `readout` used (`letters` or `probe`), `decision` (`act` /
 `escalate`, present only when a gate applies), `p_correct` and `calibration_id` when a fitted calibration exists, and
-`layout` when the question was read in another layout than the request's (a fitted question under `auto`).
+`layout` for every question when the request's questions were not all read in the same layout (`X-Tez-Layout: mixed`,
+for example fitted and unfitted questions under `auto`); otherwise they were all read in the `X-Tez-Layout` layout.
 
 The gate never acts without evidence: `act` always comes with `p_correct` and `calibration_id`. A question with no
 usable fitted calibration, and any `__none__` answer, gets `escalate` whenever a gate is requested (in the example,
@@ -175,15 +181,18 @@ Every response (errors and CORS preflights included) carries:
 - `server-timing`: `total;dur=<ms>` for every response; decisions add `tez;dur=<ms>` (the engine) and
   `backend;dur=<ms>` (time spent in model calls), in the form `tez;dur=<ms>, backend;dur=<ms>, total;dur=<ms>`.
 
-Decisions (`/v1/systemone` and `/v1/systemone/batch`, successful or not) also carry `X-Tez-Run-Id` (the same id) and,
-for a single decision that got that far, `X-Tez-Layout` (`question_first`, `state_first` or `mixed`). Browsers can read
-all four (CORS `Expose-Headers`).
+Decisions (`/v1/systemone` and `/v1/systemone/batch`) that reach the engine, successful or not, also carry
+`X-Tez-Run-Id` (the same id; not on a `401`, a `403`, or a body over `--max-body-bytes` or not JSON, which are
+answered before) and, for a
+single decision that got that far, `X-Tez-Layout`: the layout its questions were read in (`question_first` or
+`state_first`; under `auto`, a fitted question counts in its fit's layout), or `mixed` when they differ. Browsers can
+read all four (CORS `Expose-Headers`).
 
 ### Errors
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
 than the model's context, with llama.cpp's message), `503` backend unavailable. Also `404` for an unknown route or
-schema, `405` for a wrong method, `403` for feedback (or a CORS preflight) from a browser origin that is not allowed,
+schema, `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin that is not allowed,
 `413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure (a hook that raised,
 for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,
 `forbidden`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`, `backend_unavailable` and
@@ -273,7 +282,9 @@ Python: `Tez.decide_many(states, questions=None, schema=None, ...)` returns the 
 The body of a `/v1/systemone` request (`state` may be left out); nothing is sent to the model. Per question: the
 readout it would use, its fit (`ready`, `stale` or `none`, with the reason, the fit's layout and calibration id), the
 number of options, the backend calls, the layout, the prompt hash (`prompt_sha`, what `tez fit` records) and a token
-estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it.
+estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it. The
+top-level `layout` is the one the questions share, or `mixed` (what `X-Tez-Layout` would say); `order` is the order
+they would be read in (state-first questions first, back to back).
 
 For the schema file below (`support-triage`, with its one worked example) and the state of the first example:
 
@@ -291,7 +302,7 @@ For the schema file below (`support-triage`, with its one worked example) and th
                              "prompt_tokens": 165, "cached_tokens": 69},
                "anger": {"...": "..."}},
  "totals": {"calls": {"letters": 3, "embed": 0}, "prompt_tokens": 528, "cached_tokens": 138, "evaluated_tokens": 390},
- "notes": ["state first: questions after the first reuse the cached state (3 questions, back to back; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)",
+ "notes": ["state first: 3 questions read back to back, each after the first reusing the prefix it shares with the one before (cached_tokens; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)",
            "model names not checked (the plan does not call the backend): a fit made on another model would not be used"]}
 ```
 
@@ -354,8 +365,10 @@ request that names none gets), `calibration_id`, `probes` (per question: `probe`
 {"schema": "support-triage", "question": "topic", "state": "...", "label": "billing", "run_id": "5f0c..."}
 ```
 
-Appends to `<data-dir>/feedback/<schema>.jsonl` (default data dir: `<schemas>/.tez`) and returns
-`{"ok": true, "schema": ..., "question": ..., "label": ...}`. `tez fit` trains from these rows plus any labelled file.
+Appends to `<data-dir>/feedback/<schema>.jsonl` (default data dir: the schema file's directory + `/.tez`; for a preset,
+the `--schemas` directory's `.tez`, else `./.tez`) and returns `{"ok": true, "schema": ..., "question": ..., "label":
+...}`. `tez fit` trains from these rows plus any labelled file; feedback recorded for a preset is found once the preset
+is copied into the schema directory to be fitted.
 `run_id` (optional) is the decision's `X-Tez-Run-Id`; it is stored with the row. `on_feedback` hooks see the row first
 (`Redact` removes personal data from its state; docs/HOOKS.md).
 
@@ -400,8 +413,9 @@ MCP client's configuration:
 | `--max-state-chars` | 50,000 | characters per state (an object or array counts as its JSON) |
 | `--max-batch` | 64 | states per `/v1/systemone/batch` request |
 
-`0` switches a limit off. The Python API applies none unless it is given `limits=tez.config.Limits(...)`
-(`handle`, `execute`, `handle_batch`, `plan`); the MCP server applies these defaults.
+`0` switches a limit off (`None` too, in Python). The Python API applies none unless it is given
+`limits=tez.config.Limits(...)` (`handle`, `execute`, `handle_batch`, `plan`, `create_app`); the MCP server applies
+these defaults.
 
 ## Schema files (`schemas/*.yaml`)
 

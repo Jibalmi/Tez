@@ -138,7 +138,8 @@ def test_stdio_transport(schema_dir):
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
 
-    env = {"TEZ_BACKEND": "fake", "TEZ_SCHEMAS": str(schema_dir), "PYTHONPATH": str(ROOT),
+    path = os.pathsep.join(p for p in (str(ROOT), os.environ.get("PYTHONPATH", "")) if p)   # this checkout's tez first
+    env = {"TEZ_BACKEND": "fake", "TEZ_SCHEMAS": str(schema_dir), "PYTHONPATH": path,
            "PYTHONIOENCODING": "utf-8", **({"SYSTEMROOT": os.environ["SYSTEMROOT"]} if "SYSTEMROOT" in os.environ else {})}
     params = StdioServerParameters(command=sys.executable, args=["-m", "tez.mcp_server"], env=env, cwd=str(ROOT))
 

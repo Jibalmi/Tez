@@ -108,6 +108,26 @@ def test_hooks_see_every_item_with_its_own_run_id(tmp_path: Path):
            [f"{rid}.{i}" for i in range(3)]
 
 
+def test_a_refused_batch_reaches_on_error_once_with_the_batch_run_id():
+    seen = []
+
+    class Rec(BaseHook):
+        def on_decide_start(self, ctx):
+            seen.append(("start", ctx.run_id))
+
+        def on_error(self, ctx):
+            seen.append((ctx.run_id, type(ctx.error).__name__, ctx.index, ctx.request is not None))
+
+    tez = Tez(backend="fake", hooks=[Rec()])
+    with pytest.raises(InvalidRequest):
+        tez.handle_batch({"states": ["x"], "questions": {"q": {"type": "maybe", "instructions": "x"}}}, run_id="b1")
+    with pytest.raises(PayloadTooLarge):
+        tez.handle_batch({"states": STATES, "questions": QUESTIONS}, run_id="b2", limits=Limits(max_batch=2))
+    assert seen == [("b1", "InvalidRequest", None, True), ("b2", "PayloadTooLarge", None, True)]
+    r = TestClient(create_app(tez)).post("/v1/systemone/batch", json={"states": [], "questions": QUESTIONS})
+    assert r.status_code == 422 and seen[-1] == (r.headers["x-tez-run-id"], "InvalidRequest", None, True)
+
+
 def test_a_hook_failing_on_one_item_fails_only_that_item():
     class Picky(BaseHook):
         def on_decide_start(self, ctx):

@@ -17,23 +17,29 @@ DEFAULT_CORS_ORIGINS = ("http://127.0.0.1:*", "http://localhost:*", "https://jib
 @dataclass(frozen=True)
 class Limits:
     """Request limits (413 payload_too_large past any of them). The defaults are tez serve's; the Python API applies
-    none unless given limits=. None switches one off."""
+    none unless given limits=. 0 or None switches one off (as --max-* 0 does)."""
 
     max_body_bytes: int | None = 2 * 1024 * 1024
     max_questions: int | None = 64
     max_state_chars: int | None = 50_000
     max_batch: int | None = 64
 
+    def __post_init__(self) -> None:
+        for name in ("max_body_bytes", "max_questions", "max_state_chars", "max_batch"):
+            value = getattr(self, name)
+            if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+                raise ValueError(f"{name} must be a whole number of at least 0 (0 or None: no limit), got {value!r}")
+
     @classmethod
     def unlimited(cls) -> Limits:
         return cls(None, None, None, None)
 
     def check_questions(self, n: int) -> None:
-        if self.max_questions is not None and n > self.max_questions:
+        if self.max_questions and n > self.max_questions:
             raise PayloadTooLarge(f"too many questions: {n} (the limit is {self.max_questions}; tez serve --max-questions)")
 
     def check_state(self, state: Any, where: str = "state") -> None:
-        if self.max_state_chars is None:
+        if not self.max_state_chars:
             return
         n = len(state) if isinstance(state, str) else len(json.dumps(state, ensure_ascii=False))
         if n > self.max_state_chars:
@@ -41,7 +47,7 @@ class Limits:
                                   f"tez serve --max-state-chars)")
 
     def check_batch(self, n: int) -> None:
-        if self.max_batch is not None and n > self.max_batch:
+        if self.max_batch and n > self.max_batch:
             raise PayloadTooLarge(f"too many states in one batch: {n} (the limit is {self.max_batch}; tez serve --max-batch)")
 
 

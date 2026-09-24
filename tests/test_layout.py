@@ -172,9 +172,39 @@ def test_auto_keeps_a_fitted_question_in_its_fitted_layout(synth):
     res = tez.decide("invoice refund charged thanks", schema="synth", gate=False)
     metas = res["tez"]["questions"]
     assert metas["topic"]["readout"] == "probe" and metas["topic"]["layout"] == "question_first"
-    assert metas["anger"] == {"readout": "letters"}                                # unfitted: the request's state_first
+    assert metas["anger"] == {"readout": "letters", "layout": "state_first"}       # unfitted: auto's state_first
     topic = tez.schema_detail("synth")["probes"]["topic"]
     assert topic["probe"] == "ready" and topic["layout"] == "question_first"
+
+
+def test_the_reported_layout_is_the_one_the_questions_were_read_with(synth):
+    """X-Tez-Layout, ctx.layout and the plan name the layout the questions were actually read in: two questions fitted
+    question-first stay question_first under auto (not auto's count-based state_first); a request that reads its
+    questions in different layouts is "mixed", and then every question names its own."""
+    from fastapi.testclient import TestClient
+
+    from tez.server import create_app
+    d, labels = synth
+    tez = Tez(backend=FakeBackend(), schemas=d)
+    fit(tez, tez.schemas["synth"], [labels], **QUIET)
+    fitted = {qid: tez.schemas["synth"].questions[qid] for qid in ("topic", "is_urgent")}
+    body = tez.request_body("invoice refund asap", fitted, "synth", alpha=None)
+    ctx = tez.execute(body)
+    assert (ctx.requested_layout, ctx.layout) == ("auto", "question_first")
+    assert all("layout" not in m for m in ctx.response["tez"]["questions"].values())
+    plan = tez.plan(body)
+    assert plan["layout"] == "question_first" and {q["layout"] for q in plan["questions"].values()} == {"question_first"}
+    assert not any(n.startswith("state first") for n in plan["notes"])
+    client = TestClient(create_app(tez))
+    assert client.post("/v1/systemone", json=body).headers["x-tez-layout"] == "question_first"
+    whole = tez.request_body("invoice refund asap", None, "synth")                     # anger is unfitted: state_first
+    assert client.post("/v1/systemone", json=whole).headers["x-tez-layout"] == "mixed"
+    assert tez.plan(whole)["layout"] == "mixed" and tez.execute(whole).layout == "mixed"
+    metas = tez.execute(whole).response["tez"]["questions"]
+    assert {qid: m["layout"] for qid, m in metas.items()} == {"topic": "question_first", "is_urgent": "question_first",
+                                                              "anger": "state_first"}
+    three = tez.plan({"state": "x", "questions": DOCS_QUESTIONS})                    # unfitted, auto: all state first
+    assert three["layout"] == "state_first" and any(n.startswith("state first: 3 questions") for n in three["notes"])
 
 
 def test_a_fit_is_stale_under_the_other_layout(synth):
@@ -200,9 +230,9 @@ def test_fit_under_state_first_serves_single_questions_state_first(synth):
     assert manifest["layout"] == "state_first" and manifest["settings"]["layout"] == "state_first"
     fb = tez.backend
     fb.prompts.clear()
-    res = tez.decide("invoice refund", schema="synth", questions={"topic": tez.schemas["synth"].questions["topic"]})
-    assert res["tez"]["questions"]["topic"]["readout"] == "probe"
-    assert res["tez"]["questions"]["topic"]["layout"] == "state_first"              # one question, but fitted state-first
+    ctx = tez.execute(tez.request_body("invoice refund", {"topic": tez.schemas["synth"].questions["topic"]}, "synth"))
+    assert ctx.response["tez"]["questions"]["topic"]["readout"] == "probe"
+    assert ctx.layout == "state_first"                                              # one question, but fitted state-first
     assert fb.prompts and all(p.startswith(state_prefix("invoice refund", "gemma4")) for p in fb.prompts)
     res = tez.decide("invoice refund", schema="synth", layout="question_first", gate=False)
     assert res["tez"]["questions"]["topic"] == {"readout": "letters"}

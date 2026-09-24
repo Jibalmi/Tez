@@ -45,7 +45,7 @@ true), no `on_question_end` fires, and `on_decide_end` runs as usual.
 | `engine` | the `tez.Tez` deciding it |
 | `state`, `questions`, `schema` | the parsed state, `{id: tez.schema.Question}` and the named `Schema` (or None) |
 | `readout`, `abstain`, `alpha`, `model` | the request's options (alpha after the schema's default gate) |
-| `requested_layout`, `layout` | the layout asked for (`auto`, ...) and the one used (`question_first`, `state_first`, or `mixed`) |
+| `requested_layout`, `layout` | the layout asked for (`auto`, ...) and the one the questions were read in (`question_first`, `state_first`, or `mixed` when they differ; the `X-Tez-Layout` header) |
 | `response`, `usage`, `latency_ms` | set when the decision is done |
 | `traces` | per question: `readout`, `layout`, `tokens`, `ms` and `calls`, one record per backend call with its `kind` (`letters` or `embed`), `tokens`, wall `ms` and llama.cpp's own `timings` (`prompt_n`, `cache_n`, `prompt_ms`, ...) when the server sends them |
 | `error` | the exception, in `on_error` |
@@ -54,7 +54,13 @@ true), no `on_question_end` fires, and `on_decide_end` runs as usual.
 | `hook_errors` | `(hook, event, exception)` for every hook failure swallowed under `hooks_raise=False` |
 
 After a request that could not be parsed only `run_id`, `request` and `error` are set; `on_error` hooks must allow for
-that.
+that. A batch refused as a whole (no `states`, a bad shared field, over `--max-batch`) reaches `on_error` once, with
+the batch's run id and no `index`; a state that fails inside a batch reaches it with its own `<run id>.<index>`.
+
+Hooks see requests that reached the engine. The server answers some before that, without any hook: a body that is not
+JSON, is nested too deeply or is over `--max-body-bytes` (`422`, `413`), a missing API key (`401`), a `POST` from a
+browser origin that is not allowed (`403`), a wrong route or method (`404`, `405`). These responses still carry
+`x-typesafe-request-id`.
 
 ## Order
 

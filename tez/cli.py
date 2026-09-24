@@ -390,7 +390,7 @@ def build_parser(environ: Mapping[str, str] | None = None) -> argparse.ArgumentP
                    help="also load the built-in presets (tez presets); a schema of the same name in --schemas wins "
                         "(env TEZ_PRESETS=1)")
     p.add_argument("--data-dir", default=env.get("TEZ_DATA_DIR"),
-                   help="where POST /v1/feedback writes (env TEZ_DATA_DIR; default: <schemas>/.tez)")
+                   help="where POST /v1/feedback writes (env TEZ_DATA_DIR; default: <schemas>/.tez, presets included)")
     p.add_argument("--host", default=env.get("TEZ_HOST", "127.0.0.1"), help="address to bind (env TEZ_HOST; default 127.0.0.1)")
     p.add_argument("--port", type=_port, default=env.get("TEZ_PORT", "8787"), help="port (env TEZ_PORT; default 8787)")
     p.add_argument("--api-key", default=env.get("TEZ_API_KEY"),
@@ -398,8 +398,9 @@ def build_parser(environ: Mapping[str, str] | None = None) -> argparse.ArgumentP
     p.add_argument("--cors-origins", default=env.get("TEZ_CORS_ORIGINS", ",".join(DEFAULT_CORS_ORIGINS)), metavar="LIST",
                    help="browser origins allowed by CORS, comma-separated: an origin, host:* for any port, "
                         "https://*.domain, null, or * for any origin (env TEZ_CORS_ORIGINS; default "
-                        f"{','.join(DEFAULT_CORS_ORIGINS)}); POST /v1/feedback refuses other origins")
-    p.add_argument("--no-cors", action="store_true", help="send no CORS headers (browsers on other origins cannot call it)")
+                        f"{','.join(DEFAULT_CORS_ORIGINS)}); POSTs from other origins get 403")
+    p.add_argument("--no-cors", action="store_true",
+                   help="send no CORS headers and allow no browser origin (a POST that carries an Origin gets 403)")
     p.add_argument("--log-level", default=env.get("TEZ_LOG_LEVEL", "info"), type=_choice("log level", LOG_LEVELS),
                    help=f"{', '.join(LOG_LEVELS)} (env TEZ_LOG_LEVEL; default info)")
     p.add_argument("--layout", default=env.get("TEZ_LAYOUT"), type=_choice("layout", LAYOUTS),

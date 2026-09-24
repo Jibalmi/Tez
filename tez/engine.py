@@ -55,6 +55,29 @@ class DecideRequest:
     model: str
     layout: str = "auto"          # as requested (auto | question_first | state_first), before per-question resolution
     extraction: Any = None        # tez.extract.Extraction when the request came with json_schema
+    layouts: dict | None = None   # question id -> the concrete layout it is read with (set when the decision starts)
+
+
+def effective_layout(layouts: Mapping[str, str]) -> str:
+    """The layout a request was read with: the one its questions share, or "mixed"."""
+    kinds = set(layouts.values())
+    return kinds.pop() if len(kinds) == 1 else "mixed"
+
+
+MAX_STATE_DEPTH = 100      # objects and arrays nested in a state; deeper would overflow recursive hooks (Redact, yours)
+
+
+def check_state_depth(state: Any, where: str = "state") -> None:
+    """Refuse (422) a state whose objects and arrays nest more than MAX_STATE_DEPTH levels; checked without recursion."""
+    stack = [(state, 1)]
+    while stack:
+        value, depth = stack.pop()
+        children = value.values() if isinstance(value, dict) else value if isinstance(value, list) else None
+        if children is None:
+            continue
+        if depth > MAX_STATE_DEPTH:
+            raise InvalidRequest(f"{where} is nested too deeply (at most {MAX_STATE_DEPTH} levels of objects and arrays)")
+        stack.extend((c, depth + 1) for c in children if isinstance(c, (dict, list)))
 
 
 @dataclass
@@ -103,6 +126,7 @@ class Tez:
             self.embedder = make_backend(embed_backend, embed_template or template, cache_prompt, embed_model_name, n_probs)
             self.embed_backend_url = self.embedder.url
         self.data_dir = Path(data_dir) if data_dir else None
+        self.schemas_dir: Path | None = None       # the first schema directory loaded (where presets' feedback goes)
         self.schemas: dict[str, Schema] = {}
         self.fitted: dict[str, Fitted] = {}
         self._status: dict[tuple[str, str], dict] = {}
@@ -148,6 +172,8 @@ class Tez:
                 raise InvalidRequest(f"schema '{name}' is already loaded")
             self.schemas[name] = schema
             self.reload_fitted(name)
+            if self.schemas_dir is None and schema.path is not None and not schema.builtin:
+                self.schemas_dir = schema.base_dir
         return list(loaded)
 
     def add_presets(self, names: Any = None) -> list[str]:
@@ -285,6 +311,8 @@ class Tez:
         state = body["state"]
         if not isinstance(state, (str, dict, list)):
             raise InvalidRequest("state must be a string, object or array")
+        if not isinstance(state, str):
+            check_state_depth(state)
         if limits is not None:
             limits.check_state(state)
         model = body.get("model", DEFAULT_MODEL_ALIAS)
@@ -381,7 +409,13 @@ class Tez:
         ctx.state, ctx.questions, ctx.schema = req.state, req.questions, req.schema
         ctx.readout, ctx.abstain, ctx.alpha, ctx.model = req.readout, req.abstain, req.alpha, req.model
         ctx.requested_layout = req.layout
-        ctx.layout = resolve_layout(req.layout, len(req.questions))
+        req.layouts = self.resolve_layouts(req)
+        ctx.layout = effective_layout(req.layouts)
+
+    def resolve_layouts(self, req: DecideRequest, check_model: bool = True) -> dict[str, str]:
+        """The concrete layout of every question of a request (see question_layout)."""
+        n = len(req.questions)
+        return {qid: self.question_layout(q, req.schema, req.layout, n, check_model) for qid, q in req.questions.items()}
 
     def handle(self, body: Any, *, run_id: str | None = None, hooks: Any = None, limits: Limits | None = None) -> dict:
         """Validate a wire-format request and decide it. Raises TezError subclasses (422 / 503)."""
@@ -399,17 +433,11 @@ class Tez:
         Item i's run id is "<run_id>.<i>"."""
         t0 = time.perf_counter()
         run_id = run_id or new_run_id()
-        if not isinstance(body, dict):
-            raise InvalidRequest("the request body must be a JSON object")
-        if "state" in body:
-            raise InvalidRequest("a batch takes states (an array of states), not state")
-        states = body.get("states")
-        if not isinstance(states, list) or not states:
-            raise InvalidRequest("states must be a non-empty array of states (strings, objects or arrays)")
-        if limits is not None:
-            limits.check_batch(len(states))
-        shared = {k: v for k, v in body.items() if k != "states"}
-        self.parse_request({**shared, "state": ""}, limits)      # a bad shared field fails the whole batch, once
+        try:
+            states, shared = self._check_batch(body, limits)
+        except Exception as exc:       # the batch itself is refused: on_error hooks see it once, with the batch's run id
+            self.hookset(hooks).emit("on_error", DecisionContext(run_id=run_id, request=body, engine=self, error=exc))
+            raise
         results: list[dict] = []
         used: list[str] = []
         tokens, decided = 0, 0
@@ -439,6 +467,21 @@ class Tez:
         return {"model": self.model_label(used or None), "results": results,
                 "usage": {"input_tokens": tokens, "output_tokens": 0},
                 "tez": {"latency_ms": round((time.perf_counter() - t0) * 1000.0, 1), "run_id": run_id}}
+
+    def _check_batch(self, body: Any, limits: Limits | None) -> tuple[list, dict]:
+        """(states, shared fields) of a valid batch body; a bad shared field fails the whole batch, once."""
+        if not isinstance(body, dict):
+            raise InvalidRequest("the request body must be a JSON object")
+        if "state" in body:
+            raise InvalidRequest("a batch takes states (an array of states), not state")
+        states = body.get("states")
+        if not isinstance(states, list) or not states:
+            raise InvalidRequest("states must be a non-empty array of states (strings, objects or arrays)")
+        if limits is not None:
+            limits.check_batch(len(states))
+        shared = {k: v for k, v in body.items() if k != "states"}
+        self.parse_request({**shared, "state": ""}, limits)
+        return states, shared
 
     def decide_batch(self, states: list, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                      abstain: bool = False, alpha: float | None = None, gate: Any = None,
@@ -523,8 +566,8 @@ class Tez:
     def _run(self, req: DecideRequest, ctx: DecisionContext, hs: HookSet) -> dict:
         t0 = time.perf_counter()
         n = len(req.questions)
-        base = resolve_layout(req.layout, n)
-        layouts = {qid: self.question_layout(q, req.schema, req.layout, n) for qid, q in req.questions.items()}
+        layouts = req.layouts or self.resolve_layouts(req)
+        ctx.layout = effective_layout(layouts)
         # state-first questions run back to back, so the backend's prompt cache keeps the state between them
         order = [qid for qid in req.questions if layouts[qid] == STATE_FIRST] + \
                 [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
@@ -534,7 +577,7 @@ class Tez:
             tq = time.perf_counter()
             r = self.decide_question(req.questions[qid], req.state, schema=req.schema, readout=req.readout,
                                      abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n, trace=calls)
-            if r.layout != base:
+            if ctx.layout == "mixed":            # otherwise every question was read with ctx.layout (X-Tez-Layout)
                 r.meta = {**r.meta, "layout": r.layout}
             results[qid] = r
             ctx.traces[qid] = {"readout": r.readout, "layout": r.layout, "tokens": int(r.tokens),
@@ -548,8 +591,6 @@ class Tez:
             metas[qid] = r.meta
             tokens += r.tokens
             used.append(r.readout)
-        if len({r.layout for r in results.values()}) > 1:
-            ctx.layout = "mixed"
         latency = (time.perf_counter() - t0) * 1000.0
         response = {"model": self.model_label(used), "answers": answers,
                     "usage": {"input_tokens": int(tokens), "output_tokens": 0},
@@ -569,10 +610,7 @@ class Tez:
         from .backends import common_prefix, estimate_tokens
         has_state = isinstance(body, dict) and body.get("state") is not None
         req = self.parse_request({**body, "state": ""} if isinstance(body, dict) and not has_state else body, limits)
-        n = len(req.questions)
-        base = resolve_layout(req.layout, n)
-        layouts = {qid: self.question_layout(q, req.schema, req.layout, n, check_model=False)
-                   for qid, q in req.questions.items()}
+        layouts = self.resolve_layouts(req, check_model=False)
         order = [qid for qid in req.questions if layouts[qid] == STATE_FIRST] + \
                 [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
         out: dict[str, Any] = {}
@@ -627,15 +665,17 @@ class Tez:
             totals["prompt_tokens"] += tokens
             totals["cached_tokens"] += entry["cached_tokens"]
         totals["evaluated_tokens"] = totals["prompt_tokens"] - totals["cached_tokens"]
-        if base == STATE_FIRST and n >= 2:
-            notes.append(f"state first: questions after the first reuse the cached state ({len(order)} questions, "
-                         "back to back; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)")
+        state_first = [qid for qid in order if layouts[qid] == STATE_FIRST]
+        if len(state_first) >= 2:
+            notes.append(f"state first: {len(state_first)} questions read back to back, each after the first reusing the "
+                         "prefix it shares with the one before (cached_tokens; needs llama.cpp prompt caching on one slot, "
+                         "--swa-full for Gemma)")
         if self.backend.known_model_name() is None:
             notes.append("model names not checked (the plan does not call the backend): a fit made on another model "
                          "would not be used")
         return {"backend": self.backend.url, "template": self.template, "model": self.backend.known_model_name(),
                 "schema": req.schema.name if req.schema is not None else None, "readout": req.readout,
-                "requested_layout": req.layout, "layout": base,
+                "requested_layout": req.layout, "layout": effective_layout(layouts),
                 "state_tokens": estimate_tokens(render_state(req.state)) if has_state else None,
                 "order": order, "questions": {qid: out[qid] for qid in req.questions}, "totals": totals, "notes": notes}
 
@@ -850,7 +890,15 @@ class Tez:
                 "calibration": f.calibration if f else None, "manifest": manifest}
 
     def feedback_path(self, schema: Schema) -> Path:
-        base = self.data_dir if self.data_dir is not None else schema.base_dir / ".tez"
+        """<data_dir>/feedback/<name>.jsonl; without a data_dir, <schema file's dir>/.tez/feedback/. A schema with no
+        file (a preset, one built in code) uses the first schema directory loaded, else ./.tez, so a preset copied into
+        that directory to be fitted (tez presets --show NAME > schemas/NAME.yaml) finds the feedback recorded for it."""
+        if self.data_dir is not None:
+            base = self.data_dir
+        elif schema.path is not None and not schema.builtin:
+            base = schema.base_dir / ".tez"
+        else:
+            base = (self.schemas_dir if self.schemas_dir is not None else Path(".")) / ".tez"
         return base / "feedback" / f"{schema.name}.jsonl"
 
     def record_feedback(self, body: Any, *, hooks: Any = None) -> dict:
@@ -870,6 +918,8 @@ class Tez:
         state = body.get("state")
         if state is None or not isinstance(state, (str, dict, list)):
             raise InvalidRequest("state is required (string, object or array)")
+        if not isinstance(state, str):
+            check_state_depth(state)
         if "label" not in body:
             raise InvalidRequest("label is required")
         label = schema.questions[qid].canonical_label(body["label"], allow_none=True)

@@ -1,5 +1,6 @@
-"""Safe server defaults: the CORS allowlist, Private Network Access only for allowed origins, feedback refused from other
-origins, and the TEZ_* environment the CLI reads (with VAR_FILE secrets)."""
+"""Safe server defaults: the CORS allowlist, Private Network Access only for allowed origins, POSTs refused from other
+origins, bodies the parser cannot take (422, not 500), limits, and the TEZ_* environment the CLI reads (with VAR_FILE
+secrets)."""
 from __future__ import annotations
 
 import json
@@ -48,7 +49,8 @@ def test_policy_patterns():
 def test_other_origins_get_no_cors_and_no_private_network_access():
     c = TestClient(create_app(Tez(backend="fake")))
     r = c.post("/v1/systemone", json={"state": "s", "questions": Q}, headers={"Origin": "https://evil.test"})
-    assert r.status_code == 200 and "access-control-allow-origin" not in r.headers   # the browser cannot read it
+    assert r.status_code == 403 and "access-control-allow-origin" not in r.headers   # refused, and unreadable anyway
+    assert c.get("/v1/models", headers={"Origin": "https://evil.test"}).status_code == 200   # GETs: no CORS headers only
     pre = c.options("/v1/systemone", headers={"Origin": "https://evil.test", **PREFLIGHT})
     assert pre.status_code == 403 and pre.json()["error"]["type"] == "forbidden"
     assert "access-control-allow-origin" not in pre.headers and "access-control-allow-private-network" not in pre.headers
@@ -86,6 +88,79 @@ def test_feedback_refuses_other_origins(schema_dir: Path):
     assert closed.post("/v1/feedback", json=body, headers={"Origin": PLAYGROUND}).status_code == 403
     open_ = TestClient(create_app(Tez(backend="fake", schemas=schema_dir), cors_origins=["*"]))
     assert open_.post("/v1/feedback", json=body, headers={"Origin": "https://evil.test"}).status_code == 200
+
+
+def test_every_post_from_another_origin_is_refused_before_it_runs(tmp_path: Path):
+    """A cross-site page cannot read the answers, but a "simple" POST (a form, text/plain) would still use the model,
+    run the hooks and write a DecisionLog row: all POST routes refuse other origins before anything runs."""
+    from tez import BaseHook, DecisionLog
+
+    seen: list = []
+
+    class Seen(BaseHook):
+        def on_decide_start(self, ctx):
+            seen.append(ctx.run_id)
+
+    log_path = tmp_path / "decisions.jsonl"
+    tez = Tez(backend="fake", hooks=[Seen(), DecisionLog(log_path)])
+    c = TestClient(create_app(tez))
+    evil = {"Origin": "https://evil.test", "Content-Type": "text/plain"}
+    for path, body, what in [("/v1/systemone", {"state": "s", "questions": Q}, "request decisions"),
+                             ("/v1/systemone/batch", {"states": ["s", "t"], "questions": Q}, "request decisions"),
+                             ("/v1/plan", {"state": "s", "questions": Q}, "request plans")]:
+        r = c.post(path, content=json.dumps(body), headers=evil)
+        assert r.status_code == 403 and f"may not {what}" in r.json()["error"]["message"], path
+        assert len(r.headers["x-typesafe-request-id"]) == 32 and "x-tez-run-id" not in r.headers
+        assert c.post(path, json=body).status_code == 200                                   # no Origin: curl, SDKs
+        assert c.post(path, json=body, headers={"Origin": PLAYGROUND}).status_code == 200    # an allowed origin
+    assert len(seen) == 2 * (1 + 2) and len(log_path.read_text(encoding="utf-8").splitlines()) == len(seen)
+    closed = TestClient(create_app(Tez(backend="fake"), cors=False))                      # --no-cors: no origin at all
+    assert closed.post("/v1/systemone", json={"state": "s", "questions": Q},
+                       headers={"Origin": "http://localhost:8000"}).status_code == 403
+    assert closed.post("/v1/systemone", json={"state": "s", "questions": Q}).status_code == 200
+
+
+# ---------------------------------------------------------------------------------------------- bodies and limits
+def test_bodies_the_parser_refuses_are_422_not_500(schema_dir: Path):
+    c = TestClient(create_app(Tez(backend="fake", schemas=schema_dir), limits=Limits.unlimited()),
+                   raise_server_exceptions=False)
+    questions = json.dumps(Q)
+    for body, fragment in [
+        ('{"state": ' + "[" * 100_000 + "]" * 100_000 + ', "questions": ' + questions + "}", "nested too deeply"),
+        ('{"state": ' + "9" * 5000 + ', "questions": ' + questions + "}", ""),     # past Python's 4,300-digit limit
+        (b'{"state": "\xff\xfe", "questions": {}}', "not valid JSON"),
+        ('{"state": "s", "questions": ', "not valid JSON"),
+    ]:
+        r = c.post("/v1/systemone", content=body, headers={"Content-Type": "application/json"})
+        assert r.status_code == 422 and fragment in r.json()["error"]["message"], r.text[:200]
+        assert len(r.headers["x-typesafe-request-id"]) == 32
+    # nested objects past MAX_STATE_DEPTH (100) are refused by the engine before any hook sees them; 100 levels are fine
+    from tez import Redact
+    from tez.engine import MAX_STATE_DEPTH
+    hooked = TestClient(create_app(Tez(backend="fake", schemas=schema_dir, hooks=[Redact()])))
+    for path, extra in (("/v1/systemone", {"questions": Q}), ("/v1/systemone/batch", {"questions": Q}),
+                        ("/v1/feedback", {"schema": "support-triage", "question": "topic", "label": "billing"})):
+        deep = json.loads("[" * (MAX_STATE_DEPTH + 1) + "]" * (MAX_STATE_DEPTH + 1))
+        body = {**extra, "states": [deep]} if path.endswith("batch") else {**extra, "state": deep}
+        r = hooked.post(path, json=body)
+        err = r.json()["results"][0]["error"] if path.endswith("batch") else r.json()["error"]
+        assert err["type"] == "invalid_request" and "nested too deeply (at most 100 levels" in err["message"], path
+    ok = json.loads("[" * MAX_STATE_DEPTH + '"x"' + "]" * MAX_STATE_DEPTH)
+    assert hooked.post("/v1/systemone", json={"state": ok, "questions": Q}).status_code == 200
+
+
+def test_a_zero_limit_is_no_limit():
+    assert Limits(0, 0, 0, 0) != Limits.unlimited()                   # different values, the same effect
+    tez = Tez(backend="fake")
+    big = {f"q{i}": Q["q"] for i in range(65)}
+    for limits in (Limits(0, 0, 0, 0), Limits.unlimited()):
+        assert len(tez.handle({"state": "x" * 50_001, "questions": big}, limits=limits)["answers"]) == 65
+        assert len(tez.handle_batch({"states": ["a"] * 65, "questions": Q}, limits=limits)["results"]) == 65
+        c = TestClient(create_app(tez, limits=limits))
+        assert c.post("/v1/systemone", json={"state": "y" * 2_100_000, "questions": Q}).status_code == 200
+    for bad in ({"max_batch": -1}, {"max_questions": 2.5}, {"max_state_chars": "10"}, {"max_body_bytes": True}):
+        with pytest.raises(ValueError, match="0 or None: no limit"):
+            Limits(**bad)
 
 
 # ---------------------------------------------------------------------------------------------- the environment

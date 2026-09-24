@@ -12,7 +12,7 @@
 Every response carries x-typesafe-request-id and server-timing; decisions also carry X-Tez-Run-Id (the id hooks see).
 Browsers: CORS answers only the allowed origins (by default http://127.0.0.1:*, http://localhost:* and the website,
 https://jibalmi.github.io; tez serve --cors-origins changes the list, '*' allows any), and so does Chrome's Private
-Network Access preflight. POST /v1/feedback refuses a request from any other origin (403).
+Network Access preflight. Every POST from any other browser origin is refused (403) before it runs.
 Errors: {"error": {"type": ..., "message": ...}} with 401 (only with an API key), 403, 404, 413, 422, 500 or 503.
 """
 from __future__ import annotations
@@ -33,7 +33,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ._version import __version__
 from .config import DEFAULT_CORS_ORIGINS, Limits
-from .engine import Tez
+from .engine import Tez, check_state_depth
 from .errors import Forbidden, InternalError, InvalidRequest, PayloadTooLarge, TezError, Unauthorized
 from .hooks import DecisionContext, new_run_id
 
@@ -173,7 +173,7 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
     limits        request limits (default: Limits(), tez serve's: 2 MiB bodies, 64 questions, 50,000-character states,
                   64 states per batch)
     cors_origins  browser origins allowed by CORS (default DEFAULT_CORS_ORIGINS; ["*"] allows any); cors=False sends no
-                  CORS headers at all. POST /v1/feedback refuses requests from origins not allowed.
+                  CORS headers at all and allows no origin. Every POST from an origin not allowed gets 403.
     """
     app = FastAPI(title="Tez", version=__version__,
                   description="Open local System One decision engine (Jev-compatible /v1/systemone).")
@@ -212,6 +212,15 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
         if not token or not hmac.compare_digest(token.encode("utf-8"), api_key.encode("utf-8")):
             raise Unauthorized("missing or invalid API key (send Authorization: Bearer <key>)")
 
+    def check_origin(request: Request, what: str) -> None:
+        """Refuse a POST from a browser origin CORS does not allow. The page could not read the answer, but a "simple"
+        cross-site POST (text/plain, no preflight) would still run: a decision takes the model and runs the hooks (a
+        DecisionLog row), feedback writes training labels. Requests without Origin (curl, SDKs, servers) pass."""
+        origin = request.headers.get("origin")
+        if origin is not None and not policy.allows(origin):
+            raise Forbidden(f"origin {origin} may not {what} (allowed: {', '.join(policy.patterns) or 'none'}; "
+                            "tez serve --cors-origins)")
+
     def too_large() -> PayloadTooLarge:
         return PayloadTooLarge(f"the request body is over {limits.max_body_bytes:,} bytes (tez serve --max-body-bytes)")
 
@@ -219,7 +228,7 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
         """The body, refusing to buffer more than max_body_bytes whatever the framing (a Content-Length that says so
         is refused before reading; a chunked body is abandoned as soon as it passes the limit)."""
         cap = limits.max_body_bytes
-        if cap is None:
+        if not cap:                                        # 0 or None: no limit
             return await request.body()
         length = request.headers.get("content-length", "")
         if length.strip().isdigit() and int(length) > cap:
@@ -238,7 +247,9 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
             raise InvalidRequest("the request body must be a JSON object")
         try:
             return json.loads(raw)
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        except RecursionError as exc:                      # [[[[...]]]] nested past the parser's depth
+            raise InvalidRequest("the request body is nested too deeply") from exc
+        except ValueError as exc:     # JSONDecodeError, UnicodeDecodeError, an integer past Python's 4,300 digits
             raise InvalidRequest(f"the request body is not valid JSON ({exc.__class__.__name__})") from exc
 
     async def call(fn: Callable, *args: Any, **kwargs: Any) -> Any:
@@ -270,6 +281,7 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
     @app.post("/v1/systemone")
     async def systemone(request: Request):
         """Decide one state against many typed questions (Jev's wire format; Tez extensions in `schema` and `tez`)."""
+        check_origin(request, "request decisions")
         authorize(request)
         body = await read_json(request)
         request.state.tez_decision = True
@@ -279,6 +291,7 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
     @app.post("/v1/systemone/batch")
     async def systemone_batch(request: Request):
         """Decide many states against the same questions: {"states": [...], "questions" | "schema", "tez"}."""
+        check_origin(request, "request decisions")
         authorize(request)
         body = await read_json(request)
         request.state.tez_decision = True
@@ -289,6 +302,7 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
     @app.post("/v1/plan")
     async def plan(request: Request):
         """What a /v1/systemone request would do (readouts, fits, calls, layout, tokens), without calling the model."""
+        check_origin(request, "request plans")
         authorize(request)
         body = await read_json(request)
         return await call(tez.plan, body, limits)
@@ -314,14 +328,12 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
 
     @app.post("/v1/feedback")
     async def feedback(request: Request):
-        origin = request.headers.get("origin")
-        if origin is not None and not policy.allows(origin):
-            # a page on another site could otherwise write training labels through a "simple" CORS request
-            raise Forbidden(f"origin {origin} may not record feedback (allowed: "
-                            f"{', '.join(policy.patterns) or 'none'}; tez serve --cors-origins)")
+        check_origin(request, "record feedback")
         authorize(request)
         body = await read_json(request)
         if isinstance(body, dict) and isinstance(body.get("state"), (str, dict, list)):
+            if not isinstance(body["state"], str):
+                check_state_depth(body["state"])
             limits.check_state(body["state"])
         return await call(tez.record_feedback, body)
 

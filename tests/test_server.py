@@ -91,7 +91,9 @@ def test_fitted_schema_endpoints_and_gate(fitted_client):
     metas = r.json()["tez"]["questions"]
     assert metas["topic"]["readout"] == "probe" and metas["topic"]["decision"] in ("act", "escalate")
     assert metas["topic"]["calibration_id"] == detail["calibration_id"] and 0 <= metas["topic"]["p_correct"] <= 1
-    assert metas["anger"] == {"readout": "letters", "decision": "escalate"}      # never labelled: nothing certifies it
+    # never labelled: nothing certifies it; read state-first while the fitted questions keep question-first (mixed)
+    assert metas["anger"] == {"readout": "letters", "decision": "escalate", "layout": "state_first"}
+    assert r.headers["x-tez-layout"] == "mixed" and metas["topic"]["layout"] == "question_first"
 
 
 def test_feedback(client, schema_dir):

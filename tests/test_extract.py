@@ -89,25 +89,45 @@ def test_answers_become_values():
     ({"$ref": "https://example.com/s.json"}, "inside the document"),
     ({"$ref": "#/$defs/Missing"}, "does not resolve"),
     ({"$ref": "#/$defs/Node"}, "recursive"),
+    ({"$ref": "#/$defs/Wrapped"}, "recursive"),                           # pydantic v1: nested models inside allOf
+    ({"allOf": [{"$ref": "#/$defs/Wrapped"}]}, "recursive"),
+    ({"anyOf": [{"$ref": "#/$defs/Maybe"}, {"type": "null"}]}, "recursive"),   # Optional[Self]
     ({"type": "object"}, "needs properties"),
     ({}, "give it a type"),
     ({"type": ["string", "integer"]}, "one type"),
 ])
 def test_errors_name_the_path(prop, fragment):
     js = {"type": "object", "properties": {"field": prop},
-          "$defs": {"Node": {"type": "object", "properties": {"next": {"$ref": "#/$defs/Node"}}}}}
+          "$defs": {"Node": {"type": "object", "properties": {"next": {"$ref": "#/$defs/Node"}}},
+                    "Wrapped": {"type": "object", "properties": {"flag": {"type": "boolean"},
+                                                                 "child": {"allOf": [{"$ref": "#/$defs/Wrapped"}]}}},
+                    "Maybe": {"type": "object", "properties": {"next": {"anyOf": [{"$ref": "#/$defs/Maybe"},
+                                                                                  {"type": "null"}]}}}}}
     with pytest.raises(InvalidRequest) as err:
         schema_from_json_schema(js, "my_schema")
     assert err.value.message.startswith("my_schema.properties.field") and fragment in err.value.message
 
 
+def test_a_schema_nested_past_the_recursion_limit_is_an_invalid_request():
+    node: dict = {"type": "boolean"}
+    for _ in range(3000):
+        node = {"type": "object", "properties": {"x": node}}
+    with pytest.raises(InvalidRequest, match="deep: the schema is nested too deeply"):
+        schema_from_json_schema({"type": "object", "properties": {"root": node}}, "deep")
+    node = {"type": "boolean"}
+    for _ in range(40):                                                      # deep, but fine
+        node = {"allOf": [{"type": "object", "properties": {"x": node}}]}
+    assert list(schema_from_json_schema({"properties": {"root": node}}).questions) == ["root" + ".x" * 40]
+
+
 def test_shared_definitions_are_not_recursion():
-    js = {"properties": {"billing": {"$ref": "#/$defs/Addr"}, "shipping": {"$ref": "#/$defs/Addr"},
-                         "either": {"anyOf": [{"$ref": "#/$defs/A"}, {"$ref": "#/$defs/B"}]}},
+    js = {"properties": {"billing": {"$ref": "#/$defs/Addr"}, "shipping": {"allOf": [{"$ref": "#/$defs/Addr"}]},
+                         "either": {"anyOf": [{"$ref": "#/$defs/A"}, {"$ref": "#/$defs/B"}]},
+                         "maybe": {"anyOf": [{"$ref": "#/$defs/Addr"}, {"type": "null"}]}},
           "$defs": {"Addr": {"type": "object", "properties": {"country": {"enum": ["PT", "ES"]}}},
                     "A": {"const": "a", "description": "the first"}, "B": {"const": "b"}}}
     s = schema_from_json_schema(js)
-    assert list(s.questions) == ["billing.country", "shipping.country", "either"]
+    assert list(s.questions) == ["billing.country", "shipping.country", "either", "maybe.country"]
     assert s.questions["either"].criteria == {"a": "the first", "b": None}
 
 
