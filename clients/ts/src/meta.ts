@@ -50,7 +50,7 @@ export interface ResponseMeta {
 /** A response body with its ResponseMeta, as every client method returns it. */
 export type WithMeta<T> = T & { readonly meta: ResponseMeta };
 
-/** Parse a `server-timing` header: `tez;dur=2.3, backend;dur=1.0, total;dur=4.2` -> { tez: 2.3, backend: 1, total: 4.2 }. */
+/** Parse `server-timing`: `tez;dur=2.3, backend;dur=1.0, total;dur=4.2` -> { tez: 2.3, backend: 1, total: 4.2 }. */
 export function parseServerTiming(header: string | null | undefined): ServerTiming {
   const out: ServerTiming = {};
   if (!header) return out;
