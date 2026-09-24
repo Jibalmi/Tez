@@ -286,7 +286,9 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
                 Z.append(tez.letter_logits(q, s, None, shots, layout=layout)[0])
                 _progress(say, "letters", i, n)
             Zl = np.stack(Z)
-            t_letters = fit_temperature_logits(Zl[fit_idx], y[fit_idx])
+            # the prior is centred on the model's default temperature for this question type, when it has one
+            center = tez.unfitted_temperature(q.type, int(np.isfinite(Zl[0]).sum()))
+            t_letters = fit_temperature_logits(Zl[fit_idx], y[fit_idx], prior_center=center)
             m = _measure(softmax_rows(Zl[cal_idx], t_letters), y[cal_idx], alphas)
             raw = softmax_rows(Zl[cal_idx], 1.0)
             entry["letters"] = {"model": letters_model, "template": tez.backend.template, "layout": layout,

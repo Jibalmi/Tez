@@ -131,8 +131,8 @@ The three answer shapes are exactly Jev's:
   `confidence` as for choice.
 
 The `tez` block: `latency_ms`, and per question the `readout` used (`letters` or `probe`), `decision` (`act` /
-`escalate`, present only when a gate applies), `p_correct` and `calibration_id` when a fitted calibration exists, and
-`layout` for every question when the request's questions were not all read in the same layout (`X-Tez-Layout: mixed`,
+`escalate`, present only when a gate applies), `p_correct` and `calibration_id` when a fitted calibration exists,
+`temperature` when an unfitted letters answer was read at a default temperature (below), and `layout` for every question when the request's questions were not all read in the same layout (`X-Tez-Layout: mixed`,
 for example fitted and unfitted questions under `auto`); otherwise they were all read in the `X-Tez-Layout` layout.
 
 The gate never acts without evidence: `act` always comes with `p_correct` and `calibration_id`. A question with no
@@ -145,6 +145,19 @@ the schema default; any other alpha uses the largest precomputed value at or bel
 back to letters question by question. A fit is used only while the question's prompt (instructions, options,
 few-shot examples, template, layout) and the model still match what `tez fit` saw; otherwise the question falls back
 to uncalibrated letters and `GET /v1/schemas/{name}` marks it `stale`.
+
+### Default temperature
+
+Letter probabilities read at temperature 1 are overconfident on most tasks. For Gemma 4 12B Q8_0 with the `gemma4`
+template, a letters answer that no fit calibrates is read at a default temperature per question type: yes/no 6.01,
+choice with up to 10 options shown 4.71, choice with more (a tournament counts its finalists) 2.66, score 5.18. They
+were fitted on 13,610 labelled decisions from 19 tasks and checked leave-one-task-out: mean expected calibration error
+0.218 to 0.132, NLL 2.16 to 0.92, and no answer changes, only its probabilities and `confidence`
+(`results/calibration/default_temperature.md`). Easy questions read under-confident until they are fitted; the gate
+is unaffected, because it only acts on fitted questions. Any other model or template is read at temperature 1.
+`--default-temperature off` (env `TEZ_DEFAULT_TEMPERATURE`) restores temperature 1, and a number sets one temperature
+for every unfitted question. `tez fit` centres its temperature search on the same default, which makes a handful of
+labels help rather than hurt.
 
 ### Prompt layout
 
@@ -492,8 +505,8 @@ prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically w
 `--backend fake` runs an offline demo backend whose answers mean nothing. `tez fit` needs at least 20 labels per
 question to train a probe; with fewer it calibrates the letters only and says so.
 
-The CLI reads its settings from the environment too (a flag wins): `TEZ_BACKEND`, `TEZ_TEMPLATE` and
-`TEZ_EMBED_BACKEND` for the commands that talk to a model (`TEZ_DATA_DIR` for `tez fit` too); for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
+The CLI reads its settings from the environment too (a flag wins): `TEZ_BACKEND`, `TEZ_TEMPLATE`, `TEZ_EMBED_BACKEND`
+and `TEZ_DEFAULT_TEMPERATURE` for the commands that talk to a model (`TEZ_DATA_DIR` for `tez fit` too); for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
 `TEZ_API_KEY`, `TEZ_LOG_LEVEL`, `TEZ_CORS_ORIGINS`, `TEZ_PRESETS` (`1` = `--presets`) and `TEZ_LAYOUT`. Each can be read
 from a file instead, for Docker and Compose secrets: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key` (surrounding
 whitespace stripped; setting both `X` and `X_FILE` is an error).

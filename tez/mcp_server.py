@@ -54,14 +54,15 @@ DESCRIPTIONS = {
 
 def engine_from_env(environ: Mapping[str, str] | None = None) -> Any:
     """A RemoteTez for TEZ_URL, otherwise an in-process Tez from TEZ_BACKEND, TEZ_TEMPLATE, TEZ_SCHEMAS, TEZ_DATA_DIR,
-    TEZ_LAYOUT and TEZ_PRESETS (each also as VAR_FILE, like tez serve)."""
+    TEZ_LAYOUT, TEZ_DEFAULT_TEMPERATURE and TEZ_PRESETS (each also as VAR_FILE, like tez serve)."""
     env = Env(environ)
     if env.get("TEZ_URL"):
         from .integrations.remote import RemoteTez
         return RemoteTez(env.get("TEZ_URL"), api_key=env.get("TEZ_API_KEY"), timeout=float(env.get("TEZ_TIMEOUT", 120.0)))
     from .backends import DEFAULT_BACKEND
     tez = Tez(backend=env.get("TEZ_BACKEND", DEFAULT_BACKEND), template=env.get("TEZ_TEMPLATE", "gemma4"),
-              schemas=env.get("TEZ_SCHEMAS"), data_dir=env.get("TEZ_DATA_DIR"), layout=env.get("TEZ_LAYOUT", "auto"))
+              schemas=env.get("TEZ_SCHEMAS"), data_dir=env.get("TEZ_DATA_DIR"), layout=env.get("TEZ_LAYOUT", "auto"),
+              default_temperature=env.get("TEZ_DEFAULT_TEMPERATURE", "auto"))
     if env.flag("TEZ_PRESETS"):
         tez.add_presets()
     return tez

@@ -152,18 +152,22 @@ def softmax_rows(Z: np.ndarray, temperature: float = 1.0) -> np.ndarray:
     return E / np.where(s > 0, s, 1.0)
 
 
-def fit_temperature_logits(Z: Sequence[Sequence[float]], y: Sequence[int], min_rows: int = 5, prior_sd: float = 1.0) -> float:
+def fit_temperature_logits(Z: Sequence[Sequence[float]], y: Sequence[int], min_rows: int = 5, prior_sd: float = 1.0,
+                           prior_center: float = 1.0) -> float:
     """Temperature for softmax(z / T), searched on a log-spaced grid (0.05 .. 20). A MAP estimate: mean NLL plus a
-    log-normal prior on T (median 1, `prior_sd` in log space) that weighs 1/n. Pure maximum likelihood runs to the
-    grid edge whenever every row is already right (a few confident labels), which would make the next mistake
-    arbitrarily confident; the prior keeps T near 1 until the data really says otherwise. 1.0 with too few rows."""
+    log-normal prior on T (median `prior_center`, `prior_sd` in log space) that weighs 1/n. Pure maximum likelihood
+    runs to the grid edge whenever every row is already right (a few confident labels), which would make the next
+    mistake arbitrarily confident; the prior keeps T near its centre until the data really says otherwise. The
+    centre is 1, or the model's default temperature for the question type (tez.temperature), which makes a handful
+    of labels help instead of hurt. The centre itself with too few rows."""
     y = np.asarray(y, int)
     if len(y) < min_rows:
-        return 1.0
+        return float(prior_center)
     Z = np.asarray(Z, float)
-    best, bt = math.inf, 1.0
+    c = math.log(prior_center)
+    best, bt = math.inf, float(prior_center)
     for t in T_GRID:
-        v = nll(softmax_rows(Z, t), y) + math.log(t) ** 2 / (2.0 * prior_sd ** 2 * len(y))
+        v = nll(softmax_rows(Z, t), y) + (math.log(t) - c) ** 2 / (2.0 * prior_sd ** 2 * len(y))
         if v < best - 1e-12:
             best, bt = v, float(t)
     return bt

@@ -1,7 +1,7 @@
 """Command line: tez serve | decide | plan | doctor | fit | suggest | eval | presets | truncate.
 
-Settings can come from the environment (containers, services): TEZ_BACKEND, TEZ_TEMPLATE, TEZ_EMBED_BACKEND for every
-command; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR, TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS,
+Settings can come from the environment (containers, services): TEZ_BACKEND, TEZ_TEMPLATE, TEZ_EMBED_BACKEND and
+TEZ_DEFAULT_TEMPERATURE for every command; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR, TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS,
 TEZ_PRESETS and TEZ_LAYOUT. Each can be read from a file instead, for Docker and Compose secrets: TEZ_API_KEY_FILE=
 /run/secrets/tez_api_key (surrounding whitespace is stripped; setting both VAR and VAR_FILE is an error). A flag on the
 command line wins over the environment.
@@ -24,7 +24,7 @@ from .prompt import TEMPLATES
 from .schema import LAYOUTS
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
-ENV_VARS = ("TEZ_BACKEND", "TEZ_TEMPLATE", "TEZ_EMBED_BACKEND", "TEZ_HOST", "TEZ_PORT", "TEZ_SCHEMAS", "TEZ_DATA_DIR",
+ENV_VARS = ("TEZ_BACKEND", "TEZ_TEMPLATE", "TEZ_EMBED_BACKEND", "TEZ_DEFAULT_TEMPERATURE", "TEZ_HOST", "TEZ_PORT", "TEZ_SCHEMAS", "TEZ_DATA_DIR",
             "TEZ_API_KEY", "TEZ_LOG_LEVEL", "TEZ_CORS_ORIGINS", "TEZ_PRESETS", "TEZ_LAYOUT")
 
 
@@ -48,6 +48,18 @@ def _choice(name: str, options: tuple) -> Any:
         return value
     parse.__name__ = name
     return parse
+
+
+def _default_temperature(text: Any) -> str | float:
+    """An argparse type for --default-temperature (auto, off or a positive number); also checks the env default."""
+    from .temperature import parse
+    try:
+        return parse(text)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from None
+
+
+_default_temperature.__name__ = "default temperature"
 
 
 def _utf8_streams() -> None:
@@ -75,6 +87,11 @@ def _backend_args(p: argparse.ArgumentParser, env: Env, embed: bool = True) -> N
     p.add_argument("--n-probs", type=int, default=DEFAULT_N_PROBS, metavar="N",
                    help=f"next-token log-probabilities a letter readout asks for; letters outside them get the floor "
                         f"(default {DEFAULT_N_PROBS})")
+    p.add_argument("--default-temperature", default=env.get("TEZ_DEFAULT_TEMPERATURE", "auto"), type=_default_temperature,
+                   metavar="auto|off|T",
+                   help="temperature for letters answers no fit calibrates: auto uses the values measured for the model "
+                        "and template when Tez has them (Gemma 4 12B Q8_0 with gemma4), otherwise 1; off is 1; or a number "
+                        "(env TEZ_DEFAULT_TEMPERATURE; default auto)")
 
 
 def _non_negative(text: str) -> int:
@@ -119,7 +136,8 @@ def _make_tez(args: argparse.Namespace, schemas: Any = None, layout: str = "auto
                    embed_backend=getattr(args, "embed_backend", None), embed_template=getattr(args, "embed_template", None),
                    cache_prompt=not args.no_cache_prompt, data_dir=getattr(args, "data_dir", None),
                    model_name=args.model_name, n_probs=args.n_probs, layout=layout, hooks=_hooks(args),
-                   hooks_raise=getattr(args, "hook_errors", "raise") == "raise")
+                   hooks_raise=getattr(args, "hook_errors", "raise") == "raise",
+                   default_temperature=getattr(args, "default_temperature", "auto"))
     except ValueError as exc:
         raise TezError(str(exc)) from exc
 

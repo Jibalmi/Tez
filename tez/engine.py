@@ -37,6 +37,9 @@ from .prompt import (QUESTION_FIRST, STATE_FIRST, TOURNAMENT_NONE, build_prompt,
                      pick_finalists, render_state, resolve_layout, tournament_plan)
 from .readout import assemble, blend, softmax, temper
 from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alpha, parse_layout, parse_questions
+from .temperature import parse as parse_default_temperature
+from .temperature import pick as pick_temperature
+from .temperature import table_for as temperature_table
 
 log = logging.getLogger("tez")
 READOUTS = ("auto", "letters", "probe")
@@ -103,6 +106,9 @@ class Tez:
     embed_backend  optional separate server for probe features (default: the letters backend)
     layout         default prompt layout: auto (default) | question_first | state_first
     n_probs        next-token log-probabilities a letter readout asks llama-server for (default 200)
+    default_temperature
+                   temperature for letters answers no fit calibrates: auto (default: the measured per-type values when
+                   the model and template are ones tez.temperature lists, otherwise 1), off (1) or a number
     hooks          hooks run on every decision (tez.hooks; docs/HOOKS.md); hooks_raise=False logs a failing hook
                    instead of failing the decision
     """
@@ -110,10 +116,14 @@ class Tez:
     def __init__(self, backend: Any = None, template: str = "gemma4", schemas: Any = None, embed_backend: Any = None,
                  embed_template: str | None = None, cache_prompt: bool = True, data_dir: str | Path | None = None,
                  model_name: str | None = None, embed_model_name: str | None = None, *, layout: str = "auto",
-                 n_probs: int = DEFAULT_N_PROBS, hooks: Any = None, hooks_raise: bool = True):
+                 n_probs: int = DEFAULT_N_PROBS, hooks: Any = None, hooks_raise: bool = True,
+                 default_temperature: Any = "auto"):
         if layout not in LAYOUTS:
             raise ValueError(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
         self.layout = layout
+        self.default_temperature = parse_default_temperature(default_temperature)
+        self._temps: dict | None = None
+        self._temps_known = False
         self.hooks: list = normalise_hooks(hooks)
         self.hooks_raise = bool(hooks_raise)
         self._hooks_lock = threading.Lock()
@@ -776,10 +786,17 @@ class Tez:
                 log.warning("probe readout for %s failed (%s); falling back to the letters", q.id, exc)
                 use_probe = False
         p_letters = None
+        default_t = None
         if not use_probe or fq.blend or has_none:
             z, t = self.letter_logits(q, state, options, shots_letters, layout=layout, trace=trace)
             tokens += t
-            p_letters = softmax(z, fq.letters.temperature if letters_ok else 1.0)
+            if letters_ok:
+                t_letters = fq.letters.temperature
+            elif use_probe:
+                t_letters = 1.0             # a fitted probe's blend prior and __none__ share were fitted at 1
+            else:
+                t_letters = default_t = self.unfitted_temperature(q.type, int(np.isfinite(z).sum()))
+            p_letters = softmax(z, t_letters)
         if use_probe:
             p = p_probe
             if fq.blend and p_letters is not None:
@@ -796,6 +813,8 @@ class Tez:
             readout_used, cal = "letters", (fq.letters if letters_ok else None)
         answer = assemble(q, keys, p)
         meta: dict[str, Any] = {"readout": readout_used}
+        if default_t is not None and default_t != 1.0 and readout_used == "letters":
+            meta["temperature"] = default_t
         p_max = float(np.max(p))
         if alpha is not None:
             if cal is None or (q.type == "choice" and answer["choice"] == NONE_KEY):
@@ -808,6 +827,21 @@ class Tez:
             meta["calibration_id"] = self.fitted[schema.name].calibration_id
         return QuestionResult(answer=answer, meta=meta, tokens=tokens, readout=readout_used, probabilities=p, keys=keys,
                               layout=layout)
+
+    def unfitted_temperature(self, qtype: str, n_shown: int) -> float:
+        """Temperature for a letters answer that no fit calibrates (tez.temperature): n_shown is the number of options
+        the model was shown, __none__ included (a tournament's last round for more than 26)."""
+        mode = self.default_temperature
+        if mode == "off":
+            return 1.0
+        if not isinstance(mode, str):
+            return float(mode)
+        if not self._temps_known:
+            name = self.backend.model_name()
+            if name != "unknown":                # the server answered: its model is known for good
+                self._temps = temperature_table(self.template, name)
+                self._temps_known = True
+        return pick_temperature(self._temps, qtype, n_shown)
 
     def _no_probe_reason(self, schema: Schema | None, qid: str, same: bool, layout: str | None = None) -> str:
         base = f"question '{qid}' has no usable probe for tez.readout=probe"

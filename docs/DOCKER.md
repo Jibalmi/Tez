@@ -77,6 +77,7 @@ The Tez image itself (`docker/Dockerfile`) is configured by environment, which `
 | `TEZ_CORS_ORIGINS` | `http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io` | Browser origins CORS allows (`*` for any); POSTs from any other origin get `403` |
 | `TEZ_LOG_LEVEL` | `info` | `critical`, `error`, `warning`, `info` or `debug` |
 | `TEZ_LAYOUT` | `auto` | Default prompt layout (docs/API.md, "Prompt layout") |
+| `TEZ_DEFAULT_TEMPERATURE` | `auto` | Temperature for letters answers no fit calibrates: `auto`, `off` or a number (docs/API.md, "Default temperature") |
 | `TEZ_EMBED_BACKEND` | unset | Separate llama-server for probe features |
 
 Every variable in the second table can be read from a file instead: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key`. The
