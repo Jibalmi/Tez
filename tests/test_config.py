@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 
 from tez import Tez
 from tez.cli import build_parser, cors_origins, main
-from tez.config import DEFAULT_CORS_ORIGINS, Limits
+from tez.config import DEFAULT_CORS_ORIGINS, Env, Limits
 from tez.server import OriginPolicy, create_app
 
 PLAYGROUND = "https://jibalmi.github.io"
@@ -182,6 +182,15 @@ def test_serve_reads_the_environment(tmp_path: Path):
         with pytest.raises(SystemExit):
             build_parser(bad).parse_args(["serve"])
     assert build_parser({"TEZ_BACKEND": "fake"}).parse_args(["decide", "x", "--questions", "q.json"]).backend == "fake"
+
+
+def test_a_secret_file_saved_with_a_byte_order_mark_is_read_without_it(tmp_path: Path):
+    key = tmp_path / "key.txt"
+    key.write_bytes(b"\xef\xbb\xbfs3cret\r\n")                     # Notepad's "UTF-8 with BOM"
+    assert Env({"TEZ_API_KEY_FILE": str(key)}).get("TEZ_API_KEY") == "s3cret"
+    assert build_parser({"TEZ_API_KEY_FILE": str(key)}).parse_args(["serve"]).api_key == "s3cret"
+    c = TestClient(create_app(Tez(backend="fake"), api_key="s3cret"))
+    assert c.get("/v1/models", headers={"Authorization": "Bearer s3cret"}).status_code == 200
 
 
 def test_bad_secret_file_is_a_clean_error(tmp_path: Path, monkeypatch, capsys):

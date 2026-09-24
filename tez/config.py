@@ -52,9 +52,9 @@ class Limits:
 
 
 class Env:
-    """The TEZ_* environment: VAR, or the contents of the file that VAR_FILE names (Docker and Compose secrets; the
-    surrounding whitespace is stripped). An empty VAR counts as unset; VAR and VAR_FILE together, an unreadable file
-    or an empty one raise TezError."""
+    """The TEZ_* environment: VAR, or the contents of the file that VAR_FILE names (Docker and Compose secrets; read as
+    UTF-8, a byte order mark and the surrounding whitespace stripped). An empty VAR counts as unset; VAR and VAR_FILE
+    together, an unreadable file or an empty one raise TezError."""
 
     def __init__(self, environ: Mapping[str, str] | None = None):
         self.environ = os.environ if environ is None else environ
@@ -66,7 +66,7 @@ class Env:
             if value is not None:
                 raise TezError(f"set {name} or {name}_FILE, not both")
             try:
-                value = Path(path).read_text(encoding="utf-8").strip()
+                value = Path(path).read_text(encoding="utf-8-sig").strip()     # a BOM (Notepad) is not part of it
             except OSError as exc:
                 raise TezError(f"cannot read {name}_FILE={path}: {exc.strerror or exc}") from exc
             if not value:

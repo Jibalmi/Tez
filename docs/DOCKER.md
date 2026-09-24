@@ -81,7 +81,7 @@ The Tez image itself (`docker/Dockerfile`) is configured by environment, which `
 | `TEZ_EMBED_BACKEND` | unset | Separate llama-server for probe features |
 
 Every variable in the second table can be read from a file instead: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key`. The
-file's surrounding whitespace is stripped, and setting both `X` and `X_FILE` is an error. Extra container arguments are
+file's surrounding whitespace (and a UTF-8 byte order mark) is stripped, and setting both `X` and `X_FILE` is an error. Extra container arguments are
 appended to `tez serve` (for example `--log-level warning` or `--max-batch 128`). The process runs as user 10001, not
 root.
 

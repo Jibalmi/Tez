@@ -626,4 +626,4 @@ and `TEZ_DEFAULT_TEMPERATURE` for the commands that talk to a model (`TEZ_DATA_D
 `TEZ_LLAMA_LIB`, `TEZ_N_CTX`, `TEZ_N_BATCH` and `TEZ_N_GPU_LAYERS` for an in-process model; for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
 `TEZ_API_KEY`, `TEZ_LOG_LEVEL`, `TEZ_CORS_ORIGINS`, `TEZ_PRESETS` (`1` = `--presets`) and `TEZ_LAYOUT`. Each can be read
 from a file instead, for Docker and Compose secrets: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key` (surrounding
-whitespace stripped; setting both `X` and `X_FILE` is an error).
+whitespace and a UTF-8 byte order mark stripped; setting both `X` and `X_FILE` is an error).
