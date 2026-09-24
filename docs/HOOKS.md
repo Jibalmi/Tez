@@ -105,8 +105,10 @@ yours should too.
   answers would measure the model against itself, and the gate's guarantee would rest on nothing. `tez serve
   --decision-log PATH` installs one.
 - **`Redact(patterns=None, replacement=None)`** replaces personal data in the state before the model reads it, and in
-  feedback rows before they are written. Built-in patterns: `email`, `iban`, `card` (13 to 19 digits passing the Luhn
-  check) and `phone` (9 to 15 digits), all four by default; add your own regular expressions. Built-ins become
+  feedback rows before they are written. Built-in patterns: `email` (found from its `@`; an address glued to a longer
+  run of address characters takes the last 64 before the `@` with it, the most a local part can have), `iban`, `card`
+  (13 to 19 digits passing the Luhn check) and `phone` (9 to 15 digits), all four by default; add your own regular
+  expressions. All four run in linear time on any text. Built-ins become
   `[EMAIL]`, `[IBAN]`, `[CARD]`, `[PHONE]`, your patterns `[REDACTED]`, or one fixed `replacement`. Strings inside
   object and array states are redacted, keys kept. Decisions are then made on the redacted text.
 - **`Cache(maxsize=1024)`** answers a repeated decision from memory (least recently used). The key covers the state,

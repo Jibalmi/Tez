@@ -254,13 +254,32 @@ def test_redact_patterns():
         Redact(["(unclosed"])
 
 
-@pytest.mark.parametrize("kind", ["letters", "dotted", "digits", "iban-like", "spaced-digits", "parentheses"])
+@pytest.mark.parametrize("prefix", ["-" * 70, "_" * 60, "%20" * 22, "a" * 64, "x.y" * 40, "+" * 500])
+def test_redact_an_address_glued_to_a_long_run_of_address_characters(prefix):
+    """A local part is at most 64 characters: the last 64 before the @ go with the address, whatever comes before."""
+    out = Redact(["email"]).redact(f"Reply to {prefix}john.smith@example.com today")
+    assert "john.smith" not in out and "example.com" not in out and "[EMAIL]" in out
+    kept = out[len("Reply to "):out.index("[EMAIL]")]
+    assert prefix.startswith(kept) and len(prefix) + len("john.smith") - len(kept) <= 64
+
+
+def test_redact_keeps_address_boundaries():
+    r = Redact(["email"])
+    assert r.redact("a@b.co@c.com, x@@y.com and caféjohn@x.io") == "[EMAIL]@c.com, x@@y.com and café[EMAIL]"
+    assert r.redact("no address @example.com or a@b") == "no address @example.com or a@b"
+
+
+@pytest.mark.parametrize("kind", ["letters", "dotted", "digits", "iban-like", "spaced-digits", "parentheses", "dashes",
+                                  "percent-20", "glued-addresses", "at-domains", "a-at", "at-a.bc", "long-labels"])
 def test_redact_is_linear_on_long_runs(kind):
     """A server state can be 50,000 characters of anything: no pattern may backtrack quadratically (the email pattern
     once took seconds on a run of letters)."""
     import time
     text = {"letters": "a" * 50_000, "dotted": "a." * 25_000, "digits": "1" * 50_000 + "x",
-            "iban-like": "DE" + "1" * 50_000, "spaced-digits": "1 " * 25_000 + "x", "parentheses": "(" * 50_000}[kind]
+            "iban-like": "DE" + "1" * 50_000, "spaced-digits": "1 " * 25_000 + "x", "parentheses": "(" * 50_000,
+            "dashes": "-" * 50_000, "percent-20": "%20" * 16_666, "glued-addresses": ("x" * 70 + "jo@ex.com") * 630,
+            "at-domains": ("@" + "a" * 63 + ".") * 770, "a-at": "a@" * 25_000, "at-a.bc": "@a.bc" * 10_000,
+            "long-labels": ("a@" + ("b" * 63 + ".") * 9 + "1 ") * 84}[kind]
     t0 = time.perf_counter()
     Redact().redact(text)
     assert time.perf_counter() - t0 < 1.0

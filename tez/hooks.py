@@ -281,12 +281,49 @@ def _luhn(digits: str) -> bool:
     return total % 10 == 0
 
 
+class _Found:
+    """What a redaction rule's replacement sees: group(0) is the matched text."""
+
+    def __init__(self, text: str):
+        self.text = text
+
+    def group(self, index: int = 0) -> str:
+        if index != 0:
+            raise IndexError("no such group")
+        return self.text
+
+
+class _Email:
+    """The built-in email pattern, found from its @ so it stays linear on any text: a regular expression finds the @
+    and the domain, then the local part is read backwards from the @, at most 64 characters (an address's local part is
+    at most 64). A regular expression that had to start at the local part could either start anywhere inside a long run
+    of address characters (64 steps at every position) or only at the start of a run, and then an address glued to a
+    longer run ("------...john@example.com") was not redacted. Here the last 64 characters before the @ go with it."""
+
+    pattern = "email: [A-Za-z0-9._%+-]{1,64}@domain, found from the @"
+    _domain = re.compile(r"@[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63}){0,8}\.[A-Za-z]{2,24}(?![A-Za-z])")
+    _local = re.compile(r"[A-Za-z0-9._%+-]{1,64}")        # matched on the characters before the @, reversed
+
+    def sub(self, repl: Any, text: str) -> str:
+        out, last = [], 0
+        for m in self._domain.finditer(text):
+            at = m.start()
+            back = self._local.match(text[max(last, at - 64):at][::-1])
+            if back is None:
+                continue
+            start = at - back.end()
+            out += [text[last:start], repl(_Found(text[start:m.end()])) if callable(repl) else repl]
+            last = m.end()
+        out.append(text[last:])
+        return "".join(out)
+
+
 # Every pattern runs over untrusted text (up to tez serve's 50,000-character states), so each is linear: a match can only
-# start at the beginning of a run (the lookbehinds) and every repeat is bounded (an address's local part is at most 64
-# characters, a domain label 63). Without that, a long run of letters costs quadratic backtracking in the email pattern.
+# start at the beginning of a run (the lookbehinds; the email is found from its @) and every repeat is bounded (an
+# address's local part is at most 64 characters, a domain label 63). Without that, a long run of letters costs
+# quadratic backtracking.
 _BUILTIN = {
-    "email": (re.compile(r"(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63}){0,8}"
-                         r"\.[A-Za-z]{2,24}(?![A-Za-z])"), None),
+    "email": (_Email(), None),
     "iban": (re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,4})?\b"), None),
     "card": (re.compile(r"(?<![\w-])\d(?:[ -]?\d){12,18}(?![\w-])"), lambda s: _luhn(re.sub(r"\D", "", s))),
     "phone": (re.compile(r"(?<![\w+])\+?\(?\d[\d ().-]{7,}\d(?!\w)"), lambda s: 9 <= len(re.sub(r"\D", "", s)) <= 15),
@@ -308,7 +345,7 @@ class Redact(BaseHook):
             patterns = list(_BUILTIN)
         elif isinstance(patterns, (str, re.Pattern)):
             patterns = [patterns]
-        self.rules: list[tuple[re.Pattern, Any, str]] = []
+        self.rules: list[tuple[Any, Any, str]] = []        # (pattern with .sub, check, replacement)
         for p in patterns:
             if isinstance(p, str) and p in _BUILTIN:
                 rx, check = _BUILTIN[p]
