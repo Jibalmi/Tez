@@ -20,6 +20,7 @@ from __future__ import annotations
 import hmac
 import json
 import logging
+import math
 import re
 import time
 from typing import Any, Callable, Iterable
@@ -134,6 +135,41 @@ def _error(status: int, type_: str, message: str) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": {"type": type_, "message": message}})
 
 
+# Python's json module accepts more than JSON: NaN, Infinity and -Infinity, numbers like 1e400 that overflow to inf, and
+# \ud800-style escapes that leave a lone surrogate in a str (it cannot be encoded as UTF-8). Each would fail only later,
+# after hooks and the model had run, as a 500. A body is checked for all three as it is read, before anything runs.
+_SURROGATE = re.compile("[\ud800-\udfff]")
+
+
+def _no_constant(name: str) -> Any:
+    raise InvalidRequest(f"the request body is not valid JSON: {name} is not a JSON number")
+
+
+def _finite_float(text: str) -> float:
+    value = float(text)
+    if not math.isfinite(value):
+        raise InvalidRequest(f"the request body has a number too large to represent: {text[:40]}")
+    return value
+
+
+def _check_strings(body: Any) -> None:
+    """Refuse (422) a body with a string, or an object key, that is not valid Unicode (a lone surrogate); no recursion."""
+    stack = [body]
+    while stack:
+        value = stack.pop()
+        if isinstance(value, dict):
+            for k, v in value.items():
+                if _SURROGATE.search(k):
+                    raise InvalidRequest("the request body has an object key that is not valid Unicode (a lone "
+                                         "surrogate such as \\ud800)")
+                stack.append(v)
+        elif isinstance(value, list):
+            stack.extend(value)
+        elif isinstance(value, str) and _SURROGATE.search(value):
+            raise InvalidRequest("the request body has a string that is not valid Unicode (a lone surrogate such as "
+                                 "\\ud800)")
+
+
 class _RequestMeta:
     """Outermost: every response gets x-typesafe-request-id (a decision's run id, a fresh id for anything else) and
     server-timing (`total`, plus `tez` and `backend` for decisions); decision endpoints add X-Tez-Run-Id and
@@ -246,11 +282,13 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
         if not raw.strip():
             raise InvalidRequest("the request body must be a JSON object")
         try:
-            return json.loads(raw)
+            body = json.loads(raw, parse_constant=_no_constant, parse_float=_finite_float)
         except RecursionError as exc:                      # [[[[...]]]] nested past the parser's depth
             raise InvalidRequest("the request body is nested too deeply") from exc
         except ValueError as exc:     # JSONDecodeError, UnicodeDecodeError, an integer past Python's 4,300 digits
             raise InvalidRequest(f"the request body is not valid JSON ({exc.__class__.__name__})") from exc
+        _check_strings(body)
+        return body
 
     async def call(fn: Callable, *args: Any, **kwargs: Any) -> Any:
         """Run an engine call in the thread pool. A failure that is not a TezError (a hook raising, say) becomes a

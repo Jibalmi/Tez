@@ -218,7 +218,9 @@ read all four (CORS `Expose-Headers`).
 ### Errors
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
-than the model's context, with llama.cpp's message), `503` backend unavailable. Also `404` for an unknown route or
+than the model's context, with llama.cpp's message, and a body that is not strict JSON: `NaN`, `Infinity`, a number
+too large for a float such as `1e400`, or a string with a lone surrogate such as `"\ud800"`, refused before any hook
+or model call), `503` backend unavailable. Also `404` for an unknown route or
 schema, `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin that is not allowed,
 `413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure (a hook that raised,
 for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,

@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from conftest import SYNTH_SCHEMA_YAML, synth_rows, write_jsonl
-from tez import FakeBackend, Tez, __version__
+from tez import BaseHook, FakeBackend, Tez, __version__
 from tez.fit import fit
 from tez.server import create_app
 
@@ -129,6 +129,43 @@ def test_systemone_422(client, payload, fragment):
     err = r.json()["error"]
     assert err["type"] == "invalid_request" and fragment in err["message"]
     assert r.headers["access-control-allow-origin"] == ORIGIN["Origin"]       # errors carry CORS headers too
+
+
+class Events(BaseHook):
+    def __init__(self):
+        self.seen = []
+
+    def on_decide_start(self, ctx):
+        self.seen.append("start")
+
+    def on_error(self, ctx):
+        self.seen.append("error")
+
+    def on_feedback(self, row):
+        self.seen.append("feedback")
+
+
+@pytest.mark.parametrize("bad, fragment", [
+    ("NaN", "NaN is not a JSON number"),
+    ("-Infinity", "-Infinity is not a JSON number"),
+    ("1e400", "number too large to represent: 1e400"),
+    ('"refund \\ud800 please"', "string that is not valid Unicode"),
+    ('{"\\udfff": "x"}', "object key that is not valid Unicode"),
+])
+@pytest.mark.parametrize("path, template", [
+    ("/v1/systemone", '{"state": [%s], "questions": {"u": {"type": "noul", "instructions": "Urgent?"}}}'),
+    ("/v1/systemone/batch", '{"states": ["fine", [%s]], "questions": {"u": {"type": "noul", "instructions": "Urgent?"}}}'),
+    ("/v1/plan", '{"state": [%s], "schema": "support-triage"}'),
+    ("/v1/feedback", '{"schema": "support-triage", "question": "is_urgent", "state": [%s], "label": true}'),
+])
+def test_non_json_numbers_and_lone_surrogates_are_refused_before_anything_runs(schema_dir, bad, fragment, path, template):
+    fb, events = FakeBackend(), Events()
+    c = TestClient(create_app(Tez(backend=fb, schemas=schema_dir, hooks=[events])))
+    r = c.post(path, content=(template % bad).encode("utf-8"), headers={"content-type": "application/json"})
+    assert r.status_code == 422 and r.json()["error"]["type"] == "invalid_request"
+    assert fragment in r.json()["error"]["message"]
+    assert fb.calls == {"letters": 0, "embed": 0} and events.seen == []
+    assert not (schema_dir / ".tez" / "feedback").exists()
 
 
 def test_backend_down_is_503(docs_request):
