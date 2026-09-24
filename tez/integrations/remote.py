@@ -10,8 +10,9 @@ format (docs/API.md): `tez serve` on this machine or another one, or a Jev-compa
 The method names and return values match the in-process engine (tez.Tez): decide, handle, decide_many,
 decide_batch, handle_batch, extract, plan, health, models, schema_summaries, schema_detail and record_feedback, so every
 integration accepts either. Error responses raise the
-TezError subclasses the engine raises (InvalidRequest 422, NotFound 404, Unauthorized 401, BackendUnavailable 503);
-a server that cannot be reached, times out or answers with something other than JSON raises BackendUnavailable.
+TezError subclasses the engine raises (InvalidRequest 422, NotFound 404, Unauthorized 401, Forbidden 403,
+PayloadTooLarge 413, InternalError 500, BackendUnavailable 503, and 502 or 504 from a proxy); a server that cannot be
+reached, times out or answers with something other than JSON raises BackendUnavailable.
 
 Only non-default Tez extensions are sent (`schema`, and `tez` when readout, abstain or a gate is set), so a strict
 Jev-compatible server sees a plain request. Redirects are followed only within the same origin (scheme, host and
@@ -252,5 +253,6 @@ class RemoteTez:
         return self._request("GET", "/v1/schemas/" + quote(str(name), safe=""))
 
     def record_feedback(self, body: Mapping) -> dict:
-        """POST /v1/feedback: {"schema", "question", "state", "label"}."""
+        """POST /v1/feedback: {"schema", "question", "state", "label"}, and optionally "run_id", the decision's
+        X-Tez-Run-Id (stored with the row, so the label is linked to the decision it corrects)."""
         return self._request("POST", "/v1/feedback", dict(body))

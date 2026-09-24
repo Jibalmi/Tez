@@ -4,12 +4,16 @@
     pip install "tez-decisions[mcp]"
     tez-mcp                                   # speaks MCP on stdin/stdout; configured by environment variables
 
-  TEZ_URL        forward every call to a running `tez serve` (TEZ_API_KEY is then sent as the bearer token)
+  TEZ_URL        forward every call to a running `tez serve` (TEZ_API_KEY is then sent as the bearer token;
+                 TEZ_TIMEOUT seconds per request, default 120)
   TEZ_BACKEND    otherwise run Tez in this process against this llama-server (default http://127.0.0.1:8080;
                  "fake" for an offline demo whose answers mean nothing)
   TEZ_TEMPLATE   gemma4 | qwen3 (default gemma4)
   TEZ_SCHEMAS    a directory of schemas to load;  TEZ_PRESETS=1 loads the built-in presets too
   TEZ_DATA_DIR   where tez_feedback writes (default <schemas>/.tez)
+  TEZ_LAYOUT     default prompt layout: auto | question_first | state_first (default auto)
+  TEZ_DEFAULT_TEMPERATURE
+                 temperature for unfitted letters answers: auto | off | a number (default auto)
 
 Tools: tez_decide, tez_schemas, tez_schema, tez_feedback, tez_status. In process, requests get tez serve's limits
 (64 questions, 50,000-character states). The MCP SDK (1.x's FastMCP or 2.x's MCPServer) is imported only when the

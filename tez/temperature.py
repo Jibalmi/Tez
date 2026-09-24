@@ -10,7 +10,8 @@ What a default temperature (all of them above 1) changes: no argmax ever changes
 most probable level stay the same. Everything read from the probabilities moves: a yes/no probability moves towards
 0.5 without crossing it, a choice's `confidence` drops, and a score's expected level (`score` = sum of i * p_i over the
 tempered probabilities) moves towards the middle of the scale (two separate peaks can first pull it outwards). Callers
-that need an integer level take the argmax of `probabilities`, or switch the default off.
+that need an integer level take the most probable level (the argmax of `probabilities`, which no temperature changes),
+or switch the default off.
 
 A choice question's bucket is the number of options it actually showed the model, __none__ included; a tournament
 counts the finalists of its last round.

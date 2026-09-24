@@ -33,6 +33,7 @@ are refused too, but it can read the `GET` routes (schemas, models, health); bey
 | `GET` | `/v1/schemas` | Tez: schemas loaded from `--schemas` (and `--presets`) |
 | `GET` | `/v1/schemas/{name}` | Tez: one schema (questions, probe status, calibration) |
 | `POST` | `/v1/feedback` | Tez: record a correct label for a past decision (feeds `tez fit`) |
+| `GET` | `/` | Tez: the server's name, version and this list of endpoints |
 
 ## `POST /v1/systemone`
 
@@ -164,8 +165,8 @@ reorders them. The numbers around it do move, since all of them are read from th
   stays the same (as the probabilities flatten; a score whose probabilities have two separate peaks can first move
   outwards).
 
-Where you need an integer level, take the most probable level (the argmax of `probabilities`), or run with
-`--default-temperature off`. The `tez` block carries `temperature` for every answer read at a default. Easy questions
+Where you need an integer level, take the most probable level (the argmax of `probabilities`), which no temperature
+changes, or run with `--default-temperature off`. The `tez` block carries `temperature` for every answer read at a default. Easy questions
 read under-confident until they are fitted; the gate is unaffected, because it only acts on fitted questions. Any other
 model or template is read at temperature 1.
 `--default-temperature off` (env `TEZ_DEFAULT_TEMPERATURE`) restores temperature 1, and a number sets one temperature
@@ -205,27 +206,33 @@ Every response (errors and CORS preflights included) carries:
 
 - `x-typesafe-request-id`: 32 hex characters. For a decision it is the run id that hooks see (`ctx.run_id`), that a
   `DecisionLog` row records and that `POST /v1/feedback` accepts as `run_id`; for other routes a fresh id.
-- `server-timing`: `total;dur=<ms>` for every response; decisions add `tez;dur=<ms>` (the engine) and
-  `backend;dur=<ms>` (time spent in model calls), in the form `tez;dur=<ms>, backend;dur=<ms>, total;dur=<ms>`.
+- `server-timing`: `total;dur=<ms>` for every response. A successful `/v1/systemone` decision adds `tez;dur=<ms>`
+  (the engine) and `backend;dur=<ms>` (time spent in model calls): `tez;dur=<ms>, backend;dur=<ms>, total;dur=<ms>`.
+  A successful batch adds `tez;dur=<ms>` for the whole batch, without `backend`. A decision or batch that fails has
+  `total` only.
 
 Decisions (`/v1/systemone` and `/v1/systemone/batch`) that reach the engine, successful or not, also carry
 `X-Tez-Run-Id` (the same id; not on a `401`, a `403`, or a body over `--max-body-bytes` or not JSON, which are
-answered before) and, for a
-single decision that got that far, `X-Tez-Layout`: the layout its questions were read in (`question_first` or
-`state_first`; under `auto`, a fitted question counts in its fit's layout), or `mixed` when they differ. Browsers can
-read all four (CORS `Expose-Headers`).
+answered before). Only a successful `/v1/systemone` response carries `X-Tez-Layout`: the layout its questions were
+read in (`question_first` or `state_first`; under `auto`, a fitted question counts in its fit's layout), or `mixed`
+when they differ. A decision that fails in the engine (a `tez.readout: "probe"` without a usable probe, a backend
+error) has no `X-Tez-Layout`, and a batch never has one (each result's `tez.questions` names the layouts when they
+differ). Browsers can read all four (CORS `Expose-Headers`).
 
 ### Errors
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
 than the model's context, with llama.cpp's message, and a body that is not strict JSON: `NaN`, `Infinity`, a number
 too large for a float such as `1e400`, or a string with a lone surrogate such as `"\ud800"`, refused before any hook
-or model call), `503` backend unavailable. Also `404` for an unknown route or
-schema, `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin that is not allowed,
+or model call), `503` backend unavailable. Also `404` for an unknown route, or an unknown schema in the path
+(`GET /v1/schemas/{name}`), `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin that is not allowed,
 `413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure (a hook that raised,
 for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,
 `forbidden`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`, `backend_unavailable` and
-`internal_error`.
+`internal_error` (any other `4xx` the web framework answers is `invalid_request`, any other `5xx` `internal_error`).
+A schema named in a request body that is not loaded (`schema` in a decision, a batch, a plan or feedback) is a field
+the server cannot use, so it is `422 invalid_request` with the loaded names; only the path of
+`GET /v1/schemas/{name}` gives `404 not_found`.
 
 ### Structured extraction (`json_schema`)
 
@@ -280,7 +287,8 @@ decisions, escalated fields, the response).
 ## `POST /v1/systemone/batch`
 
 Many states against the same questions. The body is a `/v1/systemone` request with `states` (an array) in place of
-`state`; `questions` (or `schema`), `model` and `tez` apply to every state.
+`state`; `questions` (or `schema`, or `json_schema`), `model` and `tez` apply to every state. With `json_schema`, each
+result carries its own object in `tez.values`.
 
 ```json
 {"model": "tez-latest", "states": ["My invoice is wrong", {"text": "the app crashes"}],
@@ -313,7 +321,7 @@ Python: `Tez.decide_many(states, questions=None, schema=None, ...)` returns the 
 ## `POST /v1/plan`
 
 The body of a `/v1/systemone` request (`state` may be left out); nothing is sent to the model. Per question: the
-readout it would use, its fit (`ready`, `stale` or `none`, with the reason, the fit's layout and calibration id), the
+readout it would use, its `fit`, the
 number of options, the backend calls, the layout, the prompt hash (`prompt_sha`, what `tez fit` records) and a token
 estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it. The
 top-level `layout` is the one the questions share, or `mixed` (what `X-Tez-Layout` would say); `order` is the order
@@ -344,6 +352,15 @@ question after the first reuses the whole state.
 
 With the in-process backend a question read in a batched call has `"batch"` (`state`: the prompts that share the
 state; `rest`: the others), `totals.batches` counts the batched calls, and a note describes each.
+
+A question's `fit` has `status` (`ready`, `stale` or `none`) and `reason` (null when ready). A question with a fit
+also has `calibration_id`, `fit_layout` (the layout it was fitted under), `letters_calibrated` (its letters
+calibration would be used) and `probe` (its probe would be used):
+
+```json
+"fit": {"status": "ready", "reason": null, "calibration_id": "synth@2026-09-24", "fit_layout": "question_first",
+        "letters_calibrated": true, "probe": true}
+```
 
 A question that would fail (`tez.readout: "probe"` without a usable probe) has `"readout": null` and an `error`
 instead of failing the plan. Model names are compared only when the server already knows them (`model` is null
@@ -481,9 +498,11 @@ alias, and any other `model` string, is decided by the same engine.
 
 `builtin` is true for a preset loaded with `tez serve --presets` (see "Presets").
 
-One schema returns its questions in wire form plus `layout` (the schema's own, or null), `served_layout` (what a
-request that names none gets), `calibration_id`, `probes` (per question: `probe` = `ready`, `stale` or `none`,
-`letters_calibrated`, `n_labels`, `note`, and the `layout` it was fitted under), `calibration` and `manifest`.
+One schema returns the schema in wire form (`name`, `description`, `state`, `questions`, `gate`, `examples`) plus
+`builtin` (as in the list), `layout` (the schema's own, or null), `served_layout` (what a request that names none
+gets), `calibration_id`, `probes` (per question: `probe` = `ready`, `stale` or `none`, `letters_calibrated`,
+`n_labels`, `note`, and the `layout` it was fitted under), `calibration` and `manifest`. An unknown name is
+`404 not_found`.
 
 ## `POST /v1/feedback`
 
@@ -519,8 +538,9 @@ Protocol on stdio. Tools:
 
 The tool descriptions tell the agent that a gate decision of `escalate` means: do not act on that answer yourself, hand
 the case to a person or to a larger model. Configuration is by environment: `TEZ_URL` forwards every call to a running
-`tez serve` (with `TEZ_API_KEY` as the bearer token); otherwise Tez runs in the MCP process from `TEZ_BACKEND`,
-`TEZ_TEMPLATE`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR` and `TEZ_PRESETS=1`, with `tez serve`'s request limits. For example, in an
+`tez serve` (with `TEZ_API_KEY` as the bearer token and `TEZ_TIMEOUT` seconds per request, default 120); otherwise
+Tez runs in the MCP process from `TEZ_BACKEND`, `TEZ_TEMPLATE`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`, `TEZ_LAYOUT`,
+`TEZ_DEFAULT_TEMPERATURE` and `TEZ_PRESETS=1` (each also as `VAR_FILE`), with `tez serve`'s request limits. For example, in an
 MCP client's configuration:
 
 ```json
@@ -539,9 +559,9 @@ MCP client's configuration:
 | `--max-state-chars` | 50,000 | characters per state (an object or array counts as its JSON) |
 | `--max-batch` | 64 | states per `/v1/systemone/batch` request |
 
-`0` switches a limit off (`None` too, in Python). The Python API applies none unless it is given
-`limits=tez.config.Limits(...)` (`handle`, `execute`, `handle_batch`, `plan`, `create_app`); the MCP server applies
-these defaults.
+`0` switches a limit off (`None` too, in Python). The engine's Python API (`handle`, `execute`, `handle_batch`,
+`plan`) applies none unless it is given `limits=tez.config.Limits(...)`. `create_app` applies these defaults unless it
+is given other limits (`Limits.unlimited()` for none), and so does the MCP server.
 
 ## Schema files (`schemas/*.yaml`)
 
