@@ -13,6 +13,11 @@ test("require() loads the CommonJS build, and it works", async () => {
     const client = new cjs.TezClient({ baseUrl: mock.url });
     const res = await client.decide("hello", { questions: { q: { type: "noul", instructions: "Is it?" } } });
     assert.deepEqual(res.answers.q, { type: "noul", noul: 0.8 });
+    assert.match(res.meta.runId, /^[0-9a-f]{32}$/);
+    const batch = await client.decideMany(["a", "b"], { questions: { q: { type: "noul", instructions: "Is it?" } } });
+    assert.equal(batch.length, 2);
+    assert.equal(typeof cjs.requestBody, "function");
+    assert.equal(typeof cjs.EscalationRequired, "function");
     const err = await client.schema("nope").catch((e) => e);
     assert.ok(err instanceof cjs.TezError);
     assert.equal(err.status, 404);

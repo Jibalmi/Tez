@@ -3,7 +3,15 @@ import assert from "node:assert/strict";
 import { createServer } from "node:net";
 import { after, before, describe, test } from "node:test";
 
-import { DEFAULT_BASE_URL, NONE_LABEL, TezClient, TezError } from "tez-client";
+import {
+  DEFAULT_BASE_URL,
+  EscalationRequired,
+  NONE_LABEL,
+  parseServerTiming,
+  requestBody,
+  TezClient,
+  TezError,
+} from "tez-client";
 
 import { SCHEMA, startMockServer } from "./mock-server.mjs";
 
@@ -223,4 +231,302 @@ test("constructor defaults and validation", () => {
   for (const baseUrl of ["ftp://host", "http://", "  "]) assert.throws(() => new TezClient({ baseUrl }), TypeError);
   for (const timeoutMs of [0, -1, Number.NaN, Infinity, "30"]) assert.throws(() => new TezClient({ timeoutMs }), TypeError);
   assert.throws(() => new TezClient({ fetch: "nope" }), TypeError);
+});
+
+const RUN_ID = /^[0-9a-f]{32}$/;
+const TICKET = {
+  type: "object",
+  properties: {
+    department: { enum: ["billing", "technical", "sales"], description: "Which team should handle it?" },
+    urgent: { type: "boolean", description: "Does it need a reply today?" },
+    priority: { type: "integer", minimum: 1, maximum: 3 },
+    customer: { type: "object", properties: { tier: { enum: [1, 2, 3] } } },
+    kind: { const: "ticket" },
+  },
+};
+
+describe("response meta: status and headers on every result", () => {
+  let mock;
+  let client;
+  before(async () => {
+    mock = await startMockServer();
+    client = new TezClient({ baseUrl: mock.url });
+  });
+  after(() => mock.close());
+
+  test("a decision carries its run id, layout and server-timing, outside the body", async () => {
+    const res = await client.decide("Help! My payouts have been failing for 3 days.", { questions: QUESTIONS });
+    const { meta } = res;
+    assert.equal(meta.status, 200);
+    assert.match(meta.requestId, RUN_ID);
+    assert.equal(meta.runId, meta.requestId);                       // a decision's request id is its run id
+    assert.equal(meta.layout, "state_first");
+    assert.deepEqual(Object.keys(meta.timing), ["tez", "backend", "total"]);
+    assert.equal(meta.timing.tez, 1.5);
+    assert.equal(typeof meta.timing.total, "number");
+    assert.equal(meta.headers.get("X-Tez-Run-Id"), meta.runId);
+    assert.deepEqual(Object.keys(res), ["model", "answers", "usage", "tez"]);   // not one of the body's keys
+    assert.equal(JSON.stringify(res).includes("meta"), false);
+    assert.equal("meta" in { ...res }, false);
+    assert.throws(() => { res.meta = null; }, TypeError);                          // read-only
+  });
+
+  test("other routes have a request id but no run id or layout", async () => {
+    for (const res of [await client.health(), await client.models(), await client.schemas(),
+      await client.feedback({ schema: "support-triage", question: "topic", state: "x", label: "billing" })]) {
+      assert.match(res.meta.requestId, RUN_ID);
+      assert.equal(res.meta.runId, null);
+      assert.equal(res.meta.layout, null);
+      assert.deepEqual(Object.keys(res.meta.timing), ["total"]);
+    }
+  });
+
+  test("errors carry meta: a decision that reached the engine has a run id", async () => {
+    const err = await rejects(client.decide("s", { questions: { q: { type: "maybe", instructions: "x" } } }));
+    assert.ok(err instanceof TezError);
+    assert.equal(err.meta.status, 422);
+    assert.match(err.meta.runId, RUN_ID);
+    assert.equal(err.meta.layout, null);                             // only a decision that was read has one
+    const notFound = await rejects(client.schema("nope"));
+    assert.equal(notFound.meta.status, 404);
+    assert.equal(notFound.meta.runId, null);
+    assert.match(notFound.meta.requestId, RUN_ID);
+  });
+
+  test("a response without Tez's headers still has meta, with nulls", async () => {
+    const bare = new TezClient({ baseUrl: "http://jev.example", fetch: async () => ({ status: 200, statusText: "OK",
+      headers: new Headers({ "content-type": "application/json" }), text: async () => '{"models": []}' }) });
+    const res = await bare.models();
+    assert.deepEqual({ ...res.meta, headers: undefined },
+      { status: 200, requestId: null, runId: null, layout: null, timing: {}, headers: undefined });
+  });
+
+  test("parseServerTiming reads durations, skips the rest, keeps the first of a name", () => {
+    assert.deepEqual(parseServerTiming("tez;dur=2.3, backend;dur=1.0, total;dur=4.2"), { tez: 2.3, backend: 1, total: 4.2 });
+    assert.deepEqual(parseServerTiming('cache;desc="hit, then; miss", db;dur=53, app;dur=47.2;desc="a"'), { db: 53, app: 47.2 });
+    assert.deepEqual(parseServerTiming("total;dur=1, total;dur=9, edge;DUR=\"2e1\""), { total: 1, edge: 20 });
+    assert.deepEqual(parseServerTiming(null), {});
+    assert.deepEqual(parseServerTiming("garbage"), {});
+  });
+});
+
+describe("the new request options and response fields", () => {
+  let mock;
+  let client;
+  before(async () => {
+    mock = await startMockServer({ defaultTemperature: 4.71 });
+    client = new TezClient({ baseUrl: mock.url });
+  });
+  after(() => mock.close());
+
+  test("layout is sent as tez.layout, auto included; X-Tez-Layout follows it", async () => {
+    let res = await client.decide("hi", { questions: QUESTIONS, layout: "question_first" });
+    assert.deepEqual(mock.requests.at(-1).body.tez, { layout: "question_first" });
+    assert.equal(res.meta.layout, "question_first");
+    assert.equal(res.tez.questions.topic.layout, undefined);           // all read in the X-Tez-Layout layout
+    res = await client.decide("hi", { schema: "support-triage", layout: "auto", gate: false });
+    assert.deepEqual(mock.requests.at(-1).body, { state: "hi", schema: "support-triage", tez: { gate: false, layout: "auto" } });
+    assert.equal(res.meta.layout, "mixed");                         // the fitted question keeps its fit's layout
+    assert.deepEqual(res.tez.questions.topic, { readout: "letters", p_correct: 0.7,
+      calibration_id: "support-triage@2026-09-24", layout: "question_first" });
+    assert.deepEqual(res.tez.questions.is_urgent, { readout: "letters", temperature: 4.71, layout: "state_first" });
+  });
+
+  test("an unfitted letters answer reports its default temperature", async () => {
+    const res = await client.decide("hi", { questions: { t: QUESTIONS.topic } });
+    assert.deepEqual(res.tez.questions.t, { readout: "letters", temperature: 4.71 });
+    assert.equal(res.meta.layout, "question_first");                // one question under auto
+  });
+
+  test("jsonSchema is sent as json_schema and the object comes back in tez.values", async () => {
+    const res = await client.decide("Charged twice for invoice 4411, please fix it today!", { jsonSchema: TICKET });
+    assert.deepEqual(mock.requests.at(-1).body, { state: "Charged twice for invoice 4411, please fix it today!",
+      json_schema: TICKET });
+    assert.deepEqual(Object.keys(res.answers), ["department", "urgent", "priority", "customer.tier"]);
+    assert.deepEqual(res.tez.values, { kind: "ticket", department: "billing", urgent: true, priority: 1, customer: { tier: 1 } });
+    const err = await rejects(client.decide("x", { jsonSchema: { type: "object", properties: { note: { type: "string" } } } }));
+    assert.deepEqual([err.status, err.type], [422, "invalid_request"]);
+    assert.match(err.message, /json_schema\.properties\.note/);
+  });
+
+  test("schemas, schema, health and feedback: builtin, layouts and run_id", async () => {
+    assert.equal((await client.schemas()).schemas[0].builtin, false);
+    const detail = await client.schema("support-triage");
+    assert.deepEqual([detail.layout, detail.served_layout, detail.builtin], [null, "auto", false]);
+    assert.equal(detail.probes.topic.layout, "question_first");
+    assert.equal((await client.health()).layout, "auto");
+    const res = await client.decide("Need it by 5pm", { schema: "support-triage" });
+    const fb = await client.feedback({ schema: "support-triage", question: "is_urgent", state: "Need it by 5pm", label: true,
+      run_id: res.meta.runId });
+    assert.equal(mock.requests.at(-1).body.run_id, res.meta.runId);
+    assert.deepEqual(fb, { ok: true, schema: "support-triage", question: "is_urgent", label: "true" });
+    const err = await rejects(client.feedback({ schema: "support-triage", question: "topic", state: "x", label: "billing",
+      run_id: "x".repeat(129) }));
+    assert.deepEqual([err.status, err.type], [422, "invalid_request"]);
+  });
+});
+
+describe("batches", () => {
+  let mock;
+  let client;
+  before(async () => {
+    mock = await startMockServer();
+    client = new TezClient({ baseUrl: mock.url });
+  });
+  after(() => mock.close());
+
+  test("decideBatch sends states with the shared options and returns one result per state", async () => {
+    const res = await client.decideBatch(["My invoice is wrong", { text: "the app crashes" }, 42],
+      { questions: { topic: QUESTIONS.topic }, alpha: 0.05, layout: "state_first" });
+    assert.equal(mock.requests.at(-1).path, "/v1/systemone/batch");
+    assert.deepEqual(mock.requests.at(-1).body, { states: ["My invoice is wrong", { text: "the app crashes" }, 42],
+      questions: { topic: QUESTIONS.topic }, tez: { gate: { alpha: 0.05 }, layout: "state_first" } });
+    assert.deepEqual(Object.keys(res), ["model", "results", "usage", "tez"]);
+    assert.equal(res.results.length, 3);
+    const [first, second, third] = res.results;
+    assert.equal(first.answers.topic.choice, "billing");
+    assert.deepEqual(second.tez.questions.topic, { readout: "letters", decision: "escalate" });
+    assert.deepEqual(third, { error: { type: "invalid_request", message: "state must be a string, object or array" } });
+    assert.ok("error" in third && !("error" in first));
+    assert.deepEqual(res.usage, { input_tokens: 84, output_tokens: 0 });
+    assert.match(res.tez.run_id, RUN_ID);
+    assert.equal(res.meta.runId, res.tez.run_id);
+    assert.equal(res.meta.layout, null);                            // X-Tez-Layout is for single decisions
+    assert.equal(res.meta.timing.tez, 3);
+  });
+
+  test("decideMany resolves to the results; systemoneBatch posts a raw body", async () => {
+    const results = await client.decideMany(["a", "b"], { schema: "support-triage", gate: null });
+    assert.deepEqual(mock.requests.at(-1).body, { states: ["a", "b"], schema: "support-triage", tez: { gate: null } });
+    assert.ok(Array.isArray(results));
+    assert.deepEqual(results.map((r) => Object.keys(r.answers)), [["topic", "is_urgent"], ["topic", "is_urgent"]]);
+    const raw = await client.systemoneBatch({ states: ["x"], questions: { q: QUESTIONS.is_urgent } });
+    assert.deepEqual(raw.results[0].answers.q, { type: "noul", noul: 0.8 });
+  });
+
+  test("a bad shared field or too many states fails the whole batch", async () => {
+    let err = await rejects(client.decideBatch(["a"], { questions: { q: { type: "maybe", instructions: "x" } } }));
+    assert.deepEqual([err.status, err.type], [422, "invalid_request"]);
+    assert.match(err.meta.runId, RUN_ID);
+    err = await rejects(client.decideBatch(["a", "b", "c", "d", "e"], { schema: "support-triage" }));
+    assert.deepEqual([err.status, err.type], [413, "payload_too_large"]);
+    assert.match(err.message, /too many states/);
+    err = await rejects(client.decideBatch("not an array", { schema: "support-triage" }));      // rejects, not throws
+    assert.ok(err instanceof TypeError);
+  });
+});
+
+describe("plan", () => {
+  let mock;
+  let client;
+  before(async () => {
+    mock = await startMockServer();
+    client = new TezClient({ baseUrl: mock.url });
+  });
+  after(() => mock.close());
+
+  test("plan posts a request body, state optional; requestBody builds it from decide's options", async () => {
+    const body = requestBody(undefined, { schema: "support-triage", readout: "letters", layout: "auto" });
+    assert.deepEqual(body, { schema: "support-triage", tez: { readout: "letters", layout: "auto" } });
+    const plan = await client.plan(body);
+    assert.equal(mock.requests.at(-1).path, "/v1/plan");
+    assert.deepEqual(mock.requests.at(-1).body, body);
+    assert.equal(plan.state_tokens, null);
+    assert.equal(plan.layout, "mixed");
+    assert.deepEqual(plan.order, ["is_urgent", "topic"]);
+    assert.deepEqual(plan.questions.topic.fit, { status: "ready", reason: null, calibration_id: "support-triage@2026-09-24",
+      fit_layout: "question_first", letters_calibrated: true, probe: false });
+    assert.equal(plan.questions.is_urgent.fit.status, "none");
+    assert.equal(plan.totals.evaluated_tokens, 200);
+    assert.equal(plan.meta.runId, null);                             // nothing was decided
+    const withState = await client.plan(requestBody("I was charged twice", { questions: QUESTIONS }));
+    assert.equal(withState.state_tokens, 12);
+    assert.deepEqual(requestBody("s", { questions: QUESTIONS, signal: AbortSignal.timeout(1000), model: "m" }),
+      { state: "s", model: "m", questions: QUESTIONS });
+  });
+});
+
+describe("extract", () => {
+  let mock;
+  let client;
+  before(async () => {
+    mock = await startMockServer();
+    client = new TezClient({ baseUrl: mock.url });
+  });
+  after(() => mock.close());
+
+  test("a JSON schema goes out as json_schema and resolves to tez.values", async () => {
+    const values = await client.extract("Charged twice for invoice 4411", TICKET, { readout: "letters", layout: "state_first" });
+    assert.deepEqual(mock.requests.at(-1).body, { state: "Charged twice for invoice 4411", json_schema: TICKET,
+      tez: { readout: "letters", layout: "state_first" } });
+    assert.deepEqual(values, { kind: "ticket", department: "billing", urgent: true, priority: 1, customer: { tier: 1 } });
+  });
+
+  test("a schema name: answers become values in the client", async () => {
+    const values = await client.extract("Need it by 5pm", "support-triage");
+    assert.deepEqual(mock.requests.at(-1).body, { state: "Need it by 5pm", schema: "support-triage" });
+    assert.deepEqual(values, { topic: "billing", is_urgent: true });
+    const scored = new TezClient({ baseUrl: "http://t.example", fetch: async () => ({ status: 200, statusText: "OK",
+      headers: new Headers(), text: async () => JSON.stringify({ model: "m", usage: { input_tokens: 1, output_tokens: 0 },
+        answers: { anger: { type: "score", score: 1.2, legend: { 0: "a", 1: "b", 2: "c" },
+          probabilities: { 0: 0.1, 1: 0.6, 2: 0.3 }, confidence: 0.4 },
+          topic: { type: "choice", choice: "__none__", probabilities: { a: 0.2, __none__: 0.8 }, confidence: 0.6 },
+          urgent: { type: "noul", noul: 0.3 } } }) }) });
+    assert.deepEqual(await scored.extract("x", "s"), { anger: 1, topic: null, urgent: false });
+  });
+
+  test("with alpha an escalated field rejects with EscalationRequired, unless returnDetails", async () => {
+    const err = await rejects(client.extract("x", TICKET, { alpha: 0.05 }));
+    assert.ok(err instanceof EscalationRequired && !(err instanceof TezError));
+    assert.deepEqual(err.fields, ["department", "urgent", "priority", "customer.tier"]);
+    assert.equal(err.values.department, "billing");
+    assert.match(err.response.meta.runId, RUN_ID);
+    assert.match(err.message, /the gate escalated department, urgent, priority, customer\.tier/);
+    const details = await client.extract("x", "support-triage", { alpha: 0.05, returnDetails: true });
+    assert.deepEqual(details.decisions, { topic: "act", is_urgent: "escalate" });
+    assert.deepEqual(details.escalated, ["is_urgent"]);
+    assert.deepEqual(details.values, { topic: "billing", is_urgent: true });
+    assert.equal(details.response.answers.topic.choice, "billing");
+    // A schema's default gate may escalate without alpha: the values still come back.
+    assert.deepEqual(await client.extract("x", "support-triage"), { topic: "billing", is_urgent: true });
+  });
+
+  test("a server that answers json_schema without tez.values is an invalid_response", async () => {
+    const jev = new TezClient({ baseUrl: "http://jev.example", fetch: async () => ({ status: 200, statusText: "OK",
+      headers: new Headers(), text: async () => JSON.stringify({ model: "m", answers: {}, usage: {} }) }) });
+    const err = await rejects(jev.extract("x", TICKET));
+    assert.deepEqual([err.status, err.type], [200, "invalid_response"]);
+    assert.ok((await rejects(client.extract("x", 42))) instanceof TypeError);
+  });
+});
+
+describe("the error types forbidden, payload_too_large and internal_error", () => {
+  test("from the error body, and from the status alone", async () => {
+    const mock = await startMockServer({
+      routes: {
+        "GET /v1/models": ({ send }) => send(403, "<html>Forbidden</html>"),
+        "GET /v1/schemas": ({ send }) => send(413, "<html>Request Entity Too Large</html>"),
+        "GET /healthz": ({ send }) => send(500, { error: { type: "internal_error", message: "RuntimeError: hook failed" } }),
+      },
+    });
+    try {
+      const origin = (fetchImpl) => (url, init) => fetchImpl(url, { ...init, headers: { ...init.headers, Origin: "https://evil.example" } });
+      const browser = new TezClient({ baseUrl: mock.url, fetch: origin(fetch) });
+      let err = await rejects(browser.decide("x", { questions: QUESTIONS }));
+      assert.deepEqual([err.status, err.type], [403, "forbidden"]);
+      assert.match(err.message, /origin https:\/\/evil\.example/);
+      const client = new TezClient({ baseUrl: mock.url });
+      err = await rejects(client.decide("x".repeat(70 * 1024), { questions: QUESTIONS }));
+      assert.deepEqual([err.status, err.type], [413, "payload_too_large"]);
+      err = await rejects(client.models());
+      assert.deepEqual([err.status, err.type, err.message], [403, "forbidden", "<html>Forbidden</html>"]);
+      err = await rejects(client.schemas());
+      assert.deepEqual([err.status, err.type], [413, "payload_too_large"]);
+      err = await rejects(client.health());
+      assert.deepEqual([err.status, err.type, err.message], [500, "internal_error", "RuntimeError: hook failed"]);
+      assert.match(err.meta.requestId, RUN_ID);
+    } finally {
+      await mock.close();
+    }
+  });
 });
