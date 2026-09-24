@@ -7,8 +7,9 @@ format (docs/API.md): `tez serve` on this machine or another one, or a Jev-compa
                questions={"topic": {"type": "choice", "instructions": "What is the message about?",
                                     "criteria": {"billing": None, "technical": None}}})
 
-The method names and return values match the in-process engine (tez.Tez): decide, handle, health, models,
-schema_summaries, schema_detail and record_feedback, so every integration accepts either. Error responses raise the
+The method names and return values match the in-process engine (tez.Tez): decide, handle, decide_many,
+decide_batch, handle_batch, health, models, schema_summaries, schema_detail and record_feedback, so every integration
+accepts either. Error responses raise the
 TezError subclasses the engine raises (InvalidRequest 422, NotFound 404, Unauthorized 401, BackendUnavailable 503);
 a server that cannot be reached, times out or answers with something other than JSON raises BackendUnavailable.
 
@@ -26,14 +27,16 @@ from urllib.parse import quote, urljoin, urlsplit
 
 import requests
 
-from ..errors import BackendUnavailable, InvalidRequest, NotFound, TezError, Unauthorized
+from ..errors import (BackendUnavailable, Forbidden, InternalError, InvalidRequest, NotFound, PayloadTooLarge, TezError,
+                      Unauthorized)
 
 DEFAULT_URL = "http://127.0.0.1:8787"
 MAX_REDIRECTS = 5
 _BY_TYPE = {"unauthorized": Unauthorized, "invalid_request": InvalidRequest, "not_found": NotFound,
-            "backend_unavailable": BackendUnavailable}
-_BY_STATUS = {401: Unauthorized, 404: NotFound, 422: InvalidRequest, 502: BackendUnavailable, 503: BackendUnavailable,
-              504: BackendUnavailable}
+            "backend_unavailable": BackendUnavailable, "forbidden": Forbidden, "payload_too_large": PayloadTooLarge,
+            "internal_error": InternalError}
+_BY_STATUS = {401: Unauthorized, 403: Forbidden, 404: NotFound, 413: PayloadTooLarge, 422: InvalidRequest,
+              500: InternalError, 502: BackendUnavailable, 503: BackendUnavailable, 504: BackendUnavailable}
 _LOCAL = re.compile(r"^https?://(localhost|127\.\d+\.\d+\.\d+|\[::1\])(:\d+)?(/|$)", re.I)
 
 
@@ -194,6 +197,26 @@ class RemoteTez:
         if tez:
             body["tez"] = tez
         return body
+
+    def handle_batch(self, body: Any) -> dict:
+        """POST a wire-format batch body to /v1/systemone/batch and return the batch response."""
+        return self._request("POST", "/v1/systemone/batch", body)
+
+    def decide_batch(self, states: list, questions: Mapping | None = None, schema: Any = None,
+                     readout: str | None = "auto", abstain: bool = False, alpha: float | None = None, gate: Any = None,
+                     model: str | None = None, *, layout: str | None = None) -> dict:
+        """Decide many states against the same questions (POST /v1/systemone/batch): {"model", "results", "usage",
+        "tez"}, one result per state in order, each a response or {"error": {...}}."""
+        body = self.request_body(None, questions, schema, readout, abstain, alpha, gate, model, layout)
+        body.pop("state")
+        body["states"] = list(states)
+        return self.handle_batch(body)
+
+    def decide_many(self, states: list, questions: Mapping | None = None, schema: Any = None,
+                    readout: str | None = "auto", abstain: bool = False, alpha: float | None = None, gate: Any = None,
+                    model: str | None = None, *, layout: str | None = None) -> list[dict]:
+        """The results of decide_batch: one per state, in order (tez.Tez.decide_many over HTTP)."""
+        return self.decide_batch(states, questions, schema, readout, abstain, alpha, gate, model, layout=layout)["results"]
 
     def health(self) -> dict:
         return self._request("GET", "/healthz")

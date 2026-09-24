@@ -13,6 +13,7 @@ preflights answer `Access-Control-Allow-Private-Network: true`, so the website p
 | Method | Path | Purpose |
 |---|---|---|
 | `POST` | `/v1/systemone` | Decide: one state, many typed questions (Jev-compatible) |
+| `POST` | `/v1/systemone/batch` | Tez: many states against the same questions, in one request |
 | `GET` | `/v1/models` | List model aliases (Jev-compatible) |
 | `GET` | `/healthz` | Liveness, backend and readout status |
 | `GET` | `/v1/schemas` | Tez: schemas loaded from `--schemas` |
@@ -172,9 +173,43 @@ Decisions (`/v1/systemone`, successful or not) also carry `X-Tez-Run-Id` (the sa
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
 than the model's context, with llama.cpp's message), `503` backend unavailable. Also `404` for an unknown route or
-schema, `405` for a wrong method and `500` for an unexpected failure (a hook that raised, for example). Body:
-`{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`, `invalid_request`,
-`not_found`, `method_not_allowed`, `backend_unavailable` and `internal_error`.
+schema, `405` for a wrong method, `413` for a request over the server's limits (see "Limits") and `500` for an
+unexpected failure (a hook that raised, for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`;
+the types are `unauthorized`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`,
+`backend_unavailable` and `internal_error`.
+
+## `POST /v1/systemone/batch`
+
+Many states against the same questions. The body is a `/v1/systemone` request with `states` (an array) in place of
+`state`; `questions` (or `schema`), `model` and `tez` apply to every state.
+
+```json
+{"model": "tez-latest", "states": ["My invoice is wrong", {"text": "the app crashes"}],
+ "schema": "support-triage", "tez": {"gate": {"alpha": 0.05}}}
+```
+
+```json
+{"model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
+ "results": [{"model": "...", "answers": {...}, "usage": {...}, "tez": {...}},
+             {"error": {"type": "invalid_request", "message": "state must be a string, object or array"}}],
+ "usage": {"input_tokens": 1180, "output_tokens": 0},
+ "tez": {"latency_ms": 402.7, "run_id": "5f0c..."}}
+```
+
+- `results` has one entry per state, in input order: the state's `/v1/systemone` response, or `{"error": {"type",
+  "message"}}` for a state that failed. One state's error never fails the others.
+- A bad shared field (questions, schema, `tez` options) fails the whole batch with 422; too many states, questions or
+  a state over the limits with 413 (see "Limits"; a single oversized state is that state's error). When the backend is
+  unavailable before any state was decided the batch fails with 503; once some states are decided, the ones not yet
+  tried get a `backend_unavailable` error without calling the backend again.
+- Each state's questions run back to back (state first with two or more questions), so the backend's prompt cache
+  keeps the state between them. States are decided one after another.
+- `usage` sums the decided states. `tez.run_id` is the batch's run id (also `X-Tez-Run-Id`); state *i* is decided
+  with run id `<run_id>.<i>` (what hooks and a `DecisionLog` see).
+
+Python: `Tez.decide_many(states, questions=None, schema=None, ...)` returns the `results` list,
+`Tez.decide_batch(...)` the whole response; `RemoteTez` has both over HTTP. CLI: `tez decide --states-file rows.jsonl
+--out out.jsonl` (rows with a `state`, bare JSON values or text lines; one result line per row).
 
 ## `GET /v1/models`
 
@@ -220,6 +255,19 @@ Appends to `<data-dir>/feedback/<schema>.jsonl` (default data dir: `<schemas>/.t
 Hooks run in the engine around every decision (docs/HOOKS.md): `tez serve --hook package.module:object` (repeatable),
 `--decision-log PATH` (a JSONL row per decision, the format `tez fit` reads once labels are filled in) and
 `--hook-errors raise|log` (whether a failing hook fails the request).
+
+## Limits
+
+`tez serve` refuses oversized requests with `413` and `{"error": {"type": "payload_too_large", "message": "..."}}`:
+
+| Flag | Default | Limit |
+|---|---|---|
+| `--max-body-bytes` | 2 MiB (2,097,152) | request body; a `Content-Length` over it is refused before reading, a chunked body as soon as it passes it |
+| `--max-questions` | 64 | questions per request (and per batch) |
+| `--max-state-chars` | 50,000 | characters per state (an object or array counts as its JSON) |
+| `--max-batch` | 64 | states per `/v1/systemone/batch` request |
+
+`0` switches a limit off. The Python API applies none unless it is given `limits=tez.engine.Limits(...)`.
 
 ## Schema files (`schemas/*.yaml`)
 

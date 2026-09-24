@@ -11,7 +11,7 @@ from typing import Any
 
 from ._version import __version__
 from .backends import DEFAULT_BACKEND, DEFAULT_N_PROBS
-from .engine import READOUTS
+from .engine import READOUTS, Limits
 from .errors import TezError
 from .prompt import TEMPLATES
 from .schema import LAYOUTS
@@ -42,6 +42,16 @@ def _backend_args(p: argparse.ArgumentParser, embed: bool = True) -> None:
     p.add_argument("--n-probs", type=int, default=DEFAULT_N_PROBS, metavar="N",
                    help=f"next-token log-probabilities a letter readout asks for; letters outside them get the floor "
                         f"(default {DEFAULT_N_PROBS})")
+
+
+def _non_negative(text: str) -> int:
+    try:
+        n = int(text)
+    except ValueError:
+        n = -1
+    if n < 0:
+        raise argparse.ArgumentTypeError(f"expected a whole number (0 = no limit), got {text!r}")
+    return n
 
 
 def _layout_arg(p: argparse.ArgumentParser, what: str) -> None:
@@ -114,7 +124,8 @@ def cmd_serve(args: argparse.Namespace) -> int:
 
     from .server import create_app
     tez = _make_tez(args, schemas=args.schemas, layout=args.layout or "auto")
-    app = create_app(tez, api_key=args.api_key, cors=not args.no_cors)
+    limits = Limits(*(v or None for v in (args.max_body_bytes, args.max_questions, args.max_state_chars, args.max_batch)))
+    app = create_app(tez, api_key=args.api_key, cors=not args.no_cors, limits=limits)
     probes = sum(len(v) for v in tez.probe_index().values())
     print(f"tez {__version__} on http://{args.host}:{args.port}  backend {tez.backend.url} ({tez.template})"
           + (f", embeddings {tez.embedder.url} ({tez.embedder.template})" if tez.embedder is not tez.backend else "")
@@ -130,6 +141,9 @@ def cmd_decide(args: argparse.Namespace) -> int:
     from .schema import load_schema
     if not args.schema and not args.questions:
         raise TezError("give --schema FILE and/or --questions FILE")
+    given = [x for x in (args.text, args.state, args.state_file, args.states_file) if x is not None]
+    if len(given) != 1:
+        raise TezError("give the state once: as TEXT, --state, --state-file or --states-file")
     schema = load_schema(args.schema) if args.schema else None
     questions = None
     if args.questions:
@@ -138,12 +152,38 @@ def cmd_decide(args: argparse.Namespace) -> int:
         except (OSError, json.JSONDecodeError) as exc:
             raise TezError(f"cannot read questions from {args.questions}: {exc}") from exc
         questions = raw["questions"] if isinstance(raw, dict) and isinstance(raw.get("questions"), dict) else raw
-    state = args.state if args.state is not None else _read_state(args.state_file)
     tez = _make_tez(args, schemas=[schema] if schema else None)
-    res = tez.decide(state, questions=questions, schema=schema.name if schema else None, readout=args.readout,
-                     abstain=args.abstain, alpha=args.alpha, layout=args.layout)
+    opts = dict(questions=questions, schema=schema.name if schema else None, readout=args.readout,
+                abstain=args.abstain, alpha=args.alpha, layout=args.layout)
+    if args.states_file is not None:
+        return _decide_file(tez, args, opts)
+    if args.out:
+        raise TezError("--out goes with --states-file")
+    state = args.text if args.text is not None else args.state if args.state is not None else _read_state(args.state_file)
+    res = tez.decide(state, **opts)
     print(json.dumps(res, indent=None if args.compact else 2, ensure_ascii=False))
     return 0
+
+
+def _decide_file(tez: Any, args: argparse.Namespace, opts: dict) -> int:
+    """Every state of a JSONL file as one batch: one result line per input row, in order."""
+    from .fit import read_states
+    try:
+        states = read_states(args.states_file)
+    except OSError as exc:
+        raise TezError(f"cannot read {args.states_file}: {exc}") from exc
+    if not states:
+        raise TezError(f"{args.states_file} holds no states")
+    results = tez.decide_many(states, **opts)
+    text = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in results)
+    if args.out:
+        Path(args.out).write_text(text, encoding="utf-8")
+    else:
+        sys.stdout.write(text)
+    errors = sum(1 for r in results if "error" in r)
+    print(f"decided {len(results) - errors} of {len(results)} states" + (f", {errors} failed" if errors else "")
+          + (f" -> {args.out}" if args.out else ""), file=sys.stderr)
+    return 1 if errors == len(results) else 0
 
 
 def cmd_fit(args: argparse.Namespace) -> int:
@@ -242,15 +282,26 @@ def build_parser() -> argparse.ArgumentParser:
     _layout_arg(p, "default prompt layout for requests and schemas that name none: auto (state_first for 2+ questions, "
                    "question_first for one), question_first or state_first (default auto)")
     _hook_args(p)
+    lim = Limits()
+    for flag, default, what in (("--max-body-bytes", lim.max_body_bytes, "request body size in bytes"),
+                                ("--max-questions", lim.max_questions, "questions per request"),
+                                ("--max-state-chars", lim.max_state_chars, "characters per state (objects: as JSON)"),
+                                ("--max-batch", lim.max_batch, "states per batch request")):
+        p.add_argument(flag, type=_non_negative, default=default, metavar="N",
+                       help=f"limit on {what}, 413 past it (default {default:,}; 0 = no limit)")
     p.set_defaults(func=cmd_serve)
 
-    p = sub.add_parser("decide", help="decide one state and print the wire-format JSON")
+    p = sub.add_parser("decide", help="decide one state (or a file of states) and print the wire-format JSON")
     _backend_args(p)
+    p.add_argument("text", nargs="?", help="the state as text (or use --state, --state-file or --states-file)")
     p.add_argument("--schema", help="schema YAML file (its fitted probes and calibration are used)")
     p.add_argument("--questions", help="JSON file with Jev questions ({id: {type, instructions, criteria}})")
-    g = p.add_mutually_exclusive_group(required=True)
+    g = p.add_mutually_exclusive_group()
     g.add_argument("--state", help="the state as text")
     g.add_argument("--state-file", help="file with the state ('-' = stdin; *.json is parsed as JSON)")
+    g.add_argument("--states-file", help="JSONL file of states (rows with a state, JSON values or text lines), decided "
+                                         "as one batch: one result line per row, in order")
+    p.add_argument("--out", help="with --states-file: write the result lines here instead of stdout")
     p.add_argument("--readout", choices=READOUTS, default="auto")
     p.add_argument("--abstain", action="store_true", help="add the implicit __none__ option to choice questions")
     p.add_argument("--alpha", type=float, default=None, help="gate: target error rate among acted decisions")

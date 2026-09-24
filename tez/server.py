@@ -1,14 +1,15 @@
 """HTTP server: TypeSafe's /v1/systemone wire format plus Tez's schema and feedback endpoints (docs/API.md).
 
-    POST /v1/systemone      decide (Jev-compatible)
-    GET  /v1/models         model aliases (Jev-compatible)
-    GET  /healthz           liveness, backend and readout status
-    GET  /v1/schemas        loaded schemas
-    GET  /v1/schemas/{name} one schema: questions, probe status, calibration
-    POST /v1/feedback       record a correct label for a past decision
+    POST /v1/systemone        decide (Jev-compatible)
+    POST /v1/systemone/batch  decide many states against the same questions
+    GET  /v1/models           model aliases (Jev-compatible)
+    GET  /healthz             liveness, backend and readout status
+    GET  /v1/schemas          loaded schemas
+    GET  /v1/schemas/{name}   one schema: questions, probe status, calibration
+    POST /v1/feedback         record a correct label for a past decision
 
 Every response carries x-typesafe-request-id and server-timing; decisions also carry X-Tez-Run-Id (the id hooks see).
-Errors: {"error": {"type": ..., "message": ...}} with 401 (only with an API key), 404, 422, 500 or 503.
+Errors: {"error": {"type": ..., "message": ...}} with 401 (only with an API key), 404, 413, 422, 500 or 503.
 """
 from __future__ import annotations
 
@@ -28,8 +29,8 @@ from starlette.datastructures import MutableHeaders
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ._version import __version__
-from .engine import Tez
-from .errors import InternalError, InvalidRequest, TezError, Unauthorized
+from .engine import Limits, Tez
+from .errors import InternalError, InvalidRequest, PayloadTooLarge, TezError, Unauthorized
 from .hooks import DecisionContext, new_run_id
 
 log = logging.getLogger("tez")
@@ -99,11 +100,14 @@ class _PrivateNetworkAccess:
         return await self.app(scope, receive, send_with_header)
 
 
-def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastAPI:
-    """The FastAPI application around a Tez engine."""
+def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: Limits | None = None) -> FastAPI:
+    """The FastAPI application around a Tez engine. limits: request limits (default: Limits(), tez serve's
+    defaults: 2 MiB bodies, 64 questions, 50,000-character states, 64 states per batch)."""
     app = FastAPI(title="Tez", version=__version__,
                   description="Open local System One decision engine (Jev-compatible /v1/systemone).")
     app.state.tez = tez
+    limits = Limits() if limits is None else limits
+    app.state.limits = limits
 
     if cors:
         kwargs: dict[str, Any] = dict(allow_origins=["*"], allow_methods=["GET", "POST", "OPTIONS"], allow_headers=["*"],
@@ -139,8 +143,28 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
         if not token or not hmac.compare_digest(token.encode("utf-8"), api_key.encode("utf-8")):
             raise Unauthorized("missing or invalid API key (send Authorization: Bearer <key>)")
 
+    def too_large() -> PayloadTooLarge:
+        return PayloadTooLarge(f"the request body is over {limits.max_body_bytes:,} bytes (tez serve --max-body-bytes)")
+
+    async def read_body(request: Request) -> bytes:
+        """The body, refusing to buffer more than max_body_bytes whatever the framing (a Content-Length that says so
+        is refused before reading; a chunked body is abandoned as soon as it passes the limit)."""
+        cap = limits.max_body_bytes
+        if cap is None:
+            return await request.body()
+        length = request.headers.get("content-length", "")
+        if length.strip().isdigit() and int(length) > cap:
+            raise too_large()
+        chunks, total = [], 0
+        async for chunk in request.stream():
+            total += len(chunk)
+            if total > cap:
+                raise too_large()
+            chunks.append(chunk)
+        return b"".join(chunks)
+
     async def read_json(request: Request) -> Any:
-        raw = await request.body()
+        raw = await read_body(request)
         if not raw.strip():
             raise InvalidRequest("the request body must be a JSON object")
         try:
@@ -171,8 +195,8 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
     @app.get("/", include_in_schema=False)
     def index():
         return {"name": "tez", "version": __version__,
-                "endpoints": ["POST /v1/systemone", "GET /v1/models", "GET /healthz", "GET /v1/schemas",
-                              "GET /v1/schemas/{name}", "POST /v1/feedback"]}
+                "endpoints": ["POST /v1/systemone", "POST /v1/systemone/batch", "GET /v1/models", "GET /healthz",
+                              "GET /v1/schemas", "GET /v1/schemas/{name}", "POST /v1/feedback"]}
 
     @app.post("/v1/systemone")
     async def systemone(request: Request):
@@ -180,8 +204,18 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
         authorize(request)
         body = await read_json(request)
         request.state.tez_decision = True
-        ctx = await call(tez.execute, body, run_id=request.state.tez_run_id)
+        ctx = await call(tez.execute, body, run_id=request.state.tez_run_id, limits=limits)
         return decided(request, ctx)
+
+    @app.post("/v1/systemone/batch")
+    async def systemone_batch(request: Request):
+        """Decide many states against the same questions: {"states": [...], "questions" | "schema", "tez"}."""
+        authorize(request)
+        body = await read_json(request)
+        request.state.tez_decision = True
+        res = await call(tez.handle_batch, body, run_id=request.state.tez_run_id, limits=limits)
+        request.state.tez_timing = [f"tez;dur={res['tez']['latency_ms']:.1f}"]
+        return res
 
     @app.get("/v1/models")
     async def models(request: Request):
@@ -206,6 +240,8 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True) -> FastA
     async def feedback(request: Request):
         authorize(request)
         body = await read_json(request)
+        if isinstance(body, dict) and isinstance(body.get("state"), (str, dict, list)):
+            limits.check_state(body["state"])
         return await call(tez.record_feedback, body)
 
     return app

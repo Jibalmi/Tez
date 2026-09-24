@@ -28,7 +28,8 @@ import numpy as np
 from ._version import RELEASE_DATE, __version__
 from .artifacts import Fitted, FittedQuestion, load_artifacts
 from .backends import DEFAULT_N_PROBS, Backend, make_backend
-from .errors import BackendRequestError, BackendUnavailable, InvalidRequest, NotFound
+from .errors import (BackendRequestError, BackendUnavailable, InternalError, InvalidRequest, NotFound, PayloadTooLarge,
+                     TezError)
 from .gate import decide as gate_decide
 from .gate import lookup
 from .hooks import DecisionContext, HookSet, default_hooks, new_run_id, normalise_hooks
@@ -40,6 +41,37 @@ from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alp
 log = logging.getLogger("tez")
 READOUTS = ("auto", "letters", "probe")
 DEFAULT_MODEL_ALIAS = "tez-latest"
+
+
+@dataclass(frozen=True)
+class Limits:
+    """Request limits (413 payload_too_large past any of them). The defaults are tez serve's; the Python API applies
+    none unless given limits=. None switches one off."""
+
+    max_body_bytes: int | None = 2 * 1024 * 1024
+    max_questions: int | None = 64
+    max_state_chars: int | None = 50_000
+    max_batch: int | None = 64
+
+    @classmethod
+    def unlimited(cls) -> Limits:
+        return cls(None, None, None, None)
+
+    def check_questions(self, n: int) -> None:
+        if self.max_questions is not None and n > self.max_questions:
+            raise PayloadTooLarge(f"too many questions: {n} (the limit is {self.max_questions}; tez serve --max-questions)")
+
+    def check_state(self, state: Any, where: str = "state") -> None:
+        if self.max_state_chars is None:
+            return
+        n = len(state) if isinstance(state, str) else len(json.dumps(state, ensure_ascii=False))
+        if n > self.max_state_chars:
+            raise PayloadTooLarge(f"{where} is too large: {n:,} characters (the limit is {self.max_state_chars:,}; "
+                                  f"tez serve --max-state-chars)")
+
+    def check_batch(self, n: int) -> None:
+        if self.max_batch is not None and n > self.max_batch:
+            raise PayloadTooLarge(f"too many states in one batch: {n} (the limit is {self.max_batch}; tez serve --max-batch)")
 
 
 @dataclass
@@ -261,7 +293,7 @@ class Tez:
         return out
 
     # ---------------------------------------------------------------------------------- requests
-    def parse_request(self, body: Any) -> DecideRequest:
+    def parse_request(self, body: Any, limits: Limits | None = None) -> DecideRequest:
         if not isinstance(body, dict):
             raise InvalidRequest("the request body must be a JSON object")
         if body.get("state") is None:
@@ -269,6 +301,8 @@ class Tez:
         state = body["state"]
         if not isinstance(state, (str, dict, list)):
             raise InvalidRequest("state must be a string, object or array")
+        if limits is not None:
+            limits.check_state(state)
         model = body.get("model", DEFAULT_MODEL_ALIAS)
         if model is None:
             model = DEFAULT_MODEL_ALIAS
@@ -288,7 +322,11 @@ class Tez:
                 raise InvalidRequest("questions is required (or name a loaded schema)")
             questions = dict(schema.questions)
         else:
+            if limits is not None and isinstance(body["questions"], dict):
+                limits.check_questions(len(body["questions"]))
             questions = parse_questions(body["questions"])
+        if limits is not None:
+            limits.check_questions(len(questions))
         tez = body.get("tez")
         if tez is None:
             tez = {}
@@ -321,8 +359,8 @@ class Tez:
         return DecideRequest(state=state, questions=questions, schema=schema, readout=readout, abstain=abstain,
                              alpha=alpha, model=model, layout=layout)
 
-    def execute(self, body: Any, *, run_id: str | None = None, hooks: Any = None, parent_run_id: str | None = None,
-                index: int | None = None) -> DecisionContext:
+    def execute(self, body: Any, *, run_id: str | None = None, hooks: Any = None, limits: Limits | None = None,
+                parent_run_id: str | None = None, index: int | None = None) -> DecisionContext:
         """Validate a wire-format request, decide it and return the whole DecisionContext (response, per-question
         traces with backend timings, usage, latency). Hooks run around it; on failure on_error runs and the error
         is raised (TezError subclasses carry their HTTP status)."""
@@ -330,7 +368,7 @@ class Tez:
         ctx = DecisionContext(run_id=run_id or new_run_id(), request=body, engine=self, parent_run_id=parent_run_id,
                               index=index)
         try:
-            req = self.parse_request(body)
+            req = self.parse_request(body, limits)
             self._load_context(ctx, req)
             hs.emit("on_decide_start", ctx)
             if ctx.skipped:
@@ -354,9 +392,80 @@ class Tez:
         ctx.requested_layout = req.layout
         ctx.layout = resolve_layout(req.layout, len(req.questions))
 
-    def handle(self, body: Any, *, run_id: str | None = None, hooks: Any = None) -> dict:
+    def handle(self, body: Any, *, run_id: str | None = None, hooks: Any = None, limits: Limits | None = None) -> dict:
         """Validate a wire-format request and decide it. Raises TezError subclasses (422 / 503)."""
-        return self.execute(body, run_id=run_id, hooks=hooks).response
+        return self.execute(body, run_id=run_id, hooks=hooks, limits=limits).response
+
+    # ---------------------------------------------------------------------------------- batches
+    def handle_batch(self, body: Any, *, run_id: str | None = None, hooks: Any = None,
+                     limits: Limits | None = None) -> dict:
+        """A batch request {"model", "states": [...], "questions" | "schema" | "json_schema", "tez"}: every state is
+        decided like a /v1/systemone request with the shared fields, in input order, each state's questions back to
+        back (so the backend's prompt cache keeps the state). Returns {"model", "results", "usage", "tez":
+        {"latency_ms", "run_id"}}; a result is the state's response or {"error": {...}}. A bad shared field fails the
+        batch (422, 413); an error in one state does not. When the backend is unavailable before any state was decided
+        the batch fails (503); after that, the states not yet tried get a backend_unavailable error without a call.
+        Item i's run id is "<run_id>.<i>"."""
+        t0 = time.perf_counter()
+        run_id = run_id or new_run_id()
+        if not isinstance(body, dict):
+            raise InvalidRequest("the request body must be a JSON object")
+        if "state" in body:
+            raise InvalidRequest("a batch takes states (an array of states), not state")
+        states = body.get("states")
+        if not isinstance(states, list) or not states:
+            raise InvalidRequest("states must be a non-empty array of states (strings, objects or arrays)")
+        if limits is not None:
+            limits.check_batch(len(states))
+        shared = {k: v for k, v in body.items() if k != "states"}
+        self.parse_request({**shared, "state": ""}, limits)      # a bad shared field fails the whole batch, once
+        results: list[dict] = []
+        used: list[str] = []
+        tokens, decided = 0, 0
+        for i, state in enumerate(states):
+            try:
+                ctx = self.execute({**shared, "state": state}, run_id=f"{run_id}.{i}", hooks=hooks, limits=limits,
+                                   parent_run_id=run_id, index=i)
+            except BackendUnavailable as exc:
+                if decided == 0:
+                    raise
+                results.append(exc.body())
+                note = f"not attempted: the backend was unavailable ({exc.message})"
+                results += [{"error": {"type": exc.type, "message": note}} for _ in states[i + 1:]]
+                break
+            except TezError as exc:
+                results.append(exc.body())
+                continue
+            except Exception as exc:              # a hook that raised: this state fails, the batch goes on
+                log.exception("batch item %d failed", i)
+                results.append(InternalError(f"{exc.__class__.__name__}: {exc}").body())
+                continue
+            res = ctx.response
+            results.append(res)
+            decided += 1
+            tokens += int((res.get("usage") or {}).get("input_tokens") or 0)
+            used += [m.get("readout", "letters") for m in ((res.get("tez") or {}).get("questions") or {}).values()]
+        return {"model": self.model_label(used or None), "results": results,
+                "usage": {"input_tokens": tokens, "output_tokens": 0},
+                "tez": {"latency_ms": round((time.perf_counter() - t0) * 1000.0, 1), "run_id": run_id}}
+
+    def decide_batch(self, states: list, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
+                     abstain: bool = False, alpha: float | None = None, gate: Any = None,
+                     model: str = DEFAULT_MODEL_ALIAS, *, layout: str | None = None, hooks: Any = None,
+                     run_id: str | None = None) -> dict:
+        """Decide many states against the same questions: the batch response (model, results, usage, tez)."""
+        body = self.request_body(None, questions, schema, readout, abstain, alpha, gate, model, layout)
+        body.pop("state")
+        body["states"] = list(states)
+        return self.handle_batch(body, run_id=run_id, hooks=hooks)
+
+    def decide_many(self, states: list, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
+                    abstain: bool = False, alpha: float | None = None, gate: Any = None,
+                    model: str = DEFAULT_MODEL_ALIAS, *, layout: str | None = None, hooks: Any = None) -> list[dict]:
+        """Decide many states against the same questions; one result per state, in order: the /v1/systemone
+        response, or {"error": {"type", "message"}} for a state that failed (the others are still decided)."""
+        return self.decide_batch(states, questions, schema, readout, abstain, alpha, gate, model, layout=layout,
+                                 hooks=hooks)["results"]
 
     def decide(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str = DEFAULT_MODEL_ALIAS,
