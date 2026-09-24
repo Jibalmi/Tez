@@ -98,16 +98,28 @@ def main():
     ax.set_title("D · typed-decisions (2,000 decisions)")
 
     # ---------------------------------------------------------------- E: calibration shipped vs refit
+    # Tez reads unfitted letters at its default temperature, so Tez as shipped is that default, fitted without the task
+    # scored (results/calibration/default_temperature.json, anchor_28, the same 28 entries); T = 1 is drawn outlined.
     ax = fig.add_subplot(gs[2, 1])
+    A = (J("results/calibration/default_temperature.json") or {}).get("anchor_28")
+    tez_rows = {t: v["tez"] for t, v in S.items() if "tez" in v and "ece_refit" in v["tez"]}
+    tez_default = (A["mean"]["rule_loto"] if A and sorted(tez_rows) == sorted(e["entry"] for e in A["entries"])
+                   and abs(np.mean([r["ece"] for r in tez_rows.values()]) - A["mean"]["raw"]) < 1e-9 else None)
     for j, m in enumerate(models):
         raw = [v[m]["ece"] for v in S.values() if m in v and "ece_refit" in v[m]]; ref = [v[m]["ece_refit"] for v in S.values() if m in v and "ece_refit" in v[m]]
         if raw:
             a, b = np.mean(raw), np.mean(ref)
-            ax.bar(j - .18, a, .36, color=COL[m], alpha=.45); ax.bar(j + .18, b, .36, color=COL[m])
-            ax.text(j - .18, a + .005, f"{a:.2f}", ha="center", fontsize=6.5); ax.text(j + .18, b + .005, f"{b:.2f}", ha="center", fontsize=6.5)
+            if m == "tez" and tez_default is not None:
+                ax.bar(j - .3, a, .28, color="white", edgecolor=COL[m], linewidth=1.1); ax.text(j - .3, a + .005, f"{a:.2f}", ha="center", fontsize=6.5)
+                a, xa, xb, w = tez_default, j, j + .3, .28
+            else:
+                xa, xb, w = j - .18, j + .18, .36
+            ax.bar(xa, a, w, color=COL[m], alpha=.45); ax.bar(xb, b, w, color=COL[m])
+            ax.text(xa, a + .005, f"{a:.2f}", ha="center", fontsize=6.5); ax.text(xb, b + .005, f"{b:.2f}", ha="center", fontsize=6.5)
     ax.axhline(0.246, ls="--", color="grey", lw=.8); ax.text(3.4, .25, "Jev 0.246", fontsize=6, color="grey", ha="right")
     ax.set_xticks(range(len(models))); ax.set_xticklabels(["Tez", "laya", "laya-ml", "laya-td"], fontsize=7); ax.set_ylabel("mean ECE-15")
-    ax.set_title("E · Calibration: shipped (light) → per-task refit (dark)")
+    ax.set_title("E · Calibration: shipped (light) → per-task refit (dark)" + (
+        "\nTez shipped = default temperature (outlined: T = 1)" if tez_default is not None else ""))
 
     # ---------------------------------------------------------------- F: order flip
     ax = fig.add_subplot(gs[2, 2])
