@@ -17,10 +17,11 @@ from .errors import BackendRequestError, BackendUnavailable, InvalidRequest, Tez
 from .extract import EscalationRequired, ExtractResult
 from .hooks import (BaseHook, Cache, DecisionContext, DecisionLog, Metrics, OTelHook, Redact, default_hooks,
                     set_default_hooks)
+from .inproc import InprocBackend
 from .schema import Question, Schema, load_schema, load_schemas, parse_question
 
 __all__ = [
-    "__version__", "RELEASE_DATE", "Tez", "Backend", "LlamaCppBackend", "FakeBackend", "Question", "Schema",
+    "__version__", "RELEASE_DATE", "Tez", "Backend", "LlamaCppBackend", "InprocBackend", "FakeBackend", "Question", "Schema",
     "load_schema", "load_schemas", "parse_question", "TezError", "InvalidRequest", "BackendUnavailable",
     "BackendRequestError", "BaseHook", "DecisionContext", "DecisionLog", "Redact", "Cache", "Metrics", "OTelHook",
     "set_default_hooks", "default_hooks", "EscalationRequired", "ExtractResult",

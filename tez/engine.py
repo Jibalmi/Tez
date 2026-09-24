@@ -11,6 +11,12 @@ else the schema's `layout:`, else the engine's default). `auto` resolves per que
 keeps the layout it was fitted under (so a fit never goes stale because a request had more questions), any other
 question is read state_first when the request has two or more questions and question_first otherwise. Questions read
 state_first run back to back, so the backend's prompt cache reuses the state between them.
+
+Batched reads: with a backend that reads many prompts at once (the in-process backend, tez/inproc.py), a request with
+two or more questions first reads what its questions need in one call per group of prompts that share a prefix (the
+state, state first): the state is evaluated once and every question's suffix goes into one decode. decide_question then
+runs exactly as it does question by question, taking the backend results from that read-ahead (ReadAhead), so answers,
+temperatures and gate decisions do not depend on how the prompts were read.
 """
 from __future__ import annotations
 
@@ -34,7 +40,7 @@ from .gate import decide as gate_decide
 from .gate import lookup
 from .hooks import DecisionContext, HookSet, default_hooks, new_run_id, normalise_hooks
 from .prompt import (QUESTION_FIRST, STATE_FIRST, TOURNAMENT_NONE, build_prompt, fingerprint, needs_tournament,
-                     pick_finalists, render_state, resolve_layout, tournament_plan)
+                     pick_finalists, render_state, resolve_layout, state_prefix, tournament_plan)
 from .readout import assemble, blend, softmax, temper
 from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alpha, parse_layout, parse_questions
 from .temperature import parse as parse_default_temperature
@@ -67,6 +73,14 @@ def effective_layout(layouts: Mapping[str, str]) -> str:
     return kinds.pop() if len(kinds) == 1 else "mixed"
 
 
+def _call_record(kind: str, r: Any, hit: tuple | None) -> dict:
+    """One backend call in a question's trace; `batch` is the index (in ctx.batches) of the batched call that read it."""
+    rec = {"kind": kind, "tokens": int(r.tokens), "ms": r.ms, "timings": r.timings}
+    if hit is not None:
+        rec["batch"] = hit[1]
+    return rec
+
+
 MAX_STATE_DEPTH = 100      # objects and arrays nested in a state; deeper would overflow recursive hooks (Redact, yours)
 
 
@@ -94,18 +108,66 @@ class QuestionResult:
     layout: str = QUESTION_FIRST
 
 
+@dataclass
+class QuestionSetup:
+    """What reading one question involves, before any backend call: the concrete layout, the fit that applies, the
+    options shown (with __none__ under abstain) and the worked examples of each readout. decide_question and the
+    batched read-ahead both start from it, so they ask the backend for the same prompts."""
+    layout: str
+    same: bool
+    fq: FittedQuestion | None
+    letters_ok: bool
+    probe_ok: bool
+    options: list
+    keys: list[str]
+    has_none: bool
+    shots_letters: list
+    shots_probe: list
+    use_probe: bool
+
+    @property
+    def needs_letters(self) -> bool:
+        """A letters readout is taken unless a fitted probe answers alone (no blend, no __none__ share)."""
+        return not self.use_probe or bool(self.fq.blend) or self.has_none
+
+
+class ReadAhead:
+    """Backend results read ahead for one decision in batched calls (InprocBackend.read_many), looked up by the prompt
+    decide_question builds; a prompt not found here is read the usual way. `batches` describes each batched call."""
+
+    def __init__(self) -> None:
+        self.letters: dict[str, tuple[Any, int]] = {}
+        self.embeds: dict[str, tuple[Any, int]] = {}
+        self.batches: list[dict] = []
+
+    def take_letters(self, prompt: str, k: int) -> tuple[Any, int] | None:
+        hit = self.letters.get(prompt)
+        if hit is None or len(hit[0].logits) < k:
+            return None
+        r, bid = hit
+        if len(r.logits) > k:
+            r = type(r)(r.logits[:k], r.tokens, timings=r.timings, ms=r.ms)
+        return r, bid
+
+    def take_embed(self, prompt: str) -> tuple[Any, int] | None:
+        return self.embeds.get(prompt)
+
+
 class Tez:
     """A local decision engine.
 
         tez = Tez(backend="http://127.0.0.1:8091", template="gemma4", schemas="schemas/")
         tez.decide("Help! My payouts have been failing for 3 days.", schema="support-triage")
 
-    backend        llama-server URL, "fake" (offline demo backend) or a Backend instance
+    backend        llama-server URL, "inproc:PATH.gguf" (llama.cpp inside this process, tez.inproc), "fake" (offline
+                   demo backend) or a Backend instance
     template       prompt template of the letters model: gemma4 | qwen3
     schemas        a directory of *.yaml schemas, a schema file, Schema objects, or a list of these
     embed_backend  optional separate server for probe features (default: the letters backend)
     layout         default prompt layout: auto (default) | question_first | state_first
     n_probs        next-token log-probabilities a letter readout asks llama-server for (default 200)
+    inproc         settings of an in-process backend ("inproc:model.gguf"): lib, n_ctx, n_batch, n_ubatch, n_seq_max,
+                   n_gpu_layers (tez.inproc.InprocBackend)
     default_temperature
                    temperature for letters answers no fit calibrates: auto (default: the measured per-type values when
                    the model and template are ones tez.temperature lists, otherwise 1), off (1) or a number
@@ -117,7 +179,7 @@ class Tez:
                  embed_template: str | None = None, cache_prompt: bool = True, data_dir: str | Path | None = None,
                  model_name: str | None = None, embed_model_name: str | None = None, *, layout: str = "auto",
                  n_probs: int = DEFAULT_N_PROBS, hooks: Any = None, hooks_raise: bool = True,
-                 default_temperature: Any = "auto"):
+                 default_temperature: Any = "auto", inproc: Mapping[str, Any] | None = None):
         if layout not in LAYOUTS:
             raise ValueError(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
         self.layout = layout
@@ -127,13 +189,16 @@ class Tez:
         self.hooks: list = normalise_hooks(hooks)
         self.hooks_raise = bool(hooks_raise)
         self._hooks_lock = threading.Lock()
-        self.backend: Backend = make_backend(backend, template, cache_prompt, model_name, n_probs)
+        self.backend: Backend = make_backend(backend, template, cache_prompt, model_name, n_probs, inproc=inproc)
         self.template = self.backend.template
-        if embed_backend is None:
+        same_model = (isinstance(embed_backend, str) and isinstance(backend, str) and embed_backend == backend
+                      and (embed_template or template) == template)
+        if embed_backend is None or same_model:     # the same in-process model must never be loaded twice
             self.embedder: Backend = self.backend
             self.embed_backend_url: str | None = None
         else:
-            self.embedder = make_backend(embed_backend, embed_template or template, cache_prompt, embed_model_name, n_probs)
+            self.embedder = make_backend(embed_backend, embed_template or template, cache_prompt, embed_model_name, n_probs,
+                                         inproc=inproc)
             self.embed_backend_url = self.embedder.url
         self.data_dir = Path(data_dir) if data_dir else None
         self.schemas_dir: Path | None = None       # the first schema directory loaded (where presets' feedback goes)
@@ -581,12 +646,16 @@ class Tez:
         # state-first questions run back to back, so the backend's prompt cache keeps the state between them
         order = [qid for qid in req.questions if layouts[qid] == STATE_FIRST] + \
                 [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
+        reads = self._read_ahead(req, layouts, order)
+        if reads is not None:
+            ctx.batches = reads.batches
         results: dict[str, QuestionResult] = {}
         for qid in order:
             calls: list = []
             tq = time.perf_counter()
             r = self.decide_question(req.questions[qid], req.state, schema=req.schema, readout=req.readout,
-                                     abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n, trace=calls)
+                                     abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n, trace=calls,
+                                     reads=reads)
             if ctx.layout == "mixed":            # otherwise every question was read with ctx.layout (X-Tez-Layout)
                 r.meta = {**r.meta, "layout": r.layout}
             results[qid] = r
@@ -609,6 +678,66 @@ class Tez:
             response["tez"]["values"] = req.extraction.values(answers)
         ctx.response, ctx.usage, ctx.latency_ms = response, response["usage"], round(latency, 1)
         return response
+
+    # ---------------------------------------------------------------------------------- batched reads
+    def batch_groups(self, req: DecideRequest, layouts: Mapping[str, str], order: list[str],
+                     check_model: bool = True) -> dict[str, list[tuple[str, str, str, int]]]:
+        """The reads a batching backend takes together, {group: [(question id, kind, prompt, k)]}, in reading order.
+        "state": state-first prompts that open with the state (instructions + state are their shared prefix); "rest":
+        the others (question first, or worked examples before the state), which share only the instructions. Left out:
+        questions read by a tournament (more than 26 options), questions a probe readout refuses, and probe reads sent
+        to a separate embedding backend. The prompts are the ones decide_question builds."""
+        n = len(req.questions)
+        shared = state_prefix(req.state, self.template)
+        groups: dict[str, list] = {}
+        for qid in order:
+            q = req.questions[qid]
+            s = self.question_setup(q, req.schema, req.readout, req.abstain, layouts[qid], n, check_model)
+            if req.readout == "probe" and not s.probe_ok:
+                continue
+            if s.use_probe and self.embedder is self.backend:
+                p = self.probe_prompt(q, req.state, s.shots_probe, layout=s.layout)
+                groups.setdefault("state" if p.startswith(shared) else "rest", []).append((qid, "embed", p, 0))
+            if s.needs_letters and not needs_tournament(len(s.options)):
+                p = build_prompt(q, req.state, self.template, s.options, s.shots_letters, s.layout)
+                groups.setdefault("state" if p.startswith(shared) else "rest", []).append((qid, "letters", p, len(s.options)))
+        return groups
+
+    def _read_ahead(self, req: DecideRequest, layouts: Mapping[str, str], order: list[str]) -> ReadAhead | None:
+        """For a backend that reads many prompts at once (the in-process backend's read_many), read what a request
+        with several questions needs in one batched call per group of batch_groups, before decide_question runs.
+        None for other backends, which read question by question."""
+        if not getattr(self.backend, "batched", False) or len(req.questions) < 2:
+            return None
+        reads = ReadAhead()
+        for group, items in self.batch_groups(req, layouts, order).items():
+            prompts = list(dict.fromkeys(p for _, _, p, _ in items))
+            if len(prompts) < 2:
+                continue                                  # one prompt: the usual single read (it may reuse the cache)
+            ks, em = dict.fromkeys(prompts, 0), dict.fromkeys(prompts, False)
+            for _, kind, p, k in items:
+                if kind == "letters":
+                    ks[p] = max(ks[p], k)
+                else:
+                    em[p] = True
+            t0 = time.perf_counter()
+            got = self.backend.read_many(prompts, [ks[p] for p in prompts], [em[p] for p in prompts])
+            ms = (time.perf_counter() - t0) * 1000.0
+            bid = len(reads.batches)
+            tokens, timings = 0, {}
+            for p, (ls, emb) in zip(prompts, got):
+                if ls is not None:
+                    reads.letters[p] = (ls, bid)
+                if emb is not None:
+                    reads.embeds[p] = (emb, bid)
+                r = ls if ls is not None else emb
+                tokens += int(r.tokens)
+                timings = r.timings or {}
+            reads.batches.append({"kind": "read_many", "group": group, "prompts": len(prompts),
+                                  "questions": list(dict.fromkeys(qid for qid, _, _, _ in items)), "tokens": tokens,
+                                  "evaluated": timings.get("batch_prompt_n"), "prefix": timings.get("batch_prefix_n"),
+                                  "ms": round(ms, 3)})
+        return reads
 
     # ---------------------------------------------------------------------------------- plan
     def plan(self, body: Any, limits: Limits | None = None) -> dict:
@@ -676,7 +805,21 @@ class Tez:
             totals["cached_tokens"] += entry["cached_tokens"]
         totals["evaluated_tokens"] = totals["prompt_tokens"] - totals["cached_tokens"]
         state_first = [qid for qid in order if layouts[qid] == STATE_FIRST]
-        if len(state_first) >= 2:
+        batched = bool(getattr(self.backend, "batched", False)) and len(req.questions) >= 2
+        if batched:
+            totals["batches"] = 0
+            for group, items in self.batch_groups(req, layouts, order, check_model=False).items():
+                prompts = set(p for _, _, p, _ in items)
+                if len(prompts) < 2:
+                    continue
+                totals["batches"] += 1
+                qids = list(dict.fromkeys(qid for qid, _, _, _ in items))
+                for qid in qids:
+                    out[qid]["batch"] = group
+                what = ("the state once, copied to one sequence per prompt, then every question's suffix in one decode"
+                        if group == "state" else "the shared instructions once, then the rest of every prompt in one decode")
+                notes.append(f"in-process: {len(prompts)} reads of {len(qids)} question(s) in one batched call ({what})")
+        if len(state_first) >= 2 and not batched:
             notes.append(f"state first: {len(state_first)} questions read back to back, each after the first reusing the "
                          "prefix it shares with the one before (cached_tokens; needs llama.cpp prompt caching on one slot, "
                          "--swa-full for Gemma)")
@@ -710,22 +853,26 @@ class Tez:
         return {"status": "stale", "reason": reason, **info}
 
     def backend_ms(self, ctx: DecisionContext) -> float:
-        """Wall time spent in backend calls during a decision (from its traces)."""
-        return round(sum(c.get("ms") or 0.0 for t in ctx.traces.values() for c in t.get("calls", [])), 3)
+        """Wall time spent in backend calls during a decision (from its traces: each batched call once)."""
+        single = sum(c.get("ms") or 0.0 for t in ctx.traces.values() for c in t.get("calls", []) if "batch" not in c)
+        return round(single + sum(b.get("ms") or 0.0 for b in ctx.batches), 3)
 
     # ---------------------------------------------------------------------------------- readouts
     def letter_logits(self, q: Question, state: Any, options: list | None = None, shots: list | None = None, *,
-                      layout: str = QUESTION_FIRST, trace: list | None = None) -> tuple[np.ndarray, int]:
+                      layout: str = QUESTION_FIRST, trace: list | None = None,
+                      reads: ReadAhead | None = None) -> tuple[np.ndarray, int]:
         """Letter log-probabilities over `options` (default: the question's) and the prompt tokens spent.
         Above 26 options: tournament, and options that left it get -inf. `trace`, when given, receives one record
-        per backend call (kind, tokens, wall ms, llama.cpp timings)."""
+        per backend call (kind, tokens, wall ms, llama.cpp timings; `batch` when a batched call read it). `reads`:
+        results read ahead in a batched call, used when they hold the prompt."""
         options = q.options() if options is None else list(options)
         n = len(options)
 
         def read(prompt: str, k: int):
-            r = self.backend.letters(prompt, k)
+            hit = reads.take_letters(prompt, k) if reads is not None else None
+            r = hit[0] if hit is not None else self.backend.letters(prompt, k)
             if trace is not None:
-                trace.append({"kind": "letters", "tokens": int(r.tokens), "ms": r.ms, "timings": r.timings})
+                trace.append(_call_record("letters", r, hit))
             return r
 
         if not needs_tournament(n):
@@ -756,26 +903,42 @@ class Tez:
         """The prompt whose last-token state a probe reads (the question's own options, no __none__)."""
         return build_prompt(q, state, self.embedder.template, q.options(), shots, layout)
 
+    def question_setup(self, q: Question, schema: Schema | None = None, readout: str = "auto", abstain: bool = False,
+                       layout: str = "auto", n_questions: int = 1, check_model: bool = True) -> QuestionSetup:
+        """How a question will be read (see QuestionSetup). No backend call beyond the fit's model-name check, which
+        check_model=False skips when the name is not known without asking (tez plan)."""
+        same = self._same_question(schema, q)
+        layout = self.question_layout(q, schema, layout, n_questions, check_model) if same else \
+            resolve_layout(layout, n_questions)
+        fq, letters_ok, probe_ok = self._usable(schema.name, q.id, layout, check_model) if same else (None, False, False)
+        options, keys = q.options(abstain), q.keys(abstain)
+        return QuestionSetup(layout=layout, same=same, fq=fq, letters_ok=letters_ok, probe_ok=probe_ok, options=options,
+                             keys=keys, has_none=len(keys) > len(q.keys()),
+                             shots_letters=schema.shots(q.id, len(options)) if same else [],
+                             shots_probe=schema.shots(q.id) if same else [],
+                             use_probe=probe_ok and readout != "letters")
+
     def decide_question(self, q: Question, state: Any, schema: Schema | None = None, readout: str = "auto",
                         abstain: bool = False, alpha: float | None = None, layout: str = "auto", n_questions: int = 1,
-                        trace: list | None = None) -> QuestionResult:
-        same = self._same_question(schema, q)
-        layout = self.question_layout(q, schema, layout, n_questions) if same else resolve_layout(layout, n_questions)
-        fq, letters_ok, probe_ok = self._usable(schema.name, q.id, layout) if same else (None, False, False)
-        options, keys = q.options(abstain), q.keys(abstain)
-        has_none = len(keys) > len(q.keys())
-        shots_letters = schema.shots(q.id, len(options)) if same else []
-        shots_probe = schema.shots(q.id) if same else []
+                        trace: list | None = None, reads: ReadAhead | None = None) -> QuestionResult:
+        """Read one question and shape its answer. `reads` holds backend results read ahead in a batched call (the
+        engine passes it for requests with several questions); what it lacks is read from the backend here."""
+        s = self.question_setup(q, schema, readout, abstain, layout, n_questions)
+        layout, same, fq, letters_ok, probe_ok = s.layout, s.same, s.fq, s.letters_ok, s.probe_ok
+        options, keys, has_none = s.options, s.keys, s.has_none
+        shots_letters, shots_probe = s.shots_letters, s.shots_probe
         if readout == "probe" and not probe_ok:
             raise InvalidRequest(self._no_probe_reason(schema, q.id, same, layout))
-        use_probe = probe_ok and readout != "letters"
+        use_probe = s.use_probe
         tokens = 0
         p_probe = None
         if use_probe:
             try:
-                emb = self.embedder.embed(self.probe_prompt(q, state, shots_probe, layout=layout))
+                prompt = self.probe_prompt(q, state, shots_probe, layout=layout)
+                hit = reads.take_embed(prompt) if reads is not None and self.embedder is self.backend else None
+                emb = hit[0] if hit is not None else self.embedder.embed(prompt)
                 if trace is not None:
-                    trace.append({"kind": "embed", "tokens": int(emb.tokens), "ms": emb.ms, "timings": emb.timings})
+                    trace.append(_call_record("embed", emb, hit))
                 p_probe = fq.probe.predict(emb.vector)
                 tokens += emb.tokens
             except (BackendUnavailable, BackendRequestError, ValueError) as exc:
@@ -788,7 +951,7 @@ class Tez:
         p_letters = None
         default_t = None
         if not use_probe or fq.blend or has_none:
-            z, t = self.letter_logits(q, state, options, shots_letters, layout=layout, trace=trace)
+            z, t = self.letter_logits(q, state, options, shots_letters, layout=layout, trace=trace, reads=reads)
             tokens += t
             if letters_ok:
                 t_letters = fq.letters.temperature

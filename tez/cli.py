@@ -1,8 +1,9 @@
 """Command line: tez serve | decide | plan | doctor | fit | suggest | eval | presets | truncate.
 
 Settings can come from the environment (containers, services): TEZ_BACKEND, TEZ_TEMPLATE, TEZ_EMBED_BACKEND and
-TEZ_DEFAULT_TEMPERATURE for every command; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR, TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS,
-TEZ_PRESETS and TEZ_LAYOUT. Each can be read from a file instead, for Docker and Compose secrets: TEZ_API_KEY_FILE=
+TEZ_DEFAULT_TEMPERATURE for every command, and for an in-process backend (--backend inproc:PATH.gguf) TEZ_LLAMA_LIB,
+TEZ_N_CTX, TEZ_N_BATCH and TEZ_N_GPU_LAYERS; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR,
+TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS, TEZ_PRESETS and TEZ_LAYOUT. Each can be read from a file instead, for Docker and Compose secrets: TEZ_API_KEY_FILE=
 /run/secrets/tez_api_key (surrounding whitespace is stripped; setting both VAR and VAR_FILE is an error). A flag on the
 command line wins over the environment.
 """
@@ -12,6 +13,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -24,8 +26,9 @@ from .prompt import TEMPLATES
 from .schema import LAYOUTS
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
-ENV_VARS = ("TEZ_BACKEND", "TEZ_TEMPLATE", "TEZ_EMBED_BACKEND", "TEZ_DEFAULT_TEMPERATURE", "TEZ_HOST", "TEZ_PORT", "TEZ_SCHEMAS", "TEZ_DATA_DIR",
-            "TEZ_API_KEY", "TEZ_LOG_LEVEL", "TEZ_CORS_ORIGINS", "TEZ_PRESETS", "TEZ_LAYOUT")
+ENV_VARS = ("TEZ_BACKEND", "TEZ_TEMPLATE", "TEZ_EMBED_BACKEND", "TEZ_DEFAULT_TEMPERATURE", "TEZ_LLAMA_LIB", "TEZ_N_CTX",
+            "TEZ_N_BATCH", "TEZ_N_GPU_LAYERS", "TEZ_HOST", "TEZ_PORT", "TEZ_SCHEMAS", "TEZ_DATA_DIR", "TEZ_API_KEY",
+            "TEZ_LOG_LEVEL", "TEZ_CORS_ORIGINS", "TEZ_PRESETS", "TEZ_LAYOUT")
 
 
 def _port(text: Any) -> int:
@@ -70,9 +73,24 @@ def _utf8_streams() -> None:
             pass
 
 
+def _whole(name: str, low: int) -> Any:
+    """An argparse type for a whole number of at least `low` (also checks an environment default)."""
+    def parse(text: Any) -> int:
+        try:
+            n = int(str(text).strip())
+        except ValueError:
+            n = low - 1
+        if n < low:
+            raise argparse.ArgumentTypeError(f"{name} must be a whole number of at least {low}, got {text!r}")
+        return n
+    parse.__name__ = name
+    return parse
+
+
 def _backend_args(p: argparse.ArgumentParser, env: Env, embed: bool = True) -> None:
     p.add_argument("--backend", default=env.get("TEZ_BACKEND", DEFAULT_BACKEND),
-                   help=f"llama-server URL, or 'fake' for the offline demo backend (env TEZ_BACKEND; default {DEFAULT_BACKEND})")
+                   help=f"llama-server URL, inproc:PATH.gguf to run the model inside this process with llama.cpp's "
+                        f"library, or 'fake' for the offline demo backend (env TEZ_BACKEND; default {DEFAULT_BACKEND})")
     p.add_argument("--template", default=env.get("TEZ_TEMPLATE", "gemma4"), type=_choice("template", tuple(sorted(TEMPLATES))),
                    help="prompt template of the model behind --backend: gemma4 or qwen3 (env TEZ_TEMPLATE; default gemma4)")
     if embed:
@@ -87,6 +105,16 @@ def _backend_args(p: argparse.ArgumentParser, env: Env, embed: bool = True) -> N
     p.add_argument("--n-probs", type=int, default=DEFAULT_N_PROBS, metavar="N",
                    help=f"next-token log-probabilities a letter readout asks for; letters outside them get the floor "
                         f"(default {DEFAULT_N_PROBS})")
+    g = p.add_argument_group("in-process backend (--backend inproc:PATH.gguf)")
+    g.add_argument("--llama-lib", default=env.get("TEZ_LLAMA_LIB"), metavar="DIR",
+                   help="directory of llama.cpp's library (llama.dll / libllama.so / libllama.dylib) from a llama.cpp "
+                        "release; tested with b11100 (env TEZ_LLAMA_LIB; default: next to llama-server on PATH)")
+    g.add_argument("--n-ctx", type=_whole("n-ctx", 16), default=env.get("TEZ_N_CTX", "4096"), metavar="N",
+                   help="KV cache size in tokens, shared by the questions of a request (env TEZ_N_CTX; default 4096)")
+    g.add_argument("--n-batch", type=_whole("n-batch", 1), default=env.get("TEZ_N_BATCH"), metavar="N",
+                   help="most tokens per llama_decode (env TEZ_N_BATCH; default --n-ctx)")
+    g.add_argument("--n-gpu-layers", type=_whole("n-gpu-layers", -1), default=env.get("TEZ_N_GPU_LAYERS", "-1"), metavar="N",
+                   help="layers on the GPU: -1 all (the default), 0 none, to run on the CPU (env TEZ_N_GPU_LAYERS)")
     p.add_argument("--default-temperature", default=env.get("TEZ_DEFAULT_TEMPERATURE", "auto"), type=_default_temperature,
                    metavar="auto|off|T",
                    help="temperature for letters answers no fit calibrates: auto uses the values measured for the model "
@@ -129,6 +157,11 @@ def _hooks(args: argparse.Namespace) -> list:
     return hooks
 
 
+def inproc_options(args: argparse.Namespace) -> dict:
+    """The in-process backend's settings from the command line (tez.inproc.InprocBackend)."""
+    return {"lib": args.llama_lib, "n_ctx": args.n_ctx, "n_batch": args.n_batch, "n_gpu_layers": args.n_gpu_layers}
+
+
 def _make_tez(args: argparse.Namespace, schemas: Any = None, layout: str = "auto"):
     from .engine import Tez
     try:
@@ -137,9 +170,23 @@ def _make_tez(args: argparse.Namespace, schemas: Any = None, layout: str = "auto
                    cache_prompt=not args.no_cache_prompt, data_dir=getattr(args, "data_dir", None),
                    model_name=args.model_name, n_probs=args.n_probs, layout=layout, hooks=_hooks(args),
                    hooks_raise=getattr(args, "hook_errors", "raise") == "raise",
-                   default_temperature=getattr(args, "default_temperature", "auto"))
+                   default_temperature=getattr(args, "default_temperature", "auto"), inproc=inproc_options(args))
     except ValueError as exc:
         raise TezError(str(exc)) from exc
+
+
+def _load_inproc(tez: Any) -> None:
+    """Load in-process models now (tez serve), so the first request does not wait for them and a bad library or model
+    stops the server at once."""
+    for backend in dict.fromkeys([tez.backend, tez.embedder]):
+        if getattr(backend, "batched", False) and hasattr(backend, "load"):
+            t0 = time.perf_counter()
+            backend.load()
+            d = backend.details()
+            gpus = ", ".join(x["description"] or x["name"] for x in d["devices"] if x["gpu"]) or "CPU"
+            print(f"loaded {backend.model_name()} in this process in {time.perf_counter() - t0:.1f} s ({gpus}; llama.cpp "
+                  f"{d['build']}; n_ctx {d['n_ctx']}, n_batch {d['n_batch']}, {d['n_seq_max']} sequences)",
+                  file=sys.stderr, flush=True)
 
 
 def _read_state(path: str) -> Any:
@@ -182,6 +229,7 @@ def cmd_serve(args: argparse.Namespace) -> int:
     tez = _make_tez(args, schemas=args.schemas, layout=args.layout or "auto")
     if args.presets:
         tez.add_presets()
+    _load_inproc(tez)
     limits = Limits(*(v or None for v in (args.max_body_bytes, args.max_questions, args.max_state_chars, args.max_batch)))
     app = create_app(tez, api_key=args.api_key, cors=not args.no_cors, limits=limits, cors_origins=origins.patterns)
     probes = sum(len(v) for v in tez.probe_index().values())
@@ -364,8 +412,11 @@ def cmd_plan(args: argparse.Namespace) -> int:
 
 
 def cmd_doctor(args: argparse.Namespace) -> int:
-    from .doctor import as_json, report, run_doctor
-    checks = run_doctor(args.backend, template=args.template, n_probs=args.n_probs, timeout=args.timeout)
+    from .doctor import as_json, report, run_doctor, run_inproc_doctor
+    if str(args.backend).startswith("inproc:"):
+        checks = run_inproc_doctor(args.backend, template=args.template, options=inproc_options(args))
+    else:
+        checks = run_doctor(args.backend, template=args.template, n_probs=args.n_probs, timeout=args.timeout)
     print(json.dumps(as_json(checks), indent=2) if args.json else report(checks))
     return 1 if any(c.status == "fail" for c in checks) else 0
 
@@ -509,7 +560,7 @@ def build_parser(environ: Mapping[str, str] | None = None) -> argparse.ArgumentP
     _layout_arg(p, "prompt layout (default: the schema's, else auto)")
     p.set_defaults(func=cmd_plan)
 
-    p = sub.add_parser("doctor", help="check a llama-server for what Tez needs and print the fixes")
+    p = sub.add_parser("doctor", help="check a llama-server, or an in-process model, for what Tez needs and print the fixes")
     _backend_args(p, env, embed=False)
     p.add_argument("--timeout", type=float, default=60.0, help="seconds per request (default 60)")
     p.add_argument("--json", action="store_true", help="print the checks as JSON")

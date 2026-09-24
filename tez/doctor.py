@@ -12,12 +12,28 @@ Checks, in order (each ok / warn / fail / info, with a concrete fix):
   cache-ram   the host-memory prompt cache (--cache-ram, 8 GiB by default) copies a slot to RAM whenever a request
               keeps less than half of it, which a new state does: --cache-ram 0 is recommended
 The checks send a handful of tiny prompts; nothing is changed on the server.
+
+`tez doctor --backend inproc:PATH.gguf` checks an in-process model instead (it loads the model in the doctor's own
+process, so the GPU must have room for it):
+  library     llama.cpp's library was found (--llama-lib, TEZ_LLAMA_LIB, next to llama-server on PATH) and its build
+  gpu         a GPU backend loaded and holds the layers (on Windows ggml-cuda.dll can fail to load and leave the
+              model on the CPU without a word; Tez refuses that unless --n-gpu-layers 0)
+  model       the GGUF loads: size, layers, context, batch and sequences
+  memory      hybrid or recurrent models (Qwen3.5) reuse a prefix only by sequence copies
+  template    the GGUF's chat template matches --template
+  letters     the option letters are single tokens and hold most of the next-token probability
+  batch       two questions about one state read one by one and in one batched decode give the same letters
+  embeddings  last-token states for fitted probes
+  process     the model lives in this process: one Tez process per GPU
 """
 from __future__ import annotations
 
+import math
 import re
+import time
 from dataclasses import asdict, dataclass
-from typing import Any
+from pathlib import Path
+from typing import Any, Mapping
 
 import requests
 
@@ -263,6 +279,129 @@ def run_doctor(url: str, template: str = "gemma4", n_probs: int = DEFAULT_N_PROB
                session: requests.Session | None = None) -> list[Check]:
     """Run every check against a llama-server; see the module docstring."""
     return Doctor(url, template, n_probs, timeout, session).run()
+
+
+def run_inproc_doctor(spec: str, template: str = "gemma4", options: Mapping[str, Any] | None = None,
+                      backend: Any = None) -> list[Check]:
+    """Check an in-process backend (inproc:PATH.gguf, with the tez.inproc settings in `options`, or an InprocBackend
+    given as `backend`); see the module docstring. The model is loaded in this process."""
+    from .errors import TezError
+    from .inproc import InprocBackend, find_library, parse_spec
+    checks: list[Check] = []
+
+    def add(name: str, status: str, detail: str, fix: str | None = None) -> None:
+        checks.append(Check(name, status, detail, fix))
+
+    opts = {k: v for k, v in (options or {}).items() if v is not None}
+    if backend is None:
+        try:
+            path = parse_spec(spec)
+        except ValueError as exc:
+            add("model", "fail", str(exc), "--backend inproc:/path/to/model.gguf")
+            return checks
+        if not Path(path).is_file():
+            add("model", "fail", f"no GGUF file at {path}", "check the path after inproc:")
+            return checks
+        try:
+            find_library(opts.get("lib"))
+        except TezError as exc:
+            add("library", "fail", exc.message, "unpack the llama.cpp release for your platform (tested: b11100; for "
+                "CUDA also its cudart archive, into the same directory) and pass --llama-lib DIR or set TEZ_LLAMA_LIB")
+            return checks
+        try:
+            backend = InprocBackend(path, template, **opts)
+        except (TypeError, ValueError) as exc:
+            add("model", "fail", str(exc))
+            return checks
+    t0 = time.perf_counter()
+    try:
+        backend.load()
+    except TezError as exc:
+        if "GPU" in exc.message:
+            add("gpu", "fail", exc.message, "use the release archive for your GPU with its runtime libraries in the same "
+                "directory, or --n-gpu-layers 0 to run on the CPU")
+        elif "library" in exc.message or "llama.cpp's" in exc.message:
+            add("library", "fail", exc.message, "point --llama-lib at a complete llama.cpp release (tested: b11100)")
+        else:
+            add("model", "fail", exc.message, "check the GGUF file, and that the GPU has room for it (stop a llama-server "
+                "or tez serve holding it: one process per GPU)")
+        return checks
+    load_s = time.perf_counter() - t0
+    d = backend.details()
+    commit = d.get("commit")
+    from .inproc import TESTED_BUILDS
+    if commit in TESTED_BUILDS:
+        add("library", "ok", f"{d['library']}: llama.cpp {d['build']}")
+    else:
+        add("library", "warn", f"{d['library']}: llama.cpp {d['build']}; Tez was tested with b11100 (7ab4ee7ba)",
+            "use the b11100 release to reproduce the published numbers (other builds usually work)")
+    gpus = [x for x in d["devices"] if x["gpu"]]
+    if d["n_gpu_layers"] == 0:
+        add("gpu", "info", "--n-gpu-layers 0: the model runs on the CPU")
+    elif gpus:
+        mem = ", ".join(f"{x['description'] or x['name']} ({x['free_mb']:,} of {x['total_mb']:,} MB free after the load)"
+                        for x in gpus)
+        errors = d.get("preload_errors") or {}
+        add("gpu", "warn" if errors else "ok", f"{mem}; layers on the GPU: "
+            f"{'all' if d['n_gpu_layers'] < 0 else d['n_gpu_layers']}" + (f"; not loaded: {errors}" if errors else ""))
+    name = backend.model_name()
+    add("model", "ok", f"{name}: {d['n_params'] / 1e9:.1f}B parameters, {d['n_layer']} layers, {d['size_mb']:,} MB, loaded in "
+        f"{load_s:.1f} s; context {d['n_ctx']}, n_batch {d['n_batch']}, {d['n_seq_max']} sequences")
+    if d["n_ctx"] < 2048:
+        add("context", "warn", f"a context of {d['n_ctx']} tokens is short for a state plus its questions",
+            "--n-ctx 4096 (the questions of a request share it)")
+    if d["hybrid"] or d["recurrent"]:
+        add("memory", "info", f"{'hybrid' if d['hybrid'] else 'recurrent'} memory: its state cannot roll back, so a prefix is "
+            "reused only by sequence copies (batched reads) or when a prompt extends the previous one")
+    family = detect_template(d.get("chat_template"))
+    if family is None:
+        add("template", "info", "the model's chat template was not recognised; check --template by hand")
+    elif family == "gemma3":
+        add("template", "fail", "the model uses Gemma 3's chat template (<start_of_turn>), which Tez does not drive",
+            "use Gemma 4 (template gemma4) or a Qwen3 model (template qwen3)")
+    elif family != template:
+        add("template", "fail", f"the model's chat template is {family}'s, --template is {template}", f"--template {family}")
+    else:
+        add("template", "ok", f"chat template matches --template {template}")
+    p1 = build_prompt(Q1, STATE, template, layout="state_first")
+    p2 = build_prompt(Q2, STATE, template, layout="state_first")
+    try:
+        one = backend.letters(p1, 3)
+        two = backend.letters(p2, 2)
+    except TezError as exc:
+        add("letters", "fail", f"a letters readout failed: {exc.message}")
+        return checks
+    mass = float(sum(math.exp(x) for x in one.logits))
+    if mass >= 0.5:
+        add("letters", "ok", f"the option letters hold {mass:.0%} of the next-token probability (exact log-probabilities, "
+            f"{one.tokens} prompt tokens)")
+    else:
+        add("letters", "warn", f"the option letters hold only {mass:.0%} of the next-token probability",
+            "check --template: the model may not be answering with a letter")
+    try:
+        (b1, _), (b2, _) = backend.read_many([p1, p2], [3, 2])
+    except TezError as exc:
+        add("batch", "fail", f"a batched read failed: {exc.message}")
+    else:
+        gap = max(float(max(abs(a - b) for a, b in zip(x.logits, y.logits))) for x, y in ((one, b1), (two, b2)))
+        same = all(int(x.logits.argmax()) == int(y.logits.argmax()) for x, y in ((one, b1), (two, b2)))
+        t = b1.timings or {}
+        detail = (f"two questions about one state: the state once ({t.get('batch_prefix_n')} shared tokens), both suffixes "
+                  f"in one decode; same answers as one by one, letter log-probabilities within {gap:.3f} nats")
+        if same and gap <= 0.25:
+            add("batch", "ok", detail)
+        else:
+            add("batch", "warn", detail.replace("same answers", "answers " + ("same" if same else "DIFFER")),
+                "report the model and build; --layout question_first avoids batched reads of a shared state")
+    try:
+        emb = backend.embed(p1)
+        add("embeddings", "ok", f"last-token states work ({len(emb.vector)} numbers, the features llama-server "
+            "--embeddings --pooling last returns): fitted probes can be served")
+    except TezError as exc:
+        add("embeddings", "fail", f"reading a state failed: {exc.message}")
+    add("process", "info", "the model and its KV cache live in the Tez process: run one Tez process per GPU, and no "
+        "llama-server holding the same model beside it")
+    return checks
 
 
 def report(checks: list[Check]) -> str:

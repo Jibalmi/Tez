@@ -63,6 +63,7 @@ class DecisionContext:
     model: str | None = None            # the request's model alias
     response: dict | None = None
     traces: dict = field(default_factory=dict)      # question id -> {readout, layout, tokens, ms, calls}
+    batches: list = field(default_factory=list)     # batched backend calls (in-process): {kind, group, prompts, ...}
     usage: dict | None = None
     latency_ms: float | None = None
     error: BaseException | None = None

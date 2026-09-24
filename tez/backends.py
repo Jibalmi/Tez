@@ -5,6 +5,8 @@ LlamaCppBackend talks to a llama.cpp `llama-server`:
            (n_probs 200 by default); the log-probabilities of the bare letters "A".."Z" are the option scores, and a
            letter missing from the top list gets the floor (the smallest listed log-probability minus 2).
   embed    POST /embedding (server started with --embeddings --pooling last): the last-token state.
+InprocBackend (tez/inproc.py, "inproc:PATH.gguf") runs llama.cpp inside the Tez process and also reads many prompts
+that share a prefix in one batched call (read_many).
 FakeBackend is a deterministic stand-in for tests and offline demos (keyword overlap and hashed words).
 Every readout also reports its wall time and, when the server sends them, llama.cpp's own timings (prompt_n,
 cache_n, prompt_ms, ...), which the engine passes to hooks as per-question traces.
@@ -19,7 +21,7 @@ import threading
 import time
 from dataclasses import dataclass
 from pathlib import PurePosixPath
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 import numpy as np
 import requests
@@ -116,10 +118,13 @@ def derive_model_name(path: str | None, alias: str | None, ftype: str | None, n_
 
 class Backend:
     """Interface: letters(prompt, k) -> LetterScores, embed(prompt) -> Embedding, model_name(), health().
-    known_model_name() answers without any I/O (None when the name would need a call to the server)."""
+    known_model_name() answers without any I/O (None when the name would need a call to the server). A backend with
+    batched = True also has read_many(prompts, ks, embed) -> [(LetterScores | None, Embedding | None)], which the engine
+    uses for requests with several questions (tez/inproc.py)."""
 
     url: str = ""
     template: str = "gemma4"
+    batched: bool = False
 
     def letters(self, prompt: str, k: int) -> LetterScores:  # pragma: no cover - interface
         raise NotImplementedError
@@ -441,17 +446,26 @@ class FakeBackend(Backend):
 
 
 def make_backend(spec: Any, template: str = "gemma4", cache_prompt: bool = True, model_name: str | None = None,
-                 n_probs: int = DEFAULT_N_PROBS) -> Backend:
-    """A Backend from a URL, 'fake', or an existing Backend instance. n_probs: how many next-token log-probabilities
-    a letter readout asks llama-server for (letters outside that list get the floor)."""
+                 n_probs: int = DEFAULT_N_PROBS, *, inproc: Mapping[str, Any] | None = None) -> Backend:
+    """A Backend from a URL, 'inproc:PATH.gguf', 'fake', or an existing Backend instance. n_probs: how many next-token
+    log-probabilities a letter readout asks llama-server for (letters outside that list get the floor). inproc: the
+    in-process backend's settings (lib, n_ctx, n_batch, n_ubatch, n_seq_max, n_gpu_layers; tez.inproc.InprocBackend).
+    An in-process backend loads nothing until it is first used."""
     if isinstance(spec, Backend):
         return spec
     if spec is None:
         spec = DEFAULT_BACKEND
     if not isinstance(spec, str):
-        raise ValueError(f"backend must be a URL, 'fake' or a Backend instance, got {spec!r}")
+        raise ValueError(f"backend must be a URL, 'inproc:PATH.gguf', 'fake' or a Backend instance, got {spec!r}")
     if spec == "fake" or spec.startswith("fake:"):
         return FakeBackend(template=template, model=model_name or "fake")
+    if spec.startswith("inproc:"):
+        from .inproc import OPTION_NAMES, InprocBackend, parse_spec
+        opts = {k: v for k, v in (inproc or {}).items() if v is not None}
+        unknown = sorted(set(opts) - set(OPTION_NAMES))
+        if unknown:
+            raise ValueError(f"unknown in-process setting(s) {', '.join(unknown)}; use {', '.join(OPTION_NAMES)}")
+        return InprocBackend(parse_spec(spec), template=template, cache_prompt=cache_prompt, model_name=model_name, **opts)
     if not re.match(r"^https?://", spec):
         spec = "http://" + spec
     return LlamaCppBackend(spec, template=template, cache_prompt=cache_prompt, model_name=model_name, n_probs=n_probs)
