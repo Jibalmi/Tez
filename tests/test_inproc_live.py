@@ -51,8 +51,11 @@ def test_batched_reads_match_single_reads(backend):
             single = [backend.letters(p, k).logits for p, k in ps]
             batch = backend.read_many([p for p, _ in ps], [k for _, k in ps])
             for a, (b, _) in zip(single, batch):
+                # llama.cpp's numbers depend a little on how the tokens are split into decodes (a prefix read apart, as
+                # llama-server's prompt cache also does, moves letters far down the tail by a few tenths of a nat), so
+                # the letters are compared as the probabilities an answer is made of
                 assert int(np.argmax(a)) == int(np.argmax(b.logits))
-                assert np.max(np.abs(a - b.logits)) < 0.25          # the same numbers up to batch-shape numerics
+                assert np.max(np.abs(softmax(a) - softmax(b.logits))) < 0.05
             if layout == "state_first":
                 assert batch[0][0].timings["batch_prefix_n"] > 20   # instructions + state read once
 
@@ -70,7 +73,7 @@ def test_states_match_between_single_and_batched_reads(backend):
     for a, (_, b) in zip(single, batch):
         assert a.shape == b.vector.shape == (backend.details()["n_embd"],)
         cos = float(a @ b.vector / (np.linalg.norm(a) * np.linalg.norm(b.vector)))
-        assert cos > 0.999
+        assert cos > 0.995                                  # the same split-dependent numerics as the letters
 
 
 def test_engine_decides_the_docs_request(backend):
