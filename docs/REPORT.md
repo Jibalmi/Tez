@@ -666,8 +666,9 @@ confidence), which validates the harness. Full table in the README and the paper
 - **One model for every language:** MASSIVE macro 0.885 over 11 languages / 6 scripts, all ≥ 0.79,
   vs 0.524 for laya-multilingual and 0.354 for laya. Khmer 0.790 vs 0.000 / 0.210.
 - **Order flip at 20 options 0.07** vs Laya 0.15–0.20 (Jev 0.13).
-- **Calibration as shipped: Tez least over-confident** (mean ECE 0.212 vs 0.323 / 0.253); after a
-  per-task refit all models sit at 0.07–0.10 — Laya's calibration claim is a post-refit claim.
+- **Calibration: Tez least over-confident even at temperature 1** (mean ECE 0.212 vs 0.323 / 0.253); with
+  the default temperature Tez now ships for unfitted questions (fitted without the task scored) its mean is 0.140;
+  after a per-task refit all models sit at 0.07–0.10 — Laya's calibration claim is a post-refit claim.
 - **Laya wins on single-question latency** (25–50 ms vs 57–250 ms here, because on these tasks the
   state is the variable suffix and is evaluated every time) — the crossover rule of §4.2 — and on
   the tasks in its training mix. It has no streaming/early-commit contract and no zero-shot strength.

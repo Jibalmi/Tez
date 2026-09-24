@@ -626,7 +626,7 @@ Laya could not run Jev (no API access), so every Laya-vs-Jev number is a cross-b
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l r r r r r r r r r r}
 \toprule
-& \multicolumn{4}{c}{accuracy} & \multicolumn{2}{c}{ECE-15 shipped $\to$ refit} & \multicolumn{2}{c}{order flip} & \multicolumn{2}{c}{ms / decision} \\
+& \multicolumn{4}{c}{accuracy} & \multicolumn{2}{c}{ECE-15 $T{=}1$ $\to$ refit} & \multicolumn{2}{c}{order flip} & \multicolumn{2}{c}{ms / decision} \\
 \cmidrule(lr){2-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
 task ($n$) & \textbf{Tez} & laya & laya-ml & laya-td & Tez & laya & Tez & laya & Tez & laya \\
 \midrule
@@ -658,7 +658,7 @@ typed-decisions (2,000 decisions) & \textbf{0.704}$^{\dagger}$ & 0.362 & 0.352 &
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{0.49\textwidth}\includegraphics[width=\textwidth]{../figures/calibration.pdf}\caption{ECE as shipped vs after a per-task temperature (2-fold OOF).}\end{subfigure}\hfill
+\begin{subfigure}{0.49\textwidth}\includegraphics[width=\textwidth]{../figures/calibration.pdf}\caption{ECE at temperature 1, with the default temperature Tez now ships (fitted without the task scored), and after a per-task temperature (2-fold OOF).}\end{subfigure}\hfill
 \begin{subfigure}{0.49\textwidth}\includegraphics[width=\textwidth]{../figures/order_flip.pdf}\caption{Option-order flip rate (first 100 rows, options reversed).}\end{subfigure}
 \caption{Calibration and order robustness, every model, same rows.}
 \end{figure}
@@ -670,7 +670,7 @@ typed-decisions (2,000 decisions) & \textbf{0.704}$^{\dagger}$ & 0.362 & 0.352 &
 \item \textbf{Multilingual is not a checkpoint problem.} One frozen model: MASSIVE macro 0.885 over eleven languages spanning six scripts, every language above 0.79, against 0.524 for Laya's multilingual checkpoint and 0.354 for its English one. Laya's Khmer result (0.000 at 0.95 confidence) reproduces exactly in our harness; Tez scores 0.790 there. Laya's answer to this is a script-detecting \code{Router} in front of two encoders; the decoder does not need one.
 \item \textbf{Large option sets are a prompt-shape problem, not a ceiling.} Laya's 77-option collapse (0.395; its own explanation is the shared 192-token head budget) is not shared by the readout: a chunked tournament reaches 0.713 in five cached passes, with no embedding shortlist. Jev's published 0.870 remains ahead.
 \item \textbf{Order robustness at 20 options: 0.07 vs 0.15--0.20.} Laya reports its own flip rate as worse than Jev's 0.13 and suggests more shuffling during training; the frozen 12B is already under it, and permutation averaging (\S\ref{sec:calib}) would take it lower.
-\item \textbf{Calibration: as shipped, Tez is the least over-confident (mean ECE 0.212 vs 0.323 / 0.253); after one temperature per task all four land at 0.07--0.10.} Laya's calibration advantage in its README is an advantage \emph{after} refit, and refit is a lookup any model gets.
+\item \textbf{Calibration: read at temperature 1, Tez is already the least over-confident (mean ECE 0.212 vs 0.323 / 0.253); with the default temperature it now ships for unfitted questions, fitted without the task scored, its mean is 0.140; after one temperature per task all four land at 0.07--0.10.} Laya's calibration advantage in its README is an advantage \emph{after} refit, and refit is a lookup any model gets.
 \item \textbf{Where Laya wins: speed and trained tasks.} Laya answers in 25--50\,ms in-process; Tez takes 57--250\,ms here because on these tasks the \emph{state} is the variable part and is evaluated every time (the typed-decisions states are long JSON). This is the crossover rule of \S\ref{sec:systems} in action: one state $\to$ one question favours the encoder; one state $\to$ many questions, or a constant option set with a short suffix (the voice loop, 30\,ms), favours the cached decoder. Laya also has no streaming or early-commit contract, and its own README reports moderation at 0.53 on held-out data and \code{score} as its weakest primitive (SST-5 0.372; Tez 0.512).
 \end{enumerate}
 
