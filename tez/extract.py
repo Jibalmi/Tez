@@ -19,6 +19,11 @@ The mapping is a documented subset; anything else is refused with an error that 
 Refused: free strings and numbers without an enum, arrays, integer ranges over 10 values, more than 255 options,
 unions of different types, $ref outside the document and recursive schemas. pydantic is never imported by Tez:
 from_pydantic reads the model's own JSON schema (pydantic v2 model_json_schema, v1 schema).
+
+Size: $refs can make a small schema expand without end (ten properties that each refer to the next level, a few levels
+deep). The conversion counts as it goes and stops with 413 payload_too_large at the first question past the caller's
+question budget (tez serve's --max-questions), and at MAX_REFS references followed or MAX_REF_CHARS characters of schema
+copied in by them, whatever the budget.
 """
 from __future__ import annotations
 
@@ -27,11 +32,13 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
-from .errors import InvalidRequest
+from .errors import InvalidRequest, PayloadTooLarge
 from .schema import CHOICE_MAX, NONE_KEY, SCORE_MAX, Question, Schema, parse_question
 
 NULL_LABEL = "null"
 NULL_TEXT = "not stated, or does not apply"
+MAX_REFS = 10_000             # $refs followed while converting one JSON schema
+MAX_REF_CHARS = 1_000_000     # characters of schema (about its JSON length) those $refs copy in, all told
 
 
 class EscalationRequired(Exception):
@@ -157,16 +164,52 @@ def _integral(v: Any) -> bool:
     return not isinstance(v, bool) and isinstance(v, (int, float)) and math.isfinite(v) and float(v).is_integer()
 
 
+def _scalar_size(v: Any) -> int:
+    return len(v) + 2 if isinstance(v, str) else 4
+
+
 class _Converter:
-    def __init__(self, root: dict, name: str):
+    def __init__(self, root: dict, name: str, max_questions: int | None = None):
         self.root = root
         self.name = name
+        self.max_questions = max_questions or None       # 0 or None: no budget
         self.questions: dict[str, Question] = {}
         self.fields: dict[str, Field] = {}
         self.consts: list[Field] = []
+        self.refs = 0                                     # $refs followed so far
+        self.ref_chars = 0                                # schema text they copied in
+        self._sizes: dict[int, int] = {}
 
     def fail(self, where: str, message: str) -> InvalidRequest:
         return InvalidRequest(f"{where}: {message}")
+
+    def size(self, node: Any) -> int:
+        """About how many characters of JSON `node` is: what following a $ref to it adds to the schema. Each object
+        is measured once, without recursion (a Python object that contains itself counts once)."""
+        if not isinstance(node, (dict, list)):
+            return _scalar_size(node)
+        memo, pending, stack = self._sizes, set(), [node]
+        while stack:
+            n = stack[-1]
+            if id(n) in memo:
+                stack.pop()
+                continue
+            kids = list(n.values()) if isinstance(n, dict) else n
+            if id(n) not in pending:
+                pending.add(id(n))
+                stack.extend(c for c in kids if isinstance(c, (dict, list)) and id(c) not in memo and id(c) not in pending)
+                continue
+            stack.pop()
+            total = 2 + sum(memo.get(id(c), 0) if isinstance(c, (dict, list)) else _scalar_size(c) for c in kids)
+            memo[id(n)] = total + (sum(len(str(k)) + 3 for k in n) if isinstance(n, dict) else len(n))
+        return memo[id(node)]
+
+    def count_ref(self, target: Any, where: str) -> None:
+        self.refs += 1
+        self.ref_chars += self.size(target)
+        if self.refs > MAX_REFS or self.ref_chars > MAX_REF_CHARS:
+            raise PayloadTooLarge(f"{where}: the schema's $refs expand past {MAX_REFS:,} references or "
+                                  f"{MAX_REF_CHARS:,} characters of schema; a schema this large cannot be decided")
 
     def resolve(self, node: Any, where: str, seen: tuple = (), followed: list | None = None) -> dict:
         """The node with local $refs followed (siblings of a $ref win) and a one-element allOf merged; every $ref
@@ -185,6 +228,7 @@ class _Converter:
                 if not isinstance(target, dict) or part not in target:
                     raise self.fail(where, f"{ref} does not resolve inside the schema")
                 target = target[part]
+            self.count_ref(target, where)
             if followed is not None:
                 followed.append(ref)
             merged = {**self.resolve(target, where, seen + (ref,), followed),
@@ -210,6 +254,9 @@ class _Converter:
     def add(self, qid: str, raw: dict, f: Field, where: str) -> None:
         if qid in self.questions:
             raise self.fail(where, f"two fields map to the question id {qid!r}")
+        if self.max_questions and len(self.questions) >= self.max_questions:
+            raise PayloadTooLarge(f"{self.name}: too many questions: more than {self.max_questions} (the limit is "
+                                  f"{self.max_questions}; tez serve --max-questions)")
         try:
             self.questions[qid] = parse_question(qid, raw, where=self.name)
         except InvalidRequest as exc:
@@ -339,12 +386,13 @@ class _Converter:
         return self.add(dotted, raw, Field(qid=dotted, path=path, kind="score", values=levels), where)
 
 
-def schema_from_json_schema(json_schema: Any, name: str = "extract") -> Schema:
+def schema_from_json_schema(json_schema: Any, name: str = "extract", *, max_questions: int | None = None) -> Schema:
     """A Schema whose questions are the JSON schema's fields (see the module docstring), with the extraction attached
-    (schema.extraction.values(answers) builds the object)."""
+    (schema.extraction.values(answers) builds the object). max_questions (0 or None: none) stops the conversion with
+    413 payload_too_large as soon as the schema has more questions than that."""
     if not isinstance(json_schema, dict):
         raise InvalidRequest(f"{name}: a JSON schema must be an object, got {type(json_schema).__name__}")
-    conv = _Converter(json_schema, name)
+    conv = _Converter(json_schema, name, max_questions)
     try:
         followed: list[str] = []
         root = conv.resolve(json_schema, name, followed=followed)

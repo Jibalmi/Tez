@@ -409,7 +409,8 @@ class Tez:
             if body.get("questions") is not None:
                 raise InvalidRequest("give questions or json_schema, not both")
             from .extract import schema_from_json_schema
-            extracted = schema_from_json_schema(body["json_schema"], "json_schema")
+            budget = limits.max_questions if limits is not None else None   # counted while the schema is expanded
+            extracted = schema_from_json_schema(body["json_schema"], "json_schema", max_questions=budget)
             questions, extraction = dict(extracted.questions), extracted.extraction
         elif body.get("questions") is None:
             if schema is None:

@@ -11,6 +11,8 @@ from fastapi.testclient import TestClient
 
 from stub_http import StubServer
 from tez import EscalationRequired, ExtractResult, FakeBackend, InvalidRequest, Schema, Tez
+from tez.config import Limits
+from tez.errors import PayloadTooLarge
 from tez.extract import NULL_LABEL, default_extraction, schema_from_json_schema
 from tez.integrations import RemoteTez
 from tez.server import create_app
@@ -129,6 +131,66 @@ def test_shared_definitions_are_not_recursion():
     s = schema_from_json_schema(js)
     assert list(s.questions) == ["billing.country", "shipping.country", "either", "maybe.country"]
     assert s.questions["either"].criteria == {"a": "the first", "b": None}
+
+
+def fan_out(depth: int, leaf: dict | None = None, fan: int = 10) -> dict:
+    """A small schema that expands to fan ** (depth + 1) leaves: each level has `fan` properties that $ref the next."""
+    defs = {f"L{depth}": leaf or {"type": "boolean"}}
+    for i in range(depth - 1, -1, -1):
+        defs[f"L{i}"] = {"type": "object", "properties": {f"p{j}": {"$ref": f"#/$defs/L{i + 1}"} for j in range(fan)}}
+    return {"type": "object", "$defs": defs, "properties": {f"r{j}": {"$ref": "#/$defs/L0"} for j in range(fan)}}
+
+
+@pytest.fixture
+def parsed(monkeypatch):
+    """Counts the questions the JSON schema conversion builds."""
+    import tez.extract as extract
+    calls = []
+    real = extract.parse_question
+
+    def counting(*args, **kwargs):
+        calls.append(args[0])
+        return real(*args, **kwargs)
+    monkeypatch.setattr(extract, "parse_question", counting)
+    return calls
+
+
+def test_the_question_budget_is_counted_while_a_json_schema_is_expanded(parsed):
+    js = fan_out(3)                                          # 10,000 questions from a 1.4 KB schema
+    tez = Tez(backend="fake")
+    runs = {"systemone": lambda: tez.handle({"state": "x", "json_schema": js}, limits=Limits()),
+            "plan": lambda: tez.plan({"json_schema": js}, Limits()),
+            "batch": lambda: tez.handle_batch({"states": ["x", "y"], "json_schema": js}, limits=Limits()),
+            "budget of 5": lambda: schema_from_json_schema(js, "js", max_questions=5)}
+    for what, run in runs.items():
+        parsed.clear()
+        with pytest.raises(PayloadTooLarge, match="too many questions: more than"):
+            run()
+        assert len(parsed) <= (5 if what == "budget of 5" else 64), what        # stopped at the first one past it
+    assert len(schema_from_json_schema(fan_out(1), max_questions=0).questions) == 100    # 0: no budget
+    c = TestClient(create_app(Tez(backend="fake")))
+    for path, body in (("/v1/systemone", {"state": "x", "json_schema": js}), ("/v1/plan", {"json_schema": js}),
+                       ("/v1/systemone/batch", {"states": ["x"], "json_schema": js})):
+        parsed.clear()
+        r = c.post(path, json=body)
+        assert r.status_code == 413 and r.json()["error"]["type"] == "payload_too_large", path
+        assert len(parsed) <= 64, path
+
+
+def test_ref_expansion_is_capped_whatever_the_question_budget(parsed):
+    few_questions = {**fan_out(4, leaf={"const": 1}), "properties": {"ask": {"type": "boolean"},
+                                                                     "tree": {"$ref": "#/$defs/L0"}}}
+    with pytest.raises(PayloadTooLarge, match=r"tree.*\$refs expand past 10,000 references"):
+        schema_from_json_schema(few_questions)                               # 10,000 consts, one question
+    big = {"$defs": {"Big": {"const": "x" * 200_000}},
+           "properties": {"ask": {"type": "boolean"}, **{f"c{i}": {"$ref": "#/$defs/Big"} for i in range(10)}}}
+    with pytest.raises(PayloadTooLarge, match="1,000,000 characters of schema"):
+        schema_from_json_schema(big)
+    looped: dict = {"type": "boolean"}
+    looped["self"] = looped                                  # a Python object that contains itself is measured once
+    s = schema_from_json_schema({"$defs": {"B": looped}, "properties": {"a": {"$ref": "#/$defs/B"}}})
+    assert list(s.questions) == ["a"]
+    assert len(schema_from_json_schema(fan_out(2)).questions) == 1000           # within the caps: fine
 
 
 def test_top_level_errors():

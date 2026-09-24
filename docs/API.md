@@ -249,7 +249,9 @@ Local `$ref`s (`#/$defs/...`) and a one-element `allOf` are followed. Refused wi
 (`json_schema.properties.note: a free-text string cannot be decided in one pass; ...`): free strings and numbers
 without an enum, arrays, integer ranges over 10 values, more than 255 options, unions of different types, references
 outside the document and recursive schemas. `json_schema` and `questions` cannot both be given; `schema` may name a
-loaded schema whose identical questions then use its fits.
+loaded schema whose identical questions then use its fits. Questions are counted while the schema is expanded, so a
+schema whose `$ref`s multiply its fields is refused with 413 at the first question past `--max-questions`; whatever
+that limit, its `$ref`s may copy in at most 10,000 references and 1,000,000 characters of schema (413 past either).
 
 Python: `Schema.from_json_schema(js, name)`, `Schema.from_pydantic(Model)` (pydantic is never imported by Tez; the
 model's own JSON schema is read), and `Tez.extract(state, schema_or_model, *, alpha=None, return_details=False)`, which
@@ -516,7 +518,7 @@ MCP client's configuration:
 | Flag | Default | Limit |
 |---|---|---|
 | `--max-body-bytes` | 2 MiB (2,097,152) | request body; a `Content-Length` over it is refused before reading, a chunked body as soon as it passes it |
-| `--max-questions` | 64 | questions per request (and per batch) |
+| `--max-questions` | 64 | questions per request (and per batch); a `json_schema` is counted as it is expanded |
 | `--max-state-chars` | 50,000 | characters per state (an object or array counts as its JSON) |
 | `--max-batch` | 64 | states per `/v1/systemone/batch` request |
 
