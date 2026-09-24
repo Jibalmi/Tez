@@ -13,7 +13,12 @@ Reads only
   results/h2h/summary.json       experiments/bench_h2h.py per-system, per-task summaries (same rows, same GPU)
   results/h2h/rows_*.jsonl       its per-decision rows (only when results/vs_laya/selective.json is missing)
   results/vs_laya/apps.json, massive51.json, speed_per_call.json, selective.json   (optional)
+  results/calibration/default_temperature.json   (optional) the default temperatures Tez applies to unfitted letters,
+                                 fitted without typed-decisions, for the reliability curve at the default
   README.md, tez/schema.py, docs/REPORT.md section 1   licence, option cap and Jev's documented terms
+
+Tez as shipped reads unfitted letters at its default temperature (BENCHMARKS.md §5c); its temperature-1 figures are
+drawn as the state before that default (outlined bars, hollow markers).
 
 A panel whose data file is missing is not drawn (no placeholder numbers); every skip is printed.
 Writes docs/figures/vs/*.png and docs/figures/vs/panels/*.png at 200 dpi.
@@ -55,6 +60,7 @@ LAYA_RT = "#d95926"                  # laya-routed (Laya's router over laya / la
 JEV = "#7a7975"
 HATCH = "////"                       # hatched Tez = the probe readout (trained on labelled rows)
 SHIPPED_ALPHA = 0.38                 # tinted = as shipped / before the fix; solid = after
+BEFORE_LW = 1.4                      # outlined Tez = temperature 1, before its default temperature
 
 plt.rcParams.update({
     "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
@@ -174,7 +180,10 @@ class Data:
         rows = {r["metric"]: r["values"] for r in B["calibration_order_latency"]["rows"]}
         sysc = ("tez", "laya", "laya-multilingual", "laya-typed-decisions", "jev")
         pick = lambda prefix: dict(zip(sysc, next(v for m, v in rows.items() if m.startswith(prefix))))  # noqa: E731
-        self.ece_shipped, self.ece_temp = pick("mean ECE-15 as shipped"), pick("mean ECE-15 after")
+        # "mean ECE-15 as shipped (Tez at T = 1)": Laya and Jev as they ship, Tez before its default temperature;
+        # "mean ECE-15, Tez's default temperature fitted without the task (§5c)": Tez as it ships now
+        self.ece_t1, self.ece_temp = pick("mean ECE-15 as shipped"), pick("mean ECE-15 after")
+        self.ece_shipped = dict(self.ece_t1, tez=pick("mean ECE-15, Tez's default temperature")["tez"])
         self.flip20, self.ms = pick("option-order flip"), {k: rng(v) for k, v in pick("ms per decision").items()}
         self.probe_ms = next(r["ms_probe"] for r in B["pruned"]["rows"] if r["blocks"].startswith("24"))
         vw = {r["variant"]: r for r in B["voice_per_word"]["rows"]}
@@ -206,6 +215,45 @@ class Data:
             if self.sel:
                 self.sel_source = "results/h2h/rows_typed_decisions_*.jsonl (selective.json missing)"
                 print("  computed selective / reliability / risk-coverage from results/h2h typed-decisions rows")
+        self.td_default = self._td_default_temperature() if self.sel else None
+
+    # -------------------------------------------------------------- typed-decisions at Tez's default temperature
+    def _td_default_temperature(self):
+        """Tez's typed-decisions letters read at the default temperature it ships (BENCHMARKS.md §5c), with the
+        temperatures fitted without typed-decisions (leave-one-task-out, the 'rule' setting): one per question type.
+        Reliability bins and ECE-15 from results/h2h/rows_typed_decisions_tez.jsonl; the ECE must match the file's."""
+        rel = "results/calibration/default_temperature.json"
+        d = _json(rel)
+        rows_p = ROOT / "results" / "h2h" / "rows_typed_decisions_tez.jsonl"
+        name = next((n for n in self.sel["reliability"] if canon(n) == "tez"), None)
+        if d is None or not rows_p.exists() or name is None:
+            print(f"  missing  {rel} or {rows_p.relative_to(ROOT).as_posix()}: no default-temperature curve")
+            return None
+        temps = {}
+        for c in d["loto"]["cells"]:
+            if c["task"] == "typed_decisions":
+                if c["type"] in temps:
+                    raise SystemExit(f"{rel}: more than one typed_decisions cell of type {c['type']}")
+                temps[c["type"]] = float(c["T_rule_loto"])
+        conf, corr = [], []
+        for x in rows_p.read_text(encoding="utf-8").splitlines():
+            if x.strip():
+                r = json.loads(x)
+                p = _softmax_t(r["logits"], temps[r["qtype"]])
+                conf.append(float(p.max()))
+                corr.append(float(np.argmax(p) == r["gold"]))
+        conf, corr = np.array(conf), np.array(corr)
+        e = _ece15(conf, corr)
+        want = d["loto"]["per_task"]["typed_decisions"]["rule_loto"]["ece"]
+        if abs(e - want) > 1e-9:
+            print(f"  WARNING tez: ECE-15 at the default temperature {e:.6f} differs from {rel} ({want:.6f}); not drawn")
+            return None
+        print(f"  using    {rel} (typed-decisions at the default temperature, ECE-15 {e:.4f})")
+        self.sel["reliability"][name]["default"] = _bins(conf, corr)
+        if not self.sel.get("ece"):
+            self.sel["ece"] = {}
+        self.sel["ece"].setdefault(name, {})["default"] = e
+        return dict(ece=e, temperatures=temps, source=rel)
 
     # -------------------------------------------------------------- BENCHMARKS.md section 4b task probes
     def _task_probes(self):
@@ -697,31 +745,35 @@ def finding_speed_decision(D):
 def draw_calib_jev(fig, spec, ctx):
     D = ctx.D
     ax = fig.add_subplot(spec)
-    items = [("Jev\n(published)", D.ece_shipped["jev"], dict(key="jev")),
-             ("Tez\nas shipped", D.ece_shipped["tez"], dict(key="tez", alpha=SHIPPED_ALPHA)),
-             ("Tez + one\ntemperature", D.ece_temp["tez"], dict(key="tez")),
-             ("Tez\nprobe", D.td["probe_ece"], dict(key="tez", hatch=HATCH))]
-    for i, (_, v, st) in enumerate(items):
-        bar(ax, i, v, 0.58, **st)
-        vlab(ax, i, v, f3(v), fs=10.5, color=INK if i else INK2, weight="bold" if i else "normal")
+    before = dict(key="tez", color=SURFACE, edgecolor=TEZ, linewidth=BEFORE_LW)
+    items = [("Jev\n(published)", D.ece_shipped["jev"], dict(key="jev"), False),
+             ("Tez\nT = 1\n(before)", D.ece_t1["tez"], before, False),
+             ("Tez\nas shipped", D.ece_shipped["tez"], dict(key="tez", alpha=SHIPPED_ALPHA), True),
+             ("Tez + one\ntemperature", D.ece_temp["tez"], dict(key="tez"), True),
+             ("Tez\nprobe", D.td["probe_ece"], dict(key="tez", hatch=HATCH), True)]
+    for i, (_, v, st, strong) in enumerate(items):
+        bar(ax, i, v, 0.6, **st)
+        vlab(ax, i, v, f3(v), fs=10, color=INK if strong else INK2, weight="bold" if strong else "normal")
     ax.set_xticks(range(len(items)))
-    ax.set_xticklabels([i[0] for i in items], fontsize=9.5)
+    ax.set_xticklabels([i[0] for i in items], fontsize=9)
     ax.set_xlim(-0.55, len(items) - 0.45)
     ax.set_ylim(0, 0.30)
     ax.set_ylabel("ECE-15  (lower is better)", fontsize=10)
     grid(ax)
     strip(ax)
-    head(ax, "Calibration", note="Tez: mean over the head-to-head tasks · probe: typed-decisions only",
-         show_title=ctx.show_title)
+    head(ax, "Calibration", note="Tez: mean over the head-to-head tasks; as shipped = its default temperature, fitted "
+                                 "without the task · probe: typed-decisions only", show_title=ctx.show_title)
     s, t = D.ece_shipped, D.ece_temp
     foot(ax, "Laya on the same rows: " + " / ".join(f3(s[k]) for k in LAYA3) + " as shipped → "
-         + " / ".join(f3(t[k]) for k in LAYA3) + " after one temperature per task.", dy=-34)
+         + " / ".join(f3(t[k]) for k in LAYA3) + " after one temperature per task.", dy=-44)
 
 
 def finding_calib_jev(D):
-    return (f"Tez ships slightly better calibrated than Jev's published ECE ({f3(D.ece_shipped['tez'])} vs "
-            f"{f3(D.ece_shipped['jev'])}); one temperature per task brings it to {f3(D.ece_temp['tez'])}, "
-            f"a probe to {f3(D.td['probe_ece'])}")
+    tez, jev = D.ece_shipped["tez"], D.ece_shipped["jev"]
+    side = "below" if tez < jev else "above" if tez > jev else "level with"
+    return (f"As shipped, with its default temperature, Tez's mean ECE is {f3(tez)}, {side} Jev's published {f3(jev)} "
+            f"({f3(D.ece_t1['tez'])} at T = 1, before the default); one temperature per task brings it to "
+            f"{f3(D.ece_temp['tez'])}, a probe to {f3(D.td['probe_ece'])}")
 
 
 # ---------------------------------------------------------------- "And" facts
@@ -1122,39 +1174,52 @@ def finding_batching(D):
 def draw_calib_all(fig, spec, ctx):
     D = ctx.D
     ax = fig.add_subplot(spec)
-    w = 0.36
-    for i, k in enumerate(KEYS):
+    w, step = 0.34, 0.36
+    # Tez: T = 1 (outlined, before its default temperature), as shipped (tinted), one temperature per task (solid);
+    # each Laya checkpoint: as shipped, one temperature per task. The Tez group is one bar wider.
+    centers = {"tez": 0.0}
+    for j, k in enumerate(LAYA3):
+        centers[k] = 1.3 + j
+    t1 = D.ece_t1["tez"]
+    bar(ax, -step, t1, w, color=SURFACE, edgecolor=TEZ, linewidth=BEFORE_LW)
+    vlab(ax, -step, t1, f3(t1), fs=8.5)
+    for k in KEYS:
+        c = centers[k]
+        xa, xb = (c, c + step) if k == "tez" else (c - step / 2, c + step / 2)
         a, b = D.ece_shipped[k], D.ece_temp[k]
-        bar(ax, i - w / 2 - 0.01, a, w, k, alpha=SHIPPED_ALPHA)
-        bar(ax, i + w / 2 + 0.01, b, w, k)
-        vlab(ax, i - w / 2 - 0.01, a, f3(a), fs=8.5)
-        vlab(ax, i + w / 2 + 0.01, b, f3(b), fs=8.5, color=INK if k == "tez" else INK2,
-             weight="bold" if k == "tez" else "normal")
-    xp = len(KEYS) + 0.05
+        bar(ax, xa, a, w, k, alpha=SHIPPED_ALPHA)
+        bar(ax, xb, b, w, k)
+        vlab(ax, xa, a, f3(a), fs=8.5)
+        vlab(ax, xb, b, f3(b), fs=8.5, color=INK if k == "tez" else INK2, weight="bold" if k == "tez" else "normal")
+    xp = centers[LAYA3[-1]] + 1.05
     bar(ax, xp, D.td["probe_ece"], w, "tez", hatch=HATCH)
     vlab(ax, xp, D.td["probe_ece"], f3(D.td["probe_ece"]), fs=8.5, color=INK, weight="bold")
     jev = D.ece_shipped["jev"]
     ax.axhline(jev, color=INK3, lw=1.3, ls=(0, (4, 3)), zorder=2)
     ax.annotate(f"Jev (published) {f3(jev)}", (xp + 0.3, jev), xytext=(0, 3), textcoords="offset points",
                 ha="right", va="bottom", fontsize=8.5, color=INK3)
-    ax.set_xticks(list(range(len(KEYS))) + [xp])
+    ax.set_xticks([centers[k] for k in KEYS] + [xp])
     ax.set_xticklabels(["Tez", "laya", "laya-\nmultilingual", "laya-typed-\ndecisions", "Tez\nprobe"], fontsize=8.8)
-    ax.set_xlim(-0.6, xp + 0.45)
+    ax.set_xlim(-step - 0.5, xp + 0.45)
     ax.set_ylim(0, 0.40)
     ax.set_ylabel("mean ECE-15 (lower is better)", fontsize=10)
     grid(ax)
     strip(ax)
     handles = [patch(color=INK3, alpha=SHIPPED_ALPHA, label="as shipped"),
                patch(color=INK3, label="one temperature per task"),
+               Patch(facecolor=SURFACE, edgecolor=TEZ, linewidth=BEFORE_LW, label="Tez at T = 1, before its default"),
                patch("tez", "Tez probe", hatch=HATCH)]
-    head(ax, "Calibration", handles, ncol=3, fs_leg=8.8,
-         note="mean over the head-to-head tasks · probe: typed-decisions only", show_title=ctx.show_title)
+    head(ax, "Calibration", handles, ncol=4 if ax_width_in(ax) >= 6.5 else 2, fs_leg=8.8,
+         note="mean over the head-to-head tasks · Tez as shipped: its default temperature, fitted without the task · "
+              "probe: typed-decisions only", show_title=ctx.show_title)
 
 
 def finding_calib_all(D):
-    t = [D.ece_temp[k] for k in LAYA3]
-    return (f"One temperature per task fixes most miscalibration for every model: Tez {f3(D.ece_shipped['tez'])} → "
-            f"{f3(D.ece_temp['tez'])}, Laya {f3(min(t))}–{f3(max(t))} after; Tez's probe reads {f3(D.td['probe_ece'])}")
+    t = [D.ece_temp[k] for k in KEYS]
+    s = [D.ece_shipped[k] for k in LAYA3]
+    return (f"One temperature per task brings every model to {f3(min(t))}–{f3(max(t))}, from "
+            f"{f3(D.ece_shipped['tez'])} for Tez as shipped ({f3(D.ece_t1['tez'])} at T = 1) and "
+            f"{f3(min(s))}–{f3(max(s))} for Laya; Tez's probe reads {f3(D.td['probe_ece'])}")
 
 
 # ---------------------------------------------------------------- typed-decisions ladder (horizontal)
@@ -1483,7 +1548,12 @@ def draw_reliability(fig, spec, ctx):
         rel = s["reliability"][nm]
         c, ls, lab = sel_style(nm)
         is_tez = canon(nm) == "tez"
-        for variant, word in (("shipped", "as shipped"), ("temperature", "one temperature")):
+        # "shipped" in results/vs_laya/selective.json is each system's own readout: Laya's shipped temperatures, and
+        # Tez's letters at T = 1, which is Tez before its default temperature; "default" is Tez as it ships now
+        variants = ((("shipped", "T = 1, before the default"), ("default", "as shipped, default T"),
+                     ("temperature", "one temperature")) if is_tez
+                    else (("shipped", "as shipped"), ("temperature", "one temperature")))
+        for variant, word in variants:
             pts = rel.get(variant) or []
             if not pts:
                 continue
@@ -1495,12 +1565,19 @@ def draw_reliability(fig, spec, ctx):
             if ece is None:
                 ece = binned_ece(pts)
             if is_tez:
-                alpha = SHIPPED_ALPHA + 0.14 if variant == "shipped" else 1.0
-                ax.plot(cf, ac, ls, color=c, alpha=alpha, lw=2.0, zorder=4)
-                ax.scatter(cf, ac, s=16 + 300 * np.sqrt(nn / nn.sum()), color=c, alpha=alpha, edgecolors=SURFACE,
-                           linewidths=1.2, zorder=5)
-                handles.append(Line2D([], [], color=c, alpha=alpha, marker="o", lw=2.0, ms=7,
-                                      label=f"{lab}, {word} ({ece_lab} {fnum(ece)})"))
+                size = 16 + 300 * np.sqrt(nn / nn.sum())
+                label = f"{lab}, {word} ({ece_lab} {fnum(ece)})"
+                if variant == "shipped":                 # T = 1: hollow markers, as the outlined T = 1 bars
+                    ax.plot(cf, ac, ls, color=c, lw=BEFORE_LW, zorder=4)
+                    ax.scatter(cf, ac, s=size, facecolors=SURFACE, edgecolors=c, linewidths=BEFORE_LW, zorder=5)
+                    handles.append(Line2D([], [], color=c, marker="o", mfc=SURFACE, mec=c, mew=BEFORE_LW,
+                                          lw=BEFORE_LW, ms=7, label=label))
+                    continue
+                alpha = SHIPPED_ALPHA + 0.14 if variant == "default" else 1.0
+                ax.plot(cf, ac, ls, color=c, alpha=alpha, lw=2.0, zorder=6 if variant == "default" else 7)
+                ax.scatter(cf, ac, s=size, color=c, alpha=alpha, edgecolors=SURFACE, linewidths=1.2,
+                           zorder=6 if variant == "default" else 7)
+                handles.append(Line2D([], [], color=c, alpha=alpha, marker="o", lw=2.0, ms=7, label=label))
             else:
                 ax.plot(cf, ac, "-", color=c, lw=1.2, marker="o", ms=3.8, mec=SURFACE, mew=0.8, alpha=0.95, zorder=3)
                 handles.append(Line2D([], [], color=c, marker="o", lw=1.2, ms=4,
@@ -1539,7 +1616,8 @@ def draw_risk(fig, spec, ctx):
     ax.xaxis.grid(True, color=GRID, lw=0.9)
     strip(ax, keep=("bottom", "left"))
     head(ax, "Risk–coverage", handles, ncol=2, fs_leg=8.2,
-         note="typed-decisions, 2,000 decisions · lower is better · AURC = area under the curve",
+         note="typed-decisions, 2,000 decisions · lower is better · AURC = area under the curve · Tez ranked by its "
+              "confidence at T = 1",
          show_title=ctx.show_title)
 
 
@@ -1556,7 +1634,12 @@ def finding_reliability(D):
         a, b, lab = binned_ece(rel["shipped"]), binned_ece(rel["temperature"]), "binned ECE"
     else:
         return "Reliability of Tez's letter readout on typed-decisions"
-    return f"Tez's letter readout is over-confident as shipped ({lab} {fnum(a)}); one temperature brings it to {fnum(b)}"
+    if e and "default" in e:
+        return (f"Read at T = 1, Tez's letters are over-confident ({lab} {fnum(a)}); the default temperature Tez now "
+                f"ships, fitted without typed-decisions, brings them to {fnum(e['default'])}, one temperature fitted "
+                f"on the task to {fnum(b)}")
+    return (f"Read at T = 1, Tez's letters are over-confident ({lab} {fnum(a)}); one temperature brings them to "
+            f"{fnum(b)}")
 
 
 def finding_risk(D):
@@ -1615,7 +1698,8 @@ PANELS = {
     "calibration_vs_jev": P(
         draw_calib_jev, "Calibration", finding_calib_jev,
         lambda D: "Expected calibration error with 15 bins (lower is better)",
-        lambda D: "Source: BENCHMARKS.md §1 (mean ECE-15), §4c (probe, layer 26); Jev: third-party published.",
+        lambda D: "Source: BENCHMARKS.md §1 (mean ECE-15), §5c (Tez's default temperature), §4c (probe, layer 26); "
+                  "Jev: third-party published.",
         (5.4, 4.0), head_in=0.5, foot_in=1.15, probe=True),
     "and_facts": P(
         draw_and, "And", lambda D: "Tez runs locally on open weights at no cost; Jev is a hosted, paid API",
@@ -1663,8 +1747,10 @@ PANELS = {
         else "results/vs_laya/speed_per_call.json"),
     "calibration_shipped_vs_temperature": P(
         draw_calib_all, "Calibration", finding_calib_all,
-        lambda D: "Mean ECE-15 over the head-to-head tasks, as shipped and after one temperature per task (lower is better)",
-        lambda D: "Source: BENCHMARKS.md §1 (Calibration, order robustness, latency); probe: §4c.",
+        lambda D: "Mean ECE-15 over the head-to-head tasks, as shipped and after one temperature per task, with Tez also "
+                  "at T = 1, before its default temperature (lower is better)",
+        lambda D: "Source: BENCHMARKS.md §1 (Calibration, order robustness, latency); Tez's default temperature: §5c; "
+                  "probe: §4c.",
         (7.2, 4.2), head_in=0.95, foot_in=0.8, probe=True),
     "typed_decisions_ladder": P(
         draw_td, "typed-decisions", finding_td,
@@ -1700,14 +1786,18 @@ PANELS = {
         (6.8, 4.0), head_in=1.0),
     "selective": P(
         draw_selective, "Selective automation: accuracy vs coverage", finding_selective,
-        lambda D: "Accuracy on the decisions each system answers, most confident first",
+        lambda D: "Accuracy on the decisions each system answers, most confident first (Tez by its confidence at T = 1)",
         lambda D: f"Source: {D.sel_source}" + (" (typed-decisions rows in results/h2h; ties at a cut counted pro rata)."
                                                 if D.sel_source and D.sel_source.endswith(".json") else "."),
         (7.8, 4.6), head_in=0.6, needs=lambda D: None if D.sel else "results/vs_laya/selective.json"),
     "reliability": P(
         draw_reliability, "Reliability", finding_reliability,
-        lambda D: "Reliability diagram on typed-decisions: Tez's letter readout, with Laya's checkpoints for context",
-        lambda D: f"Source: {D.sel_source} (reliability bins and ECE-15 from the typed-decisions rows in results/h2h).",
+        lambda D: ("Reliability diagram on typed-decisions: Tez's letter readout at T = 1, at its default temperature "
+                   "and after one temperature, with Laya's checkpoints for context" if D.td_default else
+                   "Reliability diagram on typed-decisions: Tez's letter readout, with Laya's checkpoints for context"),
+        lambda D: f"Source: {D.sel_source} (reliability bins and ECE-15 from the typed-decisions rows in results/h2h)"
+                  + (f"; default temperature: {D.td_default['source']} (BENCHMARKS.md §5c, fitted without "
+                     "typed-decisions) on results/h2h/rows_typed_decisions_tez.jsonl." if D.td_default else "."),
         (6.0, 5.2), head_in=1.35, needs=lambda D: None if (D.sel and D.sel["reliability"]) else "results/vs_laya/selective.json"),
     "risk_coverage": P(
         draw_risk, "Risk–coverage", finding_risk,
@@ -1950,7 +2040,7 @@ def fig_benchmark(D):
     PANELS["accuracy_vs_jev_compact"] = dict(PANELS["accuracy_vs_jev"],
                                              draw=lambda f, s, c: draw_accuracy(f, s, c, context=False),
                                              title="Against Jev, same public datasets")
-    right = R(Pn(speed, 6.9, 3.0), G(0, 1.75), Pn("accuracy_vs_jev_compact", 6.9, 3.3), G(0, 1.95),
+    right = R(Pn(speed, 6.9, 3.0), G(0, 1.75), Pn("accuracy_vs_jev_compact", 6.9, 3.3), G(0, 2.15),
               Pn("calibration_shipped_vs_temperature", 6.9, 3.0))
     if D.m51:
         left = Pn("every_language", 7.4, 13.0)
@@ -2057,7 +2147,8 @@ def write_readme(D):
          "reference and Laya's three checkpoints as comparators. Every title states the finding; every image carries "
          "its conditions and a source line.", "",
          f"**Conditions.** {CONDITIONS} {TEZ_LETTERS} {TEZ_PROBE}" + (f" {APPS_CPU}" if D.apps else ""), "",
-         "**Colours.** Tez blue (hatched = the probe, trained on labelled rows; tinted = as shipped or before a fix); "
+         "**Colours.** Tez blue (hatched = the probe, trained on labelled rows; tinted = as shipped or before a fix; "
+         "outlined bars and hollow markers = Tez's letters at temperature 1, before its default temperature); "
          "laya magenta; laya-multilingual amber; laya-typed-decisions green; laya-routed burnt orange; Jev (published) "
          "grey. The set was checked with a colour-vision-deficiency validator; amber and magenta are light, so every "
          "mark carries its value.", "",
@@ -2065,8 +2156,10 @@ def write_readme(D):
          "results/vs_laya are printed as the file gives them (up to four decimals). Computed here rather than copied: "
          "the deltas against Jev, the probe's 4.1-4.8x against Jev's published p50 (236/58 and 276/58), the --swa-full "
          "ratios (205/30 and 394/11), the non-English means in \"English vs the rest\" (means of the per-language rows "
-         "of results/h2h/summary.json), the counts of usable languages (> 3x random) and the task counts in the "
-         "titles.", "",
+         "of results/h2h/summary.json), the counts of usable languages (> 3x random), the task counts in the "
+         "titles, and the reliability bins of Tez's typed-decisions letters at its default temperature (from "
+         "results/h2h/rows_typed_decisions_tez.jsonl and the temperatures in results/calibration/"
+         "default_temperature.json; the script stops drawing that curve if its ECE-15 does not match the file's).", "",
          "**Laya's own published numbers** (not our rerun) appear only where labelled: 45 of 51 languages usable with "
          "routing, the typed-decisions teacher ceiling (0.735) and majority class (0.461), and the laya_published "
          "column of results/vs_laya/apps.json (hollow diamonds; outlined bars where our rerun of that checkpoint is "
