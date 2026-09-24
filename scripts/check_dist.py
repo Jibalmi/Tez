@@ -1,5 +1,6 @@
-"""Check what `python -m build` produced: the wheel holds the tez package and its licence files and nothing else, and
-its version is the one in tez/_version.py and pyproject.toml. Used by CI and the release workflow.
+"""Check what `python -m build` produced: the wheel holds the tez package and its licence files and nothing else, its
+console scripts and extras, and its version is the one in tez/_version.py (which pyproject.toml reads). Used by CI and
+the release workflow.
 
     python -m build && python scripts/check_dist.py dist
 """
@@ -21,11 +22,10 @@ LICENSES = ("LICENSE", "LICENSES/Apache-2.0.txt", "THIRD_PARTY_NOTICES.md")     
 
 
 def source_versions() -> dict[str, str]:
+    """{"tez/_version.py": version}: the one place the version lives (pyproject.toml reads it from there)."""
     code = (ROOT / "tez" / "_version.py").read_text(encoding="utf-8")
-    toml = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    m1 = re.search(r'^__version__\s*=\s*"([^"]+)"', code, flags=re.M)
-    m2 = re.search(r'^version\s*=\s*"([^"]+)"', toml, flags=re.M)
-    return {"tez/_version.py": m1.group(1) if m1 else "?", "pyproject.toml": m2.group(1) if m2 else "?"}
+    m = re.search(r'^__version__\s*=\s*"([^"]+)"', code, flags=re.M)
+    return {"tez/_version.py": m.group(1) if m else "?"}
 
 
 def check_wheel(path: Path) -> list[str]:

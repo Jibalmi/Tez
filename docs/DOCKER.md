@@ -139,6 +139,10 @@ docker run --rm -p 127.0.0.1:8787:8787 -e TEZ_BACKEND=http://host.docker.interna
 
 - **Keep `--swa-full`.** Gemma 4 uses sliding-window attention; without the flag llama-server silently re-reads the
   whole prompt on every request and the cached-prefix speed-ups disappear (README, "Traps").
+- **`--cache-ram 0`.** With llama.cpp's host-memory prompt cache on (8 GiB by default), a request that keeps less than
+  half of the slot's cached tokens first copies the slot to host RAM, which every new state does; Tez gains nothing
+  from that cache, so the compose files switch it off. `tez doctor --backend http://127.0.0.1:8080` (with llama's port
+  published) checks these settings.
 - **The llama.cpp image.** The measured build is b11100 (the Windows `win-cuda-13.4` binary). No image was published
   for b11100, so the compose files pin b11096, the closest published build before it. `server-cuda-b11096` is the
   CUDA 12.8 build; `server-cuda13-b11096` is the CUDA 13 build. Build tags are not meant to move, but for an immutable

@@ -207,10 +207,12 @@ def test_extract_with_pydantic():
         Schema.from_pydantic(dict)
 
 
-def test_import_tez_does_not_import_pydantic():
-    code = "import sys, tez, tez.extract; print('pydantic' in sys.modules)"
+def test_import_tez_does_not_import_optional_sdks():
+    """pydantic stays optional for extraction, and the MCP SDK and OpenTelemetry load only when used."""
+    code = ("import sys, tez, tez.extract, tez.hooks, tez.mcp_server, tez.state, tez.presets; "
+            "print(sorted({m.split('.')[0] for m in sys.modules} & {'pydantic', 'mcp', 'opentelemetry', 'langchain_core'}))")
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
-    assert out.strip() == "False"
+    assert out.strip() == "[]"
 
 
 # ---------------------------------------------------------------------------------------------- the wire

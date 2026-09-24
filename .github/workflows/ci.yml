@@ -26,10 +26,13 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: pyproject.toml
-      - name: Install Tez with the test and langchain extras (and LangGraph for the graph tests)
-        run: python -m pip install -e ".[test,langchain]" langgraph
+      - name: Install Tez with the test, langchain, mcp and otel extras (LangGraph and the OpenTelemetry SDK for their tests)
+        run: python -m pip install -e ".[test,langchain,mcp,otel]" langgraph opentelemetry-sdk
       - name: Run the tests (live tests need a llama-server and are excluded)
         run: python -m pytest -q -m "not live"
+      - name: tez/_version.py is the one version, and pyproject.toml reads it
+        shell: bash
+        run: python scripts/check_version.py "v$(python -c 'import tez; print(tez.__version__)')"
 
   test-minimal:
     name: pytest without optional extras
@@ -40,7 +43,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -e ".[test]"
-      - name: Run the tests (the LangChain tests must skip, not fail)
+      - name: Run the tests (the LangChain, MCP and OpenTelemetry SDK tests must skip, not fail)
         run: python -m pytest -q -m "not live" -rs
 
   lint:

@@ -106,7 +106,7 @@ def test_compose_files(name, gpu):
     assert ("cuda" in image) is gpu
     cmd = " ".join(llama["command"])
     assert cmd.startswith("-m /models/gemma-4-12b-it-Q8_0.gguf")
-    for flag in ("-c 4096", "-b 512", "-np 1", "--swa-full", "--no-webui", "--host 0.0.0.0", "--port 8080"):
+    for flag in ("-c 4096", "-b 512", "-np 1", "--swa-full", "--cache-ram 0", "--no-webui", "--host 0.0.0.0", "--port 8080"):
         assert flag in cmd
     assert ("-ngl 99" in cmd) is gpu
     assert ("deploy" in llama) is gpu
@@ -208,13 +208,34 @@ def test_safe_code_is_allowed(code):
     assert load_script("scripts/check_banned_calls.py").check_source(code) == []
 
 
-def test_version_check():
+def test_version_check(tmp_path):
     check = load_script("scripts/check_version.py")
     from tez import __version__
+    assert check.version() == __version__
     assert check.check(f"v{__version__}") == []
-    assert len(check.check("v99.0.0")) == 2
+    assert check.check("v99.0.0") == [f"tez/_version.py says {__version__!r}, the tag says '99.0.0'"]
     assert "not v<version>" in check.check(__version__)[0]
     assert check.main([f"v{__version__}"]) == 0 and check.main(["v99.0.0"]) == 1
+    # pyproject.toml reads the version from tez/_version.py and states none of its own
+    (tmp_path / "tez").mkdir()
+    (tmp_path / "tez" / "_version.py").write_text(f'__version__ = "{__version__}"\n', encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text(f'[project]\nname = "x"\nversion = "{__version__}"\n', encoding="utf-8")
+    problems = check.check(f"v{__version__}", root=tmp_path)
+    assert len(problems) == 3 and "states a version" in problems[0]
+
+
+def test_version_lives_in_one_place():
+    tomllib = pytest.importorskip("tomllib")
+    doc = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert "version" not in doc["project"] and doc["project"]["dynamic"] == ["version"]
+    assert doc["tool"]["setuptools"]["dynamic"]["version"] == {"attr": "tez._version.__version__"}
+    assert load_script("scripts/check_dist.py").source_versions() == {"tez/_version.py": load_script("scripts/check_version.py").version()}
+
+
+def test_requests_floor():
+    tomllib = pytest.importorskip("tomllib")
+    deps = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["dependencies"]
+    assert "requests>=2.33.0" in deps                   # advisory PYSEC-2026-2275
 
 
 def test_apache_material_is_attributed_and_shipped():

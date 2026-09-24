@@ -15,7 +15,7 @@ services:
     # before it. This image is not separately measured. CUDA 13: ghcr.io/ggml-org/llama.cpp:server-cuda13-b11096.
     image: ${LLAMA_IMAGE:-ghcr.io/ggml-org/llama.cpp:server-cuda-b11096}
     command: ["-m", "/models/${TEZ_GGUF:-gemma-4-12b-it-Q8_0.gguf}", "-ngl", "99", "-c", "4096", "-b", "512",
-              "-np", "1", "--swa-full", "--no-webui", "--host", "0.0.0.0", "--port", "8080"]
+              "-np", "1", "--swa-full", "--cache-ram", "0", "--no-webui", "--host", "0.0.0.0", "--port", "8080"]
     volumes:
       - ${TEZ_MODELS_DIR:-./models}:/models:ro
     deploy:

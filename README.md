@@ -23,9 +23,11 @@ measured with release b11100 and Gemma 4 12B Q8_0 (Ollama's `gemma4:12b-it-q8_0`
 `unsloth/gemma-4-12b-it-GGUF` / `gemma-4-12b-it-Q8_0.gguf`, not separately measured).
 
 ```
-llama-server -m gemma-4-12b-it-Q8_0.gguf -ngl 99 -c 4096 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui --swa-full
+llama-server -m gemma-4-12b-it-Q8_0.gguf -ngl 99 -c 4096 -b 512 --port 8091 --host 127.0.0.1 -np 1 --no-webui \
+             --swa-full --cache-ram 0
 pip install git+https://github.com/Jibalmi/Tez
-tez serve --backend http://127.0.0.1:8091 --template gemma4          # listens on http://127.0.0.1:8787
+tez doctor --backend http://127.0.0.1:8091                            # checks the server's settings, prints fixes
+tez serve --backend http://127.0.0.1:8091 --template gemma4 --presets # listens on http://127.0.0.1:8787
 
 curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '{
   "state": "Help! My payouts have been failing for 3 days.",
@@ -35,16 +37,33 @@ curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '
 
 - The wire format, schema files, readouts and the gate: [`docs/API.md`](docs/API.md).
 - Ten worked use cases (schemas, sample inputs, the evidence behind each): [`examples/usecases/`](examples/usecases/).
+  They ship as presets: `tez serve --presets` loads them, `tez decide "My card was declined" --preset intent-router`
+  uses one, `tez presets` lists them.
 - Python: `from tez import Tez; Tez(backend="http://127.0.0.1:8091").decide(state, questions=...)`
-  ([`examples/quickstart.py`](examples/quickstart.py)).
+  ([`examples/quickstart.py`](examples/quickstart.py)); `tez.decide_many(states, ...)` decides a list (HTTP:
+  `POST /v1/systemone/batch`; CLI: `tez decide --states-file rows.jsonl --out out.jsonl`).
+- Typed objects: `tez.extract(text, MyPydanticModel)` or a JSON schema (`json_schema` on the wire) turns enums,
+  booleans and small integer scales into questions and returns the object; with `alpha`, a field the gate does not
+  certify raises instead of guessing.
+- Prompt layout: two or more questions about one state are read state first, so llama.cpp's prompt cache reads the
+  state once (same measured accuracy, about half the tokens); `tez plan` shows the layout, calls and tokens of a
+  request without calling the model.
+- Hooks ([`docs/HOOKS.md`](docs/HOOKS.md)): a decision log to review and fit from (`tez serve --decision-log`),
+  redaction of personal data before the model reads it, a cache, metrics and OpenTelemetry spans.
+- Agents: `tez-mcp` serves Tez over the Model Context Protocol (`pip install "tez-decisions[mcp]"`); a gate decision of
+  `escalate` tells the agent to hand the case to a person or a larger model.
+- Email: `tez.state.email_state(subject, body)` strips quoted history, signatures and disclaimers first.
 - Learn from labels: `tez suggest` picks the most typical rows to label first; `tez fit` trains per-question probes,
   temperatures and conformal thresholds; `tez eval` reports accuracy and ECE.
+- Safe defaults: web pages on other sites cannot read its answers or write feedback (the website playground and pages
+  on this machine can; `--cors-origins` changes the list), oversized requests get `413`, and every setting can come
+  from `TEZ_*` environment variables.
 
 ### Install and integrate
 
 - **pip** (Python 3.10+): `pip install "tez-decisions @ git+https://github.com/Jibalmi/Tez"`. Extras: `fit`
-  (scikit-learn, for `tez fit` and `tez suggest`), `truncate` (gguf), `langchain` (langchain-core); `otel` and `mcp` add
-  the OpenTelemetry API and the MCP SDK; `all` installs every extra.
+  (scikit-learn, for `tez fit` and `tez suggest`), `truncate` (gguf), `langchain` (langchain-core); `otel` adds the
+  OpenTelemetry API (for `OTelHook`) and `mcp` the MCP SDK (for `tez-mcp`); `all` installs every extra.
 - **Docker**: `docker compose up -d --build` runs llama.cpp (CUDA) and Tez on `127.0.0.1:8787`. The model download,
   settings, secrets and the CPU variant (`compose.cpu.yaml`) are in [`docs/DOCKER.md`](docs/DOCKER.md).
 - **TypeScript / JavaScript**: [`clients/ts`](clients/ts/) is `tez-client`, a dependency-free client with answers typed
@@ -195,7 +214,8 @@ select-and-copy attention heads (0.50–0.53, the letters' level); a collapsing 
 ## Layout
 
 ```
-tez/                             the runtime: server, CLI, schemas, prompts, backends, readouts, fit, gate, truncate
+tez/                             the runtime: server, CLI, schemas, prompts, backends, readouts, fit, gate, hooks, presets,
+                                 extraction, MCP server, doctor, truncate
 tests/                           pytest suite (live tests skip when no llama-server is running)
 docs/API.md                      the wire format, schema files, readouts and the gate
 examples/usecases/               ten use cases: schema.yaml, samples.jsonl, evidence and limits (usecases.json)

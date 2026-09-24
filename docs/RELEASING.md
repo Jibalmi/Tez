@@ -4,9 +4,10 @@ A release is a tag. Pushing `v<version>` runs `.github/workflows/release.yml`, w
 
 1. runs the whole CI workflow (`ci.yml`: tests on Ubuntu and Windows, Python 3.10 to 3.13, lint, the build check, the
    TypeScript client and the Docker image);
-2. checks that the tag names the version in `tez/_version.py` and `pyproject.toml` (`scripts/check_version.py`);
+2. checks that the tag names the version in `tez/_version.py`, and that `pyproject.toml` still reads its version from
+   there (`scripts/check_version.py`);
 3. builds the sdist and the wheel, runs `twine check --strict`, and checks that the wheel holds only `tez/` and the
-   licence (`scripts/check_dist.py`);
+   licence files, with both console scripts (`tez`, `tez-mcp`) and every extra (`scripts/check_dist.py`);
 4. publishes both to PyPI as `tez-decisions` with **trusted publishing**: no PyPI token is stored anywhere, GitHub's
    OIDC token is exchanged for a short-lived upload token;
 5. creates the GitHub release with both files attached and generated notes (tags ending in `aN`, `bN` or `rcN` are
@@ -46,10 +47,9 @@ maintainers.
 
 ## Making a release
 
-1. Choose the version and set it in **both** places:
-   - `tez/_version.py`: `__version__` (and `RELEASE_DATE`, which `/v1/models` reports)
-   - `pyproject.toml`: `version`
-   CI fails when they differ (`scripts/check_dist.py`).
+1. Choose the version and set it in `tez/_version.py`: `__version__` (and `RELEASE_DATE`, which `/v1/models` reports).
+   That is the only place: `pyproject.toml` declares `dynamic = ["version"]` and reads it from there, and CI checks
+   that it still does (`scripts/check_version.py`).
 2. If the wire format changed, `docs/API.md`, `tests/test_wire.py` and the TypeScript types in `clients/ts/src/types.ts`
    change with it.
 3. Commit, push to `main`, and wait for CI to pass. Commit messages carry no AI or assistant attribution (see
@@ -71,7 +71,7 @@ maintainers.
 ## When something goes wrong
 
 - **The tag does not match the version.** Nothing was built or published. Delete the tag (`git push --delete origin
-  v0.2.0` and `git tag -d v0.2.0`), fix the version, tag again.
+  v0.2.0` and `git tag -d v0.2.0`), fix `tez/_version.py`, tag again.
 - **PyPI refused the upload.** PyPI never accepts the same file twice, even after a deletion: release the next version
   (for example `0.2.1`) rather than re-tagging.
 - **`invalid-publisher`.** The owner, repository, workflow file name or environment name on PyPI does not match this
