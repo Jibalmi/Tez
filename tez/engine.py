@@ -611,16 +611,18 @@ class Tez:
         """Decide a state against a JSON schema, a pydantic model, a Schema or a loaded schema's name, and return the
         answers as one object: a dict, or an instance of the pydantic model (tez/extract.py has the mapping).
 
-        alpha           gate every field; if any field escalates, EscalationRequired is raised (the extracted object
-                        is not certified) unless return_details is set
+        alpha           gate every field (a named schema's own gate applies without it)
         return_details  return an ExtractResult (value, values, decisions, escalated fields, the whole response)
+
+        When a gate applies and any field escalates, EscalationRequired is raised (the extracted object is not
+        certified) unless return_details is set.
         """
         from .extract import finish, prepare
         if isinstance(schema_or_model, str) and schema_or_model not in self.schemas:
             raise InvalidRequest(f"unknown schema '{schema_or_model}' (loaded: {', '.join(sorted(self.schemas)) or 'none'})")
         extraction, fields = prepare(schema_or_model, self.schemas.get)
         body = {**self.request_body(state, None, None, readout, False, alpha, None, DEFAULT_MODEL_ALIAS, layout), **fields}
-        return finish(extraction, self.handle(body, hooks=hooks), alpha, return_details)
+        return finish(extraction, self.handle(body, hooks=hooks), return_details)
 
     def request_body(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                      abstain: bool = False, alpha: float | None = None, gate: Any = None,

@@ -105,9 +105,10 @@ const values = await tez.extract<{ department: string; urgent: boolean; priority
 
 Enums become choice questions, booleans yes/no questions, small integer ranges scores, nested objects dotted fields
 (the mapping and what is refused: docs/API.md, "Structured extraction"). `extract(state, "support-triage")` uses a
-loaded schema instead (booleans, labels, level numbers). With `alpha`, a field the gate escalates makes `extract`
-reject with `EscalationRequired` (`fields`, `values`, `response`): the object is not certified, so hand the case to a
-person or a larger model. `returnDetails: true` resolves to `{ values, decisions, escalated, response }` instead.
+loaded schema instead (booleans, labels, level numbers). When a gate applies (`alpha`, or the named schema's own
+`gate:`), a field it escalates makes `extract` reject with `EscalationRequired` (`fields`, `values`, `response`): the
+object is not certified, so hand the case to a person or a larger model. `returnDetails: true` resolves to
+`{ values, decisions, escalated, response }` instead.
 `decide(state, { jsonSchema })` sends the same request and returns the whole response, the object in `tez.values`.
 
 ## Many states at once
@@ -207,7 +208,7 @@ try {
 - Pass `signal` to cancel: the call then rejects with the signal's reason (an `AbortError`), not a `TezError`.
 - Redirects are never followed (a `redirect` error instead), so a state or an API key never goes to a host you did not
   name. Point `baseUrl` at the server itself.
-- `EscalationRequired` (from `extract` with `alpha`) is not a `TezError`: the request succeeded.
+- `EscalationRequired` (from `extract` when a gate escalated a field) is not a `TezError`: the request succeeded.
 
 ## Options
 

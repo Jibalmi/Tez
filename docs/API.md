@@ -272,8 +272,9 @@ that limit, its `$ref`s may copy in at most 10,000 references and 1,000,000 char
 Python: `Schema.from_json_schema(js, name)`, `Schema.from_pydantic(Model)` (pydantic is never imported by Tez; the
 model's own JSON schema is read), and `Tez.extract(state, schema_or_model, *, alpha=None, return_details=False)`, which
 returns a dict or an instance of the pydantic model (a loaded schema's name works too: booleans, labels, level numbers).
-With `alpha`, a field the gate escalates raises `tez.EscalationRequired` (hand the case to a person or a larger model),
-unless `return_details=True` returns an `ExtractResult` (value, values, decisions, escalated fields, the response).
+When a gate applies (`alpha`, or the `gate:` of a named schema), a field it escalates raises `tez.EscalationRequired`
+(hand the case to a person or a larger model), unless `return_details=True` returns an `ExtractResult` (value, values,
+decisions, escalated fields, the response).
 `RemoteTez.extract` does the same over HTTP.
 
 ## `POST /v1/systemone/batch`

@@ -463,7 +463,8 @@ describe("extract", () => {
   });
 
   test("a schema name: answers become values in the client", async () => {
-    const values = await client.extract("Need it by 5pm", "support-triage");
+    // (the mock's support-triage has a default gate that escalates is_urgent: returnDetails reads the values anyway)
+    const { values } = await client.extract("Need it by 5pm", "support-triage", { returnDetails: true });
     assert.deepEqual(mock.requests.at(-1).body, { state: "Need it by 5pm", schema: "support-triage" });
     assert.deepEqual(values, { topic: "billing", is_urgent: true });
     const scored = new TezClient({ baseUrl: "http://t.example", fetch: async () => ({ status: 200, statusText: "OK",
@@ -475,7 +476,7 @@ describe("extract", () => {
     assert.deepEqual(await scored.extract("x", "s"), { anger: 1, topic: null, urgent: false });
   });
 
-  test("with alpha an escalated field rejects with EscalationRequired, unless returnDetails", async () => {
+  test("a gate that escalates a field rejects with EscalationRequired, unless returnDetails", async () => {
     const err = await rejects(client.extract("x", TICKET, { alpha: 0.05 }));
     assert.ok(err instanceof EscalationRequired && !(err instanceof TezError));
     assert.deepEqual(err.fields, ["department", "urgent", "priority", "customer.tier"]);
@@ -487,8 +488,10 @@ describe("extract", () => {
     assert.deepEqual(details.escalated, ["is_urgent"]);
     assert.deepEqual(details.values, { topic: "billing", is_urgent: true });
     assert.equal(details.response.answers.topic.choice, "billing");
-    // A schema's default gate may escalate without alpha: the values still come back.
-    assert.deepEqual(await client.extract("x", "support-triage"), { topic: "billing", is_urgent: true });
+    // A schema's own gate escalates without alpha: the object is not certified either.
+    const own = await rejects(client.extract("x", "support-triage"));
+    assert.ok(own instanceof EscalationRequired);
+    assert.deepEqual([own.fields, own.values], [["is_urgent"], { topic: "billing", is_urgent: true }]);
   });
 
   test("a server that answers json_schema without tez.values is an invalid_response", async () => {

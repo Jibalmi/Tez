@@ -213,7 +213,7 @@ class RemoteTez:
 
         extraction, fields = prepare(schema_or_model, loaded)
         body = {**self.request_body(state, None, None, readout, False, alpha, None, None, layout), **fields}
-        return finish(extraction, self.handle(body), alpha, return_details)
+        return finish(extraction, self.handle(body), return_details)
 
     def plan(self, body: Any) -> dict:
         """POST /v1/plan: what a /v1/systemone request body would do, without calling the model (tez.Tez.plan)."""

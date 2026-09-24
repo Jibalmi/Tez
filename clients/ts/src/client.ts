@@ -97,7 +97,8 @@ export interface BodyOptions<Q extends Questions = Questions> {
 export interface DecideOptions<Q extends Questions = Questions> extends BodyOptions<Q>, RequestOptions {}
 
 export interface ExtractOptions extends RequestOptions {
-  /** Gate every field at this target error rate; an escalated field then throws EscalationRequired. */
+  /** Gate every field at this target error rate (a named schema's own gate applies without it); an escalated field
+   * then throws EscalationRequired. */
   alpha?: number;
   readout?: ReadoutOption;
   layout?: LayoutOption;
@@ -281,8 +282,9 @@ export class TezClient {
    * come back; for a schema name, answers become values here: noul -> boolean, choice -> its label (null for
    * "__none__"), score -> the most likely level.
    *
-   * With `alpha`, a field the gate escalates makes it reject with EscalationRequired (the object is not certified),
-   * unless `returnDetails: true`, which resolves to an ExtractResult instead. Give `V` to type the object.
+   * When a gate applies (`alpha`, or a named schema's own `gate:`), a field it escalates makes it reject with
+   * EscalationRequired (the object is not certified), unless `returnDetails: true`, which resolves to an ExtractResult
+   * instead. Give `V` to type the object.
    */
   extract<V = ExtractedObject>(
     state: State,
@@ -338,7 +340,7 @@ export class TezClient {
     }
     const escalated = Object.keys(decisions).filter((id) => decisions[id] === "escalate");
     if (options.returnDetails) return { values: values as V, decisions, escalated, response };
-    if (alpha !== undefined && escalated.length > 0) throw new EscalationRequired(escalated, values as V, response);
+    if (escalated.length > 0) throw new EscalationRequired(escalated, values as V, response);
     return values as V;
   }
 

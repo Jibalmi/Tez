@@ -47,9 +47,10 @@ MAX_REF_CHARS = 1_000_000     # characters of schema (about its JSON length) tho
 
 
 class EscalationRequired(Exception):
-    """Tez.extract(..., alpha=...) without return_details: at least one field's gate decision was `escalate`, so the
-    extracted object is not certified. `fields` names them; `values` holds the model's best guess and `response` the
-    whole decision. Hand the case to a person or a larger model, or pass return_details=True to handle it yourself."""
+    """Tez.extract without return_details, when a gate applied (alpha=..., or a named schema's own gate) and at least
+    one field's decision was `escalate`: the extracted object is not certified. `fields` names them; `values` holds the
+    model's best guess and `response` the whole decision. Hand the case to a person or a larger model, or pass
+    return_details=True to handle it yourself."""
 
     def __init__(self, fields: list[str], values: dict, response: dict):
         self.fields = list(fields)
@@ -501,8 +502,10 @@ def prepare(schema_or_model: Any, loaded: Any) -> tuple[Extraction, dict]:
     return extraction, fields
 
 
-def finish(extraction: Extraction, response: dict, alpha: float | None, return_details: bool) -> Any:
-    """The value an extract call returns for a wire-format response (see Tez.extract)."""
+def finish(extraction: Extraction, response: dict, return_details: bool) -> Any:
+    """The value an extract call returns for a wire-format response (see Tez.extract). Any field the response's gate
+    escalated raises EscalationRequired unless return_details is set, whatever set the gate: the call's alpha or the
+    schema's own `gate:`."""
     values = extraction.values(response.get("answers") or {})
     metas = (response.get("tez") or {}).get("questions") or {} if isinstance(response.get("tez"), dict) else {}
     decisions = {qid: m["decision"] for qid, m in metas.items() if isinstance(m, dict) and m.get("decision")}
@@ -510,6 +513,6 @@ def finish(extraction: Extraction, response: dict, alpha: float | None, return_d
     if return_details:
         return ExtractResult(value=extraction.build(values), values=values, response=response, decisions=decisions,
                              escalated=escalated)
-    if alpha is not None and escalated:
+    if escalated:
         raise EscalationRequired(escalated, values, response)
     return extraction.build(values)

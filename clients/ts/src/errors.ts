@@ -62,8 +62,8 @@ export class TezError extends Error {
 }
 
 /**
- * `extract(..., { alpha })` without `returnDetails`: the gate escalated at least one field, so the extracted object is
- * not certified. The request itself succeeded, so this is not a TezError. `fields` names the escalated fields,
+ * `extract` without `returnDetails`, when a gate applied (`alpha`, or a named schema's own gate) and escalated at least
+ * one field: the extracted object is not certified. The request itself succeeded, so this is not a TezError. `fields` names the escalated fields,
  * `values` holds the model's best guess and `response` the whole decision (with its `meta`). Hand the case to a
  * person or a larger model, or pass `returnDetails: true` to handle it yourself.
  */

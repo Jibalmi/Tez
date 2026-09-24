@@ -304,8 +304,8 @@ def test_extract_gate():
 
 def test_extract_with_a_schema_name_or_object(schema_dir):
     tez = Tez(backend=FakeBackend(letters_fn=fixed({4: 1, 2: 1, 3: 2})), schemas=schema_dir)
-    values = tez.extract("The app crashes", "support-triage")
-    assert values == {"topic": "technical", "is_urgent": True, "anger": 2}
+    details = tez.extract("The app crashes", "support-triage", return_details=True)
+    assert details.value == {"topic": "technical", "is_urgent": True, "anger": 2}
     assert default_extraction(tez.schemas["support-triage"]).fields["anger"].kind == "score"
     made = Schema.from_json_schema({"properties": {"ok": {"type": "boolean"}}}, "ok")
     assert tez.extract("x", made) == {"ok": True}
@@ -313,6 +313,25 @@ def test_extract_with_a_schema_name_or_object(schema_dir):
         tez.extract("x", "nope")
     with pytest.raises(TypeError, match="extract takes"):
         tez.extract("x", 42)
+
+
+def test_extract_honours_a_named_schema_own_gate(schema_dir):
+    """support-triage has gate: {alpha: 0.05} and no fit: every field escalates, without any alpha in the call."""
+    tez = Tez(backend=FakeBackend(letters_fn=fixed({4: 1, 2: 1, 3: 2})), schemas=schema_dir)
+    expected = {"topic": "technical", "is_urgent": True, "anger": 2}
+    with pytest.raises(EscalationRequired) as err:
+        tez.extract("The app crashes", "support-triage")
+    assert set(err.value.fields) == {"topic", "is_urgent", "anger"} and err.value.values == expected
+    refunds = Schema.from_json_schema({"properties": {"refund": {"type": "boolean"}}}, "refunds")
+    refunds.gate_alpha = 0.05
+    tez.add_schemas(refunds)
+    with pytest.raises(EscalationRequired, match="refund"):
+        tez.extract("Refund me now", "refunds")
+    assert tez.extract("Refund me now", "refunds", return_details=True).escalated == ["refund"]
+    with StubServer(tez) as srv:
+        with pytest.raises(EscalationRequired) as err:                     # RemoteTez: the server applies the gate
+            RemoteTez(srv.url).extract("The app crashes", "support-triage")
+    assert err.value.values == expected
 
 
 def test_extract_with_pydantic():
@@ -380,7 +399,8 @@ def test_remote_extract(schema_dir):
     with StubServer(engine) as srv:
         remote = RemoteTez(srv.url)
         assert remote.extract("I was charged twice", TICKET) == engine.extract("I was charged twice", TICKET)
-        assert remote.extract("The app crashes", "support-triage") == {"topic": "technical", "is_urgent": True, "anger": 2}
+        assert remote.extract("The app crashes", "support-triage", return_details=True).value == \
+            {"topic": "technical", "is_urgent": True, "anger": 2}
     sent = [r["body"] for r in srv.requests if r["path"] == "/v1/systemone"]
     assert sent[0]["json_schema"] == TICKET and "questions" not in sent[0]
     assert sent[1] == {"state": "The app crashes", "schema": "support-triage"}
