@@ -217,6 +217,24 @@ def test_version_check():
     assert check.main([f"v{__version__}"]) == 0 and check.main(["v99.0.0"]) == 1
 
 
+def test_apache_material_is_attributed_and_shipped():
+    tomllib = pytest.importorskip("tomllib")
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    assert project["license-files"] == ["LICENSE", "LICENSES/Apache-2.0.txt", "THIRD_PARTY_NOTICES.md"]
+    assert all((ROOT / f).is_file() for f in project["license-files"])
+    header = "Adapted from laya v0.3.20 @23a1752, (c) Convai Innovations, Apache-2.0; modified"
+    for f in ("tez/state.py", "tests/test_state.py"):
+        assert header in (ROOT / f).read_text(encoding="utf-8").splitlines()[0]
+        assert f"`{f}`" in (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
+    assert set(load_script("scripts/check_dist.py").LICENSES) == set(project["license-files"])
+    dockerfile = ROOT / "docker" / "Dockerfile"
+    if dockerfile.exists():                        # the image builds the wheel, so the files must be in its context
+        text = dockerfile.read_text(encoding="utf-8")
+        assert "COPY LICENSES ./LICENSES" in text and "THIRD_PARTY_NOTICES.md" in text
+        rules = (ROOT / ".dockerignore").read_text(encoding="utf-8").splitlines()
+        assert "!LICENSES/" in rules and "!THIRD_PARTY_NOTICES.md" in rules
+
+
 def test_presets_are_package_data():
     tomllib = pytest.importorskip("tomllib")
     config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["setuptools"]

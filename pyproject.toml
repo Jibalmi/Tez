@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Tez: an open, local System One decision engine with a Jev-compatible /v1/systemone server"
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "LICENSES/Apache-2.0.txt", "THIRD_PARTY_NOTICES.md"]   # tez/state.py is adapted from Laya (Apache-2.0)
 requires-python = ">=3.10"
 keywords = ["llm", "classification", "decisions", "llama.cpp", "calibration", "conformal"]
 classifiers = [

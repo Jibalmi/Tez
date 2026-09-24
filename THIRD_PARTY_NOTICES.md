@@ -42,31 +42,29 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ## Code adapted from Laya (Apache-2.0)
 
-Laya is the open encoder-based "System One" that the head-to-head benchmarks compare against. Its code is licensed
-under the Apache License, Version 2.0; the full text is in [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt).
+Laya is the open encoder-based "System One" that the head-to-head benchmarks compare against
+(<https://github.com/NandhaKishorM/laya>, copyright (c) Convai Innovations). Its code is licensed under the Apache
+License, Version 2.0; the full text is in [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt). Laya v0.3.20
+(commit 23a1752) has no `NOTICE` file, so there are no further notices to carry (Apache-2.0 section 4(d)).
 
-No Laya code is in the repository yet. Code adapted from it carries this attribution:
+Every adapted file starts with this attribution and a note of what was changed (Apache-2.0 section 4(b)):
 
-> adapted from laya v0.3.20 @23a1752, (c) Convai Innovations, Apache-2.0
-
-When such code lands:
-
-1. Start each adapted file (or the adapted section) with the attribution and a note of what was changed, which
-   Apache-2.0 section 4(b) requires for modified files:
-
-   ```python
-   # Adapted from laya v0.3.20 @23a1752, (c) Convai Innovations, Apache-2.0 (LICENSES/Apache-2.0.txt).
-   # Changes: <what was changed>.
-   ```
-
-2. List the file in the table below.
-3. If Laya's distribution includes a `NOTICE` file, copy its attribution notices into this section (section 4(d)).
-4. If the adapted code is under `tez/`, and therefore in the wheel, add `LICENSES/Apache-2.0.txt` and
-   `THIRD_PARTY_NOTICES.md` to `license-files` in `pyproject.toml` so the wheel carries both.
+```python
+# Adapted from laya v0.3.20 @23a1752, (c) Convai Innovations, Apache-2.0; modified.
+# Changes: <what was changed>.
+```
 
 | File | Adapted from | Changes |
 |---|---|---|
-| (none yet) | | |
+| `tez/state.py` | `laya/email.py` | `clean_email_body` renamed `clean_email`; the `email_questions` re-export dropped; docstrings rewritten; type hints modernised. The cleaning rules and their order are Laya's. |
+| `tests/test_state.py` | `tests/test_email.py` | Rewritten as pytest parametrisations against `tez.state`; the `email_questions` cases dropped; a test that decisions read the cleaned body added. |
+
+`tez/state.py` is in the wheel, so the wheel carries `LICENSES/Apache-2.0.txt` and this file next to `LICENSE`
+(`license-files` in `pyproject.toml`).
+
+Laya's hooks, presets, MCP server, request limits and batch prediction informed the design of Tez's own versions
+(`tez/hooks.py`, `tez/presets/`, `tez/mcp_server.py`, `tez/config.py`, the batch endpoint); no code was copied from
+them.
 
 ## Not distributed with Tez
 

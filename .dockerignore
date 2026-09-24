@@ -4,6 +4,8 @@
 !pyproject.toml
 !README.md
 !LICENSE
+!LICENSES/
+!THIRD_PARTY_NOTICES.md
 !tez/
 !docker/entrypoint.py
 **/__pycache__

@@ -17,6 +17,7 @@ REQUIRED = ("tez/__init__.py", "tez/cli.py", "tez/server.py", "tez/hooks.py", "t
             "tez/presets/__init__.py", "tez/presets/support-triage.yaml", "tez/presets/prompt-injection-guard.yaml")
 EXTRAS = ("fit", "truncate", "langchain", "otel", "mcp", "all")
 SCRIPTS = {"tez": "tez.cli:main", "tez-mcp": "tez.mcp_server:main"}
+LICENSES = ("LICENSE", "LICENSES/Apache-2.0.txt", "THIRD_PARTY_NOTICES.md")     # tez/state.py is adapted from Laya
 
 
 def source_versions() -> dict[str, str]:
@@ -47,8 +48,9 @@ def check_wheel(path: Path) -> list[str]:
     for r in REQUIRED:
         if r not in names:
             problems.append(f"missing {r}")
-    if not any(n.endswith(".dist-info/licenses/LICENSE") for n in names):
-        problems.append("LICENSE is not in the wheel's .dist-info/licenses/")
+    for lic in LICENSES:
+        if not any(n.endswith(f".dist-info/licenses/{lic}") for n in names):
+            problems.append(f"{lic} is not in the wheel's .dist-info/licenses/")
     if meta is None:
         problems.append("no METADATA")
         return problems
