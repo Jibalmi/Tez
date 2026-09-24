@@ -133,7 +133,7 @@
           <li><strong>Decide first, bind later.</strong> A probe trained on the usual option order still works on reversed options up to layer 14 and loses 20 points at layer 26: read at layer 18 if a schema may reorder its options.</li>
           <li><strong>A decision needs 64 numbers.</strong> One PCA learned from unlabelled traffic keeps 0.790 of 0.793, and a PCA learned on other workflows keeps 0.782 on a new one.</li>
           <li><strong>Label the typical rows first, and keep the zero-shot prior.</strong> Fifty typical labels per question on top of the 12B's zero-shot answers reach 0.766, the level of Laya's checkpoint fine-tuned on the whole train split.</li>
-          <li><strong>Calibrated as it comes.</strong> A logistic probe has an ECE of 0.023 as read, against 0.262 for the 12B's raw letters and 0.246 published for Jev.</li>
+          <li><strong>Calibrated as it comes.</strong> A logistic probe has an ECE of 0.023 as read, against 0.262 for the 12B's raw letters at temperature 1 (0.051 at the default temperature Tez now applies) and 0.246 published for Jev.</li>
           <li><strong>A guaranteed error rate.</strong> Conformal selection acts on 40 % of decisions with at most 5 % wrong (realised 5.2 %).</li>
           <li><strong>Train in English, use in eleven languages.</strong> A MASSIVE probe trained on English rows only scores 0.803 macro over eleven languages (laya-multilingual 0.524).</li>
           <li><strong>The benchmark is now the limit.</strong> Every supervised route lands at 0.79 to 0.80. Where the benchmark's own label is decisive the probe is right 98 % of the time; where its labels are split, 56 %.</li>
@@ -178,8 +178,8 @@
           </li>
           <li>
             <figure class="fig-card">
-              <a class="paper" href="./assets/figures/calibration.png"><img src="./assets/figures/calibration.png" width="1170" height="648" loading="lazy" decoding="async" alt="Bar chart of calibration error as shipped and after one temperature per task. Open full size."></a>
-              <figcaption><span class="fig-name">Calibration</span><span class="fig-desc">Mean ECE-15 over tasks as shipped and after one temperature per task, for Tez and Laya's three checkpoints, with Jev's published ECE as a reference line.</span><span class="fig-meta">calibration.png · 1170 × 648</span></figcaption>
+              <a class="paper" href="./assets/figures/calibration.png"><img src="./assets/figures/calibration.png" width="1170" height="648" loading="lazy" decoding="async" alt="Bar chart of calibration error as shipped and after one temperature per task, with Tez also at temperature 1. Open full size."></a>
+              <figcaption><span class="fig-name">Calibration</span><span class="fig-desc">Mean ECE-15 over tasks as shipped and after one temperature per task, for Tez and Laya's three checkpoints, with Jev's published ECE as a reference line. Tez as shipped reads at its default temperature, fitted without the task scored: 0.140, against 0.212 at temperature 1 (outlined) and 0.078 after one temperature per task.</span><span class="fig-meta">calibration.png · 1170 × 648</span></figcaption>
             </figure>
           </li>
           <li>

@@ -2,7 +2,9 @@
 
   1. tez_vs_laya_vs_jev.png   accuracy on every public dataset: Tez (zero-shot) vs Laya routed vs Jev (published)
   2. languages.png            MASSIVE intent per language: Tez vs laya-en vs laya-ml (dot plot, Laya's chart)
-  3. calibration.png          ECE as shipped vs after temperature refit, every model
+  3. calibration.png          ECE as shipped vs after temperature refit, every model; Tez as shipped = its default
+                              temperature fitted without the task (results/calibration/default_temperature.json),
+                              with its temperature-1 ECE outlined beside it
   4. typed_decisions.png      the 2,000-decision benchmark: Tez zero-shot vs Laya base/fine-tuned vs Jev vs ceilings
   5. order_flip.png           option-order flip rate on choice tasks
   6. speed.png                ms per decision on this machine (same GPU) -- note Laya numbers are its own runtime
@@ -84,19 +86,41 @@ def main():
         ax.set_title("Every language, one frozen decoder vs two trained encoders", fontsize=9)
         save(fig, "languages")
 
-    # 3. calibration: ECE as shipped vs refit, averaged over tasks with both numbers
+    # 3. calibration: ECE as shipped vs refit, averaged over tasks with both numbers. Tez reads unfitted letters at its
+    #    default temperature (tez/temperature.py), so Tez as shipped is that default, fitted without the task scored
+    #    (results/calibration/default_temperature.json, anchor_28: the same entries); its T = 1 ECE is drawn outlined.
     models = [m for m in ("tez", "laya-en", "laya-ml", "laya-td") if any(m in v for v in S.values())]
+    tez_default = None
+    dt_path = Path("results/calibration/default_temperature.json")
+    if dt_path.exists():
+        A = json.loads(dt_path.read_text(encoding="utf-8"))["anchor_28"]
+        tez_rows = {t: v["tez"] for t, v in S.items() if "tez" in v and "ece_refit" in v["tez"]}
+        same = sorted(tez_rows) == sorted(e["entry"] for e in A["entries"])
+        if same and abs(sum(r["ece"] for r in tez_rows.values()) / len(tez_rows) - A["mean"]["raw"]) < 1e-9:
+            tez_default = A["mean"]["rule_loto"]
+        else:
+            print(f"WARNING: {dt_path} does not cover the same Tez entries as {args.summary}; Tez's default not drawn")
     fig, ax = plt.subplots(figsize=(6.5, 3.6))
     for j, m in enumerate(models):
         raw = [v[m]["ece"] for v in S.values() if m in v and "ece_refit" in v[m]]
         ref = [v[m]["ece_refit"] for v in S.values() if m in v and "ece_refit" in v[m]]
         if raw:
             a, b = sum(raw) / len(raw), sum(ref) / len(ref)
-            ax.bar(j - 0.18, a, 0.36, color=COL[m], alpha=0.45); ax.bar(j + 0.18, b, 0.36, color=COL[m])
-            ax.text(j - 0.18, a + 0.005, f"{a:.3f}", ha="center", fontsize=7); ax.text(j + 0.18, b + 0.005, f"{b:.3f}", ha="center", fontsize=7)
+            if m == "tez" and tez_default is not None:
+                ax.bar(j - 0.3, a, 0.28, color="white", edgecolor=COL[m], linewidth=1.2)
+                ax.text(j - 0.3, a + 0.005, f"{a:.3f}", ha="center", fontsize=7)
+                ax.text(j - 0.3, a / 2, "T = 1", ha="center", va="center", fontsize=6.5, color=COL[m], rotation=90)
+                a, xa, xb, w = tez_default, j, j + 0.3, 0.28
+            else:
+                xa, xb, w = j - 0.18, j + 0.18, 0.36
+            ax.bar(xa, a, w, color=COL[m], alpha=0.45); ax.bar(xb, b, w, color=COL[m])
+            ax.text(xa, a + 0.005, f"{a:.3f}", ha="center", fontsize=7); ax.text(xb, b + 0.005, f"{b:.3f}", ha="center", fontsize=7)
     ax.axhline(0.246, ls="--", color="grey", lw=0.8); ax.text(len(models) - 0.5, 0.25, "Jev ECE 0.246 (published)", fontsize=7, color="grey", ha="right")
     ax.set_xticks(range(len(models))); ax.set_xticklabels([NAME[m] for m in models], fontsize=7)
-    ax.set_ylabel("mean ECE-15 over tasks (lower is better)"); ax.set_title("Calibration: as shipped (light) vs one temperature per task, fitted out-of-fold (dark)", fontsize=9)
+    title = "Calibration: as shipped (light) vs one temperature per task, fitted out-of-fold (dark)"
+    if tez_default is not None:
+        title += "\nTez as shipped: its default temperature, fitted without the task; outlined: Tez at T = 1"
+    ax.set_ylabel("mean ECE-15 over tasks (lower is better)"); ax.set_title(title, fontsize=9)
     save(fig, "calibration")
 
     # 4. typed decisions
