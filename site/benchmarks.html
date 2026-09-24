@@ -189,7 +189,7 @@
           </div>
           <div class="chart-table" id="tbl-languages" data-table="languages" hidden></div>
         </figure>
-        <p>The English-only probe holds within 1 to 5 points of the 12B zero-shot on European and CJK languages and falls 13 to 22 points below it on Arabic, Hindi, Thai and Khmer. Calibration as shipped, macro over the eleven languages:</p>
+        <p>The English-only probe holds within 1 to 5 points of the 12B zero-shot on European and CJK languages and falls 13 to 22 points below it on Arabic, Hindi, Thai and Khmer. Calibration, macro over the eleven languages. Tez's default temperature, fitted without MASSIVE, raises its error here from 0.099 at T&nbsp;=&nbsp;1 to 0.146, still below every Laya checkpoint as shipped; over all 51 languages it lowers MASSIVE's from 0.153 to 0.104 (<a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#5c-a-default-letter-temperature-for-unfitted-questions">§5c</a>).</p>
         <div data-table="languages-ece"></div>
       </section>
 
@@ -219,8 +219,8 @@
         <h2 id="calibration">Calibration, order robustness and latency</h2>
         <figure class="chart-figure" id="fig-calibration">
           <figcaption class="chart-head">
-            <h3 class="chart-title" id="fig-calibration-title">One temperature per task brings every system to an ECE of 0.068 to 0.103; as shipped, Tez has the lowest error</h3>
-            <p class="chart-sub">Mean ECE-15 over Laya's tasks, lower is better. Squares: as shipped. Circles: after one temperature per task, fitted 2-fold out-of-fold. Jev's 0.246 is published and has no refit.</p>
+            <h3 class="chart-title" id="fig-calibration-title">As shipped, Tez has the lowest error: 0.140 with its default temperature (0.212 at T&nbsp;=&nbsp;1); one temperature per task brings every system to 0.068 to 0.103</h3>
+            <p class="chart-sub">Mean ECE-15 over Laya's tasks, lower is better. Squares: as shipped; for Tez, its default temperature fitted with the task being scored left out. Diamond: Tez at temperature 1, before the default. Circles: after one temperature per task, fitted 2-fold out-of-fold. Jev's 0.246 is published and has no refit.</p>
           </figcaption>
           <div class="chart-body">
             <ul class="chart-legend" data-legend="calibration" aria-label="Legend"></ul>

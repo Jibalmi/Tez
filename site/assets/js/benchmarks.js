@@ -205,11 +205,16 @@
         return vals[k] === bestOf(vals, "higher") ? "best" : "";
       },
     });
+    // Tez ships its default temperature; its T = 1 figure stays as a reference and is not ranked with the shipped ones
+    const eceRows = Object.entries(L.macro_ece_shipped).map(([name, v]) => (name === "Tez"
+      ? [["Tez, default temperature fitted without the task", L.macro_ece_tez_default_temperature, true], ["Tez at T = 1, before the default", v, false]]
+      : [[name, v, true]])).flat();
+    const eceBest = bestOf(eceRows.filter((r) => r[2]).map((r) => r[1]), "lower");
     table("languages-ece", {
-      caption: "Macro ECE as shipped (lower is better)",
+      caption: "Macro ECE over the eleven languages as shipped, with Tez at T = 1 for reference (lower is better)",
       columns: [{ label: "system", get: (r) => r[0] }, { label: "macro ECE", num: true, get: (r) => f3(r[1]) }],
-      rows: Object.entries(L.macro_ece_shipped),
-      cellClass: (r, col) => (col.label === "macro ECE" && r[1] === bestOf(Object.values(L.macro_ece_shipped), "lower") ? "best" : ""),
+      rows: eceRows,
+      cellClass: (r, col) => (col.label === "macro ECE" && r[2] && r[1] === eceBest ? "best" : ""),
     });
   }
 
@@ -255,12 +260,18 @@
     const K = d.calibration_order_latency;
     const names = ["Tez", "laya", "laya-multilingual", "laya-typed-decisions", "Jev (published)"];
     const roles = ["tez", "other", "other", "other", "pub"];
-    const shipped = K.rows[0].values, refit = K.rows[1].values;
+    const row = (prefix) => K.rows.find((r) => r.metric.startsWith(prefix));
+    // Tez now reads unfitted letters at its default temperature (BENCHMARKS.md §5c): that is Tez as shipped, and its
+    // T = 1 figure is kept as the state before the default. Laya and Jev are as they ship.
+    const atT1 = row("mean ECE-15 as shipped").values, tezDefault = row("mean ECE-15, Tez's default temperature").values[0];
+    const shipped = atT1.map((v, i) => (i === 0 ? tezDefault : v)), before = atT1.map((v, i) => (i === 0 ? v : null));
+    const refit = row("mean ECE-15 after one temperature per task").values;
     const rows = names.map((n, i) => ({ key: String(i), label: n, role: roles[i] }));
     const vals = (arr) => { const o = {}; arr.forEach((v, i) => { if (v !== null) o[String(i)] = v; }); return o; };
     chart("calibration", (el) => C.rows(el, {
       rows,
       series: [
+        { key: "before", label: "Tez at T = 1, before the default", kind: "dot", role: "byRow", shape: "diamond", values: vals(before) },
         { key: "shipped", label: "as shipped", kind: "dot", role: "byRow", shape: "square", values: vals(shipped) },
         { key: "refit", label: "after one temperature per task", kind: "dot", role: "byRow", shape: "circle", values: vals(refit), endSide: "left" },
       ],
@@ -269,19 +280,21 @@
       ends: true,
       rowHeight: 30,
       labelShare: 0.36,
-      ariaLabel: "Calibration error as shipped and after one temperature per task, per system",
+      ariaLabel: "Calibration error as shipped and after one temperature per task, per system, with Tez also at temperature 1",
     }));
     legend("calibration", [
-      { label: "as shipped", role: "other", shape: "square", kind: "dot" },
+      { label: "as shipped (Tez: default temperature)", role: "other", shape: "square", kind: "dot" },
+      { label: "Tez at T = 1, before the default", role: "other", shape: "diamond", kind: "dot" },
       { label: "after one temperature per task (2-fold out-of-fold)", role: "other", shape: "circle", kind: "dot" },
       { label: "Tez", role: "tez", shape: "circle", kind: "dot" },
       { label: "published (Jev)", role: "pub", shape: "square", kind: "dot" },
     ]);
     table("calibration", {
-      caption: "Mean ECE-15 over tasks",
+      caption: "Mean ECE-15 over tasks; Tez as shipped uses its default temperature, fitted without the task scored",
       columns: [
         { label: "system", get: (r) => r.label },
         { label: "as shipped", num: true, get: (r) => cell3(shipped[Number(r.key)]) },
+        { label: "Tez at T = 1", num: true, get: (r) => cell3(before[Number(r.key)]) },
         { label: "after one temperature per task", num: true, get: (r) => cell3(refit[Number(r.key)]) },
       ],
       rows,
@@ -292,7 +305,8 @@
     });
 
     // latency ranges: show where Laya wins
-    const ms = K.rows[3].values.map((s) => s.split("-").map(Number));
+    const msRow = row("ms per decision");
+    const ms = msRow.values.map((s) => s.split("-").map(Number));
     chart("latency-ranges", (el) => C.rows(el, {
       rows: names.map((n, i) => ({ key: String(i), label: n, name: n, role: roles[i] })),
       series: [{ key: "ms", label: "ms per decision, p50 range across tasks", kind: "range", role: "byRow", values: Object.fromEntries(ms.map((r, i) => [String(i), r])) }],
@@ -308,7 +322,7 @@
     table("latency-ranges", {
       caption: "ms per decision, p50 range across Laya's tasks (this GPU; Jev published)",
       columns: [{ label: "system", get: (r) => r.n }, { label: "ms per decision, p50", num: true, get: (r) => r.v.replace("-", "–") }],
-      rows: names.map((n, i) => ({ n, v: K.rows[3].values[i] })),
+      rows: names.map((n, i) => ({ n, v: msRow.values[i] })),
     });
 
     const fmtRow = (r, v) => {
@@ -323,6 +337,7 @@
       cellClass: (r, col) => {
         const i = K.systems.indexOf(col.label);
         if (i < 0 || typeof r.values[0] === "string") return "";
+        if (r.values.filter((v) => typeof v === "number").length < 2) return "";   // a row with one value ranks nothing
         return r.values[i] === bestOf(r.values, "lower") ? "best" : "";
       },
     });

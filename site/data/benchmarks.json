@@ -313,7 +313,10 @@
       "laya": 0.487,
       "laya-multilingual": 0.299,
       "laya-typed-decisions": 0.338
-    }
+    },
+    "macro_ece_shipped_note": "Tez's value is at T = 1, before its default temperature (BENCHMARKS.md §1 Languages: macro ECE as shipped, Tez at T = 1).",
+    "macro_ece_tez_default_temperature": 0.146,
+    "macro_ece_tez_default_temperature_note": "BENCHMARKS.md §1 Languages: macro ECE, Tez's default temperature fitted without the task (§5c)."
   },
   "xnli_loss": {
     "title": "XNLI, 100 per language: the one family where Laya's trained encoder is ahead",
@@ -392,13 +395,24 @@
     ],
     "rows": [
       {
-        "metric": "mean ECE-15 as shipped",
+        "metric": "mean ECE-15 as shipped (Tez at T = 1)",
         "values": [
           0.212,
           0.323,
           0.253,
           0.226,
           0.246
+        ],
+        "better": "lower"
+      },
+      {
+        "metric": "mean ECE-15, Tez's default temperature fitted without the task (§5c)",
+        "values": [
+          0.14,
+          null,
+          null,
+          null,
+          null
         ],
         "better": "lower"
       },
