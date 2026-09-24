@@ -27,14 +27,22 @@ EMBED = Path.home() / ".claude" / "skills" / "impeccable" / "scripts" / "embed-p
 BLOB = "https://github.com/Jibalmi/Tez/blob/main/"
 NBSP = chr(0xA0)
 ORIGIN = ("Origin: data chart, not an AI-generated image. Rendered with matplotlib by experiments/make_vs_figures.py "
-          "from BENCHMARKS.md, results/h2h and results/vs_laya (github.com/Jibalmi/Tez); {what}.")
+          "from {sources} (github.com/Jibalmi/Tez); {what}.")
+SOURCES = "BENCHMARKS.md, results/h2h and results/vs_laya"
+# images that also draw Tez at its default temperature from results/calibration/default_temperature.json
+CALIBRATION = {"tez_reliability.png", "panels/reliability.png"}
+
+
+def origin(rel, what):
+    src = "BENCHMARKS.md, results/h2h, results/vs_laya and results/calibration" if rel in CALIBRATION else SOURCES
+    return ORIGIN.format(sources=src, what=what)
 
 COMPOSITES = [
     ("tez_vs_jev_full.png", "The full comparison", "Accuracy against Jev, where Tez leads and where others lead, every workflow on identical rows, English against the rest, speed, calibration, typed-decisions, all 51 languages and why --swa-full matters."),
     ("tez_benchmark.png", "Every language, speed, Jev and calibration", "Which system can read each language, beside speed per call, accuracy against Jev and calibration."),
     ("tez_benchmark_common.png", "Consolidated benchmark", "Every workflow and task, English against the rest, speed, batching and typed-decisions."),
     ("tez_selective.png", "Selective automation", "Accuracy on the typed-decisions answers each system acts on, most confident first."),
-    ("tez_reliability.png", "Reliability and risk-coverage", "How well Tez's zero-shot confidence matches its accuracy on typed-decisions, as shipped and after one temperature."),
+    ("tez_reliability.png", "Reliability and risk-coverage", "How well Tez's zero-shot confidence matches its accuracy on typed-decisions: at T = 1, as shipped with its default temperature, and after one temperature."),
 ]
 
 
@@ -52,7 +60,7 @@ PANELS = [  # order and names for the gallery: most informative first
     ("language_coverage.png", "Language coverage"),
     ("xnli_languages.png", "XNLI languages"),
     ("calibration_vs_jev.png", "Calibration against Jev"),
-    ("calibration_shipped_vs_temperature.png", "Calibration, as shipped and after one temperature"),
+    ("calibration_shipped_vs_temperature.png", "Calibration: T = 1, as shipped and after one temperature"),
     ("reliability.png", "Reliability"),
     ("risk_coverage.png", "Risk and coverage"),
     ("typed_decisions_ladder.png", "typed-decisions ladder"),
@@ -101,8 +109,9 @@ def publish_images():
         web = DST / "web" / (rel.as_posix().replace("/", "__").replace(".png", ".webp"))
         prev.save(web, "WEBP", quality=82, method=6)
         what = f"copied from docs/figures/vs/{rel.as_posix()}"
-        subprocess.run(["node", str(EMBED), str(full), "--prompt", ORIGIN.format(what=what)], check=True, capture_output=True)
-        subprocess.run(["node", str(EMBED), str(web), "--prompt", ORIGIN.format(what=f"web preview of {rel.as_posix()}")],
+        subprocess.run(["node", str(EMBED), str(full), "--prompt", origin(rel.as_posix(), what)], check=True,
+                       capture_output=True)
+        subprocess.run(["node", str(EMBED), str(web), "--prompt", origin(rel.as_posix(), f"web preview of {rel.as_posix()}")],
                        check=True, capture_output=True)
         made.append((rel.as_posix(), (w, h), web.name, prev.size))
     return made
@@ -191,7 +200,8 @@ def tables():
                + "".join(f'<th scope="col" class="num">{int(c * 100)}{NBSP}%</th>' for c in cov)
                + "</tr></thead><tbody>" + "".join(sel_rows) + "</tbody></table></div>"
                '<p class="source">laya-typed-decisions, fine-tuned on this benchmark, ranks its own errors better at every '
-               f'coverage. <a href="{BLOB}results/vs_laya/selective.json">results/vs_laya/selective.json</a>.</p>')
+               'coverage. Tez is ranked by its confidence at T = 1, before its default temperature. '
+               f'<a href="{BLOB}results/vs_laya/selective.json">results/vs_laya/selective.json</a>.</p>')
     return "".join(out)
 
 
