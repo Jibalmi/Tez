@@ -197,8 +197,12 @@ code .nobr { white-space: nowrap; }
   .doc-main .table-wrap td + td, .doc-main .table-wrap th + td { margin-top: 6px; }
   .doc-main .table-wrap [data-label]::before {
     content: attr(data-label); display: block;
-    font-size: var(--fs-xs); font-weight: 520; line-height: 1.5; color: var(--text-muted);
+    font-family: var(--font-sans); font-size: var(--fs-xs); font-weight: 520; line-height: 1.5; color: var(--text-muted);
   }
+  /* a highlighted or reference row keeps one fill across its stacked cells */
+  .doc-main .table-wrap tr.is-ref { background: var(--bg-subtle); }
+  .doc-main .table-wrap tr.is-highlight { background: var(--accent-soft); }
+  .doc-main .table-wrap tr.is-ref > *, .doc-main .table-wrap tr.is-highlight > * { background: none; }
 }
 .params td code, .params th code { font-size: 12.5px; }
 .params .type { color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; white-space: nowrap; }
