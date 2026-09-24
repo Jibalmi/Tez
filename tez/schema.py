@@ -20,6 +20,7 @@ import yaml
 from .errors import InvalidRequest
 
 QUESTION_TYPES = ("noul", "choice", "score")
+LAYOUTS = ("auto", "question_first", "state_first")      # prompt layouts (tez/prompt.py)
 NONE_KEY = "__none__"
 NONE_TEXT = "none of these fits"
 CHOICE_MIN, CHOICE_MAX = 2, 255
@@ -53,6 +54,12 @@ def parse_alpha(value: Any, where: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 < value < 1:
         raise InvalidRequest(f"{where} must be a number between 0 and 1 (exclusive), got {value!r}")
     return float(value)
+
+
+def parse_layout(value: Any, where: str) -> str:
+    if value not in LAYOUTS:
+        raise InvalidRequest(f"{where} must be one of {', '.join(LAYOUTS)}; got {value!r}")
+    return value
 
 
 @dataclass
@@ -222,6 +229,9 @@ class Schema:
     gate_alpha: float | None = None
     examples: list[dict] = field(default_factory=list)    # {"state": ..., "labels": {qid: canonical label}}
     path: Path | None = None
+    layout: str | None = None         # auto | question_first | state_first; None inherits the server's default
+    builtin: bool = False             # a preset shipped with Tez (tez/presets/): zero-shot, never loads artefacts
+    extraction: Any = None            # set by from_json_schema / from_pydantic: how answers become values
 
     @property
     def base_dir(self) -> Path:
@@ -231,6 +241,20 @@ class Schema:
     def artifact_dir(self) -> Path:
         """Trained artefacts live next to the schema file: schemas/.tez/<name>/."""
         return self.base_dir / ".tez" / self.name
+
+    @classmethod
+    def from_json_schema(cls, json_schema: Any, name: str = "extract") -> Schema:
+        """Questions from a JSON schema: enum -> choice (up to 255 options), boolean -> noul, an integer with at most
+        10 levels between minimum and maximum -> score, description -> instructions (tez/extract.py)."""
+        from .extract import schema_from_json_schema
+        return schema_from_json_schema(json_schema, name)
+
+    @classmethod
+    def from_pydantic(cls, model: Any, name: str | None = None) -> Schema:
+        """Questions from a pydantic model (its JSON schema; Literal and Enum fields become choices). pydantic is
+        not a dependency of Tez: pass a model from your own code."""
+        from .extract import schema_from_pydantic
+        return schema_from_pydantic(model, name)
 
     def shots(self, qid: str, n_options: int | None = None) -> list[tuple[Any, int]]:
         """Few-shot worked examples for one question: the first MAX_SHOTS schema examples labelled for it,
@@ -258,6 +282,8 @@ class Schema:
             "questions": {qid: q.to_wire() for qid, q in self.questions.items()},
             "gate": {"alpha": self.gate_alpha} if self.gate_alpha is not None else None,
             "examples": len(self.examples),
+            "layout": self.layout,
+            "builtin": self.builtin,
         }
 
 
@@ -302,8 +328,9 @@ def parse_schema(raw: Any, source: str = "schema", default_name: str | None = No
         examples.append({"state": ex["state"], "labels": parse_labels(ex.get("labels") or {}, questions, here)})
     description = raw.get("description") or ""
     state = raw.get("state") or ""
+    layout = parse_layout(raw["layout"], f"{source}: layout") if raw.get("layout") is not None else None
     return Schema(name=name, questions=questions, description=as_text(description), state=as_text(state),
-                  gate_alpha=gate_alpha, examples=examples)
+                  gate_alpha=gate_alpha, examples=examples, layout=layout)
 
 
 class _Loader(yaml.SafeLoader):

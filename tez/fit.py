@@ -10,6 +10,10 @@ fit, per question (labels from --labels files, recorded feedback and the schema'
      so the gate's error guarantee rests on decisions that nothing was fitted on.
 The probe keeps the fit-part training only (no refit on the held-out rows) for the same reason.
 Rows shown to the model as few-shot examples are never used for fitting or measurement.
+
+A fit reads its prompts in one layout and records it: `--layout`, else the schema's own `layout:` when it names one,
+else question_first (the layout every probe and calibration in BENCHMARKS.md was measured with). Under `auto` a
+request reads a fitted question in the layout it was fitted under.
 """
 from __future__ import annotations
 
@@ -32,9 +36,9 @@ from .engine import Tez
 from .errors import BackendUnavailable, InvalidRequest, TezError
 from .gate import DEFAULT_ALPHAS
 from .gate import thresholds as gate_thresholds
-from .prompt import fingerprint
+from .prompt import QUESTION_FIRST, STATE_FIRST, fingerprint
 from .readout import BLEND_N0, Probe, blend_weight, ece, fit_temperature_logits, fit_temperature_probs, nll, softmax_rows
-from .schema import Schema, state_key
+from .schema import LAYOUTS, Schema, state_key
 
 MIN_LABELS = 20
 HOLDOUT = 0.3
@@ -215,14 +219,29 @@ def _calibration_id(schema: Schema) -> str:
     return f"{base}.{n + 1}"
 
 
+def fit_layout(schema: Schema, layout: str | None = None) -> str:
+    """The layout a fit reads: the one asked for, else the schema's own when it names one, else question_first."""
+    if layout is not None and layout not in LAYOUTS:
+        raise InvalidRequest(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
+    for choice in (layout, schema.layout):
+        if choice in (QUESTION_FIRST, STATE_FIRST):
+            return choice
+    return QUESTION_FIRST
+
+
 def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedback: bool = True,
         holdout: float = HOLDOUT, min_labels: int = MIN_LABELS, seed: int = 0, letters: bool = True,
-        use_blend: bool = True, alphas: Iterable[float] = DEFAULT_ALPHAS, say: Callable[[str], None] | None = None) -> dict:
+        use_blend: bool = True, alphas: Iterable[float] = DEFAULT_ALPHAS, say: Callable[[str], None] | None = None,
+        layout: str | None = None) -> dict:
     """Train probes and calibrations for a schema and write schemas/.tez/<name>/. Returns calibration.json."""
     _sklearn("tez fit")
     say = say or _say_default
     if not 0.0 < holdout < 1.0:
         raise InvalidRequest("holdout must be between 0 and 1")
+    if schema.builtin:
+        raise InvalidRequest(f"'{schema.name}' is a built-in preset: copy it into a schema file first "
+                             f"(tez presets --show {schema.name} > schemas/{schema.name}.yaml)")
+    layout = fit_layout(schema, layout)
     fb = tez.feedback_path(schema) if feedback else None
     data = collect_rows(schema, label_files, fb)
     if data.total() == 0:
@@ -238,7 +257,7 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
         raise BackendUnavailable(f"embedding backend {tez.embedder.url} is unreachable")
     created = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cal_id = _calibration_id(schema)
-    say(f"fitting '{schema.name}' ({data.total()} labelled decisions, calibration {cal_id})")
+    say(f"fitting '{schema.name}' ({data.total()} labelled decisions, calibration {cal_id}, {layout} layout)")
     questions, probes, skipped, counts, hashes = {}, {}, {}, {}, {}
     embed_dim = None
     for qid, q in schema.questions.items():
@@ -264,14 +283,14 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
         if letters:
             Z = []
             for i, s in enumerate(states):
-                Z.append(tez.letter_logits(q, s, None, shots)[0])
+                Z.append(tez.letter_logits(q, s, None, shots, layout=layout)[0])
                 _progress(say, "letters", i, n)
             Zl = np.stack(Z)
             t_letters = fit_temperature_logits(Zl[fit_idx], y[fit_idx])
             m = _measure(softmax_rows(Zl[cal_idx], t_letters), y[cal_idx], alphas)
             raw = softmax_rows(Zl[cal_idx], 1.0)
-            entry["letters"] = {"model": letters_model, "template": tez.backend.template,
-                                "prompt_sha": fingerprint(q, tez.backend.template, q.options(), shots),
+            entry["letters"] = {"model": letters_model, "template": tez.backend.template, "layout": layout,
+                                "prompt_sha": fingerprint(q, tez.backend.template, q.options(), shots, layout),
                                 "temperature": round(t_letters, 4), "n_fit": int(len(fit_idx)), "n_held_out": int(len(cal_idx)),
                                 "accuracy": m["accuracy"], "ece": m["ece"],
                                 "ece_uncalibrated": ece(raw.max(1), raw.argmax(1) == y[cal_idx]) if len(cal_idx) else None,
@@ -293,7 +312,7 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
             continue
         X = []
         for i, s in enumerate(states):
-            X.append(tez.embedder.embed(tez.probe_prompt(q, s, shots)).vector)
+            X.append(tez.embedder.embed(tez.probe_prompt(q, s, shots, layout=layout)).vector)
             _progress(say, "embeddings", i, n)
         X = np.stack(X).astype(np.float64)
         embed_dim = int(X.shape[1])
@@ -309,8 +328,8 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
             Pc = _blend_rows(Pc, softmax_rows(Zl[cal_idx], t_letters), float(len(fit_idx)))
         Pc = _temper_rows(Pc, t_probe) if len(cal_idx) else Pc
         m = _measure(Pc, y[cal_idx], alphas)
-        entry["probe"] = {"model": embed_model, "template": tez.embedder.template,
-                          "prompt_sha": fingerprint(q, tez.embedder.template, q.options(), shots),
+        entry["probe"] = {"model": embed_model, "template": tez.embedder.template, "layout": layout,
+                          "prompt_sha": fingerprint(q, tez.embedder.template, q.options(), shots, layout),
                           "dim": embed_dim, "n_train": int(len(fit_idx)), "n_held_out": int(len(cal_idx)), "C": PROBE_C,
                           "blend": blend_on, "weight": round(blend_weight(len(fit_idx)), 4) if blend_on else 1.0,
                           "temperature": round(t_probe, 4), "accuracy": m["accuracy"], "ece": m["ece"], "nll": m["nll"],
@@ -325,15 +344,16 @@ def fit(tez: Tez, schema: Schema, label_files: Iterable[str | Path] = (), feedba
         if la is not None and m["accuracy"] is not None and m["accuracy"] + 0.02 < la and len(cal_idx) >= 20:
             say("    note: the probe is below the zero-shot letters on the held-out rows; consider readout=letters or more labels")
     calibration = {"schema": schema.name, "calibration_id": cal_id, "created": created, "tez_version": __version__,
-                   "holdout": holdout, "min_labels": min_labels, "blend_n0": BLEND_N0, "alphas": alphas, "questions": questions}
+                   "holdout": holdout, "min_labels": min_labels, "blend_n0": BLEND_N0, "alphas": alphas, "layout": layout,
+                   "questions": questions}
     manifest = {"schema": schema.name, "calibration_id": cal_id, "created": created, "tez_version": __version__,
-                "backend": tez.backend.url, "template": tez.backend.template, "model": letters_model,
+                "backend": tez.backend.url, "template": tez.backend.template, "model": letters_model, "layout": layout,
                 "embed_backend": tez.embedder.url, "embed_template": tez.embedder.template, "embed_model": embed_model,
                 "embed_dim": embed_dim, "layer": "last-token state (llama-server --embeddings --pooling last)",
                 "cut": _cut(embed_model), "label_counts": counts, "sources": data.sources, "problems": dict(data.problems),
                 "probes": list(probes), "skipped": skipped,
                 "settings": {"holdout": holdout, "min_labels": min_labels, "C": PROBE_C, "folds": FOLDS, "seed": seed,
-                             "letters": letters, "blend": use_blend, "blend_n0": BLEND_N0},
+                             "letters": letters, "blend": use_blend, "blend_n0": BLEND_N0, "layout": layout},
                 "train_hashes": hashes}
     save_artifacts(schema.artifact_dir, calibration, manifest, probes)
     if schema.name in tez.schemas:
@@ -420,10 +440,15 @@ def suggest(tez: Tez, schema: Schema, states: list[Any], n: int = 25, question: 
 
 # ------------------------------------------------------------------------------------------ eval
 def evaluate(tez: Tez, schema: Schema, label_files: Iterable[str | Path], readout: str = "auto", alpha: float | None = None,
-             include_seen: bool = False, say: Callable[[str], None] | None = None) -> dict:
+             include_seen: bool = False, say: Callable[[str], None] | None = None, layout: str | None = None) -> dict:
     """Accuracy and ECE per question on labelled rows, with the schema's fitted probes and calibration.
-    Rows a probe was trained on are skipped for that question unless include_seen."""
+    Rows a probe was trained on are skipped for that question unless include_seen. Each question is read in the
+    layout a request with all of the schema's questions would read it (`layout` overrides the schema's)."""
     say = say or _say_default
+    if layout is not None and layout not in LAYOUTS:
+        raise InvalidRequest(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
+    requested = layout or tez.configured_layout(schema)
+    n_all = len(schema.questions)
     data = collect_rows(schema, label_files, None, include_examples=False)
     if data.total() == 0:
         raise InvalidRequest("no labelled rows to evaluate")
@@ -439,13 +464,14 @@ def evaluate(tez: Tez, schema: Schema, label_files: Iterable[str | Path], readou
         h = row_hash(state)
         for qid, gold in labels.items():
             q = schema.questions[qid]
-            r = tez.decide_question(q, state, schema=schema, readout=readout, abstain=False, alpha=alpha)
+            r = tez.decide_question(q, state, schema=schema, readout=readout, abstain=False, alpha=alpha,
+                                    layout=tez.question_layout(q, schema, requested, n_all))
             if r.readout == "probe" and not include_seen and h in trained.get(qid, ()):
                 skipped[qid] += 1
                 continue
             rec[qid].append((r.probabilities, gold, r.readout, r.meta.get("decision")))
         _progress(say, "evaluated", j, len(by_state))
-    out: dict[str, Any] = {"schema": schema.name, "readout": readout, "alpha": alpha, "questions": {}}
+    out: dict[str, Any] = {"schema": schema.name, "readout": readout, "alpha": alpha, "layout": requested, "questions": {}}
     all_conf, all_ok = [], []
     for qid in schema.questions:
         items = rec.get(qid, [])

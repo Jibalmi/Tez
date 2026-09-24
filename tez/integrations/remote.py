@@ -43,6 +43,21 @@ def _origin(url: str) -> tuple[str, str, int | None]:
     return scheme, (parts.hostname or "").lower(), parts.port or {"http": 80, "https": 443}.get(scheme)
 
 
+def _tez_options(readout: str | None, abstain: bool, alpha: float | None, gate: Any, layout: str | None) -> dict:
+    tez: dict[str, Any] = {}
+    if readout not in (None, "auto"):
+        tez["readout"] = readout
+    if abstain:
+        tez["abstain"] = True
+    if alpha is not None:
+        tez["gate"] = {"alpha": alpha}
+    elif gate is not None:
+        tez["gate"] = gate
+    if layout is not None:
+        tez["layout"] = layout
+    return tez
+
+
 def _with(err: TezError, status: int | None = None, type_: str | None = None) -> TezError:
     """Override a TezError's HTTP status or error type (both are class defaults)."""
     if status is not None:
@@ -159,8 +174,15 @@ class RemoteTez:
         return self._request("POST", "/v1/systemone", body)
 
     def decide(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str | None = "auto",
-               abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str | None = None) -> dict:
+               abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str | None = None, *,
+               layout: str | None = None) -> dict:
         """Decide one state; the same arguments as tez.Tez.decide. `model` is sent only when given."""
+        return self.handle(self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout))
+
+    def request_body(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str | None = "auto",
+                     abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str | None = None,
+                     layout: str | None = None) -> dict:
+        """The minimal wire-format body: Tez extensions only when they differ from the defaults."""
         body: dict[str, Any] = {"state": state}
         if model is not None:
             body["model"] = model
@@ -168,18 +190,10 @@ class RemoteTez:
             body["questions"] = {qid: (q.to_wire() if hasattr(q, "to_wire") else q) for qid, q in questions.items()}
         if schema is not None:
             body["schema"] = schema if isinstance(schema, str) else getattr(schema, "name", schema)
-        tez: dict[str, Any] = {}
-        if readout not in (None, "auto"):
-            tez["readout"] = readout
-        if abstain:
-            tez["abstain"] = True
-        if alpha is not None:
-            tez["gate"] = {"alpha": alpha}
-        elif gate is not None:
-            tez["gate"] = gate
+        tez = _tez_options(readout, abstain, alpha, gate, layout)
         if tez:
             body["tez"] = tez
-        return self.handle(body)
+        return body
 
     def health(self) -> dict:
         return self._request("GET", "/healthz")

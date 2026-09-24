@@ -1,10 +1,13 @@
 """Model backends.
 
 LlamaCppBackend talks to a llama.cpp `llama-server`:
-  letters  POST /completion with one predicted token and the top-200 log-probabilities of the next token;
-           the log-probabilities of the bare letters "A".."Z" are the option scores.
+  letters  POST /completion with one predicted token and the top-n_probs log-probabilities of the next token
+           (n_probs 200 by default); the log-probabilities of the bare letters "A".."Z" are the option scores, and a
+           letter missing from the top list gets the floor (the smallest listed log-probability minus 2).
   embed    POST /embedding (server started with --embeddings --pooling last): the last-token state.
 FakeBackend is a deterministic stand-in for tests and offline demos (keyword overlap and hashed words).
+Every readout also reports its wall time and, when the server sends them, llama.cpp's own timings (prompt_n,
+cache_n, prompt_ms, ...), which the engine passes to hooks as per-question traces.
 """
 from __future__ import annotations
 
@@ -23,23 +26,34 @@ import requests
 from requests.adapters import HTTPAdapter
 
 from .errors import BackendRequestError, BackendUnavailable
-from .prompt import LETTERS, MAX_LETTERS, TEMPLATES, check_template
+from .prompt import HEAD_STATE_FIRST, LETTERS, MAX_LETTERS, TEMPLATES, check_template
 
 log = logging.getLogger("tez")
 DEFAULT_BACKEND = "http://127.0.0.1:8080"
+DEFAULT_N_PROBS = 200
 _FAMILY = {"gemma4": "gemma-4", "qwen3": "qwen3"}
 
 
 @dataclass
 class LetterScores:
-    logits: np.ndarray    # (k,) log-probabilities of the letters A.. (letters missing from the top list are floored)
-    tokens: int           # prompt tokens as reported by the backend (or estimated)
+    logits: np.ndarray            # (k,) log-probabilities of the letters A.. (letters missing from the top list are floored)
+    tokens: int                   # prompt tokens as reported by the backend (or estimated)
+    timings: dict | None = None   # llama.cpp's `timings` block for this call (prompt_n, cache_n, prompt_ms, ...)
+    ms: float | None = None       # wall time of the call, retries included
 
 
 @dataclass
 class Embedding:
     vector: np.ndarray
     tokens: int
+    timings: dict | None = None
+    ms: float | None = None
+
+
+def check_n_probs(n: Any) -> int:
+    if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= 1000:
+        raise ValueError(f"n_probs must be an integer from 1 to 1000, got {n!r}")
+    return n
 
 
 def estimate_tokens(text: str) -> int:
@@ -101,7 +115,8 @@ def derive_model_name(path: str | None, alias: str | None, ftype: str | None, n_
 
 
 class Backend:
-    """Interface: letters(prompt, k) -> LetterScores, embed(prompt) -> Embedding, model_name(), health()."""
+    """Interface: letters(prompt, k) -> LetterScores, embed(prompt) -> Embedding, model_name(), health().
+    known_model_name() answers without any I/O (None when the name would need a call to the server)."""
 
     url: str = ""
     template: str = "gemma4"
@@ -115,17 +130,20 @@ class Backend:
     def model_name(self) -> str:
         return "unknown"
 
+    def known_model_name(self) -> str | None:
+        return self.model_name()
+
     def health(self) -> dict:
         return {"ok": True}
 
 
 class LlamaCppBackend(Backend):
-    def __init__(self, url: str, template: str = "gemma4", cache_prompt: bool = True, n_probs: int = 200,
+    def __init__(self, url: str, template: str = "gemma4", cache_prompt: bool = True, n_probs: int = DEFAULT_N_PROBS,
                  timeout: float = 300.0, retries: int = 2, model_name: str | None = None):
         self.url = url.rstrip("/")
         self.template = check_template(template)
         self.cache_prompt = cache_prompt
-        self.n_probs = n_probs
+        self.n_probs = check_n_probs(n_probs)
         self.timeout = timeout
         self.retries = retries
         self._model_name = model_name
@@ -140,7 +158,8 @@ class LlamaCppBackend(Backend):
         self._session.mount("https://", adapter)
 
     def __repr__(self) -> str:
-        return f"LlamaCppBackend({self.url!r}, template={self.template!r}, cache_prompt={self.cache_prompt})"
+        return (f"LlamaCppBackend({self.url!r}, template={self.template!r}, cache_prompt={self.cache_prompt}, "
+                f"n_probs={self.n_probs})")
 
     # ------------------------------------------------------------------ transport
     def _request(self, method: str, path: str, body: dict | None = None, timeout: float | None = None) -> Any:
@@ -212,6 +231,9 @@ class LlamaCppBackend(Backend):
         self._model_name = derive_model_name(i["model_path"], i["model_alias"], i["ftype"], i["n_params"], self.template)
         return self._model_name
 
+    def known_model_name(self) -> str | None:
+        return self._model_name or None
+
     def health(self) -> dict:
         try:
             r = self._session.get(f"{self.url}/health", timeout=(2.0, 3.0))
@@ -240,6 +262,7 @@ class LlamaCppBackend(Backend):
             raise ValueError(f"a letter readout reads 1 to {MAX_LETTERS} options, got {k}")
         if not self._cache_checked:
             self._check_cache_prompt()
+        t0 = time.perf_counter()
         body = {"prompt": prompt, "n_predict": 1, "n_probs": self.n_probs, "temperature": 0, "samplers": [],
                 "cache_prompt": self.cache_prompt}
         data = self._request("POST", "/completion", body)
@@ -249,16 +272,23 @@ class LlamaCppBackend(Backend):
             z = letters_from_response(data, k)
             if z is None:
                 raise BackendUnavailable(f"backend {self.url} returned no token probabilities (n_probs unsupported?)")
-        return LetterScores(z, prompt_tokens(data, prompt))
+        return LetterScores(z, prompt_tokens(data, prompt), timings=_timings(data), ms=(time.perf_counter() - t0) * 1000.0)
 
     def embed(self, prompt: str) -> Embedding:
+        t0 = time.perf_counter()
         data = self._request("POST", "/embedding", {"content": prompt, "embd_normalize": -1})
         d = data[0] if isinstance(data, list) and data else data
         e = d.get("embedding") if isinstance(d, dict) else None
         if not e:
             raise BackendUnavailable(f"backend {self.url} returned no embedding (start llama-server with --embeddings --pooling last)")
         vec = e[-1] if isinstance(e[0], list) else e
-        return Embedding(np.asarray(vec, dtype=np.float32), estimate_tokens(prompt))
+        return Embedding(np.asarray(vec, dtype=np.float32), estimate_tokens(prompt), timings=_timings(d),
+                         ms=(time.perf_counter() - t0) * 1000.0)
+
+
+def _timings(data: Any) -> dict | None:
+    t = data.get("timings") if isinstance(data, dict) else None
+    return dict(t) if isinstance(t, dict) else None
 
 
 def _error_message(r: requests.Response) -> str:
@@ -295,14 +325,19 @@ def _h(text: str) -> int:
 
 
 def _split_prompt(prompt: str, template: str) -> tuple[list[tuple[str, str]], str]:
-    """(options, state) of the final question in a Tez prompt."""
+    """(options, state) of the final question in a Tez prompt, in either layout."""
     body = prompt
     pre, post = TEMPLATES.get(template, ("", ""))
     if post and body.endswith(post):
         body = body[: -len(post)]
     cut = body.rfind("\nInput:\n")
-    state = body[cut + len("\nInput:\n"):] if cut >= 0 else body
-    head = body[:cut] if cut >= 0 else ""
+    if cut >= 0 and HEAD_STATE_FIRST in body[: cut + 1]:     # state_first: Input, then the question and its options
+        rest = body[cut + len("\nInput:\n"):]
+        q = rest.rfind("\n\nQuestion (")
+        state, head = (rest[:q], rest[q:]) if q >= 0 else (rest, "")
+    else:
+        state = body[cut + len("\nInput:\n"):] if cut >= 0 else body
+        head = body[:cut] if cut >= 0 else ""
     opts: list[tuple[str, str]] = []
     start = head.rfind("Options:\n")
     if start >= 0:
@@ -315,12 +350,23 @@ def _split_prompt(prompt: str, template: str) -> tuple[list[tuple[str, str]], st
     return opts, state
 
 
+def common_prefix(a: str, b: str) -> int:
+    """Length of the longest common prefix of two strings."""
+    n = min(len(a), len(b))
+    i = 0
+    while i < n and a[i] == b[i]:
+        i += 1
+    return i
+
+
 class FakeBackend(Backend):
     """Deterministic offline backend. It is not a model:
       letters  options sharing words with the state score higher (plus a tiny hash-based tie-breaker);
       embed    a hashed bag of the state's words, so states that share vocabulary share directions.
     Pass letters_fn(prompt, k) -> k scores or embed_fn(prompt) -> vector to script it; fail=True makes every
-    call raise BackendUnavailable (for testing 503s). `calls` counts backend calls."""
+    call raise BackendUnavailable (for testing 503s). `calls` counts backend calls. Letter readouts report
+    llama.cpp-style timings from a simulated one-slot prompt cache: `cache_n` is the prefix shared with the previous
+    letters prompt (in estimated tokens), `prompt_n` the rest."""
 
     url = "fake"
 
@@ -335,6 +381,8 @@ class FakeBackend(Backend):
         self.sharpness = sharpness
         self.calls = {"letters": 0, "embed": 0}
         self.prompts: list[str] = []
+        self._last_prompt = ""
+        self._lock = threading.Lock()
 
     def __repr__(self) -> str:
         return f"FakeBackend(template={self.template!r})"
@@ -345,11 +393,20 @@ class FakeBackend(Backend):
     def health(self) -> dict:
         return {"ok": not self.fail, "status": "fake" if not self.fail else "failing"}
 
+    def _cache_timings(self, prompt: str) -> dict:
+        with self._lock:
+            shared = common_prefix(self._last_prompt, prompt)
+            self._last_prompt = prompt
+        total = estimate_tokens(prompt)
+        cache_n = min(total - 1, shared // 4) if shared else 0
+        return {"prompt_n": total - cache_n, "cache_n": cache_n, "prompt_ms": 0.0, "predicted_n": 1}
+
     def letters(self, prompt: str, k: int) -> LetterScores:
         if self.fail:
             raise BackendUnavailable("fake backend is set to fail")
         if not 1 <= k <= MAX_LETTERS:
             raise ValueError(f"a letter readout reads 1 to {MAX_LETTERS} options, got {k}")
+        t0 = time.perf_counter()
         self.calls["letters"] += 1
         self.prompts.append(prompt)
         if self.letters_fn is not None:
@@ -363,7 +420,8 @@ class FakeBackend(Backend):
                 s[i] = self.sharpness * len(set(_words(f"{key} {desc}")) & sw) + (_h(f"{i}|{prompt}") % 1000) / 1e5
         s = s - s.max()
         logp = s - np.log(np.exp(s).sum())
-        return LetterScores(logp, estimate_tokens(prompt))
+        return LetterScores(logp, estimate_tokens(prompt), timings=self._cache_timings(prompt),
+                            ms=(time.perf_counter() - t0) * 1000.0)
 
     def embed(self, prompt: str) -> Embedding:
         if self.fail:
@@ -382,8 +440,10 @@ class FakeBackend(Backend):
         return Embedding(v.astype(np.float32), estimate_tokens(prompt))
 
 
-def make_backend(spec: Any, template: str = "gemma4", cache_prompt: bool = True, model_name: str | None = None) -> Backend:
-    """A Backend from a URL, 'fake', or an existing Backend instance."""
+def make_backend(spec: Any, template: str = "gemma4", cache_prompt: bool = True, model_name: str | None = None,
+                 n_probs: int = DEFAULT_N_PROBS) -> Backend:
+    """A Backend from a URL, 'fake', or an existing Backend instance. n_probs: how many next-token log-probabilities
+    a letter readout asks llama-server for (letters outside that list get the floor)."""
     if isinstance(spec, Backend):
         return spec
     if spec is None:
@@ -394,4 +454,4 @@ def make_backend(spec: Any, template: str = "gemma4", cache_prompt: bool = True,
         return FakeBackend(template=template, model=model_name or "fake")
     if not re.match(r"^https?://", spec):
         spec = "http://" + spec
-    return LlamaCppBackend(spec, template=template, cache_prompt=cache_prompt, model_name=model_name)
+    return LlamaCppBackend(spec, template=template, cache_prompt=cache_prompt, model_name=model_name, n_probs=n_probs)

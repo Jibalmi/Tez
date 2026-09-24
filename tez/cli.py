@@ -10,10 +10,11 @@ from pathlib import Path
 from typing import Any
 
 from ._version import __version__
-from .backends import DEFAULT_BACKEND
+from .backends import DEFAULT_BACKEND, DEFAULT_N_PROBS
 from .engine import READOUTS
 from .errors import TezError
 from .prompt import TEMPLATES
+from .schema import LAYOUTS
 
 
 def _utf8_streams() -> None:
@@ -38,13 +39,24 @@ def _backend_args(p: argparse.ArgumentParser, embed: bool = True) -> None:
     p.add_argument("--no-cache-prompt", action="store_true",
                    help="switch llama.cpp prompt caching off (hybrid Qwen3.5 GGUFs crash b11100 on partial prefix reuse)")
     p.add_argument("--model-name", default=None, help="model name used in responses and calibration (default: read from the server)")
+    p.add_argument("--n-probs", type=int, default=DEFAULT_N_PROBS, metavar="N",
+                   help=f"next-token log-probabilities a letter readout asks for; letters outside them get the floor "
+                        f"(default {DEFAULT_N_PROBS})")
 
 
-def _make_tez(args: argparse.Namespace, schemas: Any = None):
+def _layout_arg(p: argparse.ArgumentParser, what: str) -> None:
+    p.add_argument("--layout", choices=LAYOUTS, default=None, help=what)
+
+
+def _make_tez(args: argparse.Namespace, schemas: Any = None, layout: str = "auto"):
     from .engine import Tez
-    return Tez(backend=args.backend, template=args.template, schemas=schemas,
-               embed_backend=getattr(args, "embed_backend", None), embed_template=getattr(args, "embed_template", None),
-               cache_prompt=not args.no_cache_prompt, data_dir=getattr(args, "data_dir", None), model_name=args.model_name)
+    try:
+        return Tez(backend=args.backend, template=args.template, schemas=schemas,
+                   embed_backend=getattr(args, "embed_backend", None), embed_template=getattr(args, "embed_template", None),
+                   cache_prompt=not args.no_cache_prompt, data_dir=getattr(args, "data_dir", None),
+                   model_name=args.model_name, n_probs=args.n_probs, layout=layout)
+    except ValueError as exc:
+        raise TezError(str(exc)) from exc
 
 
 def _read_state(path: str) -> Any:
@@ -79,7 +91,7 @@ def cmd_serve(args: argparse.Namespace) -> int:
     import uvicorn
 
     from .server import create_app
-    tez = _make_tez(args, schemas=args.schemas)
+    tez = _make_tez(args, schemas=args.schemas, layout=args.layout or "auto")
     app = create_app(tez, api_key=args.api_key, cors=not args.no_cors)
     probes = sum(len(v) for v in tez.probe_index().values())
     print(f"tez {__version__} on http://{args.host}:{args.port}  backend {tez.backend.url} ({tez.template})"
@@ -105,7 +117,7 @@ def cmd_decide(args: argparse.Namespace) -> int:
     state = args.state if args.state is not None else _read_state(args.state_file)
     tez = _make_tez(args, schemas=[schema] if schema else None)
     res = tez.decide(state, questions=questions, schema=schema.name if schema else None, readout=args.readout,
-                     abstain=args.abstain, alpha=args.alpha)
+                     abstain=args.abstain, alpha=args.alpha, layout=args.layout)
     print(json.dumps(res, indent=None if args.compact else 2, ensure_ascii=False))
     return 0
 
@@ -116,7 +128,8 @@ def cmd_fit(args: argparse.Namespace) -> int:
     schema = load_schema(args.schema)
     tez = _make_tez(args, schemas=[schema])
     cal = fit(tez, schema, label_files=args.labels, feedback=not args.no_feedback, holdout=args.holdout,
-              min_labels=args.min_labels, seed=args.seed, letters=not args.no_letters, use_blend=not args.no_blend)
+              min_labels=args.min_labels, seed=args.seed, letters=not args.no_letters, use_blend=not args.no_blend,
+              layout=args.layout)
     rows = [["question", "type", "labels", "probe", "letters acc", "probe acc", "T letters", "T probe", "act@0.05"]]
     for qid, e in cal["questions"].items():
         lt, pr = e.get("letters") or {}, e.get("probe") or {}
@@ -154,7 +167,8 @@ def cmd_eval(args: argparse.Namespace) -> int:
     from .schema import load_schema
     schema = load_schema(args.schema)
     tez = _make_tez(args, schemas=[schema])
-    res = evaluate(tez, schema, args.labels, readout=args.readout, alpha=args.alpha, include_seen=args.include_seen)
+    res = evaluate(tez, schema, args.labels, readout=args.readout, alpha=args.alpha, include_seen=args.include_seen,
+                   layout=args.layout)
     head = ["question", "n", "readout", "accuracy", "ECE", "mean conf"] + (["acted", "error|acted"] if args.alpha else [])
     rows = [head]
     for qid, r in res["questions"].items():
@@ -201,6 +215,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--api-key", default=os.environ.get("TEZ_API_KEY"), help="require Authorization: Bearer <key> (env TEZ_API_KEY)")
     p.add_argument("--no-cors", action="store_true", help="do not send CORS headers (open to every origin by default)")
     p.add_argument("--log-level", default="info", choices=["critical", "error", "warning", "info", "debug"])
+    _layout_arg(p, "default prompt layout for requests and schemas that name none: auto (state_first for 2+ questions, "
+                   "question_first for one), question_first or state_first (default auto)")
     p.set_defaults(func=cmd_serve)
 
     p = sub.add_parser("decide", help="decide one state and print the wire-format JSON")
@@ -214,6 +230,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--abstain", action="store_true", help="add the implicit __none__ option to choice questions")
     p.add_argument("--alpha", type=float, default=None, help="gate: target error rate among acted decisions")
     p.add_argument("--compact", action="store_true", help="one-line JSON")
+    _layout_arg(p, "prompt layout (default: the schema's, else auto)")
     p.set_defaults(func=cmd_decide)
 
     p = sub.add_parser("fit", help="train probes, temperatures and gate thresholds for a schema")
@@ -228,6 +245,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--no-letters", action="store_true", help="skip the letters readout (no letters calibration, no blend)")
     p.add_argument("--no-blend", action="store_true", help="serve the probe alone, without the zero-shot letters prior")
+    _layout_arg(p, "prompt layout to fit under (default: the schema's layout when it names one, else question_first); "
+                   "under auto a request reads each fitted question in the layout it was fitted under")
     p.set_defaults(func=cmd_fit)
 
     p = sub.add_parser("suggest", help="pick the most typical unlabelled states to label first")
@@ -248,6 +267,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--alpha", type=float, default=None, help="also report the gate: share acted and error among acted")
     p.add_argument("--include-seen", action="store_true", help="keep rows a probe was trained on")
     p.add_argument("--json", help="also write the results as JSON")
+    _layout_arg(p, "prompt layout (default: the schema's, else auto for a request with all of its questions)")
     p.set_defaults(func=cmd_eval)
 
     p = sub.add_parser("truncate", help="keep the first N transformer blocks of a GGUF (needs the gguf package)")

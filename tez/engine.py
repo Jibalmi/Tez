@@ -5,6 +5,12 @@ One request = one state and many typed questions. Each question is read independ
   probe    one /embedding call through the question's logistic probe, blended with the letters prior
            (weight n / (n + 10) on the probe) unless the schema was fitted with --no-blend
 and gets Jev's answer shape, plus Tez's per-question block (readout, gate decision, p_correct).
+
+Prompt layout (tez/prompt.py): a request asks for `auto`, `question_first` or `state_first` (request `tez.layout`,
+else the schema's `layout:`, else the engine's default). `auto` resolves per question: a question with a usable fit
+keeps the layout it was fitted under (so a fit never goes stale because a request had more questions), any other
+question is read state_first when the request has two or more questions and question_first otherwise. Questions read
+state_first run back to back, so the backend's prompt cache reuses the state between them.
 """
 from __future__ import annotations
 
@@ -21,13 +27,14 @@ import numpy as np
 
 from ._version import RELEASE_DATE, __version__
 from .artifacts import Fitted, FittedQuestion, load_artifacts
-from .backends import Backend, make_backend
+from .backends import DEFAULT_N_PROBS, Backend, make_backend
 from .errors import BackendRequestError, BackendUnavailable, InvalidRequest, NotFound
 from .gate import decide as gate_decide
 from .gate import lookup
-from .prompt import TOURNAMENT_NONE, build_prompt, fingerprint, needs_tournament, pick_finalists, tournament_plan
+from .prompt import (QUESTION_FIRST, STATE_FIRST, TOURNAMENT_NONE, build_prompt, fingerprint, needs_tournament,
+                     pick_finalists, resolve_layout, tournament_plan)
 from .readout import assemble, blend, softmax, temper
-from .schema import NONE_KEY, Question, Schema, load_schemas, parse_alpha, parse_questions
+from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alpha, parse_layout, parse_questions
 
 log = logging.getLogger("tez")
 READOUTS = ("auto", "letters", "probe")
@@ -43,6 +50,7 @@ class DecideRequest:
     abstain: bool
     alpha: float | None
     model: str
+    layout: str = "auto"          # as requested (auto | question_first | state_first), before per-question resolution
 
 
 @dataclass
@@ -53,6 +61,7 @@ class QuestionResult:
     readout: str
     probabilities: np.ndarray
     keys: list[str]
+    layout: str = QUESTION_FIRST
 
 
 class Tez:
@@ -65,18 +74,24 @@ class Tez:
     template       prompt template of the letters model: gemma4 | qwen3
     schemas        a directory of *.yaml schemas, a schema file, Schema objects, or a list of these
     embed_backend  optional separate server for probe features (default: the letters backend)
+    layout         default prompt layout: auto (default) | question_first | state_first
+    n_probs        next-token log-probabilities a letter readout asks llama-server for (default 200)
     """
 
     def __init__(self, backend: Any = None, template: str = "gemma4", schemas: Any = None, embed_backend: Any = None,
                  embed_template: str | None = None, cache_prompt: bool = True, data_dir: str | Path | None = None,
-                 model_name: str | None = None, embed_model_name: str | None = None):
-        self.backend: Backend = make_backend(backend, template, cache_prompt, model_name)
+                 model_name: str | None = None, embed_model_name: str | None = None, *, layout: str = "auto",
+                 n_probs: int = DEFAULT_N_PROBS):
+        if layout not in LAYOUTS:
+            raise ValueError(f"layout must be one of {', '.join(LAYOUTS)}, got {layout!r}")
+        self.layout = layout
+        self.backend: Backend = make_backend(backend, template, cache_prompt, model_name, n_probs)
         self.template = self.backend.template
         if embed_backend is None:
             self.embedder: Backend = self.backend
             self.embed_backend_url: str | None = None
         else:
-            self.embedder = make_backend(embed_backend, embed_template or template, cache_prompt, embed_model_name)
+            self.embedder = make_backend(embed_backend, embed_template or template, cache_prompt, embed_model_name, n_probs)
             self.embed_backend_url = self.embedder.url
         self.data_dir = Path(data_dir) if data_dir else None
         self.schemas: dict[str, Schema] = {}
@@ -111,6 +126,8 @@ class Tez:
         self.fitted.pop(name, None)
         for key in [k for k in self._status if k[0] == name]:
             del self._status[key]
+        if schema.builtin:              # presets are zero-shot: copy one into a schema directory to fit it
+            return None
         fitted = load_artifacts(schema.artifact_dir)
         if fitted is None:
             return None
@@ -120,8 +137,9 @@ class Tez:
         return fitted
 
     def _static_check(self, schema: Schema, qid: str, fq: FittedQuestion) -> dict:
-        """Is a fitted calibration / probe still valid for the schema as it is now? (model names are checked later)"""
-        out = {"letters": False, "probe": False, "reason": None}
+        """Is a fitted calibration / probe still valid for the schema as it is now, under the layout it was fitted
+        with? (Model names are checked later; so is the layout a request asks for.)"""
+        out = {"letters": False, "probe": False, "reason": None, "layout": fq.layout}
         sq = schema.questions.get(qid)
         if sq is None:
             out["reason"] = "question is no longer in the schema"
@@ -134,41 +152,87 @@ class Tez:
         if fq.letters is not None:
             if fq.letters.template != self.backend.template:
                 reasons.append(f"letters were calibrated with the {fq.letters.template} template")
-            elif fq.letters.prompt_sha != fingerprint(sq, self.backend.template, sq.options(), shots):
+            elif fq.letters.prompt_sha != fingerprint(sq, self.backend.template, sq.options(), shots, fq.letters.layout):
                 reasons.append("the prompt changed since tez fit (instructions, options or examples)")
             else:
                 out["letters"] = True
         if fq.probe is not None and fq.probe_cal is not None:
             if fq.probe_cal.template != self.embedder.template:
                 reasons.append(f"the probe was fitted with the {fq.probe_cal.template} template")
-            elif fq.probe_cal.prompt_sha != fingerprint(sq, self.embedder.template, sq.options(), shots):
+            elif fq.probe_cal.prompt_sha != fingerprint(sq, self.embedder.template, sq.options(), shots, fq.probe_cal.layout):
                 reasons.append("the probe prompt changed since tez fit (instructions, options or examples)")
             else:
                 out["probe"] = True
         out["reason"] = "; ".join(dict.fromkeys(reasons)) or fq.note
         return out
 
-    def _usable(self, schema_name: str, qid: str) -> tuple[FittedQuestion | None, bool, bool]:
-        """(fitted question, letters calibration usable, probe usable), including the model-name check."""
+    def configured_layout(self, schema: Schema | None) -> str:
+        """The layout a request gets when it names none: the schema's `layout:`, else the engine's default."""
+        if schema is not None and schema.layout is not None:
+            return schema.layout
+        return self.layout
+
+    def _layout_mismatch(self, fit_layout: str, layout: str) -> str | None:
+        if layout in (QUESTION_FIRST, STATE_FIRST) and layout != fit_layout:
+            return f"fitted under the {fit_layout} layout, read with {layout}"
+        return None
+
+    def _usable(self, schema_name: str, qid: str, layout: str | None = None,
+                check_model: bool = True) -> tuple[FittedQuestion | None, bool, bool]:
+        """(fitted question, letters calibration usable, probe usable), including the model-name check and, when a
+        concrete layout is given, that the fit was made under it. check_model=False skips the model names when they
+        are not known without asking the backend (tez plan never calls it)."""
         fitted = self.fitted.get(schema_name)
         fq = fitted.questions.get(qid) if fitted else None
         st = self._status.get((schema_name, qid))
         if fq is None or st is None:
             return None, False, False
-        letters_ok = st["letters"] and fq.letters is not None and fq.letters.model == self.backend.model_name()
-        probe_ok = st["probe"] and fq.probe_cal is not None and fq.probe_cal.model == self.embedder.model_name()
-        for kind, flag, cal, backend in (("letters", st["letters"] and not letters_ok, fq.letters, self.backend),
-                                         ("probe", st["probe"] and not probe_ok, fq.probe_cal, self.embedder)):
-            if flag and (schema_name, qid, kind) not in self._warned:
-                self._warned.add((schema_name, qid, kind))
-                log.warning("%s/%s: %s calibration was fitted on model %r, the backend serves %r: not used",
-                            schema_name, qid, kind, cal.model, backend.model_name())
+        if layout is not None and self._layout_mismatch(fq.layout, layout):
+            return fq, False, False
+
+        def model_ok(cal: Any, backend: Backend) -> bool:
+            if cal is None:
+                return False
+            name = backend.model_name() if check_model else backend.known_model_name()
+            return name is None or cal.model == name
+
+        letters_ok = st["letters"] and model_ok(fq.letters, self.backend)
+        probe_ok = st["probe"] and model_ok(fq.probe_cal, self.embedder)
+        if check_model:
+            for kind, flag, cal, backend in (("letters", st["letters"] and not letters_ok, fq.letters, self.backend),
+                                             ("probe", st["probe"] and not probe_ok, fq.probe_cal, self.embedder)):
+                if flag and (schema_name, qid, kind) not in self._warned:
+                    self._warned.add((schema_name, qid, kind))
+                    log.warning("%s/%s: %s calibration was fitted on model %r, the backend serves %r: not used",
+                                schema_name, qid, kind, cal.model, backend.model_name())
         return fq, letters_ok, probe_ok
 
+    def _same_question(self, schema: Schema | None, q: Question) -> bool:
+        sq = schema.questions.get(q.id) if schema is not None else None
+        return sq is not None and sq.signature() == q.signature()
+
+    def question_layout(self, q: Question, schema: Schema | None, layout: str, n_questions: int,
+                        check_model: bool = True) -> str:
+        """The concrete layout one question of a request is read with. An explicit layout applies as is; `auto` keeps
+        the layout of a usable fit, otherwise state_first for two or more questions and question_first for one."""
+        if layout in (QUESTION_FIRST, STATE_FIRST):
+            return layout
+        if self._same_question(schema, q):
+            fq, letters_ok, probe_ok = self._usable(schema.name, q.id, None, check_model)
+            if fq is not None and (letters_ok or probe_ok):
+                return fq.layout
+        return resolve_layout(layout, n_questions)
+
     def probe_index(self) -> dict[str, list[str]]:
-        """Questions with a trained, current probe, per schema (model names not checked)."""
-        return {name: [qid for qid in s.questions if self._status.get((name, qid), {}).get("probe")]
-                for name, s in self.schemas.items()}
+        """Questions with a trained, current probe under the schema's configured layout, per schema (model names not
+        checked)."""
+        out = {}
+        for name, s in self.schemas.items():
+            layout = self.configured_layout(s)
+            out[name] = [qid for qid in s.questions
+                         if (st := self._status.get((name, qid), {})).get("probe")
+                         and not self._layout_mismatch(st.get("layout", QUESTION_FIRST), layout)]
+        return out
 
     # ---------------------------------------------------------------------------------- requests
     def parse_request(self, body: Any) -> DecideRequest:
@@ -224,15 +288,20 @@ class Tez:
                     raise InvalidRequest("tez.gate.alpha is required (the target error rate among acted decisions)")
             else:
                 raise InvalidRequest("tez.gate must be an object like {\"alpha\": 0.05}")
+        if tez.get("layout") is not None:
+            layout = parse_layout(tez["layout"], "tez.layout")
+        else:
+            layout = self.configured_layout(schema)
         return DecideRequest(state=state, questions=questions, schema=schema, readout=readout, abstain=abstain,
-                             alpha=alpha, model=model)
+                             alpha=alpha, model=model, layout=layout)
 
     def handle(self, body: Any) -> dict:
         """Validate a wire-format request and decide it. Raises TezError subclasses (422 / 503)."""
         return self.run(self.parse_request(body))
 
     def decide(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
-               abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str = DEFAULT_MODEL_ALIAS) -> dict:
+               abstain: bool = False, alpha: float | None = None, gate: Any = None, model: str = DEFAULT_MODEL_ALIAS,
+               *, layout: str | None = None) -> dict:
         """Decide one state. Returns the wire-format response dict (answers, usage, tez block).
 
         questions  {id: {type, instructions, criteria}} (or Question objects); optional when schema is given
@@ -241,7 +310,14 @@ class Tez:
         abstain    add the implicit __none__ option to every choice question
         alpha      gate: target error rate among acted decisions (needs a fitted schema); gate=False disables
                    a schema's default gate
+        layout     prompt layout: auto | question_first | state_first (default: the schema's, else the engine's)
         """
+        return self.handle(self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout))
+
+    def request_body(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
+                     abstain: bool = False, alpha: float | None = None, gate: Any = None,
+                     model: str = DEFAULT_MODEL_ALIAS, layout: str | None = None) -> dict:
+        """The wire-format request body for decide()'s arguments (a Schema object is loaded on first use)."""
         body: dict[str, Any] = {"model": model, "state": state}
         if questions is not None:
             body["questions"] = {qid: (q.to_wire() if isinstance(q, Question) else q) for qid, q in questions.items()}
@@ -256,17 +332,28 @@ class Tez:
             tez["gate"] = {"alpha": alpha}
         elif gate is not None:
             tez["gate"] = gate
+        if layout is not None:
+            tez["layout"] = layout
         body["tez"] = tez
-        return self.handle(body)
+        return body
 
     def run(self, req: DecideRequest) -> dict:
         t0 = time.perf_counter()
-        answers, metas, used = {}, {}, []
-        tokens = 0
-        for qid, q in req.questions.items():
-            r = self.decide_question(q, req.state, schema=req.schema, readout=req.readout, abstain=req.abstain, alpha=req.alpha)
+        n = len(req.questions)
+        base = resolve_layout(req.layout, n)
+        layouts = {qid: self.question_layout(q, req.schema, req.layout, n) for qid, q in req.questions.items()}
+        # state-first questions run back to back, so the backend's prompt cache keeps the state between them
+        order = [qid for qid in req.questions if layouts[qid] == STATE_FIRST] + \
+                [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
+        results: dict[str, QuestionResult] = {}
+        for qid in order:
+            results[qid] = self.decide_question(req.questions[qid], req.state, schema=req.schema, readout=req.readout,
+                                                abstain=req.abstain, alpha=req.alpha, layout=layouts[qid], n_questions=n)
+        answers, metas, used, tokens = {}, {}, [], 0
+        for qid in req.questions:
+            r = results[qid]
             answers[qid] = r.answer
-            metas[qid] = r.meta
+            metas[qid] = r.meta if r.layout == base else {**r.meta, "layout": r.layout}
             tokens += r.tokens
             used.append(r.readout)
         latency = (time.perf_counter() - t0) * 1000.0
@@ -275,20 +362,29 @@ class Tez:
                 "tez": {"latency_ms": round(latency, 1), "questions": metas}}
 
     # ---------------------------------------------------------------------------------- readouts
-    def letter_logits(self, q: Question, state: Any, options: list | None = None, shots: list | None = None) -> tuple[np.ndarray, int]:
+    def letter_logits(self, q: Question, state: Any, options: list | None = None, shots: list | None = None, *,
+                      layout: str = QUESTION_FIRST, trace: list | None = None) -> tuple[np.ndarray, int]:
         """Letter log-probabilities over `options` (default: the question's) and the prompt tokens spent.
-        Above 26 options: tournament, and options that left it get -inf."""
+        Above 26 options: tournament, and options that left it get -inf. `trace`, when given, receives one record
+        per backend call (kind, tokens, wall ms, llama.cpp timings)."""
         options = q.options() if options is None else list(options)
         n = len(options)
+
+        def read(prompt: str, k: int):
+            r = self.backend.letters(prompt, k)
+            if trace is not None:
+                trace.append({"kind": "letters", "tokens": int(r.tokens), "ms": r.ms, "timings": r.timings})
+            return r
+
         if not needs_tournament(n):
-            r = self.backend.letters(build_prompt(q, state, self.template, options, shots), n)
+            r = read(build_prompt(q, state, self.template, options, shots, layout), n)
             return r.logits, r.tokens
         none_opt = options[-1] if options[-1][0] == NONE_KEY else None
         real = options[:-1] if none_opt else options
         winners, wprobs, tokens = [], [], 0
         for chunk in tournament_plan(len(real)):
             opts = [real[i] for i in chunk] + [TOURNAMENT_NONE]
-            r = self.backend.letters(build_prompt(q, state, self.template, opts), len(opts))
+            r = read(build_prompt(q, state, self.template, opts, None, layout), len(opts))
             tokens += r.tokens
             pc = softmax(r.logits)
             j = int(np.argmax(pc[:-1]))
@@ -296,7 +392,7 @@ class Tez:
             wprobs.append(float(pc[j]))
         fin = pick_finalists(winners, wprobs)
         fopts = [real[i] for i in fin] + ([none_opt] if none_opt else [])
-        r = self.backend.letters(build_prompt(q, state, self.template, fopts), len(fopts))
+        r = read(build_prompt(q, state, self.template, fopts, None, layout), len(fopts))
         tokens += r.tokens
         z = np.full(n, -np.inf)
         z[fin] = r.logits[: len(fin)]
@@ -304,27 +400,30 @@ class Tez:
             z[-1] = r.logits[-1]
         return z, tokens
 
-    def probe_prompt(self, q: Question, state: Any, shots: list | None = None) -> str:
+    def probe_prompt(self, q: Question, state: Any, shots: list | None = None, *, layout: str = QUESTION_FIRST) -> str:
         """The prompt whose last-token state a probe reads (the question's own options, no __none__)."""
-        return build_prompt(q, state, self.embedder.template, q.options(), shots)
+        return build_prompt(q, state, self.embedder.template, q.options(), shots, layout)
 
     def decide_question(self, q: Question, state: Any, schema: Schema | None = None, readout: str = "auto",
-                        abstain: bool = False, alpha: float | None = None) -> QuestionResult:
-        sq = schema.questions.get(q.id) if schema is not None else None
-        same = sq is not None and sq.signature() == q.signature()
-        fq, letters_ok, probe_ok = self._usable(schema.name, q.id) if same else (None, False, False)
+                        abstain: bool = False, alpha: float | None = None, layout: str = "auto", n_questions: int = 1,
+                        trace: list | None = None) -> QuestionResult:
+        same = self._same_question(schema, q)
+        layout = self.question_layout(q, schema, layout, n_questions) if same else resolve_layout(layout, n_questions)
+        fq, letters_ok, probe_ok = self._usable(schema.name, q.id, layout) if same else (None, False, False)
         options, keys = q.options(abstain), q.keys(abstain)
         has_none = len(keys) > len(q.keys())
         shots_letters = schema.shots(q.id, len(options)) if same else []
         shots_probe = schema.shots(q.id) if same else []
         if readout == "probe" and not probe_ok:
-            raise InvalidRequest(self._no_probe_reason(schema, q.id, same))
+            raise InvalidRequest(self._no_probe_reason(schema, q.id, same, layout))
         use_probe = probe_ok and readout != "letters"
         tokens = 0
         p_probe = None
         if use_probe:
             try:
-                emb = self.embedder.embed(self.probe_prompt(q, state, shots_probe))
+                emb = self.embedder.embed(self.probe_prompt(q, state, shots_probe, layout=layout))
+                if trace is not None:
+                    trace.append({"kind": "embed", "tokens": int(emb.tokens), "ms": emb.ms, "timings": emb.timings})
                 p_probe = fq.probe.predict(emb.vector)
                 tokens += emb.tokens
             except (BackendUnavailable, BackendRequestError, ValueError) as exc:
@@ -336,7 +435,7 @@ class Tez:
                 use_probe = False
         p_letters = None
         if not use_probe or fq.blend or has_none:
-            z, t = self.letter_logits(q, state, options, shots_letters)
+            z, t = self.letter_logits(q, state, options, shots_letters, layout=layout, trace=trace)
             tokens += t
             p_letters = softmax(z, fq.letters.temperature if letters_ok else 1.0)
         if use_probe:
@@ -365,9 +464,10 @@ class Tez:
         if cal is not None:
             meta["p_correct"] = round(p_max, 4)
             meta["calibration_id"] = self.fitted[schema.name].calibration_id
-        return QuestionResult(answer=answer, meta=meta, tokens=tokens, readout=readout_used, probabilities=p, keys=keys)
+        return QuestionResult(answer=answer, meta=meta, tokens=tokens, readout=readout_used, probabilities=p, keys=keys,
+                              layout=layout)
 
-    def _no_probe_reason(self, schema: Schema | None, qid: str, same: bool) -> str:
+    def _no_probe_reason(self, schema: Schema | None, qid: str, same: bool, layout: str | None = None) -> str:
         base = f"question '{qid}' has no usable probe for tez.readout=probe"
         if schema is None:
             return f"{base} (name a fitted schema, or use readout auto or letters)"
@@ -376,7 +476,12 @@ class Tez:
         st = self._status.get((schema.name, qid))
         if st is None:
             return f"{base} (run tez fit on schema '{schema.name}')"
-        return f"{base} ({st.get('reason') or 'fitted on another model'})"
+        if not st.get("probe"):
+            return f"{base} ({st.get('reason') or 'no probe was trained for it'})"
+        mismatch = self._layout_mismatch(st.get("layout", QUESTION_FIRST), layout) if layout else None
+        if mismatch:
+            return f"{base} ({mismatch}; request tez.layout {st.get('layout')} or refit with --layout {layout})"
+        return f"{base} (fitted on another model)"
 
     # ---------------------------------------------------------------------------------- endpoints
     def model_label(self, used: list[str] | None = None) -> str:
@@ -399,6 +504,7 @@ class Tez:
                "template": self.template, "embed_backend": self.embed_backend_url, "schemas": sorted(self.schemas),
                "probes": self.probe_index(), "backend_status": b.get("status")}
         out["model"] = self.backend.model_name() if b.get("ok") else None
+        out["layout"] = self.layout
         if self.embedder is not self.backend:
             e = self.embedder.health()
             out["embed_template"] = self.embedder.template
@@ -412,7 +518,7 @@ class Tez:
             out.append({"name": name, "description": s.description,
                         "questions": {qid: q.type for qid, q in s.questions.items()},
                         "calibration_id": f.calibration_id if f else None,
-                        "probes": self.probe_index()[name]})
+                        "probes": self.probe_index()[name], "builtin": s.builtin})
         return {"schemas": out}
 
     def schema_detail(self, name: str) -> dict:
@@ -420,16 +526,22 @@ class Tez:
         if s is None:
             raise NotFound(f"unknown schema '{name}'")
         f = self.fitted.get(name)
+        layout = self.configured_layout(s)
         status = {}
         for qid in s.questions:
             st = self._status.get((name, qid))
             fq = f.questions.get(qid) if f else None
             cal_q = (f.calibration.get("questions") or {}).get(qid, {}) if f else {}
-            probe = "ready" if st and st["probe"] else ("stale" if fq is not None and fq.probe is not None else "none")
-            status[qid] = {"probe": probe, "letters_calibrated": bool(st and st["letters"]),
-                           "n_labels": cal_q.get("n_labels"), "note": (st or {}).get("reason") or cal_q.get("note")}
+            mismatch = self._layout_mismatch(st.get("layout", QUESTION_FIRST), layout) if st else None
+            ready = bool(st and st["probe"] and not mismatch)
+            probe = "ready" if ready else ("stale" if fq is not None and fq.probe is not None else "none")
+            note = (mismatch if mismatch and fq is not None else None) or (st or {}).get("reason") or cal_q.get("note")
+            status[qid] = {"probe": probe, "letters_calibrated": bool(st and st["letters"] and not mismatch),
+                           "n_labels": cal_q.get("n_labels"), "note": note,
+                           "layout": fq.layout if fq is not None else None}
         manifest = {k: v for k, v in (f.manifest if f else {}).items() if k != "train_hashes"} if f else None
-        return {**s.to_wire(), "calibration_id": f.calibration_id if f else None, "probes": status,
+        return {**s.to_wire(), "layout": s.layout, "served_layout": layout,
+                "calibration_id": f.calibration_id if f else None, "probes": status,
                 "calibration": f.calibration if f else None, "manifest": manifest}
 
     def feedback_path(self, schema: Schema) -> Path:

@@ -60,7 +60,8 @@ preflights answer `Access-Control-Allow-Private-Network: true`, so the website p
   "tez": {
     "readout": "auto",
     "abstain": false,
-    "gate": {"alpha": 0.05}
+    "gate": {"alpha": 0.05},
+    "layout": "auto"
   }
 }
 ```
@@ -71,6 +72,8 @@ preflights answer `Access-Control-Allow-Private-Network: true`, so the website p
 - `tez.abstain`: adds an implicit `__none__` option to every `choice` question ("none of these fits").
 - `tez.gate.alpha`: target error rate among acted decisions (conformal selection, needs a fitted schema); each answer
   then gets `act` or `escalate` in the `tez` block.
+- `tez.layout`: the prompt layout (see "Prompt layout" below): `auto`, `question_first` or `state_first`. Default: the
+  schema's `layout:`, else the server's `--layout`, else `auto`.
 
 ### Response
 
@@ -113,7 +116,8 @@ The three answer shapes are exactly Jev's:
   `confidence` as for choice.
 
 The `tez` block: `latency_ms`, and per question the `readout` used (`letters` or `probe`), `decision` (`act` /
-`escalate`, present only when a gate applies), `p_correct` and `calibration_id` when a fitted calibration exists.
+`escalate`, present only when a gate applies), `p_correct` and `calibration_id` when a fitted calibration exists, and
+`layout` when the question was read in another layout than the request's (a fitted question under `auto`).
 
 The gate never acts without evidence: `act` always comes with `p_correct` and `calibration_id`. A question with no
 usable fitted calibration, and any `__none__` answer, gets `escalate` whenever a gate is requested (in the example,
@@ -123,8 +127,34 @@ the schema default; any other alpha uses the largest precomputed value at or bel
 
 `tez.readout: "probe"` is strict: a request fails with 422 if a requested question has no usable probe. `auto` falls
 back to letters question by question. A fit is used only while the question's prompt (instructions, options,
-few-shot examples, template) and the model still match what `tez fit` saw; otherwise the question falls back to
-uncalibrated letters and `GET /v1/schemas/{name}` marks it `stale`.
+few-shot examples, template, layout) and the model still match what `tez fit` saw; otherwise the question falls back
+to uncalibrated letters and `GET /v1/schemas/{name}` marks it `stale`.
+
+### Prompt layout
+
+Every question is one prompt that ends where the model answers with an option letter. Two layouts:
+
+| Layout | Prompt | What the backend's prompt cache keeps |
+|---|---|---|
+| `question_first` | instructions, question, options, then `Input:` and the state last | the question's prefix, across states (one question, many states: the voice loop) |
+| `state_first` | instructions, `Input:` and the state, then the question and its options | the state, across the questions about it |
+
+`auto` (the default) reads a request with two or more questions `state_first` and a single question `question_first`
+(streaming, when it comes, stays `question_first`). Measured on typed-decisions with Gemma 4 12B Q8_0: the same
+accuracy (0.7015 state first vs 0.705, McNemar p = 0.74) for about half the evaluated tokens. State-first questions of a
+request run back to back, so with llama.cpp prompt caching on one slot each question after the first evaluates only its
+own tail. Worked examples (a schema's `examples`) come before the input in both layouts, so a question with examples
+shares only the instructions with the other questions about its state.
+
+A fit records its layout (`tez fit --layout`, default the schema's `layout:` or `question_first`). Under `auto` a fitted
+question keeps the layout it was fitted under, so a request never makes a fit stale by having more questions; an
+explicit layout that differs from the fit's reads the question with uncalibrated letters, and a schema served with such
+a layout shows the fit as `stale`. `tez plan` shows the layout, calls and tokens of every question without calling the
+model.
+
+llama.cpp settings for Tez: `-np 1`, `--swa-full` for Gemma (sliding-window models otherwise re-read the whole prompt)
+and `--cache-ram 0`: with host-memory prompt caching on (the default, 8 GiB) a request that keeps less than half of the
+slot's cached tokens first copies the slot to host RAM, which is what a new state does. `tez doctor` checks these.
 
 ### Errors
 
@@ -143,11 +173,12 @@ schema and `405` for a wrong method. Body: `{"error": {"type": "invalid_request"
 
 ```json
 {"status": "ok", "version": "0.1.0", "backend": "http://127.0.0.1:8091", "template": "gemma4", "backend_status": "ok",
- "model": "gemma-4-12b-q8_0", "embed_backend": null, "schemas": ["support-triage"], "probes": {"support-triage": ["topic"]}}
+ "model": "gemma-4-12b-q8_0", "embed_backend": null, "schemas": ["support-triage"], "probes": {"support-triage": ["topic"]},
+ "layout": "auto"}
 ```
 
 `status` is `degraded` when the backend is unreachable. With a separate embedding backend, `embed_template` and
-`embed_backend_status` are added.
+`embed_backend_status` are added. `layout` is the server's default prompt layout (`--layout`).
 
 ## `GET /v1/schemas` and `GET /v1/schemas/{name}`
 
@@ -156,8 +187,9 @@ schema and `405` for a wrong method. Body: `{"error": {"type": "invalid_request"
               "calibration_id": "support-triage@2026-09-24", "probes": ["topic"]}]}
 ```
 
-One schema returns its questions in wire form plus `calibration_id`, `probes` (per question: `probe` = `ready`,
-`stale` or `none`, `letters_calibrated`, `n_labels`, `note`), `calibration` and `manifest`.
+One schema returns its questions in wire form plus `layout` (the schema's own, or null), `served_layout` (what a
+request that names none gets), `calibration_id`, `probes` (per question: `probe` = `ready`, `stale` or `none`,
+`letters_calibrated`, `n_labels`, `note`, and the `layout` it was fitted under), `calibration` and `manifest`.
 
 ## `POST /v1/feedback`
 
@@ -197,6 +229,7 @@ questions:
     criteria: [Calm, Frustrated, Very angry]
 gate:
   alpha: 0.05          # optional default for tez.gate
+layout: auto           # optional: auto | question_first | state_first (default: the server's --layout)
 examples:              # optional labelled rows: the first 4 per question (26 options or fewer) become few-shot
                        # examples in the prompt; the rest are training rows
   - state: "I was charged twice this month."
@@ -211,13 +244,15 @@ and `manifest.json` (backend, template, layer/cut, label counts, date).
 
 | Readout | Needs | Backend call | Measured (typed-decisions) |
 |---|---|---|---|
-| `letters` | nothing (zero-shot) | `/completion`, one token, top-200 log-probs | Gemma 4 12B Q8: 0.704 |
+| `letters` | nothing (zero-shot) | `/completion`, one token, top-`n_probs` log-probs (200) | Gemma 4 12B Q8: 0.704 |
 | `probe` | ≥ 25–50 labels per question (`tez fit`) | `/embedding` (last-token state) | Qwen3.5-4B cut to 24 blocks: 0.793 |
 | blend | a few labels | both | 12B letters + 50 typical labels per question: 0.766 |
 
-Prompt layout (letters): instructions and options first, state last, answered with a single option letter;
-more than 26 options run as a chunked tournament. Hybrid Qwen3.5 GGUFs need prompt caching off in llama.cpp b11100
-(`tez serve` turns it off automatically when the model name matches Qwen3.5; `--no-cache-prompt` forces it).
+Letters are answered with a single option letter (layouts above); more than 26 options run as a chunked tournament. A
+letter outside the top `n_probs` next-token log-probabilities gets a floor (the smallest listed log-probability
+minus 2); `--n-probs` changes how many are asked for (default 200, the measured setting). Hybrid Qwen3.5 GGUFs need
+prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically when the model name matches Qwen3.5;
+`--no-cache-prompt` forces it).
 
 ## Server defaults
 

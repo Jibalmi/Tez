@@ -29,13 +29,15 @@ class ReadoutCal:
     temperature: float
     thresholds: dict
     info: dict = field(default_factory=dict)
+    layout: str = "question_first"      # the prompt layout the fit read (fits made before layouts: question_first)
 
     @classmethod
     def from_json(cls, d: dict | None) -> "ReadoutCal | None":
         if not d:
             return None
         return cls(model=str(d.get("model", "")), template=str(d.get("template", "")), prompt_sha=str(d.get("prompt_sha", "")),
-                   temperature=float(d.get("temperature", 1.0)), thresholds=dict(d.get("thresholds") or {}), info=d)
+                   temperature=float(d.get("temperature", 1.0)), thresholds=dict(d.get("thresholds") or {}), info=d,
+                   layout=str(d.get("layout") or "question_first"))
 
 
 @dataclass
@@ -48,6 +50,12 @@ class FittedQuestion:
     probe: Probe | None
     blend: bool
     note: str | None = None
+
+    @property
+    def layout(self) -> str:
+        """The prompt layout this question was fitted under (letters and probe are fitted in one run)."""
+        cal = self.letters or self.probe_cal
+        return cal.layout if cal is not None else "question_first"
 
 
 @dataclass
