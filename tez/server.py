@@ -229,7 +229,9 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
 
     @app.exception_handler(StarletteHTTPException)
     async def _http_error(request: Request, exc: StarletteHTTPException):
-        return _error(exc.status_code, _HTTP_TYPES.get(exc.status_code, "error"), str(exc.detail))
+        # every error body carries one of the documented types, whatever status the framework answers with
+        fallback = "invalid_request" if exc.status_code < 500 else "internal_error"
+        return _error(exc.status_code, _HTTP_TYPES.get(exc.status_code, fallback), str(exc.detail))
 
     @app.exception_handler(RequestValidationError)
     async def _validation_error(request: Request, exc: RequestValidationError):

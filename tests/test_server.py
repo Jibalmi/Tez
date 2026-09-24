@@ -272,3 +272,21 @@ def test_unknown_route_and_method(client):
     r = client.get("/v1/systemone")
     assert r.status_code == 405 and r.json()["error"]["type"] == "method_not_allowed"
     assert client.get("/").json()["name"] == "tez"
+
+
+@pytest.mark.parametrize("status, kind", [(400, "invalid_request"), (409, "invalid_request"), (429, "invalid_request"),
+                                          (501, "internal_error"), (502, "internal_error")])
+def test_framework_errors_carry_a_documented_type(status, kind):
+    """Any status the web framework answers with (FastAPI or Starlette raising HTTPException) keeps the error body's
+    documented types: invalid_request for a 4xx, internal_error for a 5xx."""
+    from starlette.exceptions import HTTPException
+
+    app = create_app(Tez(backend="fake"))
+
+    @app.get("/framework-error")
+    def framework_error():
+        raise HTTPException(status_code=status, detail="from the framework")
+
+    r = TestClient(app).get("/framework-error")
+    assert r.status_code == status
+    assert r.json() == {"error": {"type": kind, "message": "from the framework"}}
