@@ -1,4 +1,4 @@
-"""Command line: tez serve | decide | fit | suggest | eval | presets | truncate.
+"""Command line: tez serve | decide | plan | doctor | fit | suggest | eval | presets | truncate.
 
 Settings can come from the environment (containers, services): TEZ_BACKEND, TEZ_TEMPLATE, TEZ_EMBED_BACKEND for every
 command; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR, TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS,
@@ -184,31 +184,14 @@ def cors_origins(value: str | None) -> list[str]:
 
 
 def cmd_decide(args: argparse.Namespace) -> int:
-    from . import presets
-    from .schema import load_schema
-    if not args.schema and not args.preset and not args.questions:
-        raise TezError("give --schema FILE, --preset NAME and/or --questions FILE")
-    if args.schema and args.preset:
-        raise TezError("give --schema or --preset, not both")
-    given = [x for x in (args.text, args.state, args.state_file, args.states_file) if x is not None]
-    if len(given) != 1:
-        raise TezError("give the state once: as TEXT, --state, --state-file or --states-file")
-    schema = load_schema(args.schema) if args.schema else (presets.load(args.preset) if args.preset else None)
-    questions = None
-    if args.questions:
-        try:
-            raw = json.loads(Path(args.questions).read_text(encoding="utf-8-sig"))
-        except (OSError, json.JSONDecodeError) as exc:
-            raise TezError(f"cannot read questions from {args.questions}: {exc}") from exc
-        questions = raw["questions"] if isinstance(raw, dict) and isinstance(raw.get("questions"), dict) else raw
+    schema, questions, state = _request_inputs(args)
+    if args.out and args.states_file is None:
+        raise TezError("--out goes with --states-file")
     tez = _make_tez(args, schemas=[schema] if schema else None)
     opts = dict(questions=questions, schema=schema.name if schema else None, readout=args.readout,
                 abstain=args.abstain, alpha=args.alpha, layout=args.layout)
     if args.states_file is not None:
         return _decide_file(tez, args, opts)
-    if args.out:
-        raise TezError("--out goes with --states-file")
-    state = args.text if args.text is not None else args.state if args.state is not None else _read_state(args.state_file)
     res = tez.decide(state, **opts)
     print(json.dumps(res, indent=None if args.compact else 2, ensure_ascii=False))
     return 0
@@ -303,6 +286,70 @@ def cmd_eval(args: argparse.Namespace) -> int:
     if args.json:
         Path(args.json).write_text(json.dumps(res, indent=1), encoding="utf-8")
     return 0
+
+
+def _request_inputs(args: argparse.Namespace, need_state: bool = True) -> tuple[Any, Any, Any]:
+    """(schema, questions, state) from decide/plan-style arguments; state is None when not given and not needed."""
+    from . import presets
+    from .schema import load_schema
+    if not args.schema and not args.preset and not args.questions:
+        raise TezError("give --schema FILE, --preset NAME and/or --questions FILE")
+    if args.schema and args.preset:
+        raise TezError("give --schema or --preset, not both")
+    given = [x for x in (args.text, args.state, args.state_file, getattr(args, "states_file", None)) if x is not None]
+    if len(given) > 1 or (need_state and not given):
+        raise TezError("give the state once: as TEXT, --state, --state-file" +
+                       (" or --states-file" if hasattr(args, "states_file") else ""))
+    schema = load_schema(args.schema) if args.schema else (presets.load(args.preset) if args.preset else None)
+    questions = None
+    if args.questions:
+        try:
+            raw = json.loads(Path(args.questions).read_text(encoding="utf-8-sig"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise TezError(f"cannot read questions from {args.questions}: {exc}") from exc
+        questions = raw["questions"] if isinstance(raw, dict) and isinstance(raw.get("questions"), dict) else raw
+    state = args.text if args.text is not None else args.state if args.state is not None else \
+        (_read_state(args.state_file) if args.state_file is not None else None)
+    return schema, questions, state
+
+
+def cmd_plan(args: argparse.Namespace) -> int:
+    schema, questions, state = _request_inputs(args, need_state=False)
+    tez = _make_tez(args, schemas=[schema] if schema else None)
+    body = tez.request_body(state, questions, schema.name if schema else None, args.readout, args.abstain, args.alpha,
+                            None, "tez-latest", args.layout)
+    if state is None:
+        body.pop("state")
+    plan = tez.plan(body)
+    if args.json:
+        print(json.dumps(plan, indent=2, ensure_ascii=False))
+        return 0
+    rows = [["question", "type", "options", "readout", "layout", "fit", "calls", "tokens", "cached", "prompt"]]
+    for qid in plan["order"]:
+        q = plan["questions"][qid]
+        calls = "+".join(f"{n} {k}" for k, n in q["calls"].items() if n) or "-"
+        rows.append([qid, q["type"], str(q["options"]), q["readout"] or "error", q["layout"], q["fit"]["status"], calls,
+                     str(q["prompt_tokens"]), str(q["cached_tokens"]), q["prompt_sha"]])
+    print(_table(rows))
+    t = plan["totals"]
+    print(f"total: {t['calls']['letters']} letter call(s), {t['calls']['embed']} embedding call(s), ~{t['prompt_tokens']} "
+          f"prompt tokens, ~{t['evaluated_tokens']} to evaluate with the prompt cache (estimates: characters / 4)")
+    for qid in plan["order"]:
+        q = plan["questions"][qid]
+        if q.get("error"):
+            print(f"{qid}: {q['error']}")
+        elif q["fit"].get("reason") and q["fit"]["status"] != "none":
+            print(f"{qid}: fit {q['fit']['status']}: {q['fit']['reason']}")
+    for note in plan["notes"]:
+        print(f"note: {note}")
+    return 0
+
+
+def cmd_doctor(args: argparse.Namespace) -> int:
+    from .doctor import as_json, report, run_doctor
+    checks = run_doctor(args.backend, template=args.template, n_probs=args.n_probs, timeout=args.timeout)
+    print(json.dumps(as_json(checks), indent=2) if args.json else report(checks))
+    return 1 if any(c.status == "fail" for c in checks) else 0
 
 
 def cmd_presets(args: argparse.Namespace) -> int:
@@ -425,6 +472,29 @@ def build_parser(environ: Mapping[str, str] | None = None) -> argparse.ArgumentP
     p.add_argument("--json", help="also write the results as JSON")
     _layout_arg(p, "prompt layout (default: the schema's, else auto for a request with all of its questions)")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("plan", help="show what a request would do (readouts, fits, calls, layout, tokens) without "
+                                    "calling the model")
+    _backend_args(p, env)
+    p.add_argument("text", nargs="?", help="the state as text (optional: token estimates then leave it out)")
+    p.add_argument("--schema", help="schema YAML file (its fits are shown)")
+    p.add_argument("--preset", metavar="NAME", help="a built-in preset schema")
+    p.add_argument("--questions", help="JSON file with questions ({id: {type, instructions, criteria}})")
+    g = p.add_mutually_exclusive_group()
+    g.add_argument("--state", help="the state as text")
+    g.add_argument("--state-file", help="file with the state ('-' = stdin; *.json is parsed as JSON)")
+    p.add_argument("--readout", choices=READOUTS, default="auto")
+    p.add_argument("--abstain", action="store_true")
+    p.add_argument("--alpha", type=float, default=None)
+    p.add_argument("--json", action="store_true", help="print the plan as JSON (the POST /v1/plan response)")
+    _layout_arg(p, "prompt layout (default: the schema's, else auto)")
+    p.set_defaults(func=cmd_plan)
+
+    p = sub.add_parser("doctor", help="check a llama-server for what Tez needs and print the fixes")
+    _backend_args(p, env, embed=False)
+    p.add_argument("--timeout", type=float, default=60.0, help="seconds per request (default 60)")
+    p.add_argument("--json", action="store_true", help="print the checks as JSON")
+    p.set_defaults(func=cmd_doctor)
 
     p = sub.add_parser("presets", help="list the built-in preset schemas, or print one (--show NAME)")
     p.add_argument("--show", metavar="NAME", help="print this preset's YAML (redirect it into a schema file to fit it)")

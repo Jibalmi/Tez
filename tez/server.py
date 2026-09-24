@@ -2,6 +2,7 @@
 
     POST /v1/systemone        decide (Jev-compatible)
     POST /v1/systemone/batch  decide many states against the same questions
+    POST /v1/plan             what a request would do, without calling the model
     GET  /v1/models           model aliases (Jev-compatible)
     GET  /healthz             liveness, backend and readout status
     GET  /v1/schemas          loaded schemas
@@ -263,8 +264,8 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
     @app.get("/", include_in_schema=False)
     def index():
         return {"name": "tez", "version": __version__,
-                "endpoints": ["POST /v1/systemone", "POST /v1/systemone/batch", "GET /v1/models", "GET /healthz",
-                              "GET /v1/schemas", "GET /v1/schemas/{name}", "POST /v1/feedback"]}
+                "endpoints": ["POST /v1/systemone", "POST /v1/systemone/batch", "POST /v1/plan", "GET /v1/models",
+                              "GET /healthz", "GET /v1/schemas", "GET /v1/schemas/{name}", "POST /v1/feedback"]}
 
     @app.post("/v1/systemone")
     async def systemone(request: Request):
@@ -284,6 +285,13 @@ def create_app(tez: Tez, api_key: str | None = None, cors: bool = True, limits: 
         res = await call(tez.handle_batch, body, run_id=request.state.tez_run_id, limits=limits)
         request.state.tez_timing = [f"tez;dur={res['tez']['latency_ms']:.1f}"]
         return res
+
+    @app.post("/v1/plan")
+    async def plan(request: Request):
+        """What a /v1/systemone request would do (readouts, fits, calls, layout, tokens), without calling the model."""
+        authorize(request)
+        body = await read_json(request)
+        return await call(tez.plan, body, limits)
 
     @app.get("/v1/models")
     async def models(request: Request):

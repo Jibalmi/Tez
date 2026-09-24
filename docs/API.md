@@ -22,6 +22,7 @@ that is not allowed (`403 forbidden`), so a web page elsewhere cannot write trai
 |---|---|---|
 | `POST` | `/v1/systemone` | Decide: one state, many typed questions (Jev-compatible) |
 | `POST` | `/v1/systemone/batch` | Tez: many states against the same questions, in one request |
+| `POST` | `/v1/plan` | Tez: what a `/v1/systemone` request would do, without calling the model |
 | `GET` | `/v1/models` | List model aliases (Jev-compatible) |
 | `GET` | `/healthz` | Liveness, backend and readout status |
 | `GET` | `/v1/schemas` | Tez: schemas loaded from `--schemas` |
@@ -263,6 +264,40 @@ Many states against the same questions. The body is a `/v1/systemone` request wi
 Python: `Tez.decide_many(states, questions=None, schema=None, ...)` returns the `results` list,
 `Tez.decide_batch(...)` the whole response; `RemoteTez` has both over HTTP. CLI: `tez decide --states-file rows.jsonl
 --out out.jsonl` (rows with a `state`, bare JSON values or text lines; one result line per row).
+
+## `POST /v1/plan`
+
+The body of a `/v1/systemone` request (`state` may be left out); nothing is sent to the model. Per question: the
+readout it would use, its fit (`ready`, `stale` or `none`, with the reason, the fit's layout and calibration id), the
+number of options, the backend calls, the layout, the prompt hash (`prompt_sha`, what `tez fit` records) and a token
+estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it.
+
+```json
+{"backend": "http://127.0.0.1:8091", "template": "gemma4", "model": null, "schema": "support-triage",
+ "readout": "auto", "requested_layout": "auto", "layout": "state_first", "state_tokens": 12,
+ "order": ["topic", "is_urgent", "anger"],
+ "questions": {"topic": {"type": "choice", "options": 4, "layout": "state_first", "readout": "letters",
+                         "fit": {"status": "none", "reason": "not fitted (tez fit --schema support-triage)"},
+                         "calls": {"letters": 1, "embed": 0}, "prompt_sha": "9f2c41d0a7b3e815",
+                         "prompt_tokens": 118, "cached_tokens": 0}, "...": {}},
+ "totals": {"calls": {"letters": 3, "embed": 0}, "prompt_tokens": 322, "cached_tokens": 112, "evaluated_tokens": 210},
+ "notes": ["state first: questions after the first reuse the cached state (...)"]}
+```
+
+A question that would fail (`tez.readout: "probe"` without a usable probe) has `"readout": null` and an `error`
+instead of failing the plan. Model names are compared only when the server already knows them (`model` is null
+until a decision has asked the backend); a note says so. CLI: `tez plan "text" --schema FILE` (a table; `--json` for
+this body).
+
+## `tez doctor`
+
+`tez doctor --backend http://127.0.0.1:8091 --template gemma4` checks a llama-server for what Tez needs and prints a
+fix for anything that is off (exit code 1 when a check fails): `/health`; the model, build, context and slots from
+`/props`; that the chat template matches `--template`; that `/completion` returns the top `--n-probs` log-probabilities
+with the option letters among them; that a repeated prompt is served from the prompt cache and a second question about
+the same state reuses it (timings `prompt_n` and `cache_n`; the fix for Gemma is `--swa-full`); whether `/embedding`
+works (fitted probes need `--embeddings --pooling last`); one slot (`-np 1`); and the `--cache-ram 0` recommendation.
+It sends a few tiny prompts and changes nothing on the server. `--json` prints the checks.
 
 ## `GET /v1/models`
 

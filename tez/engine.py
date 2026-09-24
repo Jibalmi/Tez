@@ -34,7 +34,7 @@ from .gate import decide as gate_decide
 from .gate import lookup
 from .hooks import DecisionContext, HookSet, default_hooks, new_run_id, normalise_hooks
 from .prompt import (QUESTION_FIRST, STATE_FIRST, TOURNAMENT_NONE, build_prompt, fingerprint, needs_tournament,
-                     pick_finalists, resolve_layout, tournament_plan)
+                     pick_finalists, render_state, resolve_layout, tournament_plan)
 from .readout import assemble, blend, softmax, temper
 from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alpha, parse_layout, parse_questions
 
@@ -557,6 +557,106 @@ class Tez:
             response["tez"]["values"] = req.extraction.values(answers)
         ctx.response, ctx.usage, ctx.latency_ms = response, response["usage"], round(latency, 1)
         return response
+
+    # ---------------------------------------------------------------------------------- plan
+    def plan(self, body: Any, limits: Limits | None = None) -> dict:
+        """What a /v1/systemone request would do, without calling the backend: per question the readout, the fit's
+        status and reason, the option count, the backend calls, the layout, the prompt hash and a token estimate
+        (characters / 4), plus the prefix the backend's prompt cache would keep from the question read before it.
+        `state` may be left out (the estimate then leaves it out too). Model names are checked only when they are
+        already known; the plan never asks the backend."""
+        from .backends import common_prefix, estimate_tokens
+        has_state = isinstance(body, dict) and body.get("state") is not None
+        req = self.parse_request({**body, "state": ""} if isinstance(body, dict) and not has_state else body, limits)
+        n = len(req.questions)
+        base = resolve_layout(req.layout, n)
+        layouts = {qid: self.question_layout(q, req.schema, req.layout, n, check_model=False)
+                   for qid, q in req.questions.items()}
+        order = [qid for qid in req.questions if layouts[qid] == STATE_FIRST] + \
+                [qid for qid in req.questions if layouts[qid] != STATE_FIRST]
+        out: dict[str, Any] = {}
+        prev = ""
+        totals = {"calls": {"letters": 0, "embed": 0}, "prompt_tokens": 0, "cached_tokens": 0}
+        notes: list[str] = []
+        for qid in order:
+            q, layout = req.questions[qid], layouts[qid]
+            same = self._same_question(req.schema, q)
+            fq, letters_ok, probe_ok = self._usable(req.schema.name, q.id, layout, False) if same else (None, False, False)
+            options = q.options(req.abstain)
+            has_none = len(options) > len(q.options())
+            shots = req.schema.shots(q.id, len(options)) if same else []
+            entry: dict[str, Any] = {"type": q.type, "options": len(options), "layout": layout,
+                                     "fit": self._plan_fit(req.schema, q, same, fq, letters_ok, probe_ok, layout)}
+            if req.readout == "probe" and not probe_ok:
+                entry["readout"] = None
+                entry["error"] = self._no_probe_reason(req.schema, q.id, same, layout)
+                use_probe = False
+            else:
+                use_probe = probe_ok and req.readout != "letters"
+                entry["readout"] = "probe" if use_probe else "letters"
+            prompts = []
+            if not use_probe or fq.blend or has_none:
+                if needs_tournament(len(options)):
+                    real = [o for o in options if o[0] != NONE_KEY]
+                    chunks = tournament_plan(len(real))
+                    prompts += [build_prompt(q, req.state, self.template, [real[i] for i in c] + [TOURNAMENT_NONE], None,
+                                             layout) for c in chunks]
+                    final = real[: min(len(chunks), 20)] + [o for o in options if o[0] == NONE_KEY]
+                    prompts.append(build_prompt(q, req.state, self.template, final, None, layout))
+                    notes.append(f"{qid}: {len(real)} options run a tournament of {len(chunks)} chunks and a final "
+                                 f"({len(chunks) + 1} passes; a fitted probe answers in one)")
+                else:
+                    prompts.append(build_prompt(q, req.state, self.template, options, shots, layout))
+            letters_prompts = list(prompts)
+            embed_tokens = 0
+            if use_probe:
+                embed_tokens = estimate_tokens(self.probe_prompt(q, req.state, req.schema.shots(q.id), layout=layout))
+            tokens = sum(estimate_tokens(p) for p in letters_prompts) + embed_tokens
+            cached = 0
+            for p in letters_prompts:
+                cached += min(estimate_tokens(p) - 1, common_prefix(prev, p) // 4) if prev else 0
+                prev = p
+            entry["calls"] = {"letters": len(letters_prompts), "embed": 1 if use_probe else 0}
+            entry["prompt_sha"] = fingerprint(q, self.template, q.options(), req.schema.shots(q.id) if same else [], layout)
+            entry["prompt_tokens"] = tokens
+            entry["cached_tokens"] = max(0, cached)
+            out[qid] = entry
+            totals["calls"]["letters"] += entry["calls"]["letters"]
+            totals["calls"]["embed"] += entry["calls"]["embed"]
+            totals["prompt_tokens"] += tokens
+            totals["cached_tokens"] += entry["cached_tokens"]
+        totals["evaluated_tokens"] = totals["prompt_tokens"] - totals["cached_tokens"]
+        if base == STATE_FIRST and n >= 2:
+            notes.append(f"state first: questions after the first reuse the cached state ({len(order)} questions, "
+                         "back to back; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)")
+        if self.backend.known_model_name() is None:
+            notes.append("model names not checked (the plan does not call the backend): a fit made on another model "
+                         "would not be used")
+        return {"backend": self.backend.url, "template": self.template, "model": self.backend.known_model_name(),
+                "schema": req.schema.name if req.schema is not None else None, "readout": req.readout,
+                "requested_layout": req.layout, "layout": base,
+                "state_tokens": estimate_tokens(render_state(req.state)) if has_state else None,
+                "order": order, "questions": {qid: out[qid] for qid in req.questions}, "totals": totals, "notes": notes}
+
+    def _plan_fit(self, schema: Schema | None, q: Question, same: bool, fq: FittedQuestion | None, letters_ok: bool,
+                  probe_ok: bool, layout: str) -> dict:
+        if schema is None:
+            return {"status": "none", "reason": "no schema named: questions are read zero-shot"}
+        if not same:
+            return {"status": "none", "reason": f"not the '{schema.name}' schema's question as defined there"}
+        if schema.builtin:
+            return {"status": "none", "reason": "a built-in preset: zero-shot"}
+        st = self._status.get((schema.name, q.id))
+        if fq is None or st is None:
+            return {"status": "none", "reason": f"not fitted (tez fit --schema {schema.name})"}
+        if fq.letters is None and fq.probe is None:
+            return {"status": "none", "reason": fq.note or "nothing was fitted for it"}
+        info = {"calibration_id": self.fitted[schema.name].calibration_id, "fit_layout": fq.layout,
+                "letters_calibrated": bool(letters_ok), "probe": bool(probe_ok)}
+        if letters_ok or probe_ok:
+            return {"status": "ready", "reason": None, **info}
+        reason = self._layout_mismatch(fq.layout, layout) or st.get("reason") or "fitted on another model"
+        return {"status": "stale", "reason": reason, **info}
 
     def backend_ms(self, ctx: DecisionContext) -> float:
         """Wall time spent in backend calls during a decision (from its traces)."""
