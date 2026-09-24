@@ -1,0 +1,488 @@
+{
+ "meta": {
+  "script": "experiments/speed_overhead.py",
+  "date": "2026-09-24T11:42:42",
+  "reps": 60,
+  "question": {
+   "type": "choice",
+   "instructions": "Which team should handle this?",
+   "criteria": {
+    "billing": "payments",
+    "technical": "bugs and integrations",
+    "sales": "pricing"
+   }
+  },
+  "state": "vs_laya_speed.fresh_state(i), new ticket id per call",
+  "llama_model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "llama_build": "b11100-7ab4ee7ba",
+  "tez_health": {
+   "status": "ok",
+   "version": "0.1.0",
+   "backend": "http://127.0.0.1:8091",
+   "template": "gemma4",
+   "embed_backend": null,
+   "schemas": [],
+   "probes": {},
+   "backend_status": "ok",
+   "model": "gemma-4-12b-q8_0"
+  }
+ },
+ "decomposition_p50": {
+  "llama_compute_ms (prompt_ms + predicted_ms, direct n_probs 200)": 81.43,
+  "direct_http_round_trip_np200_ms": 139.96,
+  "direct_http_round_trip_np0_ms": 140.05,
+  "n_probs_200_cost_ms (np200 - np0 round trip)": -0.09,
+  "engine_total_ms": 145.08,
+  "engine_backend_http_ms": 144.6,
+  "engine_python_ms (engine - backend http)": 0.43,
+  "tez_serve_client_round_trip_ms": 144.81,
+  "tez_serve_reported_latency_ms": 142.5,
+  "fastapi_uvicorn_client_ms (round trip - reported)": 2.34,
+  "health_round_trip_tez_ms": 3.64,
+  "health_round_trip_llama_ms": 1.0
+ },
+ "modes": {
+  "tez_serve": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 144.81,
+    "p95": 195.24,
+    "mean": 150.59,
+    "min": 117.02,
+    "max": 246.66
+   },
+   "server_ms": {
+    "n": 60,
+    "p50": 142.5,
+    "p95": 193.21,
+    "mean": 148.24,
+    "min": 114.6,
+    "max": 243.9
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 361.5,
+    "p95": 363.0,
+    "mean": 361.5,
+    "min": 359.0,
+    "max": 363.0
+   }
+  },
+  "engine": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 145.08,
+    "p95": 174.66,
+    "mean": 149.06,
+    "min": 115.47,
+    "max": 283.67
+   },
+   "backend_ms": {
+    "n": 60,
+    "p50": 144.6,
+    "p95": 174.25,
+    "mean": 148.62,
+    "min": 115.15,
+    "max": 283.36
+   }
+  },
+  "direct_np200": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 139.96,
+    "p95": 197.36,
+    "mean": 148.02,
+    "min": 113.87,
+    "max": 286.79
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 136.36,
+    "p95": 193.24,
+    "mean": 144.8,
+    "min": 111.4,
+    "max": 284.54
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 3.25,
+    "p95": 4.33,
+    "mean": 3.22,
+    "min": 1.94,
+    "max": 4.55
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 81.42,
+    "p95": 130.74,
+    "mean": 90.43,
+    "min": 73.71,
+    "max": 218.29
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 164.0,
+    "mean": 164.0,
+    "min": 164.0,
+    "max": 164.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 90.0,
+    "min": 90.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 18605.0,
+    "p95": 18693.2,
+    "mean": 18610.57,
+    "min": 18502.0,
+    "max": 18756.0
+   }
+  },
+  "direct_np20": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 146.77,
+    "p95": 194.57,
+    "mean": 150.17,
+    "min": 117.73,
+    "max": 209.18
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 146.32,
+    "p95": 193.95,
+    "mean": 149.6,
+    "min": 117.15,
+    "max": 208.74
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.56,
+    "p95": 0.78,
+    "mean": 0.57,
+    "min": 0.35,
+    "max": 0.8
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 87.03,
+    "p95": 140.62,
+    "mean": 95.96,
+    "min": 73.04,
+    "max": 148.18
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.01,
+    "min": 0.0,
+    "max": 0.25
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 165.0,
+    "mean": 164.22,
+    "min": 164.0,
+    "max": 166.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 89.78,
+    "min": 88.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 4178.0,
+    "p95": 4191.05,
+    "mean": 4179.25,
+    "min": 4166.0,
+    "max": 4195.0
+   }
+  },
+  "direct_np1": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 141.44,
+    "p95": 196.08,
+    "mean": 152.38,
+    "min": 116.16,
+    "max": 316.77
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 141.09,
+    "p95": 195.64,
+    "mean": 152.06,
+    "min": 115.85,
+    "max": 316.56
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.29,
+    "p95": 0.46,
+    "mean": 0.32,
+    "min": 0.18,
+    "max": 0.56
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 89.41,
+    "p95": 142.29,
+    "mean": 100.28,
+    "min": 71.72,
+    "max": 269.66
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 164.0,
+    "mean": 164.0,
+    "min": 164.0,
+    "max": 164.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 90.0,
+    "min": 90.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 2859.0,
+    "p95": 2861.0,
+    "mean": 2858.62,
+    "min": 2850.0,
+    "max": 2861.0
+   }
+  },
+  "direct_np0": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 140.05,
+    "p95": 208.34,
+    "mean": 153.95,
+    "min": 115.1,
+    "max": 319.32
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 139.85,
+    "p95": 208.1,
+    "mean": 153.67,
+    "min": 114.85,
+    "max": 319.04
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.25,
+    "p95": 0.4,
+    "mean": 0.28,
+    "min": 0.17,
+    "max": 0.42
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 86.65,
+    "p95": 143.58,
+    "mean": 99.85,
+    "min": 67.28,
+    "max": 270.49
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 165.0,
+    "mean": 164.22,
+    "min": 164.0,
+    "max": 166.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 89.78,
+    "min": 88.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 2668.0,
+    "p95": 2669.0,
+    "mean": 2667.97,
+    "min": 2665.0,
+    "max": 2669.0
+   }
+  },
+  "health_tez": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 3.64,
+    "p95": 4.82,
+    "mean": 3.74,
+    "min": 2.79,
+    "max": 5.74
+   }
+  },
+  "health_llama": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 1.0,
+    "p95": 1.42,
+    "mean": 1.01,
+    "min": 0.63,
+    "max": 1.55
+   }
+  }
+ },
+ "gpu": {
+  "samples": 344,
+  "temp_c_p50": 86.0,
+  "temp_c_max": 93.0,
+  "sm_mhz_busy_p50": 510.0,
+  "sm_mhz_busy_p10": 332.8,
+  "power_w_busy_p50": 63.81,
+  "busy_frac": 0.334,
+  "thermal_throttle_frac": 0.57
+ },
+ "gpu_guard": {
+  "own_pids": [
+   64868
+  ],
+  "before": {
+   "time": "2026-09-24T11:39:43+02:00",
+   "used_mb": 15472,
+   "total_mb": 16303,
+   "util_pct": 5,
+   "processes": [
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2272
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 413
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 240
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 174
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 14170
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 104
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T11:42:42+02:00",
+   "used_mb": 15521,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 120
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2321
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 393
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 240
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 174
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 14170
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 104
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ }
+}

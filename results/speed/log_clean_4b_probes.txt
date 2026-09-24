@@ -1,0 +1,2123 @@
+acquired: {"owner": "projects-37-speedlab", "purpose": "Tez latency measurements", "since": "2026-09-24T14:18:35+02:00", "until": "2026-09-24T15:18:35+02:00", "pid": null}
+  55/220 91s
+  110/220 167s
+  165/220 229s
+  220/220 304s
+gpu_guard contaminated: False []
+{
+ "latency_incremental": {
+  "compute_ms": {
+   "n": 938,
+   "p50": 9.95,
+   "p95": 14.95,
+   "mean": 10.79,
+   "min": 7.96,
+   "max": 24.92
+  },
+  "round_trip_ms": {
+   "n": 938,
+   "p50": 10.95,
+   "p95": 16.16,
+   "mean": 11.77,
+   "min": 8.67,
+   "max": 27.02
+  },
+  "tokens_evaluated": {
+   "n": 938,
+   "p50": 1.0,
+   "p95": 2.0,
+   "mean": 1.07,
+   "min": 1.0,
+   "max": 4.0
+  }
+ },
+ "first_word": {
+  "compute_ms": {
+   "n": 220,
+   "p50": 14.25,
+   "p95": 18.72,
+   "mean": 14.83,
+   "min": 12.66,
+   "max": 23.6
+  },
+  "round_trip_ms": {
+   "n": 220,
+   "p50": 15.21,
+   "p95": 20.15,
+   "mean": 15.78,
+   "min": 13.29,
+   "max": 25.21
+  }
+ },
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 5.0,
+    "inner_cv": 0.5048,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.05,
+    "inner_cv": 0.4953,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.5318,
+   "intent_accuracy_alt_ok": 0.5318,
+   "intent_accuracy_alt_or_then_ok": 0.6,
+   "accuracy_by_style": {
+    "canonical": 0.597,
+    "paraphrase": 0.564,
+    "noisy": 0.667,
+    "compound": 0.045,
+    "ambiguous": 0.364,
+    "oos": 0.591
+   },
+   "none_recall": 0.5909,
+   "none_precision": 0.5652
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 57,
+   "harmful_rate": 0.2879,
+   "final_action_consistent_rate": 0.6869,
+   "mean_first_action_word": 4.304,
+   "first_action_at_or_before_human": 0.4798,
+   "oos_rows": 22,
+   "oos_false_actions": 11,
+   "harmful_detail": [
+    {
+     "id": "v001",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v004",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v006",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v007",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       6,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v014",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ],
+      [
+       9,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_notes",
+      "type_text"
+     ]
+    },
+    {
+     "id": "v018",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ],
+      [
+       8,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_notes",
+      "type_text"
+     ]
+    },
+    {
+     "id": "v032",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "type_text"
+     ]
+    },
+    {
+     "id": "v037",
+     "seq": [
+      [
+       3,
+       "open_youtube"
+      ],
+      [
+       4,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v039",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       5,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v042",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       9,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v043",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       6,
+       "open_browser"
+      ],
+      [
+       6,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v050",
+     "seq": [
+      [
+       1,
+       "open_youtube"
+      ],
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v065",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       5,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v070",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ],
+      [
+       5,
+       "resume_media"
+      ],
+      [
+       7,
+       "play_liked_songs"
+      ],
+      [
+       8,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_spotify",
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v073",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ],
+      [
+       7,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "open_spotify",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v075",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v076",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       6,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v088",
+     "seq": [
+      [
+       4,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v094",
+     "seq": [
+      [
+       8,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v096",
+     "seq": [
+      [
+       6,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v101",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v105",
+     "seq": [
+      [
+       3,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v106",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v108",
+     "seq": [
+      [
+       5,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v109",
+     "seq": [
+      [
+       4,
+       "pause_media"
+      ],
+      [
+       5,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v110",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v119",
+     "seq": [
+      [
+       2,
+       "resume_media"
+      ],
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v120",
+     "seq": [
+      [
+       4,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v122",
+     "seq": [
+      [
+       4,
+       "resume_media"
+      ],
+      [
+       5,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v125",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v126",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v128",
+     "seq": [
+      [
+       3,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v130",
+     "seq": [
+      [
+       7,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v137",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v139",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v143",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v144",
+     "seq": [
+      [
+       3,
+       "volume_up"
+      ],
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v145",
+     "seq": [
+      [
+       4,
+       "volume_up"
+      ],
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v158",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v170",
+     "seq": [
+      [
+       3,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v177",
+     "seq": [
+      [
+       7,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v180",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v186",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v188",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v190",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v191",
+     "seq": [
+      [
+       4,
+       "pause_media"
+      ],
+      [
+       5,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v192",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v198",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app",
+      "pause_media"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v201",
+    "v202",
+    "v204",
+    "v207",
+    "v210",
+    "v213",
+    "v214",
+    "v216",
+    "v217",
+    "v218",
+    "v220"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 0.5,
+    "inner_cv": 0.7683,
+    "n_train": 535
+   },
+   "1": {
+    "C": 5.0,
+    "inner_cv": 0.7897,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.5727,
+   "intent_accuracy_alt_ok": 0.5727,
+   "intent_accuracy_alt_or_then_ok": 0.6545,
+   "accuracy_by_style": {
+    "canonical": 0.636,
+    "paraphrase": 0.655,
+    "noisy": 0.606,
+    "compound": 0.091,
+    "ambiguous": 0.364,
+    "oos": 0.682
+   },
+   "none_recall": 0.6818,
+   "none_precision": 0.3846
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 40,
+   "harmful_rate": 0.202,
+   "final_action_consistent_rate": 0.7273,
+   "mean_first_action_word": 3.972,
+   "first_action_at_or_before_human": 0.4394,
+   "oos_rows": 22,
+   "oos_false_actions": 8,
+   "harmful_detail": [
+    {
+     "id": "v032",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "type_text"
+     ]
+    },
+    {
+     "id": "v037",
+     "seq": [
+      [
+       3,
+       "open_youtube"
+      ],
+      [
+       4,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v043",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       6,
+       "open_browser"
+      ],
+      [
+       6,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v046",
+     "seq": [
+      [
+       3,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v052",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       7,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v059",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       11,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v065",
+     "seq": [
+      [
+       3,
+       "open_spotify"
+      ],
+      [
+       4,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       5,
+       "next_track"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v075",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v076",
+     "seq": [
+      [
+       6,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v077",
+     "seq": [
+      [
+       4,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v085",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v089",
+     "seq": [
+      [
+       6,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v101",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v106",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v108",
+     "seq": [
+      [
+       5,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v114",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v117",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ],
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v122",
+     "seq": [
+      [
+       5,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v126",
+     "seq": [
+      [
+       2,
+       "next_track"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       2,
+       "next_track"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v137",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v143",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v145",
+     "seq": [
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v162",
+     "seq": [
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v166",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ],
+      [
+       5,
+       "open_youtube"
+      ],
+      [
+       10,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_browser",
+      "search_web"
+     ]
+    },
+    {
+     "id": "v170",
+     "seq": [
+      [
+       4,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v177",
+     "seq": [
+      [
+       7,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v180",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v186",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v187",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v188",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v190",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v192",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v193",
+     "seq": [
+      [
+       4,
+       "open_notes"
+      ],
+      [
+       6,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v198",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app",
+      "pause_media"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v200",
+    "v201",
+    "v204",
+    "v206",
+    "v213",
+    "v214",
+    "v216",
+    "v217"
+   ]
+  }
+ }
+}
+  55/220 97s
+  110/220 177s
+  165/220 243s
+  220/220 323s
+gpu_guard contaminated: False []
+{
+ "latency_incremental": {
+  "compute_ms": {
+   "n": 938,
+   "p50": 29.0,
+   "p95": 36.29,
+   "mean": 30.09,
+   "min": 25.91,
+   "max": 63.27
+  },
+  "round_trip_ms": {
+   "n": 938,
+   "p50": 30.12,
+   "p95": 37.79,
+   "mean": 31.26,
+   "min": 26.64,
+   "max": 64.72
+  },
+  "tokens_evaluated": {
+   "n": 938,
+   "p50": 13.0,
+   "p95": 16.0,
+   "mean": 13.7,
+   "min": 13.0,
+   "max": 19.0
+  }
+ },
+ "first_word": {
+  "compute_ms": {
+   "n": 220,
+   "p50": 17.05,
+   "p95": 21.93,
+   "mean": 17.71,
+   "min": 15.09,
+   "max": 25.46
+  },
+  "round_trip_ms": {
+   "n": 220,
+   "p50": 18.11,
+   "p95": 23.23,
+   "mean": 18.77,
+   "min": 15.78,
+   "max": 26.94
+  }
+ },
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 0.01,
+    "inner_cv": 0.8667,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.05,
+    "inner_cv": 0.8525,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.9,
+   "intent_accuracy_alt_ok": 0.9136,
+   "intent_accuracy_alt_or_then_ok": 0.9182,
+   "accuracy_by_style": {
+    "canonical": 0.987,
+    "paraphrase": 0.909,
+    "noisy": 0.848,
+    "compound": 0.955,
+    "ambiguous": 0.364,
+    "oos": 0.864
+   },
+   "none_recall": 0.8636,
+   "none_precision": 0.7917
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 7,
+   "harmful_rate": 0.0354,
+   "final_action_consistent_rate": 0.9394,
+   "mean_first_action_word": 4.021,
+   "first_action_at_or_before_human": 0.4899,
+   "oos_rows": 22,
+   "oos_false_actions": 4,
+   "harmful_detail": [
+    {
+     "id": "v068",
+     "seq": [
+      [
+       4,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v111",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v141",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v207",
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 0.5,
+    "inner_cv": 0.9253,
+    "n_train": 535
+   },
+   "1": {
+    "C": 5.0,
+    "inner_cv": 0.9503,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.8818,
+   "intent_accuracy_alt_ok": 0.8864,
+   "intent_accuracy_alt_or_then_ok": 0.8909,
+   "accuracy_by_style": {
+    "canonical": 1,
+    "paraphrase": 0.855,
+    "noisy": 0.848,
+    "compound": 0.955,
+    "ambiguous": 0.273,
+    "oos": 0.818
+   },
+   "none_recall": 0.8182,
+   "none_precision": 0.5
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 3,
+   "harmful_rate": 0.0152,
+   "final_action_consistent_rate": 0.904,
+   "mean_first_action_word": 3.89,
+   "first_action_at_or_before_human": 0.4242,
+   "oos_rows": 22,
+   "oos_false_actions": 4,
+   "harmful_detail": [
+    {
+     "id": "v150",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ],
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v199",
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ }
+}
+  55/220 100s
+  110/220 184s
+  165/220 251s
+  220/220 334s
+gpu_guard contaminated: False []
+{
+ "latency_incremental": {
+  "compute_ms": {
+   "n": 938,
+   "p50": 38.75,
+   "p95": 47.47,
+   "mean": 39.73,
+   "min": 33.91,
+   "max": 81.01
+  },
+  "round_trip_ms": {
+   "n": 938,
+   "p50": 40.06,
+   "p95": 49.31,
+   "mean": 41.07,
+   "min": 34.7,
+   "max": 83.5
+  },
+  "tokens_evaluated": {
+   "n": 938,
+   "p50": 13.0,
+   "p95": 16.0,
+   "mean": 13.7,
+   "min": 13.0,
+   "max": 19.0
+  }
+ },
+ "first_word": {
+  "compute_ms": {
+   "n": 220,
+   "p50": 22.89,
+   "p95": 27.6,
+   "mean": 23.2,
+   "min": 19.71,
+   "max": 35.03
+  },
+  "round_trip_ms": {
+   "n": 220,
+   "p50": 24.26,
+   "p95": 28.95,
+   "mean": 24.44,
+   "min": 20.41,
+   "max": 36.63
+  }
+ },
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 0.05,
+    "inner_cv": 0.8762,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.05,
+    "inner_cv": 0.861,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.8909,
+   "intent_accuracy_alt_ok": 0.9045,
+   "intent_accuracy_alt_or_then_ok": 0.9182,
+   "accuracy_by_style": {
+    "canonical": 0.987,
+    "paraphrase": 0.909,
+    "noisy": 0.848,
+    "compound": 0.864,
+    "ambiguous": 0.364,
+    "oos": 0.864
+   },
+   "none_recall": 0.8636,
+   "none_precision": 0.76
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 7,
+   "harmful_rate": 0.0354,
+   "final_action_consistent_rate": 0.9394,
+   "mean_first_action_word": 3.995,
+   "first_action_at_or_before_human": 0.4848,
+   "oos_rows": 22,
+   "oos_false_actions": 4,
+   "harmful_detail": [
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v101",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v111",
+     "seq": [
+      [
+       3,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v141",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v207",
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 5.0,
+    "inner_cv": 0.9328,
+    "n_train": 535
+   },
+   "1": {
+    "C": 5.0,
+    "inner_cv": 0.9439,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.8909,
+   "intent_accuracy_alt_ok": 0.8955,
+   "intent_accuracy_alt_or_then_ok": 0.9,
+   "accuracy_by_style": {
+    "canonical": 1,
+    "paraphrase": 0.891,
+    "noisy": 0.848,
+    "compound": 0.955,
+    "ambiguous": 0.182,
+    "oos": 0.864
+   },
+   "none_recall": 0.8636,
+   "none_precision": 0.5278
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 3,
+   "harmful_rate": 0.0152,
+   "final_action_consistent_rate": 0.9091,
+   "mean_first_action_word": 3.918,
+   "first_action_at_or_before_human": 0.4141,
+   "oos_rows": 22,
+   "oos_false_actions": 3,
+   "harmful_detail": [
+    {
+     "id": "v150",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ],
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ }
+}
+acquired: {"owner": "projects-37-speedlab", "purpose": "Tez latency measurements", "since": "2026-09-24T14:43:18+02:00", "until": "2026-09-24T15:43:18+02:00", "pid": null}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+train (6000, 2560) 106s
+test (2000, 2560) 47s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+train (6000, 2560) 705s
+test (2000, 2560) 285s
+L24_inproc     stateonly  1q  p50    40.43  p95    68.10  per q   40.43
+L24_inproc     stateonly  2q  p50    36.41  p95    43.62  per q   18.20
+L24_inproc     stateonly  5q  p50    36.22  p95    40.43  per q    7.24
+L24_inproc     stateonly 10q  p50    38.29  p95    50.58  per q    3.83
+L24_inproc     stateonly 20q  p50    36.57  p95    41.52  per q    1.83
+L24_inproc     stateonly 50q  p50    37.83  p95    44.29  per q    0.76
+L24_inproc     sfq        1q  p50    45.84  p95    81.13  per q   45.84
+L24_inproc     sfq        2q  p50   134.97  p95   221.10  per q   67.48
+L24_inproc     sfq        5q  p50   212.04  p95   245.41  per q   42.41
+L24_inproc     sfq       10q  p50   346.42  p95   367.68  per q   34.64
+L24_inproc     sfq       20q  p50   657.83  p95   712.38  per q   32.89
+L24_inproc     sfq       50q  p50  2103.87  p95  2463.06  per q   42.08
+L24_inproc     qprompt    1q  p50    45.07  p95    50.05  per q   45.07
+L24_inproc     qprompt    2q  p50   125.00  p95   212.43  per q   62.50
+L24_inproc     qprompt    5q  p50   419.24  p95   443.65  per q   83.85
+L24_inproc     qprompt   10q  p50  1080.36  p95  1183.39  per q  108.04
+L24_inproc     qprompt   20q  p50  2459.74  p95  3294.88  per q  122.99
+L24_inproc     qprompt   50q  p50  6781.22  p95  8334.90  per q  135.62
+gpu_guard contaminated: False []
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+L24_stateonly {'accuracy': 0.749, 'C': 0.05, 'train_cv': 0.7438, 'by_type': {'choice': 0.7183, 'noul': 0.8367, 'score': 0.7063}}
+L24_stateonly_inproc {'accuracy': 0.7445, 'C': 0.05, 'train_cv': 0.7433, 'by_type': {'choice': 0.7083, 'noul': 0.8367, 'score': 0.7025}}
+L24_sfq {'accuracy': 0.7845, 'C': 0.05, 'train_cv': 0.7795, 'by_type': {'choice': 0.7433, 'noul': 0.85, 'score': 0.7662}}
+reference qprompt {'accuracy': 0.793, 'C': 0.05, 'train_cv': 0.7793, 'by_type': {'choice': 0.7667, 'noul': 0.8717, 'score': 0.7538}}
+q4bL24_inproc_unique batch_today        1q  p50     40.6  p95     44.5  per q  40.59  tokens 261  sm 675.0 76.0C thr 0.0
+q4bL24_inproc_unique batch_statefirst   1q  p50     41.6  p95     44.2  per q  41.56  tokens 260  sm 675.0 76.0C thr 0.0
+q4bL24_inproc_unique batch_today        5q  p50    203.1  p95    213.6  per q  40.61  tokens 1157  sm 720.0 77.0C thr 0.0
+q4bL24_inproc_unique batch_statefirst   5q  p50     93.8  p95    100.9  per q  18.76  tokens 460  sm 720.0 77.0C thr 0.0
+q4bL24_inproc_unique batch_today       10q  p50    392.9  p95    398.3  per q  39.29  tokens 2282  sm 701.0 78.5C thr 0.0
+q4bL24_inproc_unique batch_statefirst  10q  p50    143.1  p95    149.2  per q  14.31  tokens 715  sm 701.0 78.5C thr 0.0
+q4bL24_inproc_unique batch_today       50q  p50   2153.4  p95   2253.1  per q  43.07  tokens 11282  sm 1620.0 81.0C thr 0.0
+q4bL24_inproc_unique batch_statefirst  50q  p50    646.6  p95    651.2  per q  12.93  tokens 2755  sm 1620.0 81.0C thr 0.0
+gpu_guard contaminated: False []
+4B probe chain done

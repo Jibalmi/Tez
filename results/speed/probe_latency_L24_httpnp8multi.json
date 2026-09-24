@@ -1,0 +1,227 @@
+{
+ "meta": {
+  "script": "experiments/speed_probe_multiq.py latency",
+  "date": "2026-09-24T13:47:02",
+  "engine": "http",
+  "url": "http://127.0.0.1:8095",
+  "model": "tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "warmup": 5,
+  "reps": 50,
+  "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "total_slots": 8
+ },
+ "layouts": {
+  "qprompt": {
+   "1": {
+    "n": 50,
+    "p50": 51.22,
+    "p95": 56.62,
+    "mean": 51.35,
+    "min": 46.24,
+    "max": 58.28,
+    "ms_per_question_p50": 51.22,
+    "ms_per_question_p95": 56.62,
+    "feature_ms_p50": 51.16,
+    "probe_ms_p50": 0.062
+   },
+   "2": {
+    "n": 50,
+    "p50": 133.34,
+    "p95": 141.28,
+    "mean": 133.67,
+    "min": 124.51,
+    "max": 149.06,
+    "ms_per_question_p50": 66.67,
+    "ms_per_question_p95": 70.64,
+    "feature_ms_p50": 133.26,
+    "probe_ms_p50": 0.074
+   },
+   "5": {
+    "n": 50,
+    "p50": 320.63,
+    "p95": 329.05,
+    "mean": 321.23,
+    "min": 311.59,
+    "max": 333.72,
+    "ms_per_question_p50": 64.13,
+    "ms_per_question_p95": 65.81,
+    "feature_ms_p50": 320.54,
+    "probe_ms_p50": 0.087
+   },
+   "10": {
+    "n": 50,
+    "p50": 666.37,
+    "p95": 704.26,
+    "mean": 668.53,
+    "min": 638.21,
+    "max": 716.33,
+    "ms_per_question_p50": 66.64,
+    "ms_per_question_p95": 70.43,
+    "feature_ms_p50": 666.24,
+    "probe_ms_p50": 0.136
+   },
+   "20": {
+    "n": 50,
+    "p50": 1555.44,
+    "p95": 1763.16,
+    "mean": 1580.84,
+    "min": 1437.84,
+    "max": 1815.84,
+    "ms_per_question_p50": 77.77,
+    "ms_per_question_p95": 88.16,
+    "feature_ms_p50": 1555.22,
+    "probe_ms_p50": 0.218
+   },
+   "50": {
+    "n": 50,
+    "p50": 5085.92,
+    "p95": 5331.24,
+    "mean": 5009.48,
+    "min": 4477.75,
+    "max": 5395.11,
+    "ms_per_question_p50": 101.72,
+    "ms_per_question_p95": 106.62,
+    "feature_ms_p50": 5085.32,
+    "probe_ms_p50": 0.602
+   }
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   49460
+  ],
+  "before": {
+   "time": "2026-09-24T13:47:06+02:00",
+   "used_mb": 6019,
+   "total_mb": 16303,
+   "util_pct": 3,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 104
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2394
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 130
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 378
+    },
+    {
+     "pid": 49460,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 4583
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 205
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 49460,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 586
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T13:55:52+02:00",
+   "used_mb": 6169,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2427
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 410
+    },
+    {
+     "pid": 49460,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 4583
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 49460,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 586
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": true,
+  "reasons_before": [
+   "our process llama-server (49460) has 586 MB in shared system memory (VRAM spill)"
+  ],
+  "reasons_after": [
+   "our process llama-server (49460) has 586 MB in shared system memory (VRAM spill)"
+  ]
+ }
+}

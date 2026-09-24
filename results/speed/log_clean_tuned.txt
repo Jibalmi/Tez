@@ -1,0 +1,36 @@
+{
+ "llama_compute_ms (prompt_ms + predicted_ms, direct n_probs 200)": 138.23,
+ "direct_http_round_trip_np200_ms": 147.66,
+ "direct_http_round_trip_np0_ms": 143.73,
+ "n_probs_200_cost_ms (np200 - np0 round trip)": 3.93,
+ "engine_total_ms": 148.45,
+ "engine_backend_http_ms": 148.06,
+ "engine_python_ms (engine - backend http)": 0.4,
+ "tez_serve_client_round_trip_ms": 148.97,
+ "tez_serve_reported_latency_ms": 146.85,
+ "fastapi_uvicorn_client_ms (round trip - reported)": 2.24,
+ "health_round_trip_tez_ms": 3.51,
+ "health_round_trip_llama_ms": 0.91
+}
+tuned_unique             tez:today               1q  p50    170.2  p95    225.4  per q 170.17  tokens/call 0  sm 630.0  87.0C
+tuned_unique             http:today              1q  p50    132.1  p95    153.5  per q 132.10  tokens/call 165  sm 630.0  87.0C
+tuned_unique             http:statefirst         1q  p50    154.1  p95    185.3  per q 154.08  tokens/call 248  sm 630.0  87.0C
+tuned_unique             tez:today               5q  p50   1194.1  p95   1406.4  per q 238.82  tokens/call 0  sm 648.5  87.0C
+tuned_unique             http:today              5q  p50   1178.5  p95   1470.1  per q 235.70  tokens/call 1104  sm 648.5  87.0C
+tuned_unique             http:statefirst         5q  p50    522.2  p95    582.8  per q 104.45  tokens/call 448  sm 648.5  87.0C
+tuned_unique             tez:today              10q  p50   2694.5  p95   3588.9  per q 269.45  tokens/call 0  sm 577.0  88.0C
+tuned_unique             http:today             10q  p50   2782.0  p95   3321.7  per q 278.20  tokens/call 2241  sm 577.0  88.0C
+tuned_unique             http:statefirst        10q  p50    924.7  p95   1097.7  per q  92.47  tokens/call 704  sm 577.0  88.0C
+tuned_unique             tez:today              50q  p50  16623.8  p95  17330.4  per q 332.48  tokens/call 0  sm 558.5  88.0C
+tuned_unique             http:today             50q  p50  13496.0  p95  14448.4  per q 269.92  tokens/call 11241  sm 558.5  88.0C
+tuned_unique             http:statefirst        50q  p50   4478.4  p95   4638.8  per q  89.57  tokens/call 2744  sm 558.5  88.0C
+gpu_guard contaminated: False []
+tuned                    tez:today               1q  p50    171.8  p95    189.7  per q 171.80  tokens/call 0  sm 419.5  87.0C
+tuned                    http:statefirst         1q  p50    167.6  p95    188.7  per q 167.59  tokens/call 243  sm 419.5  87.0C
+tuned                    tez:today               5q  p50   1131.2  p95   1346.2  per q 226.23  tokens/call 0  sm 562.0  88.0C
+tuned                    http:statefirst         5q  p50    500.0  p95    538.2  per q 100.01  tokens/call 423  sm 562.0  88.0C
+tuned                    tez:today              10q  p50   2366.8  p95   2461.2  per q 236.68  tokens/call 0  sm 603.5  87.5C
+tuned                    http:statefirst        10q  p50    884.2  p95    906.1  per q  88.42  tokens/call 653  sm 603.5  87.5C
+tuned                    tez:today              50q  p50  11826.1  p95  12866.8  per q 236.52  tokens/call 0  sm 645.0  88.0C
+tuned                    http:statefirst        50q  p50   4004.0  p95   4104.1  per q  80.08  tokens/call 2453  sm 645.0  88.0C
+gpu_guard contaminated: False []

@@ -1,0 +1,233 @@
+{
+ "meta": {
+  "script": "experiments/speed_multiq_inproc.py",
+  "date": "2026-09-24T14:07:38",
+  "args": {
+   "mode": "td",
+   "arms": "batch_statefirst,batch_today",
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_seq_max": 64,
+   "n_ubatch": 512,
+   "warmup": 3,
+   "reps": 20,
+   "reps50": 8,
+   "gap": 0.3,
+   "cool": 0.0,
+   "seed_offset": 300000,
+   "unique": false,
+   "duty": 0.0,
+   "limit_rows": 0,
+   "compare": "",
+   "tag": "q4bL24_inproc"
+  },
+  "params": {
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_ubatch": 512,
+   "n_seq_max": 64,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 64,
+   "n_outputs_max_per_seq": 0
+  },
+  "load_s": 3.2,
+  "n_layer": 24
+ },
+ "batch_statefirst": {
+  "n_decisions": 2000,
+  "accuracy": 0.574,
+  "by_type": {
+   "choice": 0.5983,
+   "noul": 0.675,
+   "score": 0.48
+  },
+  "per_row_call_ms": {
+   "n": 400,
+   "p50": 176.2,
+   "p95": 209.18,
+   "mean": 176.72,
+   "min": 140.06,
+   "max": 404.7
+  },
+  "wall_s": 70.9,
+  "gpu": {
+   "samples": 139,
+   "temp_c_p50": 84.0,
+   "temp_c_max": 89.0,
+   "sm_mhz_busy_p50": 1672.0,
+   "sm_mhz_busy_p10": 1467.6,
+   "power_w_busy_p50": 84.09,
+   "busy_frac": 0.993,
+   "thermal_throttle_frac": 0.281
+  }
+ },
+ "batch_today": {
+  "n_decisions": 2000,
+  "accuracy": 0.5815,
+  "by_type": {
+   "choice": 0.5433,
+   "noul": 0.715,
+   "score": 0.51
+  },
+  "per_row_call_ms": {
+   "n": 400,
+   "p50": 480.8,
+   "p95": 681.83,
+   "mean": 476.43,
+   "min": 229.68,
+   "max": 898.03
+  },
+  "wall_s": 190.9,
+  "gpu": {
+   "samples": 373,
+   "temp_c_p50": 87.0,
+   "temp_c_max": 88.0,
+   "sm_mhz_busy_p50": 982.0,
+   "sm_mhz_busy_p10": 937.0,
+   "power_w_busy_p50": 60.07,
+   "busy_frac": 1.0,
+   "thermal_throttle_frac": 1.0
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   63920
+  ],
+  "before": {
+   "time": "2026-09-24T14:07:42+02:00",
+   "used_mb": 8066,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 214
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2424
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 132
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 405
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 63920,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 6386
+    },
+    {
+     "pid": 63920,
+     "name": "python",
+     "kind": "shared",
+     "mb": 152
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T14:12:15+02:00",
+   "used_mb": 8058,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 188
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2424
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 134
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 426
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 63920,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 6422
+    },
+    {
+     "pid": 63920,
+     "name": "python",
+     "kind": "shared",
+     "mb": 154
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ }
+}

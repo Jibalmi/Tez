@@ -1,0 +1,1224 @@
+{
+ "meta": {
+  "script": "experiments/speed_voice.py",
+  "date": "2026-09-24T15:56:28",
+  "args": {
+   "engine": "inproc",
+   "readout": "probe_end",
+   "defer": true,
+   "url": "http://127.0.0.1:8091",
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "cache": "on",
+   "n_probs": 200,
+   "limit": 0,
+   "gap": 0.25,
+   "cool": 85.0,
+   "tag": "q4bL24_probeend_defer"
+  },
+  "data_sha256": "6dfba8d2de653e6010f682703400ef9444976ffc9bb8b18d6be1b6fe7a99a1c5",
+  "prompt_example": "<|im_start|>user\nYou are the command router of a voice-controlled computer assistant. Read the user's transcript and decide which ONE action they are asking for. Answer with the letter only. Choose 'none' if the request is chit-chat, a question, out of scope, or too unclear to act on.\n\nActions:\nA. open_notes: Open the notes or notepad application.\nB. type_text: Type the dictated text into the app that is currently in focus.\nC. open_youtube: Open YouTube without playing anything in particular.\nD. play_youtube: Search for and play a specific video, channel or topic on YouTube.\nE. open_spotify: Open Spotify without playing anything in particular.\nF. play_liked_songs: Play the user's own liked or saved songs collection on Spotify.\nG. play_spotify: Play a specific song, artist, album or playlist on Spotify.\nH. pause_media: Pause or stop whatever is currently playing.\nI. resume_media: Resume or continue playback that was paused.\nJ. next_track: Skip to the next track or video.\nK. volume_up: Make the sound louder by increasing the volume.\nL. volume_down: Make the sound quieter by decreasing the volume.\nM. open_browser: Open the web browser without searching for anything.\nN. search_web: Search the web or look something up online for the user.\nO. close_app: Close the current window or a named application.\nP. none: Out of scope: chit-chat, a question, or a request for something the assistant cannot do.\n\nTranscript: \"open notes\"<|im_end|>",
+  "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "load_s": 3.1,
+  "n_layer": 24,
+  "n_embd": 2560,
+  "params": {
+   "n_ctx": 2048,
+   "n_batch": 512,
+   "n_ubatch": 512,
+   "n_seq_max": 3,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 32,
+   "n_outputs_max_per_seq": 0
+  },
+  "constant_prefix_tokens": 341
+ },
+ "latency_per_word": {
+  "all_words": {
+   "compute_ms": {
+    "n": 1158,
+    "p50": 14.69,
+    "p95": 18.64,
+    "mean": 15.34,
+    "min": 13.08,
+    "max": 85.26
+   },
+   "round_trip_ms": {
+    "n": 1158,
+    "p50": 15.9,
+    "p95": 19.9,
+    "mean": 16.5,
+    "min": 13.86,
+    "max": 94.26
+   },
+   "tokens_evaluated": {
+    "n": 1158,
+    "p50": 3.0,
+    "p95": 4.0,
+    "mean": 3.27,
+    "min": 3.0,
+    "max": 6.0
+   }
+  },
+  "incremental_words": {
+   "compute_ms": {
+    "n": 938,
+    "p50": 14.68,
+    "p95": 18.58,
+    "mean": 15.34,
+    "min": 13.08,
+    "max": 85.26
+   },
+   "round_trip_ms": {
+    "n": 938,
+    "p50": 15.88,
+    "p95": 19.82,
+    "mean": 16.53,
+    "min": 13.96,
+    "max": 94.26
+   },
+   "tokens_evaluated": {
+    "n": 938,
+    "p50": 3.0,
+    "p95": 4.0,
+    "mean": 3.07,
+    "min": 3.0,
+    "max": 6.0
+   }
+  },
+  "first_word": {
+   "compute_ms": {
+    "n": 220,
+    "p50": 14.81,
+    "p95": 18.7,
+    "mean": 15.34,
+    "min": 13.14,
+    "max": 34.14
+   },
+   "round_trip_ms": {
+    "n": 220,
+    "p50": 15.95,
+    "p95": 20.04,
+    "mean": 16.41,
+    "min": 13.86,
+    "max": 37.57
+   }
+  },
+  "deferred_commit_ms": {
+   "n": 1158,
+   "p50": 14.37,
+   "p95": 18.61,
+   "mean": 14.91,
+   "min": 12.3,
+   "max": 85.86
+  }
+ },
+ "gpu": {
+  "before": {
+   "temp_c": 84.0,
+   "sm_mhz": 1650.0,
+   "power_w": 27.07,
+   "util": 5.0,
+   "throttle": "0x0000000000000000",
+   "waited_s": 0.2
+  },
+  "during": {
+   "samples": 640,
+   "temp_c_p50": 84.0,
+   "temp_c_max": 87.0,
+   "sm_mhz_busy_p50": 615.0,
+   "sm_mhz_busy_p10": 492.6,
+   "power_w_busy_p50": 37.11,
+   "busy_frac": 0.091,
+   "thermal_throttle_frac": 0.0
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   58776
+  ],
+  "before": {
+   "time": "2026-09-24T15:56:34+02:00",
+   "used_mb": 5816,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 469
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2517
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 128
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 424
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 58776,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3814
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T16:02:04+02:00",
+   "used_mb": 5839,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 472
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2517
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 128
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 426
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 58776,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3816
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "shared",
+     "mb": 123
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ },
+ "restored_from_checkpoint": 0,
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 5.0,
+    "inner_cv": 0.6095,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.5,
+    "inner_cv": 0.5128,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.7682,
+   "intent_accuracy_alt_ok": 0.7818,
+   "intent_accuracy_alt_or_then_ok": 0.7818,
+   "accuracy_by_style": {
+    "canonical": 0.844,
+    "paraphrase": 0.709,
+    "noisy": 0.667,
+    "compound": 0.773,
+    "ambiguous": 0.545,
+    "oos": 0.909
+   },
+   "none_recall": 0.9091,
+   "none_precision": 0.8
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 41,
+   "harmful_rate": 0.2071,
+   "final_action_consistent_rate": 0.7677,
+   "mean_first_action_word": 4.518,
+   "first_action_at_or_before_human": 0.3737,
+   "oos_rows": 22,
+   "oos_false_actions": 2,
+   "harmful_detail": [
+    {
+     "id": "v028",
+     "seq": [
+      [
+       7,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "type_text"
+     ]
+    },
+    {
+     "id": "v036",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v037",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v041",
+     "seq": [
+      [
+       6,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v042",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       9,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v043",
+     "seq": [
+      [
+       6,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v045",
+     "seq": [
+      [
+       3,
+       "open_youtube"
+      ],
+      [
+       8,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v050",
+     "seq": [
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v052",
+     "seq": [
+      [
+       7,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v057",
+     "seq": [
+      [
+       7,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v063",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v064",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v065",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v066",
+     "seq": [
+      [
+       3,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       5,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v068",
+     "seq": [
+      [
+       4,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v069",
+     "seq": [
+      [
+       3,
+       "open_spotify"
+      ],
+      [
+       7,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify",
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v080",
+     "seq": [
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v088",
+     "seq": [
+      [
+       4,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v094",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v095",
+     "seq": [
+      [
+       6,
+       "open_youtube"
+      ],
+      [
+       6,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v097",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v098",
+     "seq": [
+      [
+       5,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v111",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v114",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v117",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v118",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v130",
+     "seq": [
+      [
+       9,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v144",
+     "seq": [
+      [
+       6,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v145",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ],
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v158",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v166",
+     "seq": [
+      [
+       5,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_browser",
+      "search_web"
+     ]
+    },
+    {
+     "id": "v193",
+     "seq": [
+      [
+       6,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v208",
+    "v217"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 0.5,
+    "inner_cv": 0.8991,
+    "n_train": 535
+   },
+   "1": {
+    "C": 5.0,
+    "inner_cv": 0.915,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.7682,
+   "intent_accuracy_alt_ok": 0.7727,
+   "intent_accuracy_alt_or_then_ok": 0.7727,
+   "accuracy_by_style": {
+    "canonical": 0.909,
+    "paraphrase": 0.673,
+    "noisy": 0.636,
+    "compound": 0.909,
+    "ambiguous": 0.364,
+    "oos": 0.773
+   },
+   "none_recall": 0.7727,
+   "none_precision": 0.4722
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 26,
+   "harmful_rate": 0.1313,
+   "final_action_consistent_rate": 0.7778,
+   "mean_first_action_word": 4.156,
+   "first_action_at_or_before_human": 0.3939,
+   "oos_rows": 22,
+   "oos_false_actions": 5,
+   "harmful_detail": [
+    {
+     "id": "v041",
+     "seq": [
+      [
+       6,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v045",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       8,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v050",
+     "seq": [
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v052",
+     "seq": [
+      [
+       4,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v066",
+     "seq": [
+      [
+       3,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       5,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v075",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v076",
+     "seq": [
+      [
+       6,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v080",
+     "seq": [
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v114",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v117",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v119",
+     "seq": [
+      [
+       3,
+       "next_track"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v130",
+     "seq": [
+      [
+       9,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       2,
+       "next_track"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v155",
+     "seq": [
+      [
+       5,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v156",
+     "seq": [
+      [
+       6,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "pause_media",
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v160",
+     "seq": [
+      [
+       3,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v177",
+     "seq": [
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v188",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v193",
+     "seq": [
+      [
+       6,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v196",
+     "seq": [
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v200",
+    "v203",
+    "v208",
+    "v210",
+    "v211"
+   ]
+  }
+ }
+}

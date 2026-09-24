@@ -1,0 +1,108 @@
+12b_inproc_unique seq_today          1q  p50    121.1  p95    125.2  per q 121.11  tokens 261  sm 877.0 79.0C thr 0.0
+12b_inproc_unique seq_statefirst     1q  p50     94.9  p95     97.8  per q  94.94  tokens 248  sm 877.0 79.0C thr 0.0
+12b_inproc_unique batch_statefirst   1q  p50    119.8  p95    123.5  per q 119.84  tokens 260  sm 877.0 79.0C thr 0.0
+12b_inproc_unique onepass_markers    1q  p50     96.0  p95    100.8  per q  95.97  tokens 249  sm 877.0 79.0C thr 0.0
+12b_inproc_unique seq_today          5q  p50    519.3  p95    522.8  per q 103.86  tokens 1157  sm 1214.5 83.0C thr 0.042
+12b_inproc_unique seq_statefirst     5q  p50    275.4  p95    285.9  per q  55.09  tokens 448  sm 1214.5 83.0C thr 0.042
+12b_inproc_unique batch_statefirst   5q  p50    186.6  p95    190.6  per q  37.31  tokens 460  sm 1214.5 83.0C thr 0.042
+12b_inproc_unique onepass_markers    5q  p50    179.9  p95    183.9  per q  35.97  tokens 453  sm 1214.5 83.0C thr 0.042
+12b_inproc_unique seq_today         10q  p50   1201.5  p95   1322.8  per q 120.15  tokens 2283  sm 1323.5 86.0C thr 0.426
+12b_inproc_unique seq_statefirst    10q  p50    535.7  p95    558.8  per q  53.57  tokens 704  sm 1323.5 86.0C thr 0.426
+12b_inproc_unique batch_statefirst  10q  p50    288.7  p95    330.8  per q  28.87  tokens 716  sm 1323.5 86.0C thr 0.426
+12b_inproc_unique onepass_markers   10q  p50    296.3  p95    400.1  per q  29.63  tokens 716  sm 1323.5 86.0C thr 0.426
+12b_inproc_unique seq_today         50q  p50   6430.3  p95   6606.6  per q 128.61  tokens 11283  sm 1275.0 84.0C thr 0.43
+12b_inproc_unique seq_statefirst    50q  p50   2759.3  p95   3126.9  per q  55.19  tokens 2744  sm 1275.0 84.0C thr 0.43
+12b_inproc_unique batch_statefirst  50q  p50   1357.2  p95   1439.1  per q  27.14  tokens 2756  sm 1275.0 84.0C thr 0.43
+12b_inproc_unique onepass_markers   50q  p50   1402.3  p95   1428.4  per q  28.05  tokens 2876  sm 1275.0 84.0C thr 0.43
+gpu_guard contaminated: False []
+12b_inproc     seq_today          1q  p50     96.9  p95    100.6  per q  96.89  tokens 256  sm 945.0 81.0C thr 0.043
+12b_inproc     batch_statefirst   1q  p50     96.5  p95    101.6  per q  96.50  tokens 255  sm 945.0 81.0C thr 0.043
+12b_inproc     seq_today          5q  p50    485.9  p95    497.7  per q  97.18  tokens 1132  sm 1499.5 82.5C thr 0.075
+12b_inproc     batch_statefirst   5q  p50    183.3  p95    195.2  per q  36.65  tokens 435  sm 1499.5 82.5C thr 0.075
+12b_inproc     seq_today         10q  p50   1108.2  p95   1228.3  per q 110.82  tokens 2232  sm 1413.5 86.0C thr 0.481
+12b_inproc     batch_statefirst  10q  p50    274.1  p95    284.4  per q  27.41  tokens 665  sm 1413.5 86.0C thr 0.481
+12b_inproc     seq_today         50q  p50   5732.4  p95   5822.2  per q 114.65  tokens 10992  sm 1365.0 86.0C thr 0.494
+12b_inproc     batch_statefirst  50q  p50   1113.7  p95   1171.7  per q  22.27  tokens 2465  sm 1365.0 86.0C thr 0.494
+gpu_guard contaminated: False []
+  55/220 99s
+  110/220 182s
+  165/220 249s
+  220/220 331s
+gpu_guard contaminated: False []
+{
+ "latency_incremental": {
+  "compute_ms": {
+   "n": 938,
+   "p50": 34.36,
+   "p95": 38.75,
+   "mean": 33.57,
+   "min": 28.61,
+   "max": 43.58
+  },
+  "round_trip_ms": {
+   "n": 938,
+   "p50": 35.61,
+   "p95": 40.49,
+   "mean": 35.14,
+   "min": 29.91,
+   "max": 45.56
+  },
+  "tokens_evaluated": {
+   "n": 938,
+   "p50": 13.0,
+   "p95": 15.0,
+   "mean": 13.67,
+   "min": 13.0,
+   "max": 21.0
+  }
+ },
+ "first_word": {
+  "compute_ms": {
+   "n": 220,
+   "p50": 35.33,
+   "p95": 39.48,
+   "mean": 35.54,
+   "min": 30.22,
+   "max": 40.6
+  },
+  "round_trip_ms": {
+   "n": 220,
+   "p50": 36.98,
+   "p95": 41.12,
+   "mean": 37.06,
+   "min": 31.52,
+   "max": 42.51
+  }
+ },
+ "accuracy": {
+  "intent_accuracy": 0.9091,
+  "intent_accuracy_alt_ok": 0.9136,
+  "intent_accuracy_alt_or_then_ok": 0.9864,
+  "accuracy_by_style": {
+   "canonical": 1,
+   "paraphrase": 0.982,
+   "noisy": 0.97,
+   "compound": 0.273,
+   "ambiguous": 0.818,
+   "oos": 1
+  },
+  "none_recall": 1.0,
+  "none_precision": 0.9167
+ },
+ "streaming_policy": {
+  "policy": {
+   "tau": 0.9,
+   "media_stable": 2,
+   "play_stable": 2,
+   "slot_stable": 2
+  },
+  "actionable": 198,
+  "harmful": 1,
+  "harmful_rate": 0.0051,
+  "final_action_consistent_rate": 0.9848,
+  "mean_first_action_word": 3.622,
+  "first_action_at_or_before_human": 0.5253,
+  "oos_rows": 22,
+  "oos_false_actions": 2
+ }
+}

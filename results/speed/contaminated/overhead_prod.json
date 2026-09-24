@@ -1,0 +1,374 @@
+{
+ "meta": {
+  "script": "experiments/speed_overhead.py",
+  "date": "2026-09-24T10:12:29",
+  "reps": 60,
+  "question": {
+   "type": "choice",
+   "instructions": "Which team should handle this?",
+   "criteria": {
+    "billing": "payments",
+    "technical": "bugs and integrations",
+    "sales": "pricing"
+   }
+  },
+  "state": "vs_laya_speed.fresh_state(i), new ticket id per call",
+  "llama_model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "llama_build": "b11100-7ab4ee7ba",
+  "tez_health": {
+   "status": "ok",
+   "version": "0.1.0",
+   "backend": "http://127.0.0.1:8091",
+   "template": "gemma4",
+   "embed_backend": null,
+   "schemas": [],
+   "probes": {},
+   "backend_status": "ok",
+   "model": "gemma-4-12b-q8_0"
+  }
+ },
+ "decomposition_p50": {
+  "llama_compute_ms (prompt_ms + predicted_ms, direct n_probs 200)": 140.22,
+  "direct_http_round_trip_np200_ms": 191.25,
+  "direct_http_round_trip_np0_ms": 182.21,
+  "n_probs_200_cost_ms (np200 - np0 round trip)": 9.04,
+  "engine_total_ms": 196.43,
+  "engine_backend_http_ms": 196.04,
+  "engine_python_ms (engine - backend http)": 0.41,
+  "tez_serve_client_round_trip_ms": 193.13,
+  "tez_serve_reported_latency_ms": 190.35,
+  "fastapi_uvicorn_client_ms (round trip - reported)": 2.33,
+  "health_round_trip_tez_ms": 3.57,
+  "health_round_trip_llama_ms": 0.97
+ },
+ "modes": {
+  "tez_serve": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 193.13,
+    "p95": 254.14,
+    "mean": 197.43,
+    "min": 119.69,
+    "max": 330.75
+   },
+   "server_ms": {
+    "n": 60,
+    "p50": 190.35,
+    "p95": 251.83,
+    "mean": 194.99,
+    "min": 117.4,
+    "max": 328.4
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 361.0,
+    "p95": 363.0,
+    "mean": 361.23,
+    "min": 358.0,
+    "max": 363.0
+   }
+  },
+  "engine": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 196.43,
+    "p95": 245.18,
+    "mean": 199.83,
+    "min": 144.12,
+    "max": 335.59
+   },
+   "backend_ms": {
+    "n": 60,
+    "p50": 196.04,
+    "p95": 244.76,
+    "mean": 199.42,
+    "min": 143.76,
+    "max": 335.18
+   }
+  },
+  "direct_np200": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 191.25,
+    "p95": 253.84,
+    "mean": 195.48,
+    "min": 132.11,
+    "max": 294.79
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 188.31,
+    "p95": 251.16,
+    "mean": 192.66,
+    "min": 129.48,
+    "max": 292.27
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 2.79,
+    "p95": 3.42,
+    "mean": 2.83,
+    "min": 2.06,
+    "max": 3.63
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 140.22,
+    "p95": 164.57,
+    "mean": 137.62,
+    "min": 89.24,
+    "max": 211.25
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 164.0,
+    "mean": 164.0,
+    "min": 164.0,
+    "max": 164.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 90.0,
+    "min": 90.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 18635.0,
+    "p95": 18747.05,
+    "mean": 18645.98,
+    "min": 18519.0,
+    "max": 18772.0
+   }
+  },
+  "direct_np20": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 190.49,
+    "p95": 231.24,
+    "mean": 195.73,
+    "min": 133.04,
+    "max": 300.51
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 189.92,
+    "p95": 230.77,
+    "mean": 195.21,
+    "min": 132.58,
+    "max": 299.98
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.5,
+    "p95": 0.65,
+    "mean": 0.52,
+    "min": 0.4,
+    "max": 0.78
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 142.58,
+    "p95": 163.81,
+    "mean": 140.77,
+    "min": 87.75,
+    "max": 170.46
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 165.0,
+    "mean": 164.22,
+    "min": 164.0,
+    "max": 166.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 89.78,
+    "min": 88.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 4181.0,
+    "p95": 4192.0,
+    "mean": 4181.37,
+    "min": 4170.0,
+    "max": 4194.0
+   }
+  },
+  "direct_np1": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 190.69,
+    "p95": 248.93,
+    "mean": 193.59,
+    "min": 119.62,
+    "max": 271.78
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 190.34,
+    "p95": 248.63,
+    "mean": 193.3,
+    "min": 119.38,
+    "max": 271.53
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.28,
+    "p95": 0.43,
+    "mean": 0.3,
+    "min": 0.22,
+    "max": 0.45
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 140.59,
+    "p95": 160.94,
+    "mean": 140.41,
+    "min": 77.73,
+    "max": 190.21
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 164.0,
+    "mean": 164.0,
+    "min": 164.0,
+    "max": 164.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 90.0,
+    "min": 90.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 2859.0,
+    "p95": 2861.0,
+    "mean": 2858.33,
+    "min": 2845.0,
+    "max": 2861.0
+   }
+  },
+  "direct_np0": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 182.21,
+    "p95": 231.02,
+    "mean": 185.24,
+    "min": 117.6,
+    "max": 270.61
+   },
+   "http_ms": {
+    "n": 60,
+    "p50": 181.92,
+    "p95": 230.75,
+    "mean": 184.97,
+    "min": 117.36,
+    "max": 270.36
+   },
+   "parse_ms": {
+    "n": 60,
+    "p50": 0.25,
+    "p95": 0.39,
+    "mean": 0.27,
+    "min": 0.19,
+    "max": 0.41
+   },
+   "prompt_ms": {
+    "n": 60,
+    "p50": 139.39,
+    "p95": 168.15,
+    "mean": 137.95,
+    "min": 74.48,
+    "max": 195.23
+   },
+   "predicted_ms": {
+    "n": 60,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "prompt_n": {
+    "n": 60,
+    "p50": 164.0,
+    "p95": 165.0,
+    "mean": 164.22,
+    "min": 164.0,
+    "max": 166.0
+   },
+   "cache_n": {
+    "n": 60,
+    "p50": 90.0,
+    "p95": 90.0,
+    "mean": 89.78,
+    "min": 88.0,
+    "max": 90.0
+   },
+   "bytes": {
+    "n": 60,
+    "p50": 2669.0,
+    "p95": 2669.0,
+    "mean": 2668.5,
+    "min": 2667.0,
+    "max": 2669.0
+   }
+  },
+  "health_tez": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 3.57,
+    "p95": 4.38,
+    "mean": 3.65,
+    "min": 2.83,
+    "max": 4.93
+   }
+  },
+  "health_llama": {
+   "round_trip_ms": {
+    "n": 60,
+    "p50": 0.97,
+    "p95": 1.24,
+    "mean": 0.98,
+    "min": 0.66,
+    "max": 1.32
+   }
+  }
+ }
+}

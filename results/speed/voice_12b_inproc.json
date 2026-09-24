@@ -1,0 +1,304 @@
+{
+ "meta": {
+  "script": "experiments/speed_voice.py",
+  "date": "2026-09-24T13:03:30",
+  "args": {
+   "engine": "inproc",
+   "readout": "letters",
+   "url": "http://127.0.0.1:8091",
+   "model": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+   "template": "gemma4",
+   "cache": "on",
+   "n_probs": 200,
+   "limit": 0,
+   "gap": 0.25,
+   "cool": 85.0,
+   "tag": "12b_inproc"
+  },
+  "data_sha256": "6dfba8d2de653e6010f682703400ef9444976ffc9bb8b18d6be1b6fe7a99a1c5",
+  "prompt_example": "<|turn>user\nYou are the command router of a voice-controlled computer assistant. Read the user's transcript and decide which ONE action they are asking for. Answer with the letter only. Choose 'none' if the request is chit-chat, a question, out of scope, or too unclear to act on.\n\nActions:\nA. open_notes: Open the notes or notepad application.\nB. type_text: Type the dictated text into the app that is currently in focus.\nC. open_youtube: Open YouTube without playing anything in particular.\nD. play_youtube: Search for and play a specific video, channel or topic on YouTube.\nE. open_spotify: Open Spotify without playing anything in particular.\nF. play_liked_songs: Play the user's own liked or saved songs collection on Spotify.\nG. play_spotify: Play a specific song, artist, album or playlist on Spotify.\nH. pause_media: Pause or stop whatever is currently playing.\nI. resume_media: Resume or continue playback that was paused.\nJ. next_track: Skip to the next track or video.\nK. volume_up: Make the sound louder by increasing the volume.\nL. volume_down: Make the sound quieter by decreasing the volume.\nM. open_browser: Open the web browser without searching for anything.\nN. search_web: Search the web or look something up online for the user.\nO. close_app: Close the current window or a named application.\nP. none: Out of scope: chit-chat, a question, or a request for something the assistant cannot do.\n\nTranscript: \"open notes\"<turn|>\n<|turn>model\n<|channel>thought\n<channel|>",
+  "model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "load_s": 17.2,
+  "n_layer": 48,
+  "n_embd": 3840,
+  "params": {
+   "n_ctx": 2048,
+   "n_batch": 512,
+   "n_ubatch": 512,
+   "n_seq_max": 3,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 8,
+   "n_outputs_max_per_seq": 0
+  },
+  "constant_prefix_tokens": 353
+ },
+ "latency_per_word": {
+  "all_words": {
+   "compute_ms": {
+    "n": 1158,
+    "p50": 34.53,
+    "p95": 38.96,
+    "mean": 33.94,
+    "min": 28.61,
+    "max": 43.58
+   },
+   "round_trip_ms": {
+    "n": 1158,
+    "p50": 35.89,
+    "p95": 40.67,
+    "mean": 35.51,
+    "min": 29.91,
+    "max": 45.56
+   },
+   "tokens_evaluated": {
+    "n": 1158,
+    "p50": 13.0,
+    "p95": 15.0,
+    "mean": 13.37,
+    "min": 12.0,
+    "max": 21.0
+   }
+  },
+  "incremental_words": {
+   "compute_ms": {
+    "n": 938,
+    "p50": 34.36,
+    "p95": 38.75,
+    "mean": 33.57,
+    "min": 28.61,
+    "max": 43.58
+   },
+   "round_trip_ms": {
+    "n": 938,
+    "p50": 35.61,
+    "p95": 40.49,
+    "mean": 35.14,
+    "min": 29.91,
+    "max": 45.56
+   },
+   "tokens_evaluated": {
+    "n": 938,
+    "p50": 13.0,
+    "p95": 15.0,
+    "mean": 13.67,
+    "min": 13.0,
+    "max": 21.0
+   }
+  },
+  "first_word": {
+   "compute_ms": {
+    "n": 220,
+    "p50": 35.33,
+    "p95": 39.48,
+    "mean": 35.54,
+    "min": 30.22,
+    "max": 40.6
+   },
+   "round_trip_ms": {
+    "n": 220,
+    "p50": 36.98,
+    "p95": 41.12,
+    "mean": 37.06,
+    "min": 31.52,
+    "max": 42.51
+   }
+  }
+ },
+ "gpu": {
+  "before": {
+   "temp_c": 83.0,
+   "sm_mhz": 510.0,
+   "power_w": 28.65,
+   "util": 55.0,
+   "throttle": "0x0000000000000000",
+   "waited_s": 0.1
+  },
+  "during": {
+   "samples": 648,
+   "temp_c_p50": 78.0,
+   "temp_c_max": 83.0,
+   "sm_mhz_busy_p50": 652.0,
+   "sm_mhz_busy_p10": 610.2,
+   "power_w_busy_p50": 37.1,
+   "busy_frac": 0.316,
+   "thermal_throttle_frac": 0.0
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   28692
+  ],
+  "before": {
+   "time": "2026-09-24T13:03:50+02:00",
+   "used_mb": 14548,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 28692,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13092
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 112
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2374
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 115
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 395
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 205
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T13:09:24+02:00",
+   "used_mb": 14539,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 28692,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13098
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 109
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2374
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 115
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 396
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 205
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ },
+ "restored_from_checkpoint": 0,
+ "accuracy": {
+  "intent_accuracy": 0.9091,
+  "intent_accuracy_alt_ok": 0.9136,
+  "intent_accuracy_alt_or_then_ok": 0.9864,
+  "accuracy_by_style": {
+   "canonical": 1,
+   "paraphrase": 0.982,
+   "noisy": 0.97,
+   "compound": 0.273,
+   "ambiguous": 0.818,
+   "oos": 1
+  },
+  "none_recall": 1.0,
+  "none_precision": 0.9167
+ },
+ "streaming_policy": {
+  "policy": {
+   "tau": 0.9,
+   "media_stable": 2,
+   "play_stable": 2,
+   "slot_stable": 2
+  },
+  "actionable": 198,
+  "harmful": 1,
+  "harmful_rate": 0.0051,
+  "final_action_consistent_rate": 0.9848,
+  "mean_first_action_word": 3.622,
+  "first_action_at_or_before_human": 0.5253,
+  "oos_rows": 22,
+  "oos_false_actions": 2,
+  "harmful_detail": [
+   {
+    "id": "v197",
+    "seq": [
+     [
+      3,
+      "open_notes"
+     ]
+    ],
+    "accepted": [
+     "close_app"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   "v207",
+   "v215"
+  ]
+ }
+}

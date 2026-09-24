@@ -1,0 +1,43 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  100/400 rows  acc 0.598  66s
+  200/400 rows  acc 0.684  279s
+  300/400 rows  acc 0.712  591s
+  400/400 rows  acc 0.705  861s
+{
+ "n_decisions": 2000,
+ "n_rows": 400,
+ "accuracy": 0.705,
+ "by_type": {
+  "choice": 0.675,
+  "noul": 0.8133,
+  "score": 0.6462
+ },
+ "per_row_call_ms": {
+  "n": 400,
+  "p50": 2370.82,
+  "p95": 3637.61,
+  "mean": 2152.63,
+  "min": 522.44,
+  "max": 4228.24
+ },
+ "per_question_http_ms": {
+  "n": 2000,
+  "p50": 444.37,
+  "p95": 791.92,
+  "mean": 427.11,
+  "min": 90.43,
+  "max": 1140.81
+ },
+ "prompt_tokens_evaluated_total": 480400,
+ "cache_tokens_total": 248210,
+ "gpu": {
+  "samples": 1679,
+  "temp_c_p50": 88.0,
+  "temp_c_max": 91.0,
+  "sm_mhz_busy_p50": 465.0,
+  "sm_mhz_busy_p10": 232.0,
+  "power_w_busy_p50": 43.57,
+  "busy_frac": 0.962,
+  "thermal_throttle_frac": 0.967
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "meta": {
+  "script": "experiments/speed_multiq.py",
+  "date": "2026-09-24T09:54:13",
+  "args": {
+   "mode": "td",
+   "layout": "today",
+   "transport": "http",
+   "arms": "",
+   "cool": 0.0,
+   "url": "http://127.0.0.1:8091",
+   "tez": "http://127.0.0.1:8787",
+   "template": "gemma4",
+   "n_probs": 200,
+   "workers": 64,
+   "prime": false,
+   "warmup": 10,
+   "reps": 100,
+   "reps50": 30,
+   "seed_offset": 100000,
+   "limit_rows": 0,
+   "tag": "prod_today_http"
+  },
+  "llama_model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "llama_build": "b11100-7ab4ee7ba",
+  "total_slots": 1
+ },
+ "n_decisions": 2000,
+ "n_rows": 400,
+ "accuracy": 0.705,
+ "by_type": {
+  "choice": 0.675,
+  "noul": 0.8133,
+  "score": 0.6462
+ },
+ "per_row_call_ms": {
+  "n": 400,
+  "p50": 2370.82,
+  "p95": 3637.61,
+  "mean": 2152.63,
+  "min": 522.44,
+  "max": 4228.24
+ },
+ "per_question_http_ms": {
+  "n": 2000,
+  "p50": 444.37,
+  "p95": 791.92,
+  "mean": 427.11,
+  "min": 90.43,
+  "max": 1140.81
+ },
+ "prompt_tokens_evaluated_total": 480400,
+ "cache_tokens_total": 248210,
+ "gpu": {
+  "samples": 1679,
+  "temp_c_p50": 88.0,
+  "temp_c_max": 91.0,
+  "sm_mhz_busy_p50": 465.0,
+  "sm_mhz_busy_p10": 232.0,
+  "power_w_busy_p50": 43.57,
+  "busy_frac": 0.962,
+  "thermal_throttle_frac": 0.967
+ }
+}

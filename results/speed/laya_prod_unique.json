@@ -1,0 +1,523 @@
+{
+ "meta": {
+  "script": "experiments/speed_multiq.py",
+  "date": "2026-09-24T11:48:38",
+  "args": {
+   "mode": "laya",
+   "layout": "today",
+   "transport": "http",
+   "arms": "tez:today,http:today,http:statefirst",
+   "cool": 85.0,
+   "gap": 0.3,
+   "unique": true,
+   "duty": 1.0,
+   "url": "http://127.0.0.1:8091",
+   "tez": "http://127.0.0.1:8787",
+   "template": "gemma4",
+   "n_probs": 200,
+   "workers": 64,
+   "prime": false,
+   "warmup": 2,
+   "reps": 12,
+   "reps50": 4,
+   "seed_offset": 100000,
+   "limit_rows": 0,
+   "tag": "prod_unique"
+  },
+  "llama_model_path": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "llama_build": "b11100-7ab4ee7ba",
+  "total_slots": 1
+ },
+ "arms": {
+  "tez:today": {
+   "1": {
+    "n": 12,
+    "p50": 154.72,
+    "p95": 177.67,
+    "mean": 159.06,
+    "min": 142.63,
+    "max": 190.38,
+    "ms_per_question_p50": 154.72,
+    "ms_per_question_p95": 177.67,
+    "prompt_tokens_evaluated_per_call_p50": 0.0,
+    "sum_prompt_ms_per_call_p50": 0.0,
+    "tez_reported_ms_p50": 151.9,
+    "samples_ms": [
+     166.86,
+     148.09,
+     154.07,
+     164.5,
+     167.27,
+     154.45,
+     142.63,
+     154.53,
+     154.91,
+     152.47,
+     190.38,
+     158.56
+    ]
+   },
+   "5": {
+    "n": 12,
+    "p50": 950.44,
+    "p95": 1025.26,
+    "mean": 951.14,
+    "min": 818.47,
+    "max": 1038.43,
+    "ms_per_question_p50": 190.09,
+    "ms_per_question_p95": 205.05,
+    "prompt_tokens_evaluated_per_call_p50": 0.0,
+    "sum_prompt_ms_per_call_p50": 0.0,
+    "tez_reported_ms_p50": 947.6500000000001,
+    "samples_ms": [
+     919.2,
+     937.42,
+     975.92,
+     996.38,
+     963.46,
+     920.36,
+     818.47,
+     1038.43,
+     1014.49,
+     1006.02,
+     907.77,
+     915.81
+    ]
+   },
+   "10": {
+    "n": 12,
+    "p50": 1786.44,
+    "p95": 1876.83,
+    "mean": 1767.67,
+    "min": 1617.3,
+    "max": 1957.43,
+    "ms_per_question_p50": 178.64,
+    "ms_per_question_p95": 187.68,
+    "prompt_tokens_evaluated_per_call_p50": 0.0,
+    "sum_prompt_ms_per_call_p50": 0.0,
+    "tez_reported_ms_p50": 1775.55,
+    "samples_ms": [
+     1689.45,
+     1792.11,
+     1661.76,
+     1763.45,
+     1780.78,
+     1796.59,
+     1792.96,
+     1738.75,
+     1810.88,
+     1617.3,
+     1810.55,
+     1957.43
+    ]
+   },
+   "50": {
+    "n": 4,
+    "p50": 10510.53,
+    "p95": 12228.17,
+    "mean": 10846.52,
+    "min": 9893.97,
+    "max": 12471.03,
+    "ms_per_question_p50": 210.21,
+    "ms_per_question_p95": 244.56,
+    "prompt_tokens_evaluated_per_call_p50": 0.0,
+    "sum_prompt_ms_per_call_p50": 0.0,
+    "tez_reported_ms_p50": 10495.599999999999,
+    "samples_ms": [
+     9893.97,
+     10169.1,
+     12471.03,
+     10851.96
+    ]
+   }
+  },
+  "http:today": {
+   "1": {
+    "n": 12,
+    "p50": 128.55,
+    "p95": 155.73,
+    "mean": 133.42,
+    "min": 122.26,
+    "max": 172.75,
+    "ms_per_question_p50": 128.55,
+    "ms_per_question_p95": 155.73,
+    "prompt_tokens_evaluated_per_call_p50": 165.0,
+    "sum_prompt_ms_per_call_p50": 84.0,
+    "samples_ms": [
+     140.59,
+     130.03,
+     127.71,
+     128.98,
+     122.54,
+     122.77,
+     128.13,
+     172.75,
+     122.26,
+     126.37,
+     137.16,
+     141.81
+    ]
+   },
+   "5": {
+    "n": 12,
+    "p50": 911.84,
+    "p95": 1000.43,
+    "mean": 911.79,
+    "min": 814.84,
+    "max": 1052.59,
+    "ms_per_question_p50": 182.37,
+    "ms_per_question_p95": 200.09,
+    "prompt_tokens_evaluated_per_call_p50": 825.0,
+    "sum_prompt_ms_per_call_p50": 603.98,
+    "samples_ms": [
+     918.2,
+     885.5,
+     1052.59,
+     946.56,
+     905.48,
+     957.76,
+     928.04,
+     942.03,
+     814.84,
+     863.93,
+     853.51,
+     873.08
+    ]
+   },
+   "10": {
+    "n": 12,
+    "p50": 1677.92,
+    "p95": 1780.81,
+    "mean": 1677.55,
+    "min": 1544.27,
+    "max": 1794.27,
+    "ms_per_question_p50": 167.79,
+    "ms_per_question_p95": 178.08,
+    "prompt_tokens_evaluated_per_call_p50": 1650.0,
+    "sum_prompt_ms_per_call_p50": 1083.38,
+    "samples_ms": [
+     1612.72,
+     1794.27,
+     1634.99,
+     1741.01,
+     1720.84,
+     1769.79,
+     1608.14,
+     1605.47,
+     1749.64,
+     1597.06,
+     1544.27,
+     1752.43
+    ]
+   },
+   "50": {
+    "n": 4,
+    "p50": 10722.41,
+    "p95": 11629.98,
+    "mean": 10687.61,
+    "min": 9604.03,
+    "max": 11701.58,
+    "ms_per_question_p50": 214.45,
+    "ms_per_question_p95": 232.6,
+    "prompt_tokens_evaluated_per_call_p50": 8250.0,
+    "sum_prompt_ms_per_call_p50": 7334.36,
+    "samples_ms": [
+     9604.03,
+     11224.24,
+     11701.58,
+     10220.57
+    ]
+   }
+  },
+  "http:statefirst": {
+   "1": {
+    "n": 12,
+    "p50": 158.19,
+    "p95": 263.24,
+    "mean": 174.21,
+    "min": 129.16,
+    "max": 365.5,
+    "ms_per_question_p50": 158.19,
+    "ms_per_question_p95": 263.24,
+    "prompt_tokens_evaluated_per_call_p50": 248.0,
+    "sum_prompt_ms_per_call_p50": 106.66,
+    "samples_ms": [
+     161.45,
+     156.83,
+     365.5,
+     164.93,
+     147.64,
+     129.16,
+     150.76,
+     156.97,
+     157.54,
+     158.85,
+     179.58,
+     161.25
+    ]
+   },
+   "5": {
+    "n": 12,
+    "p50": 494.69,
+    "p95": 535.2,
+    "mean": 491.08,
+    "min": 440.91,
+    "max": 551.63,
+    "ms_per_question_p50": 98.94,
+    "ms_per_question_p95": 107.04,
+    "prompt_tokens_evaluated_per_call_p50": 448.0,
+    "sum_prompt_ms_per_call_p50": 407.77,
+    "samples_ms": [
+     502.52,
+     499.83,
+     505.31,
+     473.37,
+     521.75,
+     464.5,
+     481.4,
+     506.71,
+     489.56,
+     455.43,
+     551.63,
+     440.91
+    ]
+   },
+   "10": {
+    "n": 12,
+    "p50": 752.17,
+    "p95": 826.77,
+    "mean": 754.82,
+    "min": 676.11,
+    "max": 830.41,
+    "ms_per_question_p50": 75.22,
+    "ms_per_question_p95": 82.68,
+    "prompt_tokens_evaluated_per_call_p50": 704.0,
+    "sum_prompt_ms_per_call_p50": 627.71,
+    "samples_ms": [
+     676.11,
+     762.56,
+     716.08,
+     746.61,
+     742.72,
+     823.8,
+     717.54,
+     808.39,
+     830.41,
+     694.64,
+     781.27,
+     757.74
+    ]
+   },
+   "50": {
+    "n": 4,
+    "p50": 4254.53,
+    "p95": 4561.83,
+    "mean": 4318.06,
+    "min": 4148.19,
+    "max": 4615.0,
+    "ms_per_question_p50": 85.09,
+    "ms_per_question_p95": 91.24,
+    "prompt_tokens_evaluated_per_call_p50": 2744.0,
+    "sum_prompt_ms_per_call_p50": 3716.85,
+    "samples_ms": [
+     4148.19,
+     4615.0,
+     4260.52,
+     4248.54
+    ]
+   }
+  }
+ },
+ "gpu": {
+  "1": {
+   "before": {
+    "temp_c": 85.0,
+    "sm_mhz": 472.0,
+    "power_w": 23.05,
+    "util": 4.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 0.1
+   },
+   "during": {
+    "samples": 39,
+    "temp_c_p50": 86.0,
+    "temp_c_max": 91.0,
+    "sm_mhz_busy_p50": 592.0,
+    "sm_mhz_busy_p10": 371.0,
+    "power_w_busy_p50": 69.84,
+    "busy_frac": 0.41,
+    "thermal_throttle_frac": 0.385
+   }
+  },
+  "5": {
+   "before": {
+    "temp_c": 85.0,
+    "sm_mhz": 577.0,
+    "power_w": 25.9,
+    "util": 1.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 5.1
+   },
+   "during": {
+    "samples": 129,
+    "temp_c_p50": 87.0,
+    "temp_c_max": 89.0,
+    "sm_mhz_busy_p50": 772.0,
+    "sm_mhz_busy_p10": 340.2,
+    "power_w_busy_p50": 53.85,
+    "busy_frac": 0.504,
+    "thermal_throttle_frac": 0.977
+   }
+  },
+  "10": {
+   "before": {
+    "temp_c": 85.0,
+    "sm_mhz": 427.0,
+    "power_w": 25.05,
+    "util": 1.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 5.1
+   },
+   "during": {
+    "samples": 232,
+    "temp_c_p50": 86.0,
+    "temp_c_max": 93.0,
+    "sm_mhz_busy_p50": 825.0,
+    "sm_mhz_busy_p10": 420.40000000000003,
+    "power_w_busy_p50": 57.769999999999996,
+    "busy_frac": 0.509,
+    "thermal_throttle_frac": 0.875
+   }
+  },
+  "50": {
+   "before": {
+    "temp_c": 85.0,
+    "sm_mhz": 240.0,
+    "power_w": 22.61,
+    "util": 1.0,
+    "throttle": "0x0000000000000020",
+    "waited_s": 0.1
+   },
+   "during": {
+    "samples": 586,
+    "temp_c_p50": 87.0,
+    "temp_c_max": 92.0,
+    "sm_mhz_busy_p50": 765.0,
+    "sm_mhz_busy_p10": 570.0,
+    "power_w_busy_p50": 56.1,
+    "busy_frac": 0.505,
+    "thermal_throttle_frac": 0.751
+   }
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   64868
+  ],
+  "before": {
+   "time": "2026-09-24T11:48:42+02:00",
+   "used_mb": 15537,
+   "total_mb": 16303,
+   "util_pct": 3,
+   "processes": [
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 123
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2281
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 431
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 240
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 174
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 14172
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 104
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T11:57:20+02:00",
+   "used_mb": 15555,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 122
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2291
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 417
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 240
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 174
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 14172
+    },
+    {
+     "pid": 64868,
+     "name": "llama-server",
+     "kind": "shared",
+     "mb": 104
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ }
+}

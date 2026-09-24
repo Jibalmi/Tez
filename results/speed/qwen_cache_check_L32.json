@@ -1,0 +1,257 @@
+{
+ "meta": {
+  "script": "experiments/speed_qwen_cache_check.py",
+  "model": "tools/models/Qwen3.5-4B-Q8_0.gguf",
+  "extra": "",
+  "date": "2026-09-24T11:29:49"
+ },
+ "scenarios": {
+  "identical": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 158.3,
+     "prompt_n": 354,
+     "cache_n": 0,
+     "prompt_ms": 152.505,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 79.6,
+     "prompt_n": 4,
+     "cache_n": 350,
+     "prompt_ms": 73.193,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "extend_n0": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 280.0,
+     "prompt_n": 343,
+     "cache_n": 0,
+     "prompt_ms": 274.125,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 53.4,
+     "prompt_n": 4,
+     "cache_n": 343,
+     "prompt_ms": 46.743,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 78.3,
+     "prompt_n": 1,
+     "cache_n": 347,
+     "prompt_ms": 71.0,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "extend_n1": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 302.8,
+     "prompt_n": 343,
+     "cache_n": 0,
+     "prompt_ms": 295.327,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 84.3,
+     "prompt_n": 4,
+     "cache_n": 343,
+     "prompt_ms": 76.372,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "voice_letters": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 153.6,
+     "prompt_n": 353,
+     "cache_n": 0,
+     "prompt_ms": 147.478,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 137.5,
+     "prompt_n": 354,
+     "cache_n": 0,
+     "prompt_ms": 131.63,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 137.3,
+     "prompt_n": 355,
+     "cache_n": 0,
+     "prompt_ms": 131.15,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "embed_extend": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 218.5,
+     "prompt_n": null,
+     "cache_n": null,
+     "prompt_ms": null,
+     "error": null,
+     "path": "/embedding",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 27.7,
+     "prompt_n": null,
+     "cache_n": null,
+     "prompt_ms": null,
+     "error": null,
+     "path": "/embedding",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 28.2,
+     "prompt_n": null,
+     "cache_n": null,
+     "prompt_ms": null,
+     "error": null,
+     "path": "/embedding",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "diverge": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 277.4,
+     "prompt_n": 221,
+     "cache_n": 0,
+     "prompt_ms": 271.293,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 152.3,
+     "prompt_n": 186,
+     "cache_n": 0,
+     "prompt_ms": 100.451,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  },
+  "multiturn_checkpoint": {
+   "steps": [
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 95.5,
+     "prompt_n": 157,
+     "cache_n": 0,
+     "prompt_ms": 90.514,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 56.6,
+     "prompt_n": 4,
+     "cache_n": 153,
+     "prompt_ms": 51.244,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    },
+    {
+     "ok": true,
+     "status": 200,
+     "ms": 98.5,
+     "prompt_n": 152,
+     "cache_n": 0,
+     "prompt_ms": 60.737,
+     "error": null,
+     "path": "/completion",
+     "server_alive_after": true
+    }
+   ],
+   "crashed": false,
+   "pr": "b11100-7ab4ee7ba",
+   "log_tail": []
+  }
+ }
+}

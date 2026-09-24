@@ -1,0 +1,42 @@
+{
+ "L24_stateonly": {
+  "accuracy": 0.749,
+  "C": 0.05,
+  "train_cv": 0.7438,
+  "by_type": {
+   "choice": 0.7183,
+   "noul": 0.8367,
+   "score": 0.7063
+  }
+ },
+ "L24_stateonly_inproc": {
+  "accuracy": 0.7445,
+  "C": 0.05,
+  "train_cv": 0.7433,
+  "by_type": {
+   "choice": 0.7083,
+   "noul": 0.8367,
+   "score": 0.7025
+  }
+ },
+ "L24_sfq": {
+  "accuracy": 0.7845,
+  "C": 0.05,
+  "train_cv": 0.7795,
+  "by_type": {
+   "choice": 0.7433,
+   "noul": 0.85,
+   "score": 0.7662
+  }
+ },
+ "qprompt_served_L24 (results/probe_cache_served_L24.npz)": {
+  "accuracy": 0.793,
+  "C": 0.05,
+  "train_cv": 0.7793,
+  "by_type": {
+   "choice": 0.7667,
+   "noul": 0.8717,
+   "score": 0.7538
+  }
+ }
+}

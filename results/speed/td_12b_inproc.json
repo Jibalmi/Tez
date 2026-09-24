@@ -1,0 +1,315 @@
+{
+ "meta": {
+  "script": "experiments/speed_multiq_inproc.py",
+  "date": "2026-09-24T12:35:19",
+  "args": {
+   "mode": "td",
+   "arms": "batch_statefirst,batch_today,onepass_markers",
+   "model": "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+   "template": "gemma4",
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_seq_max": 64,
+   "n_ubatch": 512,
+   "warmup": 3,
+   "reps": 20,
+   "reps50": 8,
+   "gap": 0.3,
+   "cool": 0.0,
+   "seed_offset": 300000,
+   "unique": false,
+   "duty": 0.0,
+   "limit_rows": 0,
+   "compare": "td_rows_prod_statefirst_http.jsonl,td_rows_prod_today_http.jsonl",
+   "tag": "12b_inproc"
+  },
+  "params": {
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_ubatch": 512,
+   "n_seq_max": 64,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 64,
+   "n_outputs_max_per_seq": 0
+  },
+  "load_s": 18.5,
+  "n_layer": 48
+ },
+ "batch_statefirst": {
+  "n_decisions": 2000,
+  "accuracy": 0.702,
+  "by_type": {
+   "choice": 0.6583,
+   "noul": 0.825,
+   "score": 0.6425
+  },
+  "per_row_call_ms": {
+   "n": 400,
+   "p50": 636.21,
+   "p95": 936.5,
+   "mean": 628.43,
+   "min": 262.48,
+   "max": 1227.29
+  },
+  "wall_s": 251.7,
+  "gpu": {
+   "samples": 491,
+   "temp_c_p50": 88.0,
+   "temp_c_max": 89.0,
+   "sm_mhz_busy_p50": 648.5,
+   "sm_mhz_busy_p10": 457.0,
+   "power_w_busy_p50": 56.11,
+   "busy_frac": 0.998,
+   "thermal_throttle_frac": 0.957
+  },
+  "vs_td_rows_prod_statefirst_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.989,
+   "mcnemar": {
+    "a_only": 10,
+    "b_only": 9,
+    "p": 1.0
+   },
+   "other_accuracy": 0.7015
+  },
+  "vs_td_rows_prod_today_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.8205,
+   "mcnemar": {
+    "a_only": 152,
+    "b_only": 158,
+    "p": 0.77648
+   },
+   "other_accuracy": 0.705
+  }
+ },
+ "batch_today": {
+  "n_decisions": 2000,
+  "accuracy": 0.701,
+  "by_type": {
+   "choice": 0.6767,
+   "noul": 0.8117,
+   "score": 0.6362
+  },
+  "per_row_call_ms": {
+   "n": 400,
+   "p50": 1543.74,
+   "p95": 2356.21,
+   "mean": 1522.47,
+   "min": 694.58,
+   "max": 3697.71
+  },
+  "wall_s": 609.3,
+  "gpu": {
+   "samples": 1191,
+   "temp_c_p50": 89.0,
+   "temp_c_max": 89.0,
+   "sm_mhz_busy_p50": 712.0,
+   "sm_mhz_busy_p10": 555.0,
+   "power_w_busy_p50": 55.504999999999995,
+   "busy_frac": 0.999,
+   "thermal_throttle_frac": 1.0
+  },
+  "vs_td_rows_prod_statefirst_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.8125,
+   "mcnemar": {
+    "a_only": 159,
+    "b_only": 160,
+    "p": 1.0
+   },
+   "other_accuracy": 0.7015
+  },
+  "vs_td_rows_prod_today_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.9825,
+   "mcnemar": {
+    "a_only": 10,
+    "b_only": 18,
+    "p": 0.18493
+   },
+   "other_accuracy": 0.705
+  }
+ },
+ "onepass_markers": {
+  "n_decisions": 2000,
+  "accuracy": 0.3345,
+  "by_type": {
+   "choice": 0.2267,
+   "noul": 0.5867,
+   "score": 0.2263
+  },
+  "per_row_call_ms": {
+   "n": 400,
+   "p50": 582.23,
+   "p95": 918.27,
+   "mean": 627.6,
+   "min": 400.68,
+   "max": 1135.89
+  },
+  "wall_s": 251.3,
+  "gpu": {
+   "samples": 491,
+   "temp_c_p50": 89.0,
+   "temp_c_max": 89.0,
+   "sm_mhz_busy_p50": 660.0,
+   "sm_mhz_busy_p10": 532.0,
+   "power_w_busy_p50": 54.7,
+   "busy_frac": 1.0,
+   "thermal_throttle_frac": 1.0
+  },
+  "vs_td_rows_prod_statefirst_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.3695,
+   "mcnemar": {
+    "a_only": 138,
+    "b_only": 872,
+    "p": 0.0
+   },
+   "other_accuracy": 0.7015
+  },
+  "vs_td_rows_prod_today_http.jsonl": {
+   "n": 2000,
+   "agreement": 0.3855,
+   "mcnemar": {
+    "a_only": 133,
+    "b_only": 874,
+    "p": 0.0
+   },
+   "other_accuracy": 0.705
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   29484
+  ],
+  "before": {
+   "time": "2026-09-24T12:35:22+02:00",
+   "used_mb": 15168,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 29484,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13736
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 112
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2360
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 115
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 397
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 205
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 29484,
+     "name": "python",
+     "kind": "shared",
+     "mb": 162
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T12:54:12+02:00",
+   "used_mb": 15209,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 29484,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13780
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 109
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2374
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 115
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 384
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 205
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 29484,
+     "name": "python",
+     "kind": "shared",
+     "mb": 164
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ }
+}

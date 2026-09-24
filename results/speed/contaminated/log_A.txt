@@ -1,0 +1,107 @@
+{
+ "llama_compute_ms (prompt_ms + predicted_ms, direct n_probs 200)": 140.22,
+ "direct_http_round_trip_np200_ms": 191.25,
+ "direct_http_round_trip_np0_ms": 182.21,
+ "n_probs_200_cost_ms (np200 - np0 round trip)": 9.04,
+ "engine_total_ms": 196.43,
+ "engine_backend_http_ms": 196.04,
+ "engine_python_ms (engine - backend http)": 0.41,
+ "tez_serve_client_round_trip_ms": 193.13,
+ "tez_serve_reported_latency_ms": 190.35,
+ "fastapi_uvicorn_client_ms (round trip - reported)": 2.33,
+ "health_round_trip_tez_ms": 3.57,
+ "health_round_trip_llama_ms": 0.97
+}
+prod                     tez:today               1q  p50    159.4  p95    174.1  per q 159.40  tokens/call 0  sm 742.5  86.0C
+prod                     http:today              1q  p50    135.7  p95    198.9  per q 135.74  tokens/call 165  sm 742.5  86.0C
+prod                     http:statefirst         1q  p50    160.2  p95    195.6  per q 160.18  tokens/call 243  sm 742.5  86.0C
+prod                     tez:today               5q  p50    849.5  p95    997.4  per q 169.91  tokens/call 0  sm 592.0  88.0C
+prod                     http:today              5q  p50    817.7  p95   1092.7  per q 163.54  tokens/call 333  sm 592.0  88.0C
+prod                     http:statefirst         5q  p50    618.6  p95    973.2  per q 123.72  tokens/call 423  sm 592.0  88.0C
+prod                     tez:today              10q  p50   1492.2  p95   2061.4  per q 149.22  tokens/call 0  sm 472.0  88.0C
+prod                     http:today             10q  p50   1440.6  p95   1918.3  per q 144.06  tokens/call 338  sm 472.0  88.0C
+prod                     http:statefirst        10q  p50   1252.8  p95   2356.3  per q 125.28  tokens/call 653  sm 472.0  88.0C
+prod                     tez:today              50q  p50   7452.5  p95   7985.0  per q 149.05  tokens/call 0  sm 390.0  88.0C
+prod                     http:today             50q  p50   6776.8  p95   8023.0  per q 135.54  tokens/call 378  sm 390.0  88.0C
+prod                     http:statefirst        50q  p50  12006.9  p95  14026.9  per q 240.14  tokens/call 2453  sm 390.0  88.0C
+  55/220 107s
+  110/220 196s
+  165/220 269s
+  220/220 357s
+{
+ "latency_incremental": {
+  "compute_ms": {
+   "n": 938,
+   "p50": 43.75,
+   "p95": 65.72,
+   "mean": 45.39,
+   "min": 33.88,
+   "max": 171.97
+  },
+  "round_trip_ms": {
+   "n": 938,
+   "p50": 51.88,
+   "p95": 77.32,
+   "mean": 54.34,
+   "min": 40.38,
+   "max": 233.62
+  },
+  "tokens_evaluated": {
+   "n": 938,
+   "p50": 11.0,
+   "p95": 11.0,
+   "mean": 11.06,
+   "min": 11.0,
+   "max": 15.0
+  }
+ },
+ "first_word": {
+  "compute_ms": {
+   "n": 220,
+   "p50": 44.19,
+   "p95": 67.47,
+   "mean": 47.75,
+   "min": 35.13,
+   "max": 150.67
+  },
+  "round_trip_ms": {
+   "n": 220,
+   "p50": 52.69,
+   "p95": 78.32,
+   "mean": 56.58,
+   "min": 41.88,
+   "max": 178.96
+  }
+ },
+ "accuracy": {
+  "intent_accuracy": 0.9091,
+  "intent_accuracy_alt_ok": 0.9136,
+  "intent_accuracy_alt_or_then_ok": 0.9864,
+  "accuracy_by_style": {
+   "canonical": 1,
+   "paraphrase": 0.982,
+   "noisy": 0.97,
+   "compound": 0.273,
+   "ambiguous": 0.818,
+   "oos": 1
+  },
+  "none_recall": 1.0,
+  "none_precision": 0.9167
+ },
+ "streaming_policy": {
+  "policy": {
+   "tau": 0.9,
+   "media_stable": 2,
+   "play_stable": 2,
+   "slot_stable": 2
+  },
+  "actionable": 198,
+  "harmful": 1,
+  "harmful_rate": 0.0051,
+  "final_action_consistent_rate": 0.9848,
+  "mean_first_action_word": 3.617,
+  "first_action_at_or_before_human": 0.5253,
+  "oos_rows": 22,
+  "oos_false_actions": 2
+ }
+}

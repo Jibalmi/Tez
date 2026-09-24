@@ -1,0 +1,28 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+batch_statefirst {"n_decisions": 2000, "accuracy": 0.702, "by_type": {"choice": 0.6583, "noul": 0.825, "score": 0.6425}, "per_row_call_ms": {"n": 400, "p50": 636.21, "p95": 936.5, "mean": 628.43, "min": 262.48, "max": 1227.29}, "wall_s": 251.7, "gpu": {"samples": 491, "temp_c_p50": 88.0, "temp_c_max": 89.0, "sm_mhz_busy_p50": 648.5, "sm_mhz_busy_p10": 457.0, "power_w_busy_p50": 56.11, "busy_frac": 0.998, "thermal_throttle_frac": 0.957}, "vs_td_rows_prod_statefirst_http.jsonl": {"n": 2000, "agreement": 0.989, "mcnemar": {"a_only": 10, "b_only": 9, "p": 1.0}, "other_accuracy": 0.7015}, "vs_td_rows_prod_today_http.jsonl": {"n": 2000, "agreement": 0.8205, "mcnemar": {"a_only": 152, "b_only": 158, "p": 0.77648}, "other_accuracy": 0.705}}
+batch_today {"n_decisions": 2000, "accuracy": 0.701, "by_type": {"choice": 0.6767, "noul": 0.8117, "score": 0.6362}, "per_row_call_ms": {"n": 400, "p50": 1543.74, "p95": 2356.21, "mean": 1522.47, "min": 694.58, "max": 3697.71}, "wall_s": 609.3, "gpu": {"samples": 1191, "temp_c_p50": 89.0, "temp_c_max": 89.0, "sm_mhz_busy_p50": 712.0, "sm_mhz_busy_p10": 555.0, "power_w_busy_p50": 55.504999999999995, "busy_frac": 0.999, "thermal_throttle_frac": 1.0}, "vs_td_rows_prod_statefirst_http.jsonl": {"n": 2000, "agreement": 0.8125, "mcnemar": {"a_only": 159, "b_only": 160, "p": 1.0}, "other_accuracy": 0.7015}, "vs_td_rows_prod_today_http.jsonl": {"n": 2000, "agreement": 0.9825, "mcnemar": {"a_only": 10, "b_only": 18, "p": 0.18493}, "other_accuracy": 0.705}}
+onepass_markers {"n_decisions": 2000, "accuracy": 0.3345, "by_type": {"choice": 0.2267, "noul": 0.5867, "score": 0.2263}, "per_row_call_ms": {"n": 400, "p50": 582.23, "p95": 918.27, "mean": 627.6, "min": 400.68, "max": 1135.89}, "wall_s": 251.3, "gpu": {"samples": 491, "temp_c_p50": 89.0, "temp_c_max": 89.0, "sm_mhz_busy_p50": 660.0, "sm_mhz_busy_p10": 532.0, "power_w_busy_p50": 54.7, "busy_frac": 1.0, "thermal_throttle_frac": 1.0}, "vs_td_rows_prod_statefirst_http.jsonl": {"n": 2000, "agreement": 0.3695, "mcnemar": {"a_only": 138, "b_only": 872, "p": 0.0}, "other_accuracy": 0.7015}, "vs_td_rows_prod_today_http.jsonl": {"n": 2000, "agreement": 0.3855, "mcnemar": {"a_only": 133, "b_only": 874, "p": 0.0}, "other_accuracy": 0.705}}
+gpu_guard contaminated: False []
+Traceback (most recent call last):
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 286, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 279, in main
+    res = mode_laya(a, eng) if a.mode == "laya" else mode_td(a, eng)
+          ~~~~~~~~~^^^^^^^^
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 198, in mode_laya
+    z, ev = eng.run(arm, cases)
+            ~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 170, in run
+    return self.run_seq([sc.prompt_today(c, self.template) for c in cases], ks)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 81, in run_seq
+    zz, e = self.seq_one(p, k)
+            ~~~~~~~~~~~~^^^^^^
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_multiq_inproc.py", line 74, in seq_one
+    outs = llm.eval_seq(T[n:], 0, n)
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_llama.py", line 272, in eval_seq
+    outs = self.decode(chunk, list(range(start + s, start + s + len(chunk))), [seq] * len(chunk), o)
+  File "C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_llama.py", line 246, in decode
+    raise RuntimeError(f"llama_decode returned {rc}")
+RuntimeError: llama_decode returned -1

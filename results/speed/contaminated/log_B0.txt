@@ -1,0 +1,12 @@
+prod_unique              tez:today               1q  p50    175.3  p95    277.6  per q 175.34  tokens/call 0  sm 479.5  86.0C
+prod_unique              http:today              1q  p50    174.2  p95    223.7  per q 174.22  tokens/call 165  sm 479.5  86.0C
+prod_unique              http:statefirst         1q  p50    187.4  p95    269.3  per q 187.44  tokens/call 248  sm 479.5  86.0C
+prod_unique              tez:today               5q  p50   1115.5  p95   1259.4  per q 223.10  tokens/call 0  sm 671.0  87.0C
+prod_unique              http:today              5q  p50   1105.3  p95   1359.7  per q 221.07  tokens/call 825  sm 671.0  87.0C
+prod_unique              http:statefirst         5q  p50    583.1  p95    628.1  per q 116.62  tokens/call 448  sm 671.0  87.0C
+prod_unique              tez:today              10q  p50   2757.1  p95   3385.7  per q 275.71  tokens/call 0  sm 615.0  87.0C
+prod_unique              http:today             10q  p50   2656.2  p95   3160.1  per q 265.62  tokens/call 1650  sm 615.0  87.0C
+prod_unique              http:statefirst        10q  p50   1080.6  p95   1402.7  per q 108.06  tokens/call 704  sm 615.0  87.0C
+prod_unique              tez:today              50q  p50  11656.5  p95  14316.6  per q 233.13  tokens/call 0  sm 712.0  87.0C
+prod_unique              http:today             50q  p50  12130.5  p95  13383.5  per q 242.61  tokens/call 8250  sm 712.0  87.0C
+prod_unique              http:statefirst        50q  p50   4678.2  p95   5004.7  per q  93.56  tokens/call 2744  sm 712.0  87.0C

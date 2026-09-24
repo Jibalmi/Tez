@@ -1,0 +1,1731 @@
+{
+ "meta": {
+  "script": "experiments/speed_voice.py",
+  "date": "2026-09-24T14:18:36",
+  "args": {
+   "engine": "inproc",
+   "readout": "probe",
+   "url": "http://127.0.0.1:8091",
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "cache": "on",
+   "n_probs": 200,
+   "limit": 0,
+   "gap": 0.25,
+   "cool": 85.0,
+   "tag": "q4bL24_probe"
+  },
+  "data_sha256": "6dfba8d2de653e6010f682703400ef9444976ffc9bb8b18d6be1b6fe7a99a1c5",
+  "prompt_example": "<|im_start|>user\nYou are the command router of a voice-controlled computer assistant. Read the user's transcript and decide which ONE action they are asking for. Answer with the letter only. Choose 'none' if the request is chit-chat, a question, out of scope, or too unclear to act on.\n\nActions:\nA. open_notes: Open the notes or notepad application.\nB. type_text: Type the dictated text into the app that is currently in focus.\nC. open_youtube: Open YouTube without playing anything in particular.\nD. play_youtube: Search for and play a specific video, channel or topic on YouTube.\nE. open_spotify: Open Spotify without playing anything in particular.\nF. play_liked_songs: Play the user's own liked or saved songs collection on Spotify.\nG. play_spotify: Play a specific song, artist, album or playlist on Spotify.\nH. pause_media: Pause or stop whatever is currently playing.\nI. resume_media: Resume or continue playback that was paused.\nJ. next_track: Skip to the next track or video.\nK. volume_up: Make the sound louder by increasing the volume.\nL. volume_down: Make the sound quieter by decreasing the volume.\nM. open_browser: Open the web browser without searching for anything.\nN. search_web: Search the web or look something up online for the user.\nO. close_app: Close the current window or a named application.\nP. none: Out of scope: chit-chat, a question, or a request for something the assistant cannot do.\n\nTranscript: \"open notes",
+  "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "load_s": 2.7,
+  "n_layer": 24,
+  "n_embd": 2560,
+  "params": {
+   "n_ctx": 2048,
+   "n_batch": 512,
+   "n_ubatch": 512,
+   "n_seq_max": 3,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 32,
+   "n_outputs_max_per_seq": 0
+  },
+  "constant_prefix_tokens": 341
+ },
+ "latency_per_word": {
+  "all_words": {
+   "compute_ms": {
+    "n": 1158,
+    "p50": 11.23,
+    "p95": 16.54,
+    "mean": 11.55,
+    "min": 7.96,
+    "max": 24.92
+   },
+   "round_trip_ms": {
+    "n": 1158,
+    "p50": 12.39,
+    "p95": 17.61,
+    "mean": 12.53,
+    "min": 8.67,
+    "max": 27.02
+   },
+   "tokens_evaluated": {
+    "n": 1158,
+    "p50": 1.0,
+    "p95": 2.0,
+    "mean": 1.27,
+    "min": 1.0,
+    "max": 4.0
+   }
+  },
+  "incremental_words": {
+   "compute_ms": {
+    "n": 938,
+    "p50": 9.95,
+    "p95": 14.95,
+    "mean": 10.79,
+    "min": 7.96,
+    "max": 24.92
+   },
+   "round_trip_ms": {
+    "n": 938,
+    "p50": 10.95,
+    "p95": 16.16,
+    "mean": 11.77,
+    "min": 8.67,
+    "max": 27.02
+   },
+   "tokens_evaluated": {
+    "n": 938,
+    "p50": 1.0,
+    "p95": 2.0,
+    "mean": 1.07,
+    "min": 1.0,
+    "max": 4.0
+   }
+  },
+  "first_word": {
+   "compute_ms": {
+    "n": 220,
+    "p50": 14.25,
+    "p95": 18.72,
+    "mean": 14.83,
+    "min": 12.66,
+    "max": 23.6
+   },
+   "round_trip_ms": {
+    "n": 220,
+    "p50": 15.21,
+    "p95": 20.15,
+    "mean": 15.78,
+    "min": 13.29,
+    "max": 25.21
+   }
+  }
+ },
+ "gpu": {
+  "before": {
+   "temp_c": 72.0,
+   "sm_mhz": 1642.0,
+   "power_w": 24.06,
+   "util": 5.0,
+   "throttle": "0x0000000000000000",
+   "waited_s": 0.1
+  },
+  "during": {
+   "samples": 596,
+   "temp_c_p50": 71.0,
+   "temp_c_max": 75.0,
+   "sm_mhz_busy_p50": 1837.0,
+   "sm_mhz_busy_p10": 1837.0,
+   "power_w_busy_p50": 94.43,
+   "busy_frac": 0.002,
+   "thermal_throttle_frac": 0.0
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   64652
+  ],
+  "before": {
+   "time": "2026-09-24T14:18:42+02:00",
+   "used_mb": 5477,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2424
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48068,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 137
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 419
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 64652,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3814
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T14:23:50+02:00",
+   "used_mb": 5546,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 102
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 220
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2424
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48068,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 132
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 422
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 64652,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3816
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ },
+ "restored_from_checkpoint": 0,
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 5.0,
+    "inner_cv": 0.5048,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.05,
+    "inner_cv": 0.4953,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.5318,
+   "intent_accuracy_alt_ok": 0.5318,
+   "intent_accuracy_alt_or_then_ok": 0.6,
+   "accuracy_by_style": {
+    "canonical": 0.597,
+    "paraphrase": 0.564,
+    "noisy": 0.667,
+    "compound": 0.045,
+    "ambiguous": 0.364,
+    "oos": 0.591
+   },
+   "none_recall": 0.5909,
+   "none_precision": 0.5652
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 57,
+   "harmful_rate": 0.2879,
+   "final_action_consistent_rate": 0.6869,
+   "mean_first_action_word": 4.304,
+   "first_action_at_or_before_human": 0.4798,
+   "oos_rows": 22,
+   "oos_false_actions": 11,
+   "harmful_detail": [
+    {
+     "id": "v001",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v004",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v006",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v007",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       6,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_notes"
+     ]
+    },
+    {
+     "id": "v014",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ],
+      [
+       9,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_notes",
+      "type_text"
+     ]
+    },
+    {
+     "id": "v018",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ],
+      [
+       8,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_notes",
+      "type_text"
+     ]
+    },
+    {
+     "id": "v032",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "type_text"
+     ]
+    },
+    {
+     "id": "v037",
+     "seq": [
+      [
+       3,
+       "open_youtube"
+      ],
+      [
+       4,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v039",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       5,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v042",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       9,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v043",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       6,
+       "open_browser"
+      ],
+      [
+       6,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v050",
+     "seq": [
+      [
+       1,
+       "open_youtube"
+      ],
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v065",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       5,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v070",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ],
+      [
+       5,
+       "resume_media"
+      ],
+      [
+       7,
+       "play_liked_songs"
+      ],
+      [
+       8,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_spotify",
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v073",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ],
+      [
+       7,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "open_spotify",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v075",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v076",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       6,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v088",
+     "seq": [
+      [
+       4,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v094",
+     "seq": [
+      [
+       8,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v096",
+     "seq": [
+      [
+       6,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v101",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v105",
+     "seq": [
+      [
+       3,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v106",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v108",
+     "seq": [
+      [
+       5,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v109",
+     "seq": [
+      [
+       4,
+       "pause_media"
+      ],
+      [
+       5,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v110",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v119",
+     "seq": [
+      [
+       2,
+       "resume_media"
+      ],
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v120",
+     "seq": [
+      [
+       4,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v122",
+     "seq": [
+      [
+       4,
+       "resume_media"
+      ],
+      [
+       5,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v125",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v126",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v128",
+     "seq": [
+      [
+       3,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v130",
+     "seq": [
+      [
+       7,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v137",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v139",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v143",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v144",
+     "seq": [
+      [
+       3,
+       "volume_up"
+      ],
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v145",
+     "seq": [
+      [
+       4,
+       "volume_up"
+      ],
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v158",
+     "seq": [
+      [
+       2,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v170",
+     "seq": [
+      [
+       3,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v177",
+     "seq": [
+      [
+       7,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v180",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v186",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v188",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v190",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v191",
+     "seq": [
+      [
+       4,
+       "pause_media"
+      ],
+      [
+       5,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v192",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v198",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app",
+      "pause_media"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v201",
+    "v202",
+    "v204",
+    "v207",
+    "v210",
+    "v213",
+    "v214",
+    "v216",
+    "v217",
+    "v218",
+    "v220"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 0.5,
+    "inner_cv": 0.7683,
+    "n_train": 535
+   },
+   "1": {
+    "C": 5.0,
+    "inner_cv": 0.7897,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.5727,
+   "intent_accuracy_alt_ok": 0.5727,
+   "intent_accuracy_alt_or_then_ok": 0.6545,
+   "accuracy_by_style": {
+    "canonical": 0.636,
+    "paraphrase": 0.655,
+    "noisy": 0.606,
+    "compound": 0.091,
+    "ambiguous": 0.364,
+    "oos": 0.682
+   },
+   "none_recall": 0.6818,
+   "none_precision": 0.3846
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 40,
+   "harmful_rate": 0.202,
+   "final_action_consistent_rate": 0.7273,
+   "mean_first_action_word": 3.972,
+   "first_action_at_or_before_human": 0.4394,
+   "oos_rows": 22,
+   "oos_false_actions": 8,
+   "harmful_detail": [
+    {
+     "id": "v032",
+     "seq": [
+      [
+       8,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "type_text"
+     ]
+    },
+    {
+     "id": "v037",
+     "seq": [
+      [
+       3,
+       "open_youtube"
+      ],
+      [
+       4,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "open_youtube"
+     ]
+    },
+    {
+     "id": "v043",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       6,
+       "open_browser"
+      ],
+      [
+       6,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_youtube",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v046",
+     "seq": [
+      [
+       3,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v052",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       7,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v059",
+     "seq": [
+      [
+       4,
+       "open_youtube"
+      ],
+      [
+       11,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v065",
+     "seq": [
+      [
+       3,
+       "open_spotify"
+      ],
+      [
+       4,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v067",
+     "seq": [
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       5,
+       "next_track"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v075",
+     "seq": [
+      [
+       3,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v076",
+     "seq": [
+      [
+       6,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v077",
+     "seq": [
+      [
+       4,
+       "play_liked_songs"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v085",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v089",
+     "seq": [
+      [
+       6,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v101",
+     "seq": [
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v106",
+     "seq": [
+      [
+       2,
+       "open_spotify"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v108",
+     "seq": [
+      [
+       5,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v114",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v115",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v117",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ],
+      [
+       3,
+       "resume_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v122",
+     "seq": [
+      [
+       5,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "resume_media"
+     ]
+    },
+    {
+     "id": "v126",
+     "seq": [
+      [
+       2,
+       "next_track"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v132",
+     "seq": [
+      [
+       2,
+       "next_track"
+      ],
+      [
+       5,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "next_track"
+     ]
+    },
+    {
+     "id": "v137",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v142",
+     "seq": [
+      [
+       2,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v143",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v145",
+     "seq": [
+      [
+       6,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v152",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v162",
+     "seq": [
+      [
+       5,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_browser"
+     ]
+    },
+    {
+     "id": "v166",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ],
+      [
+       5,
+       "open_youtube"
+      ],
+      [
+       10,
+       "search_web"
+      ]
+     ],
+     "accepted": [
+      "open_browser",
+      "search_web"
+     ]
+    },
+    {
+     "id": "v170",
+     "seq": [
+      [
+       4,
+       "open_browser"
+      ],
+      [
+       7,
+       "play_youtube"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v177",
+     "seq": [
+      [
+       7,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v180",
+     "seq": [
+      [
+       7,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "search_web"
+     ]
+    },
+    {
+     "id": "v186",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v187",
+     "seq": [
+      [
+       2,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v188",
+     "seq": [
+      [
+       2,
+       "open_browser"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v190",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v192",
+     "seq": [
+      [
+       2,
+       "open_youtube"
+      ],
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v193",
+     "seq": [
+      [
+       4,
+       "open_notes"
+      ],
+      [
+       6,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    },
+    {
+     "id": "v198",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "close_app",
+      "pause_media"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v200",
+    "v201",
+    "v204",
+    "v206",
+    "v213",
+    "v214",
+    "v216",
+    "v217"
+   ]
+  }
+ }
+}

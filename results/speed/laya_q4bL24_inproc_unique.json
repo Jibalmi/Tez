@@ -1,0 +1,473 @@
+{
+ "meta": {
+  "script": "experiments/speed_multiq_inproc.py",
+  "date": "2026-09-24T15:45:35",
+  "args": {
+   "mode": "laya",
+   "arms": "batch_today,batch_statefirst",
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_seq_max": 64,
+   "n_ubatch": 512,
+   "warmup": 2,
+   "reps": 12,
+   "reps50": 4,
+   "gap": 0.3,
+   "cool": 85.0,
+   "seed_offset": 300000,
+   "unique": true,
+   "duty": 1.0,
+   "limit_rows": 0,
+   "compare": "",
+   "tag": "q4bL24_inproc_unique"
+  },
+  "params": {
+   "n_ctx": 4096,
+   "n_batch": 4096,
+   "n_ubatch": 512,
+   "n_seq_max": 64,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 64,
+   "n_outputs_max_per_seq": 0
+  },
+  "load_s": 2.7,
+  "n_layer": 24
+ },
+ "arms": {
+  "batch_today": {
+   "1": {
+    "n": 12,
+    "p50": 40.59,
+    "p95": 44.5,
+    "mean": 41.26,
+    "min": 39.52,
+    "max": 44.62,
+    "ms_per_question_p50": 40.59,
+    "ms_per_question_p95": 44.5,
+    "tokens_evaluated_per_call_p50": 261.0,
+    "samples_ms": [
+     39.84,
+     39.98,
+     39.69,
+     39.52,
+     39.96,
+     41.19,
+     44.62,
+     41.51,
+     44.4,
+     42.45,
+     39.96,
+     41.93
+    ]
+   },
+   "5": {
+    "n": 12,
+    "p50": 203.07,
+    "p95": 213.59,
+    "mean": 203.1,
+    "min": 194.29,
+    "max": 218.05,
+    "ms_per_question_p50": 40.61,
+    "ms_per_question_p95": 42.72,
+    "tokens_evaluated_per_call_p50": 1157.0,
+    "samples_ms": [
+     218.05,
+     198.59,
+     201.61,
+     205.02,
+     209.95,
+     207.25,
+     204.52,
+     195.48,
+     194.45,
+     208.16,
+     199.83,
+     194.29
+    ]
+   },
+   "10": {
+    "n": 12,
+    "p50": 392.93,
+    "p95": 398.32,
+    "mean": 390.54,
+    "min": 380.42,
+    "max": 399.36,
+    "ms_per_question_p50": 39.29,
+    "ms_per_question_p95": 39.83,
+    "tokens_evaluated_per_call_p50": 2282.0,
+    "samples_ms": [
+     381.49,
+     380.42,
+     394.81,
+     393.89,
+     397.47,
+     394.52,
+     399.36,
+     391.97,
+     386.93,
+     384.06,
+     386.8,
+     394.75
+    ]
+   },
+   "50": {
+    "n": 4,
+    "p50": 2153.41,
+    "p95": 2253.14,
+    "mean": 2173.99,
+    "min": 2121.84,
+    "max": 2267.28,
+    "ms_per_question_p50": 43.07,
+    "ms_per_question_p95": 45.06,
+    "tokens_evaluated_per_call_p50": 11282.0,
+    "samples_ms": [
+     2267.28,
+     2133.86,
+     2121.84,
+     2172.97
+    ]
+   }
+  },
+  "batch_statefirst": {
+   "1": {
+    "n": 12,
+    "p50": 41.56,
+    "p95": 44.2,
+    "mean": 41.7,
+    "min": 39.74,
+    "max": 44.81,
+    "ms_per_question_p50": 41.56,
+    "ms_per_question_p95": 44.2,
+    "tokens_evaluated_per_call_p50": 260.0,
+    "samples_ms": [
+     40.23,
+     39.74,
+     43.33,
+     40.51,
+     44.81,
+     42.11,
+     40.41,
+     42.6,
+     41.85,
+     39.87,
+     41.27,
+     43.69
+    ]
+   },
+   "5": {
+    "n": 12,
+    "p50": 93.81,
+    "p95": 100.94,
+    "mean": 94.39,
+    "min": 89.66,
+    "max": 101.74,
+    "ms_per_question_p50": 18.76,
+    "ms_per_question_p95": 20.19,
+    "tokens_evaluated_per_call_p50": 460.0,
+    "samples_ms": [
+     95.15,
+     93.38,
+     89.66,
+     93.66,
+     90.34,
+     91.35,
+     101.74,
+     100.29,
+     93.96,
+     96.0,
+     92.09,
+     94.99
+    ]
+   },
+   "10": {
+    "n": 12,
+    "p50": 143.06,
+    "p95": 149.22,
+    "mean": 143.06,
+    "min": 135.56,
+    "max": 149.72,
+    "ms_per_question_p50": 14.31,
+    "ms_per_question_p95": 14.92,
+    "tokens_evaluated_per_call_p50": 715.0,
+    "samples_ms": [
+     140.5,
+     144.46,
+     148.81,
+     144.44,
+     139.92,
+     149.72,
+     141.68,
+     145.95,
+     135.56,
+     140.35,
+     144.95,
+     140.38
+    ]
+   },
+   "50": {
+    "n": 4,
+    "p50": 646.63,
+    "p95": 651.17,
+    "mean": 646.38,
+    "min": 640.37,
+    "max": 651.87,
+    "ms_per_question_p50": 12.93,
+    "ms_per_question_p95": 13.02,
+    "tokens_evaluated_per_call_p50": 2755.0,
+    "samples_ms": [
+     646.1,
+     640.37,
+     651.87,
+     647.17
+    ]
+   }
+  }
+ },
+ "gpu": {
+  "1": {
+   "before": {
+    "temp_c": 75.0,
+    "sm_mhz": 1590.0,
+    "power_w": 22.75,
+    "util": 1.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 0.1
+   },
+   "during": {
+    "samples": 19,
+    "temp_c_p50": 76.0,
+    "temp_c_max": 79.0,
+    "sm_mhz_busy_p50": 675.0,
+    "sm_mhz_busy_p10": 662.8,
+    "power_w_busy_p50": 38.37,
+    "busy_frac": 0.263,
+    "thermal_throttle_frac": 0.0
+   }
+  },
+  "5": {
+   "before": {
+    "temp_c": 75.0,
+    "sm_mhz": 712.0,
+    "power_w": 23.48,
+    "util": 1.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 0.0
+   },
+   "during": {
+    "samples": 25,
+    "temp_c_p50": 77.0,
+    "temp_c_max": 82.0,
+    "sm_mhz_busy_p50": 720.0,
+    "sm_mhz_busy_p10": 394.2,
+    "power_w_busy_p50": 61.67,
+    "busy_frac": 0.28,
+    "thermal_throttle_frac": 0.0
+   }
+  },
+  "10": {
+   "before": {
+    "temp_c": 78.0,
+    "sm_mhz": 652.0,
+    "power_w": 56.67,
+    "util": 47.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 0.1
+   },
+   "during": {
+    "samples": 34,
+    "temp_c_p50": 78.5,
+    "temp_c_max": 84.0,
+    "sm_mhz_busy_p50": 701.0,
+    "sm_mhz_busy_p10": 390.0,
+    "power_w_busy_p50": 59.625,
+    "busy_frac": 0.529,
+    "thermal_throttle_frac": 0.0
+   }
+  },
+  "50": {
+   "before": {
+    "temp_c": 78.0,
+    "sm_mhz": 1305.0,
+    "power_w": 22.9,
+    "util": 1.0,
+    "throttle": "0x0000000000000000",
+    "waited_s": 0.1
+   },
+   "during": {
+    "samples": 67,
+    "temp_c_p50": 81.0,
+    "temp_c_max": 86.0,
+    "sm_mhz_busy_p50": 1620.0,
+    "sm_mhz_busy_p10": 392.8,
+    "power_w_busy_p50": 75.9,
+    "busy_frac": 0.522,
+    "thermal_throttle_frac": 0.0
+   }
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   18940
+  ],
+  "before": {
+   "time": "2026-09-24T15:45:37+02:00",
+   "used_mb": 8500,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 18940,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 6386
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 424
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2561
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 448
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 64580,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 18940,
+     "name": "python",
+     "kind": "shared",
+     "mb": 152
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "shared",
+     "mb": 120
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T15:46:54+02:00",
+   "used_mb": 8534,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 18940,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 6420
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 424
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2561
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 451
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 64580,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 18940,
+     "name": "python",
+     "kind": "shared",
+     "mb": 154
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "shared",
+     "mb": 120
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ }
+}

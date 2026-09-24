@@ -1,0 +1,26 @@
+{
+ "llama_compute_ms (prompt_ms + predicted_ms, direct n_probs 200)": 110.37,
+ "direct_http_round_trip_np200_ms": 120.81,
+ "direct_http_round_trip_np0_ms": 113.67,
+ "n_probs_200_cost_ms (np200 - np0 round trip)": 7.14,
+ "engine_total_ms": 117.28,
+ "engine_backend_http_ms": 116.82,
+ "engine_python_ms (engine - backend http)": 0.37,
+ "tez_serve_client_round_trip_ms": 117.92,
+ "tez_serve_reported_latency_ms": 115.95,
+ "fastapi_uvicorn_client_ms (round trip - reported)": 2.14,
+ "health_round_trip_tez_ms": 3.42,
+ "health_round_trip_llama_ms": 0.87
+}
+tuned_unique             tez:today               1q  p50    120.4  p95    217.5  per q 120.40  tokens/call 0  sm 656.0  87.0C
+tuned_unique             http:today              1q  p50     97.4  p95    193.6  per q  97.38  tokens/call 165  sm 656.0  87.0C
+tuned_unique             http:statefirst         1q  p50    115.2  p95    174.5  per q 115.18  tokens/call 248  sm 656.0  87.0C
+tuned_unique             tez:today               5q  p50   1362.2  p95   1587.9  per q 272.44  tokens/call 0  sm 607.0  88.0C
+tuned_unique             http:today              5q  p50   1260.0  p95   1510.9  per q 252.00  tokens/call 1104  sm 607.0  88.0C
+tuned_unique             http:statefirst         5q  p50    572.1  p95    625.0  per q 114.42  tokens/call 448  sm 607.0  88.0C
+tuned_unique             tez:today              10q  p50   3437.4  p95   3927.0  per q 343.74  tokens/call 0  sm 532.0  88.0C
+tuned_unique             http:today             10q  p50   3267.9  p95   3863.2  per q 326.79  tokens/call 2241  sm 532.0  88.0C
+tuned_unique             http:statefirst        10q  p50   1093.9  p95   1170.8  per q 109.39  tokens/call 704  sm 532.0  88.0C
+tuned_unique             tez:today              50q  p50  14634.5  p95  15240.3  per q 292.69  tokens/call 0  sm 585.0  87.0C
+tuned_unique             http:today             50q  p50  13453.4  p95  15426.7  per q 269.07  tokens/call 11241  sm 585.0  87.0C
+tuned_unique             http:statefirst        50q  p50   4410.2  p95   4436.1  per q  88.20  tokens/call 2744  sm 585.0  87.0C

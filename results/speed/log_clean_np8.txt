@@ -1,0 +1,17 @@
+np8_unique               http-par:today          1q  p50     92.7  p95    146.2  per q  92.69  tokens/call 165  sm 727.0  84.0C
+np8_unique               http-par:statefirst     1q  p50    105.4  p95    114.4  per q 105.36  tokens/call 204  sm 727.0  84.0C
+np8_unique               http-multi:statefirst   1q  p50    104.8  p95    162.4  per q 104.78  tokens/call 204  sm 727.0  84.0C
+np8_unique               http:statefirst         1q  p50    102.6  p95    111.1  per q 102.57  tokens/call 204  sm 727.0  84.0C
+np8_unique               http-par:today          5q  p50    776.2  p95    830.6  per q 155.24  tokens/call 1090  sm 997.0  86.0C
+np8_unique               http-par:statefirst     5q  p50    708.6  p95    757.0  per q 141.72  tokens/call 1128  sm 997.0  86.0C
+np8_unique               http-multi:statefirst   5q  p50    704.0  p95    792.0  per q 140.79  tokens/call 1040  sm 997.0  86.0C
+np8_unique               http:statefirst         5q  p50    391.7  p95    413.1  per q  78.33  tokens/call 404  sm 997.0  86.0C
+np8_unique               http-par:today         10q  p50   1757.0  p95   1840.0  per q 175.70  tokens/call 2462  sm 907.0  87.0C
+np8_unique               http-par:statefirst    10q  p50   1479.4  p95   1639.4  per q 147.94  tokens/call 2106  sm 907.0  87.0C
+np8_unique               http-multi:statefirst  10q  p50   1297.5  p95   1436.3  per q 129.75  tokens/call 1743  sm 907.0  87.0C
+np8_unique               http:statefirst        10q  p50    839.3  p95    876.4  per q  83.93  tokens/call 660  sm 907.0  87.0C
+np8_unique               http-par:today         50q  p50   8044.1  p95   8176.1  per q 160.88  tokens/call 11106  sm 892.0  86.0C
+np8_unique               http-par:statefirst    50q  p50   2928.6  p95   3202.4  per q  58.57  tokens/call 3632  sm 892.0  86.0C
+np8_unique               http-multi:statefirst  50q  p50   2552.7  p95   2732.9  per q  51.05  tokens/call 3172  sm 892.0  86.0C
+np8_unique               http:statefirst        50q  p50   3950.5  p95   4025.8  per q  79.01  tokens/call 2700  sm 892.0  86.0C
+gpu_guard contaminated: False []

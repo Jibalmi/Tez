@@ -1,0 +1,79 @@
+{
+ "time": "2026-09-24T11:26:19",
+ "nvidia_smi_memory": "15520 MiB, 16303 MiB",
+ "gpu": {
+  "temp_c": 82.0,
+  "sm_mhz": 495.0,
+  "power_w": 23.9,
+  "util": 7.0,
+  "throttle": "0x0000000000000000"
+ },
+ "per_process_GB": {
+  "35324": {
+   "dedicated": 12.029,
+   "shared": 1.914,
+   "name": "llama-server"
+  },
+  "42484": {
+   "dedicated": 2.253,
+   "name": "dwm"
+  },
+  "42836": {
+   "dedicated": 1.831,
+   "name": "llama-server"
+  },
+  "48680": {
+   "dedicated": 0.393,
+   "shared": 0.053,
+   "name": "Code"
+  },
+  "54988": {
+   "dedicated": 0.235,
+   "name": "WINWORD"
+  },
+  "57260": {
+   "dedicated": 0.187,
+   "name": "WINWORD"
+  },
+  "33500": {
+   "dedicated": 0.133,
+   "name": "chrome"
+  },
+  "48068": {
+   "dedicated": 0.068,
+   "name": "msedgewebview2"
+  },
+  "43552": {
+   "dedicated": 0.06,
+   "name": "msedgewebview2"
+  },
+  "26584": {
+   "dedicated": 0.054,
+   "name": "csrss"
+  }
+ },
+ "ollama_ps": {
+  "models": [
+   {
+    "name": "gemma4:12b",
+    "model": "gemma4:12b",
+    "size": 8150371531,
+    "digest": "4eb23ef187e2c5462566d6a1d3bbbc2f1346d0b4327cbb66d58fffbcc9b2b05c",
+    "details": {
+     "parent_model": "",
+     "format": "gguf",
+     "family": "gemma4",
+     "families": [
+      "gemma4"
+     ],
+     "parameter_size": "11.9B",
+     "quantization_level": "Q4_K_M"
+    },
+    "expires_at": "2026-09-25T11:19:56.565251+02:00",
+    "size_vram": 8150371531,
+    "context_length": 131072
+   }
+  ]
+ },
+ "note": "12B llama-server -np 1 --cache-ram 0 (the configuration measured cleanly from 10:53 to 11:15) restarted at 11:24: 1.9 GB of it landed in shared system memory and a 165-token prompt took ~790 ms instead of ~110 ms. The -np 8 -kvu server at 11:17-11:22 spilled 1.4 GB (725 ms per 165 tokens). Cause: an Ollama runner (gemma4:12b Q4_K_M, loaded at 10:32 by another client, keep-alive 24 h) holds ~1.9 GB dedicated VRAM and dwm ~2.2 GB, leaving ~11 GB for a 12.5 GB model. Not measured further: every 12B timing after 11:17 would be a VRAM-spill artefact."
+}

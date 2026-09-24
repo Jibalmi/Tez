@@ -1,0 +1,572 @@
+{
+ "meta": {
+  "script": "experiments/speed_voice.py",
+  "date": "2026-09-24T15:47:10",
+  "args": {
+   "engine": "inproc",
+   "readout": "probe_tail",
+   "defer": true,
+   "url": "http://127.0.0.1:8091",
+   "model": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "cache": "on",
+   "n_probs": 200,
+   "limit": 0,
+   "gap": 0.25,
+   "cool": 85.0,
+   "tag": "q4bL24_probetail_defer"
+  },
+  "data_sha256": "6dfba8d2de653e6010f682703400ef9444976ffc9bb8b18d6be1b6fe7a99a1c5",
+  "prompt_example": "<|im_start|>user\nYou are the command router of a voice-controlled computer assistant. Read the user's transcript and decide which ONE action they are asking for. Answer with the letter only. Choose 'none' if the request is chit-chat, a question, out of scope, or too unclear to act on.\n\nActions:\nA. open_notes: Open the notes or notepad application.\nB. type_text: Type the dictated text into the app that is currently in focus.\nC. open_youtube: Open YouTube without playing anything in particular.\nD. play_youtube: Search for and play a specific video, channel or topic on YouTube.\nE. open_spotify: Open Spotify without playing anything in particular.\nF. play_liked_songs: Play the user's own liked or saved songs collection on Spotify.\nG. play_spotify: Play a specific song, artist, album or playlist on Spotify.\nH. pause_media: Pause or stop whatever is currently playing.\nI. resume_media: Resume or continue playback that was paused.\nJ. next_track: Skip to the next track or video.\nK. volume_up: Make the sound louder by increasing the volume.\nL. volume_down: Make the sound quieter by decreasing the volume.\nM. open_browser: Open the web browser without searching for anything.\nN. search_web: Search the web or look something up online for the user.\nO. close_app: Close the current window or a named application.\nP. none: Out of scope: chit-chat, a question, or a request for something the assistant cannot do.\n\nTranscript: \"open notes\"<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "model_path": "C:/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+  "load_s": 2.9,
+  "n_layer": 24,
+  "n_embd": 2560,
+  "params": {
+   "n_ctx": 2048,
+   "n_batch": 512,
+   "n_ubatch": 512,
+   "n_seq_max": 3,
+   "embeddings": false,
+   "pooling": "none",
+   "swa_full": true,
+   "kv_unified": true,
+   "flash_attn": -1,
+   "n_gpu_layers": 99,
+   "n_outputs_max": 32,
+   "n_outputs_max_per_seq": 0
+  },
+  "constant_prefix_tokens": 341
+ },
+ "latency_per_word": {
+  "all_words": {
+   "compute_ms": {
+    "n": 1158,
+    "p50": 18.3,
+    "p95": 22.87,
+    "mean": 18.78,
+    "min": 14.97,
+    "max": 84.49
+   },
+   "round_trip_ms": {
+    "n": 1158,
+    "p50": 19.65,
+    "p95": 24.43,
+    "mean": 20.05,
+    "min": 15.71,
+    "max": 86.94
+   },
+   "tokens_evaluated": {
+    "n": 1158,
+    "p50": 11.0,
+    "p95": 12.0,
+    "mean": 11.27,
+    "min": 11.0,
+    "max": 14.0
+   }
+  },
+  "incremental_words": {
+   "compute_ms": {
+    "n": 938,
+    "p50": 18.25,
+    "p95": 22.87,
+    "mean": 18.75,
+    "min": 14.97,
+    "max": 84.49
+   },
+   "round_trip_ms": {
+    "n": 938,
+    "p50": 19.63,
+    "p95": 24.43,
+    "mean": 20.03,
+    "min": 15.71,
+    "max": 86.94
+   },
+   "tokens_evaluated": {
+    "n": 938,
+    "p50": 11.0,
+    "p95": 12.0,
+    "mean": 11.07,
+    "min": 11.0,
+    "max": 14.0
+   }
+  },
+  "first_word": {
+   "compute_ms": {
+    "n": 220,
+    "p50": 18.52,
+    "p95": 22.77,
+    "mean": 18.9,
+    "min": 15.48,
+    "max": 37.33
+   },
+   "round_trip_ms": {
+    "n": 220,
+    "p50": 19.76,
+    "p95": 24.36,
+    "mean": 20.14,
+    "min": 16.35,
+    "max": 39.05
+   }
+  },
+  "deferred_commit_ms": {
+   "n": 1158,
+   "p50": 14.83,
+   "p95": 19.1,
+   "mean": 15.25,
+   "min": 12.24,
+   "max": 28.55
+  }
+ },
+ "gpu": {
+  "before": {
+   "temp_c": 78.0,
+   "sm_mhz": 1612.0,
+   "power_w": 28.99,
+   "util": 33.0,
+   "throttle": "0x0000000000000004",
+   "waited_s": 0.1
+  },
+  "during": {
+   "samples": 648,
+   "temp_c_p50": 78.0,
+   "temp_c_max": 82.0,
+   "sm_mhz_busy_p50": 705.0,
+   "sm_mhz_busy_p10": 634.9,
+   "power_w_busy_p50": 35.629999999999995,
+   "busy_frac": 0.275,
+   "thermal_throttle_frac": 0.0
+  }
+ },
+ "gpu_guard": {
+  "own_pids": [
+   42700
+  ],
+  "before": {
+   "time": "2026-09-24T15:47:15+02:00",
+   "used_mb": 5896,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 424
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2561
+    },
+    {
+     "pid": 42700,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3814
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 127
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 429
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 64580,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "shared",
+     "mb": 114
+    }
+   ],
+   "ollama_ps": []
+  },
+  "after": {
+   "time": "2026-09-24T15:52:49+02:00",
+   "used_mb": 5838,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 13196,
+     "name": "WindowsTerminal",
+     "kind": "dedicated",
+     "mb": 124
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 494
+    },
+    {
+     "pid": 42484,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 2517
+    },
+    {
+     "pid": 42700,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3816
+    },
+    {
+     "pid": 43552,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 128
+    },
+    {
+     "pid": 48680,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 425
+    },
+    {
+     "pid": 54988,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 323
+    },
+    {
+     "pid": 57260,
+     "name": "WINWORD",
+     "kind": "dedicated",
+     "mb": 139
+    },
+    {
+     "pid": 33500,
+     "name": "chrome",
+     "kind": "shared",
+     "mb": 124
+    },
+    {
+     "pid": 42700,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ],
+   "ollama_ps": []
+  },
+  "contaminated": false,
+  "reasons_before": [],
+  "reasons_after": []
+ },
+ "restored_from_checkpoint": 0,
+ "probe_full": {
+  "cv": {
+   "0": {
+    "C": 0.01,
+    "inner_cv": 0.8667,
+    "n_train": 105
+   },
+   "1": {
+    "C": 0.5,
+    "inner_cv": 0.861,
+    "n_train": 115
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.9,
+   "intent_accuracy_alt_ok": 0.9136,
+   "intent_accuracy_alt_or_then_ok": 0.9182,
+   "accuracy_by_style": {
+    "canonical": 0.987,
+    "paraphrase": 0.909,
+    "noisy": 0.848,
+    "compound": 0.955,
+    "ambiguous": 0.364,
+    "oos": 0.864
+   },
+   "none_recall": 0.8636,
+   "none_precision": 0.7917
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 10,
+   "harmful_rate": 0.0505,
+   "final_action_consistent_rate": 0.9394,
+   "mean_first_action_word": 3.953,
+   "first_action_at_or_before_human": 0.5101,
+   "oos_rows": 22,
+   "oos_false_actions": 4,
+   "harmful_detail": [
+    {
+     "id": "v068",
+     "seq": [
+      [
+       4,
+       "close_app"
+      ]
+     ],
+     "accepted": [
+      "open_spotify"
+     ]
+    },
+    {
+     "id": "v078",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ],
+      [
+       5,
+       "play_liked_songs"
+      ]
+     ],
+     "accepted": [
+      "play_liked_songs"
+     ]
+    },
+    {
+     "id": "v097",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ],
+      [
+       4,
+       "open_spotify"
+      ],
+      [
+       8,
+       "play_spotify"
+      ]
+     ],
+     "accepted": [
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v100",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "play_spotify",
+      "play_youtube"
+     ]
+    },
+    {
+     "id": "v111",
+     "seq": [
+      [
+       3,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "pause_media"
+     ]
+    },
+    {
+     "id": "v134",
+     "seq": [
+      [
+       3,
+       "pause_media"
+      ]
+     ],
+     "accepted": [
+      "next_track",
+      "play_spotify"
+     ]
+    },
+    {
+     "id": "v141",
+     "seq": [
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v143",
+     "seq": [
+      [
+       2,
+       "pause_media"
+      ],
+      [
+       4,
+       "volume_up"
+      ]
+     ],
+     "accepted": [
+      "volume_up"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v207",
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ },
+ "probe_prefix": {
+  "cv": {
+   "0": {
+    "C": 5.0,
+    "inner_cv": 0.929,
+    "n_train": 535
+   },
+   "1": {
+    "C": 0.5,
+    "inner_cv": 0.9471,
+    "n_train": 623
+   }
+  },
+  "accuracy": {
+   "intent_accuracy": 0.8818,
+   "intent_accuracy_alt_ok": 0.8864,
+   "intent_accuracy_alt_or_then_ok": 0.8909,
+   "accuracy_by_style": {
+    "canonical": 1,
+    "paraphrase": 0.855,
+    "noisy": 0.848,
+    "compound": 0.955,
+    "ambiguous": 0.273,
+    "oos": 0.818
+   },
+   "none_recall": 0.8182,
+   "none_precision": 0.5143
+  },
+  "streaming_policy": {
+   "policy": {
+    "tau": 0.9,
+    "media_stable": 2,
+    "play_stable": 2,
+    "slot_stable": 2
+   },
+   "actionable": 198,
+   "harmful": 3,
+   "harmful_rate": 0.0152,
+   "final_action_consistent_rate": 0.9091,
+   "mean_first_action_word": 3.868,
+   "first_action_at_or_before_human": 0.4293,
+   "oos_rows": 22,
+   "oos_false_actions": 4,
+   "harmful_detail": [
+    {
+     "id": "v150",
+     "seq": [
+      [
+       2,
+       "volume_up"
+      ],
+      [
+       4,
+       "volume_down"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v154",
+     "seq": [
+      [
+       3,
+       "type_text"
+      ]
+     ],
+     "accepted": [
+      "volume_down"
+     ]
+    },
+    {
+     "id": "v197",
+     "seq": [
+      [
+       3,
+       "open_notes"
+      ]
+     ],
+     "accepted": [
+      "close_app"
+     ]
+    }
+   ],
+   "oos_false_detail": [
+    "v199",
+    "v208",
+    "v217",
+    "v218"
+   ]
+  }
+ }
+}
