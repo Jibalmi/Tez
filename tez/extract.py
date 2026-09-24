@@ -12,8 +12,13 @@ The mapping is a documented subset; anything else is refused with an error that 
   integer with minimum and maximum, 2 to 10 values           score -> the most likely value
   one possible value (const, a one-value enum or range)      fixed: filled in, not asked
   object with properties (nested models)                     its properties, as dotted question ids ("address.city")
-  optional (anyOf with null, type [..., "null"])             a choice gets a "null" option (value None); booleans and
-                                                             integer scales always get a value
+  optional (anyOf with null, type [..., "null"])             a choice or a boolean gets a "null" option (value None; a
+                                                             boolean is then a choice true / false / null); an integer
+                                                             scale always gets a value
+  optional object (Optional[Address])                        every field inside can answer "null" (an integer scale
+                                                             there becomes a choice of its values and null); the object
+                                                             is None when none of its fields has a value. One with
+                                                             nothing to decide (only consts) is refused
   description                                                the question's instructions
 
 Refused: free strings and numbers without an enum, arrays, integer ranges over 10 values, more than 255 options,
@@ -68,15 +73,18 @@ class Field:
 @dataclass
 class Extraction:
     """How a schema's answers become values: `fields` per question id, `consts` filled in without asking. `source` is
-    the JSON schema it came from (sent on the wire as json_schema), `model` the pydantic model, when there is one."""
+    the JSON schema it came from (sent on the wire as json_schema), `model` the pydantic model, when there is one.
+    `optional` lists the optional objects, innermost first, each with the question ids of the fields inside it."""
 
     fields: dict[str, Field]
     consts: list[Field] = field(default_factory=list)
     source: dict | None = None
     model: Any = None
+    optional: list[tuple[tuple[str, ...], list[str]]] = field(default_factory=list)
 
     def values(self, answers: dict) -> dict:
-        """The (nested) object from wire-format answers. Missing answers are left out."""
+        """The (nested) object from wire-format answers. Missing answers are left out. An optional object none of
+        whose fields has a value (each answered null, abstained or is missing) is None, consts and all."""
         out: dict = {}
         for f in self.consts:
             _put(out, f.path, f.values[0])
@@ -85,6 +93,9 @@ class Extraction:
             if a is None:
                 continue
             _put(out, f.path, _value(f, a))
+        for path, qids in self.optional:
+            if all(_get(out, self.fields[qid].path) is None for qid in qids):
+                _put(out, path, None)
         return out
 
     def build(self, values: dict) -> Any:
@@ -115,6 +126,15 @@ def _put(out: dict, path: tuple[str, ...], value: Any) -> None:
     for key in path[:-1]:
         d = d.setdefault(key, {})
     d[path[-1]] = value
+
+
+def _get(out: dict, path: tuple[str, ...]) -> Any:
+    d: Any = out
+    for key in path:
+        if not isinstance(d, dict):
+            return None
+        d = d.get(key)
+    return d
 
 
 def _value(f: Field, answer: dict) -> Any:
@@ -176,6 +196,7 @@ class _Converter:
         self.questions: dict[str, Question] = {}
         self.fields: dict[str, Field] = {}
         self.consts: list[Field] = []
+        self.optional: list[tuple[tuple[str, ...], list[str]]] = []   # optional objects, innermost first
         self.refs = 0                                     # $refs followed so far
         self.ref_chars = 0                                # schema text they copied in
         self._sizes: dict[int, int] = {}
@@ -266,9 +287,12 @@ class _Converter:
     def const(self, path: tuple, value: Any) -> None:
         self.consts.append(Field(qid=".".join(path), path=path, kind="const", values=[value]))
 
-    def convert(self, node: Any, path: tuple[str, ...], where: str, nullable: bool = False, refs: tuple = ()) -> None:
+    def convert(self, node: Any, path: tuple[str, ...], where: str, nullable: bool = False, refs: tuple = (),
+                absent: bool = False) -> None:
         """Add the questions for one field. `refs` are the $refs being expanded along this path (through $ref, a
-        one-element allOf or a union's branch): meeting one again means the schema contains itself."""
+        one-element allOf or a union's branch): meeting one again means the schema contains itself. `nullable`: the
+        field itself may be null; `absent`: it sits inside an optional object, so its answer must be able to say that
+        the object is not there (a null option)."""
         followed: list[str] = []
         node = self.resolve(node, where, followed=followed)
         refs = self.enter(refs, followed, where)
@@ -281,11 +305,11 @@ class _Converter:
                 has_null = len(real) < len(branches)
                 if real and all("const" in b for b in real):
                     options = [(b["const"], b.get("description") or b.get("title")) for b in real]
-                    return self.choice(node, path, where, options, nullable or has_null)
+                    return self.choice(node, path, where, options, nullable or has_null or absent)
                 if len(real) == 1:
                     rest = {k: v for k, v in node.items() if k not in ("anyOf", "oneOf")}
                     return self.convert({**real[0], **rest}, path, where, nullable or has_null,
-                                        self.enter(refs, in_branches, where))
+                                        self.enter(refs, in_branches, where), absent)
                 raise self.fail(where, "a union of different types cannot be decided in one pass; use one enum")
         jtype = node.get("type")
         if isinstance(jtype, list):
@@ -301,21 +325,29 @@ class _Converter:
             if not isinstance(enum, list) or not enum:
                 raise self.fail(where, "enum must be a non-empty list")
             has_null = any(v is None for v in enum)
-            return self.choice(node, path, where, [(v, None) for v in enum if v is not None], nullable or has_null)
+            return self.choice(node, path, where, [(v, None) for v in enum if v is not None],
+                               nullable or has_null or absent)
         if jtype == "boolean":
-            if nullable:
+            if nullable or absent:
                 return self.choice(node, path, where, [(True, "yes"), (False, "no")], True,
                                    default=f"Is `{dotted}` true for this input?")
             raw = {"type": "noul", "instructions": self.instructions(node, f"Is `{dotted}` true for this input?")}
             return self.add(dotted, raw, Field(qid=dotted, path=path, kind="noul"), where)
         if jtype == "integer":
-            return self.scale(node, path, where)
+            return self.scale(node, path, where, absent)
         if jtype == "object" or "properties" in node:
             props = node.get("properties")
             if not isinstance(props, dict) or not props:
                 raise self.fail(where, "an object needs properties (a free-form object cannot be decided)")
+            start = len(self.questions)
             for key, sub in props.items():
-                self.convert(sub, path + (str(key),), f"{where}.properties.{key}", refs=refs)
+                self.convert(sub, path + (str(key),), f"{where}.properties.{key}", refs=refs, absent=absent or nullable)
+            if nullable:             # optional: None when none of its fields has a value (Extraction.values)
+                inside = list(self.questions)[start:]
+                if not inside:
+                    raise self.fail(where, "an optional object needs a field to decide: with only fixed values, "
+                                           "nothing can tell whether it is there (make it required)")
+                self.optional.append((path, inside))
             return None
         if jtype == "string":
             raise self.fail(where, "a free-text string cannot be decided in one pass; give it an enum (or use a "
@@ -355,7 +387,9 @@ class _Converter:
                "criteria": dict(zip(labels, descriptions))}
         return self.add(dotted, raw, Field(qid=dotted, path=path, kind="choice", values=values, labels=labels), where)
 
-    def scale(self, node: dict, path: tuple, where: str) -> None:
+    def scale(self, node: dict, path: tuple, where: str, absent: bool = False) -> None:
+        """An integer range as a score; inside an optional object, as a choice of its values and null (a score has no
+        way to say the object is not there)."""
         dotted = ".".join(path)
         lo, hi = node.get("minimum"), node.get("maximum")
         emin, emax = node.get("exclusiveMinimum"), node.get("exclusiveMaximum")
@@ -380,6 +414,9 @@ class _Converter:
             raise self.fail(where, f"{n} values from {lo} to {hi}; a score takes at most {SCORE_MAX} (narrow the range or "
                                    "use an enum)")
         levels = list(range(lo, hi + 1))
+        if absent:
+            return self.choice(node, path, where, [(v, None) for v in levels], True,
+                               default=f"What is `{dotted}` for this input, from {lo} to {hi}?")
         raw = {"type": "score",
                "instructions": self.instructions(node, f"What is `{dotted}` for this input, from {lo} to {hi}?"),
                "criteria": [f"{dotted} = {v}" for v in levels]}
@@ -407,7 +444,7 @@ def schema_from_json_schema(json_schema: Any, name: str = "extract", *, max_ques
         raise InvalidRequest(f"{name}: every field has a single possible value; there is nothing to decide")
     desc = root.get("description") if isinstance(root.get("description"), str) else ""
     schema = Schema(name=name, questions=conv.questions, description=desc)
-    schema.extraction = Extraction(fields=conv.fields, consts=conv.consts, source=json_schema)
+    schema.extraction = Extraction(fields=conv.fields, consts=conv.consts, source=json_schema, optional=conv.optional)
     return schema
 
 

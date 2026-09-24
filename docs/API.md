@@ -254,7 +254,8 @@ keyed by the field's dotted path).
 | `"type": "integer"` with `minimum` and `maximum` (or the exclusive bounds), 2 to 10 values | `score` | the most likely value |
 | one possible value (`const`, a one-value enum or range) | none: filled in | the value |
 | an object with `properties` (a nested model) | its fields, ids `parent.child` | a nested object |
-| optional (`anyOf` with `{"type": "null"}`, `"type": [..., "null"]`) | a choice gets a `null` option ("not stated, or does not apply") | `null` |
+| optional (`anyOf` with `{"type": "null"}`, `"type": [..., "null"]`) | a choice or a boolean gets a `null` option ("not stated, or does not apply"); an integer scale always gets a value | `null` |
+| an optional object (`Optional[Address]`) | each field inside gets a `null` option (an integer scale there becomes a choice of its values and `null`) | `null` when none of its fields has a value; an optional object with nothing to decide is refused |
 | `description` | the question's instructions | |
 
 Local `$ref`s (`#/$defs/...`) and a one-element `allOf` are followed. Refused with a 422 that names the path

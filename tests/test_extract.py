@@ -133,6 +133,67 @@ def test_shared_definitions_are_not_recursion():
     assert s.questions["either"].criteria == {"a": "the first", "b": None}
 
 
+OPTIONAL_ADDRESS = {
+    "$defs": {"Address": {"type": "object", "properties": {
+                  "country": {"enum": ["PT", "ES"]},
+                  "verified": {"type": "boolean"},
+                  "floor": {"type": "integer", "minimum": 0, "maximum": 3},
+                  "kind": {"const": "postal"},
+                  "geo": {"type": "object", "properties": {"zone": {"enum": ["north", "south"]}}},
+                  "note": {"anyOf": [{"$ref": "#/$defs/Note"}, {"type": "null"}]}}},
+              "Note": {"type": "object", "properties": {"tone": {"enum": ["calm", "angry"]}}}},
+    "type": "object",
+    "properties": {"urgent": {"type": "boolean"},
+                   "address": {"anyOf": [{"$ref": "#/$defs/Address"}, {"type": "null"}], "default": None},
+                   "maybe": {"type": ["object", "null"], "properties": {"x": {"type": "boolean"}}}},
+}
+
+
+def test_an_optional_object_is_none_when_none_of_its_fields_has_a_value():
+    s = schema_from_json_schema(OPTIONAL_ADDRESS)
+    q = s.questions
+    assert list(q["address.country"].criteria) == ["PT", "ES", "null"]     # every field inside can say "not there"
+    assert list(q["address.verified"].criteria) == ["true", "false", "null"]
+    assert q["address.floor"].type == "choice" and list(q["address.floor"].criteria) == ["0", "1", "2", "3", "null"]
+    assert list(q["address.geo.zone"].criteria) == ["north", "south", "null"]
+    assert list(q["address.note.tone"].criteria) == ["calm", "angry", "null"]
+    assert list(q["maybe.x"].criteria) == ["true", "false", "null"]
+    assert q["urgent"].type == "noul"                                        # required fields are unchanged
+
+    def said(label):
+        return {"type": "choice", "choice": label}
+    nothing = {qid: said("null") for qid in q if qid != "urgent"}
+    assert s.extraction.values({"urgent": {"type": "noul", "noul": 0.9}, **nothing}) == \
+        {"urgent": True, "address": None, "maybe": None}                     # not fabricated: no consts, no fields
+    assert s.extraction.values({}) == {"address": None, "maybe": None}
+    some = s.extraction.values({**nothing, "address.country": said("PT"), "address.floor": said("2")})
+    assert some["address"] == {"country": "PT", "verified": None, "floor": 2, "kind": "postal", "geo": {"zone": None},
+                               "note": None} and some["maybe"] is None
+    with pytest.raises(InvalidRequest, match="js.properties.meta: an optional object needs a field to decide"):
+        schema_from_json_schema({"properties": {"ok": {"type": "boolean"}, "meta": {
+            "anyOf": [{"type": "object", "properties": {"v": {"const": 1}}}, {"type": "null"}]}}}, "js")
+
+
+def test_extract_an_optional_nested_model():
+    pydantic = pytest.importorskip("pydantic")
+    if not hasattr(pydantic.BaseModel, "model_json_schema"):
+        pytest.skip("pydantic v1")
+    from pydantic import BaseModel
+
+    class Address(BaseModel):
+        country: Literal["PT", "ES"]
+
+    class Ticket(BaseModel):
+        urgent: bool
+        address: Optional[Address] = None
+
+    assert list(Schema.from_pydantic(Ticket).questions["address.country"].criteria) == ["PT", "ES", "null"]
+    last = Tez(backend=FakeBackend(letters_fn=lambda prompt, k: [0.0] * (k - 1) + [5.0]))     # "null" wins
+    assert last.extract("Please call me back, it's urgent.", Ticket).address is None
+    first = Tez(backend=FakeBackend(letters_fn=fixed({3: 0})))
+    assert first.extract("Ship it to Lisbon, urgently.", Ticket).address == Address(country="PT")
+
+
 def fan_out(depth: int, leaf: dict | None = None, fan: int = 10) -> dict:
     """A small schema that expands to fan ** (depth + 1) leaves: each level has `fan` properties that $ref the next."""
     defs = {f"L{depth}": leaf or {"type": "boolean"}}
