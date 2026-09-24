@@ -2,13 +2,15 @@ export { DEFAULT_BASE_URL, DEFAULT_TIMEOUT_MS, NONE_LABEL, requestBody, TezClien
 export type {
   BodyOptions,
   DecideOptions,
+  ExtractOptions,
+  ExtractResult,
   FetchInitLike,
   FetchLike,
   FetchResponseLike,
   RequestOptions,
   TezClientOptions,
 } from "./client.js";
-export { TezError } from "./errors.js";
+export { EscalationRequired, TezError } from "./errors.js";
 export type { TezErrorType } from "./errors.js";
 export { parseServerTiming } from "./meta.js";
 export type { HeadersLike, ResponseMeta, ServerTiming, WithMeta } from "./meta.js";

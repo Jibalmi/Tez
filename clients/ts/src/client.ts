@@ -1,16 +1,20 @@
-import { TezError } from "./errors.js";
+import { EscalationRequired, TezError } from "./errors.js";
 import type { TezErrorType } from "./errors.js";
 import { responseMeta, withMeta } from "./meta.js";
 import type { HeadersLike, ResponseMeta, WithMeta } from "./meta.js";
 import type {
+  Answer,
   AnswersFor,
   BatchRequest,
   BatchResponse,
   BatchResult,
   DecideRequest,
   DecideResponse,
+  ExtractedObject,
+  ExtractedValue,
   FeedbackRequest,
   FeedbackResponse,
+  GateDecision,
   GateOptions,
   HealthResponse,
   JsonSchema,
@@ -92,6 +96,27 @@ export interface BodyOptions<Q extends Questions = Questions> {
 
 export interface DecideOptions<Q extends Questions = Questions> extends BodyOptions<Q>, RequestOptions {}
 
+export interface ExtractOptions extends RequestOptions {
+  /** Gate every field at this target error rate; an escalated field then throws EscalationRequired. */
+  alpha?: number;
+  readout?: ReadoutOption;
+  layout?: LayoutOption;
+  /** Resolve to an ExtractResult (values, gate decisions, escalated fields, the response); never EscalationRequired. */
+  returnDetails?: boolean;
+}
+
+/** `extract(..., { returnDetails: true })`. */
+export interface ExtractResult<V = ExtractedObject> {
+  /** The extracted object. */
+  values: V;
+  /** Field -> gate decision, for the fields a gate applied to. */
+  decisions: Record<string, GateDecision>;
+  /** The fields the gate escalated. */
+  escalated: string[];
+  /** The whole /v1/systemone response. */
+  response: WithMeta<DecideResponse>;
+}
+
 const STATUS_TYPES: Record<number, TezErrorType> = {
   401: "unauthorized",
   403: "forbidden",
@@ -144,6 +169,17 @@ export function requestBody(state: State | undefined, options: BodyOptions<Quest
   const body: PlanRequest = {};
   if (state !== undefined) body.state = state;
   return Object.assign(body, sharedFields(options));
+}
+
+/** A value per answer, as the Python API's extract does for a schema not made from a JSON schema. */
+function answerValue(answer: Answer): ExtractedValue {
+  if (answer.type === "noul") return answer.noul >= 0.5;
+  if (answer.type === "choice") return answer.choice === NONE_LABEL ? null : answer.choice;
+  let best: string | undefined;
+  for (const [level, p] of Object.entries(answer.probabilities)) {
+    if (best === undefined || p > (answer.probabilities[best] ?? -Infinity)) best = level;
+  }
+  return best !== undefined ? Number(best) : Math.round(answer.score);
 }
 
 /**
@@ -219,10 +255,8 @@ export class TezClient {
   ): Promise<BatchResult<AnswersFor<Q>>[]> {
     const res = await this.decideBatch(states, options);
     if (!Array.isArray(res.results)) {
-      throw new TezError(res.meta.status, "invalid_response", `${this.baseUrl}/v1/systemone/batch answered without results`, {
-        body: res,
-        meta: res.meta,
-      });
+      const message = `${this.baseUrl}/v1/systemone/batch answered without results`;
+      throw new TezError(res.meta.status, "invalid_response", message, { body: res, meta: res.meta });
     }
     return res.results;
   }
@@ -239,6 +273,73 @@ export class TezClient {
    */
   plan(body: PlanRequest, options: RequestOptions = {}): Promise<WithMeta<PlanResponse>> {
     return this.request("POST", "/v1/plan", body, options.signal);
+  }
+
+  /**
+   * Decide a state against a JSON schema, or a loaded schema's name, and resolve to the answers as one object
+   * (docs/API.md, "Structured extraction"). A JSON schema is sent as `json_schema` and the server's `tez.values`
+   * come back; for a schema name, answers become values here: noul -> boolean, choice -> its label (null for
+   * "__none__"), score -> the most likely level.
+   *
+   * With `alpha`, a field the gate escalates makes it reject with EscalationRequired (the object is not certified),
+   * unless `returnDetails: true`, which resolves to an ExtractResult instead. Give `V` to type the object.
+   */
+  extract<V = ExtractedObject>(
+    state: State,
+    source: JsonSchema | string,
+    options?: ExtractOptions & { returnDetails?: false },
+  ): Promise<V>;
+  extract<V = ExtractedObject>(
+    state: State,
+    source: JsonSchema | string,
+    options: ExtractOptions & { returnDetails: true },
+  ): Promise<ExtractResult<V>>;
+  extract<V = ExtractedObject>(
+    state: State,
+    source: JsonSchema | string,
+    options?: ExtractOptions,
+  ): Promise<V | ExtractResult<V>>;
+  async extract<V = ExtractedObject>(
+    state: State,
+    source: JsonSchema | string,
+    options: ExtractOptions = {},
+  ): Promise<V | ExtractResult<V>> {
+    const byName = typeof source === "string";
+    if (!byName && !isObject(source)) {
+      throw new TypeError("extract takes a JSON schema (an object) or the name of a loaded schema");
+    }
+    const { readout, layout, alpha } = options;
+    const bodyOptions: BodyOptions<Questions> = { readout, layout, alpha };
+    if (byName) bodyOptions.schema = source;
+    else bodyOptions.jsonSchema = source;
+    const response: WithMeta<DecideResponse> = await this.request(
+      "POST",
+      "/v1/systemone",
+      requestBody(state, bodyOptions),
+      options.signal,
+    );
+    let values: ExtractedObject;
+    if (byName) {
+      values = {};
+      for (const [id, answer] of Object.entries(response.answers ?? {})) values[id] = answerValue(answer);
+    } else if (isObject(response.tez) && isObject(response.tez.values)) {
+      values = response.tez.values;
+    } else {
+      throw new TezError(
+        response.meta.status,
+        "invalid_response",
+        `${this.baseUrl}/v1/systemone answered a json_schema request without tez.values (a server without extraction?)`,
+        { body: response, meta: response.meta },
+      );
+    }
+    const decisions: Record<string, GateDecision> = {};
+    for (const [id, meta] of Object.entries(response.tez?.questions ?? {})) {
+      if (isObject(meta) && (meta.decision === "act" || meta.decision === "escalate")) decisions[id] = meta.decision;
+    }
+    const escalated = Object.keys(decisions).filter((id) => decisions[id] === "escalate");
+    if (options.returnDetails) return { values: values as V, decisions, escalated, response };
+    if (alpha !== undefined && escalated.length > 0) throw new EscalationRequired(escalated, values as V, response);
+    return values as V;
   }
 
   /** The schemas the server loaded (GET /v1/schemas); `builtin` marks the presets. */

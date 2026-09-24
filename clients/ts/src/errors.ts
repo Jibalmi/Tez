@@ -1,7 +1,8 @@
 /**
  * Error types: the server's (docs/API.md, "Errors") and the client's own, for failures without a usable response.
  */
-import type { ResponseMeta } from "./meta.js";
+import type { ResponseMeta, WithMeta } from "./meta.js";
+import type { DecideResponse } from "./types.js";
 
 export type TezErrorType =
   | "unauthorized"
@@ -56,6 +57,30 @@ export class TezError extends Error {
     if (options.body !== undefined) this.body = options.body;
     if (options.meta !== undefined) this.meta = options.meta;
     if (options.cause !== undefined) this.cause = options.cause;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/**
+ * `extract(..., { alpha })` without `returnDetails`: the gate escalated at least one field, so the extracted object is
+ * not certified. The request itself succeeded, so this is not a TezError. `fields` names the escalated fields,
+ * `values` holds the model's best guess and `response` the whole decision (with its `meta`). Hand the case to a
+ * person or a larger model, or pass `returnDetails: true` to handle it yourself.
+ */
+export class EscalationRequired<V = unknown> extends Error {
+  readonly fields: string[];
+  readonly values: V;
+  readonly response: WithMeta<DecideResponse>;
+
+  constructor(fields: readonly string[], values: V, response: WithMeta<DecideResponse>) {
+    super(
+      `the gate escalated ${fields.join(", ")}: no certified value (hand the case to a person or a larger model, or ` +
+        "use returnDetails: true)",
+    );
+    this.name = "EscalationRequired";
+    this.fields = [...fields];
+    this.values = values;
+    this.response = response;
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
