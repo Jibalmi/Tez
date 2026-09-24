@@ -54,15 +54,17 @@ DESCRIPTIONS = {
 
 def engine_from_env(environ: Mapping[str, str] | None = None) -> Any:
     """A RemoteTez for TEZ_URL, otherwise an in-process Tez from TEZ_BACKEND, TEZ_TEMPLATE, TEZ_SCHEMAS, TEZ_DATA_DIR,
-    TEZ_LAYOUT, TEZ_DEFAULT_TEMPERATURE and TEZ_PRESETS (each also as VAR_FILE, like tez serve)."""
+    TEZ_LAYOUT, TEZ_DEFAULT_TEMPERATURE and TEZ_PRESETS, plus TEZ_LLAMA_LIB, TEZ_N_CTX, TEZ_N_BATCH and TEZ_N_GPU_LAYERS for
+    an in-process model (TEZ_BACKEND=inproc:PATH.gguf) (each also as VAR_FILE, like tez serve)."""
     env = Env(environ)
     if env.get("TEZ_URL"):
         from .integrations.remote import RemoteTez
         return RemoteTez(env.get("TEZ_URL"), api_key=env.get("TEZ_API_KEY"), timeout=float(env.get("TEZ_TIMEOUT", 120.0)))
     from .backends import DEFAULT_BACKEND
+    from .inproc import options_from_env
     tez = Tez(backend=env.get("TEZ_BACKEND", DEFAULT_BACKEND), template=env.get("TEZ_TEMPLATE", "gemma4"),
               schemas=env.get("TEZ_SCHEMAS"), data_dir=env.get("TEZ_DATA_DIR"), layout=env.get("TEZ_LAYOUT", "auto"),
-              default_temperature=env.get("TEZ_DEFAULT_TEMPERATURE", "auto"))
+              default_temperature=env.get("TEZ_DEFAULT_TEMPERATURE", "auto"), inproc=options_from_env(env.get))
     if env.flag("TEZ_PRESETS"):
         tez.add_presets()
     return tez

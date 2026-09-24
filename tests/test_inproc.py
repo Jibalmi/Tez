@@ -426,3 +426,12 @@ def test_inproc_doctor(gguf: Path, stub_library, capsys):
     assert missing[0].name == "library" and missing[0].status == "fail"
     assert main(["doctor", "--backend", f"inproc:{gguf}", "--llama-lib", str(lib)]) == 0
     assert "0 failed" in capsys.readouterr().out
+
+
+def test_mcp_engine_reads_the_in_process_settings(gguf: Path):
+    from tez.mcp_server import engine_from_env
+    tez = engine_from_env({"TEZ_BACKEND": f"inproc:{gguf}", "TEZ_N_CTX": "8192", "TEZ_N_GPU_LAYERS": "0",
+                           "TEZ_LLAMA_LIB": str(gguf.parent)})
+    b = tez.backend
+    assert isinstance(b, InprocBackend) and (b.n_ctx, b.n_batch, b.n_gpu_layers, b.lib) == (8192, 8192, 0, str(gguf.parent))
+    assert not b.loaded

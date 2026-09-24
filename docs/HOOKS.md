@@ -47,7 +47,8 @@ true), no `on_question_end` fires, and `on_decide_end` runs as usual.
 | `readout`, `abstain`, `alpha`, `model` | the request's options (alpha after the schema's default gate) |
 | `requested_layout`, `layout` | the layout asked for (`auto`, ...) and the one the questions were read in (`question_first`, `state_first`, or `mixed` when they differ; the `X-Tez-Layout` header) |
 | `response`, `usage`, `latency_ms` | set when the decision is done |
-| `traces` | per question: `readout`, `layout`, `tokens`, `ms` and `calls`, one record per backend call with its `kind` (`letters` or `embed`), `tokens`, wall `ms` and llama.cpp's own `timings` (`prompt_n`, `cache_n`, `prompt_ms`, ...) when the server sends them |
+| `traces` | per question: `readout`, `layout`, `tokens`, `ms` and `calls`, one record per backend call with its `kind` (`letters` or `embed`), `tokens`, wall `ms` and llama.cpp's own `timings` (`prompt_n`, `cache_n`, `prompt_ms`, ...) when the server sends them. A call read in a batch (the in-process backend) also has `batch`, its index in `batches`; its `ms` is its share of the batch's time and its `timings` add `batch_n`, `batch_ms`, `batch_prompt_n` and `batch_prefix_n` |
+| `batches` | the batched backend calls of the decision (the in-process backend reads a request's questions together): `kind` (`read_many`), `group` (`state`: prompts that share the state; `rest`: the others), `prompts`, `questions`, `tokens` (prompt tokens), `evaluated` (tokens actually evaluated), `prefix` (the shared prefix, evaluated once) and wall `ms`. Empty for other backends |
 | `error` | the exception, in `on_error` |
 | `skipped` | true after `ctx.skip()` |
 | `data` | a dict the hooks of this decision can share |
