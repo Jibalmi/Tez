@@ -68,7 +68,8 @@ Every number here was measured on one machine (RTX 5080 Laptop 16 GB, llama.cpp 
 
 | | Tez | laya | laya-ml | laya-td | Jev (published) |
 |---|---:|---:|---:|---:|---:|
-| mean ECE-15 as shipped | **0.212** | 0.323 | 0.253 | 0.226 | 0.246 |
+| mean ECE-15 as shipped (Tez at T = 1) | **0.212** | 0.323 | 0.253 | 0.226 | 0.246 |
+| mean ECE-15, Tez's default temperature fitted without the task (§5c) | 0.140 | — | — | — | — |
 | mean ECE-15 after one temperature per task (2-fold OOF) | 0.078 | 0.071 | 0.103 | **0.068** | — |
 | option-order flip, MASSIVE-en (20 options) | **0.07** | 0.18 | 0.20 | 0.15 | 0.13 |
 | option-order flip, Emotion / AG News | 0.07 / 0.03 | 0.06 / 0.00 | 0.16 / 0.00 | 0.06 / 0.00 | — |
@@ -116,11 +117,11 @@ Tez beats Laya's router in every language (the smallest margin is English, 0.90 
 
 | system | 1 q / call | 5 q / call | 10 q / call | 50 q / call | ms per question at 50 |
 |---|---:|---:|---:|---:|---:|
-| **Tez** (tez serve, new ticket each call) | 139 ms | 549 ms | 1,039 ms | 4,666 ms | 93.3 ms |
+| **Tez** (tez serve, question first, new ticket each call) | 139 ms | 549 ms | 1,039 ms | 4,666 ms | 93.3 ms |
 | laya (same GPU) | 36 ms | 50 ms | 75 ms | 370 ms | 7.4 ms |
 | laya-multilingual (same GPU) | 30 ms | 33 ms | 38 ms | 141 ms | 2.8 ms |
 
-Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass per question and the state is read again for each, so its cost per question stays near 90–140 ms (`experiments/probe_multiq.py` measures a state-first layout that would share it; the runtime does not use it yet).
+Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass per question. In these runs the runtime read every question first and the state after it, so the state was evaluated again for each question and the cost per question stayed near 90–140 ms. The runtime now reads two or more questions state first (`--layout auto`), so llama-server's prompt cache can keep the state for the questions after the first; the runtime's own latency over HTTP with that layout has not been measured. §5b measures the layout on direct `/completion` calls and in process.
 
 ### Selective automation on typed-decisions (accuracy on the decisions acted on, most confident first; `experiments/vs_laya_selective.py`)
 
@@ -131,7 +132,7 @@ Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per ca
 | laya | 0.413 | 0.430 | 0.426 | 0.422 | 0.409 | 0.386 | 0.376 | 0.362 |
 | laya-multilingual | 0.477 | 0.446 | 0.411 | 0.388 | 0.369 | 0.366 | 0.354 | 0.352 |
 
-Tez's letters ship over-confident (ECE-15 0.262; most answers sit in the top confidence bin); one out-of-fold temperature brings it to 0.048 on these rows (2-fold split of `bench_h2h.py`; §4c's 0.067 used the probe lab's split). laya-typed-decisions, fine-tuned on this benchmark, ranks its own errors better at every coverage.
+Tez's letters read at T = 1 are over-confident (ECE-15 0.262; most answers sit in the top confidence bin); one out-of-fold temperature brings it to 0.048 on these rows (2-fold split of `bench_h2h.py`; §4c's 0.067 used the probe lab's split), and the default temperature Tez now applies to unfitted questions, fitted without typed-decisions, to 0.051 (§5c). laya-typed-decisions, fine-tuned on this benchmark, ranks its own errors better at every coverage.
 
 <!-- vs_laya:end -->
 
@@ -610,6 +611,99 @@ evaluated in full, so its times are pessimistic).
 
 Weighted over the public tiers with the leaderboard's weights: **79.0** through the runtime (78.2 through the harness).
 Indicative only; Tez has not been submitted to the leaderboard.
+
+## 5b. Speed study: many questions about one state, probes and voice
+
+`experiments/speed_multiq.py`, `speed_multiq_inproc.py`, `speed_probe_multiq.py`, `speed_voice.py`, `speed_overhead.py`; every table in `results/speed/tables.md`, every number in `results/speed/summary.json`, per-decision rows in `results/speed/td_rows_*.jsonl` (commit b6a8e0a). Clean reruns under a GPU lock, each with VRAM snapshots before and after (the `guard` field); earlier runs made while another process held VRAM are kept apart in `results/speed/contaminated/` and not used. Gemma 4 12B Q8_0 letters unless stated, on the production llama-server (`-c 4096 -b 512 -np 1 --swa-full --embeddings --pooling last`) or in process through llama.dll.
+
+*Question first* is the layout the runtime used when these were measured: instructions, question and options, then the state, so every question evaluates the state again. *State first* puts the state before the question, so with prompt caching the state is evaluated once per call and each further question evaluates only its own suffix. The runtime now reads two or more questions state first (`--layout auto`), but **its own latency over HTTP with that layout has not been measured**: the state-first rows below are direct `/completion` calls or in process.
+
+### Many questions about one state (Laya's latency protocol with distinct questions, a new ticket every call, p50 ms per call)
+
+| engine, arm | 1 q | 5 q | 10 q | 50 q | ms per question at 50 |
+|---|---:|---:|---:|---:|---:|
+| tez serve, question first (the runtime as deployed when measured) | 155 | 950 | 1,786 | 10,511 | 210.2 |
+| direct `/completion` per question, question first | 129 | 912 | 1,678 | 10,722 | 214.4 |
+| direct `/completion` per question, state first (state cached once per call) | 158 | 495 | 752 | 4,255 | 85.1 |
+| in process, sequential, state first (KV rollback) | 95 | 275 | 536 | 2,759 | 55.2 |
+| in process, the state once and all question suffixes in one decode | 120 | 187 | 289 | **1,357** | **27.1** |
+
+On the same server, direct `/completion` calls, read state first, answer 50 questions in 4,255 ms against 10,722 ms question first; for a single question state first gains nothing (158 against 129 ms). In process, with the state evaluated once and every question's suffix in one `llama_decode`, 50 questions take 1,357 ms (27 ms each). On Laya's verbatim protocol (the questions alternate a 3-option choice and a yes/no), the same rerun has tez serve, question first, at 153 / 632 / 1,199 / 5,880 ms for 1 / 5 / 10 / 50 questions, direct `/completion` state first at 152 / 437 / 856 / 4,117 ms, and the in-process single decode at 96 / 183 / 274 / 1,114 ms (22.3 ms per question at 50; laya: 7.4, §1b). Rows for other llama-server settings, including parallel slots, are in `tables.md`.
+
+**Accuracy by layout** (typed-decisions test split, 400 rows × 5 questions = 2,000 decisions, zero-shot letters):
+
+| layout / engine | accuracy | choice | yes/no | score | prompt tokens evaluated |
+|---|---:|---:|---:|---:|---:|
+| question first, direct `/completion` | 0.7050 | 0.6750 | 0.8133 | 0.6462 | 480,400 |
+| state first, direct `/completion`, prompt cache | 0.7015 | 0.6583 | 0.8233 | 0.6425 | 246,784 |
+| in process, the state once and all suffixes in one decode | 0.7020 | 0.6583 | 0.8250 | 0.6425 | — |
+| in process, one sequence with all questions, read at markers | 0.3345 | 0.2267 | 0.5867 | 0.2263 | — |
+
+State first and question first over HTTP agree on 81.6 % of the decisions and differ by 155 against 162 discordant answers: exact McNemar p = 0.74 (paired over `td_rows_prod_statefirst_http.jsonl` and `td_rows_prod_today_http.jsonl`, with `speed_common.mcnemar`). The in-process single decode matches state first over HTTP on 98.9 % of decisions (McNemar p = 1.0). Reading every question from one sequence at markers, so that each question also sees the ones before it, falls to 0.3345.
+
+### Probes: one state vector for any number of questions (Qwen3.5-4B cut to 24 blocks)
+
+| features | probe accuracy (2,000) | 1 q p50 | 50 q p50 | ms per question at 50 |
+|---|---:|---:|---:|---:|
+| state only, one vector per state, llama-server `/embedding` | 0.7490 | 40.9 | 41.2 | 0.82 |
+| state only, one vector per state, in process | 0.7445 | 40.4 | 37.8 | 0.76 |
+| state first, then the question: one vector per question, in process | 0.7845 | 45.8 | 2,103.9 | 42.08 |
+| question first: one prompt per question, in process | 0.7930 | 45.1 | 6,781.2 | 135.62 |
+
+One state-only vector answers any number of questions in about 41 ms, since each probe costs microseconds, at 0.749 against 0.793 for the per-question prompt that the runtime's probes read. The llama-server `/embedding` row is flagged by the VRAM guard's 200 MB rule because of that path's own pinned host output buffer (582 MB); 5.5 of 15.9 GB were in use, with no spill.
+
+### Streamed voice: word to action (220 commands, 1,158 words; words after the first)
+
+| model / engine | compute ms per word, p50 / p95 | round trip, p50 / p95 | intent accuracy | harmful / 198 | out-of-scope false / 22 |
+|---|---:|---:|---:|---:|---:|
+| Gemma 4 12B letters, production llama-server (§3's setting) | 33.5 / 42.8 | 41.6 / 51.6 | 0.909 | 1 | 2 |
+| Gemma 4 12B letters, in process | 34.4 / 38.8 | 35.6 / 40.5 | 0.909 | 1 | 2 |
+| Qwen3.5-4B 24 blocks, probe at the answer position, in process, deferred commit (trained on prefixes, 2-fold) | 18.2 / 22.9 | 19.6 / 24.4 | 0.882 | 3 | 4 |
+| Qwen3.5-4B 24 blocks letters, llama-server, cache off (the runtime's Qwen setting) | 68.0 / 73.5 | 74.9 / 81.2 | 0.605 | 80 | 7 |
+
+The clean rerun of §3's loop measures 33.5 ms compute and 41.6 ms round trip per word on the production server, against §3's 30 / 45 ms; in process the round trip is 35.6 ms. A 4B probe trained on labelled prefixes roughly halves the round trip (19.6 ms), with three harmful actions instead of one.
+
+### One question: where the time goes (production llama-server, p50 / p95 ms)
+
+| path | round trip |
+|---|---:|
+| client → tez serve → llama-server (the runtime) | 144.8 / 195.2 |
+| Tez engine in process → llama-server | 145.1 / 174.7 |
+| direct `/completion`, top-200 log-probabilities | 140.0 / 197.4 |
+| direct `/completion`, no log-probabilities | 140.1 / 208.3 |
+
+For one question the runtime adds about 5 ms to a direct call, including 0.4 ms in the engine and 2.3 ms in FastAPI and uvicorn (`overhead_prod.json`). Asking for 200 log-probabilities costs nothing measurable. A check of prompt-cache reuse on the cut Qwen3.5-4B GGUFs (24 and 32 blocks, seven scenarios, `speed_qwen_cache_check.py`) crashed no server on b11100 (`qwen_cache_check_L24.json`, `qwen_cache_check_L32.json`); the runtime still switches caching off for Qwen3.5 model names.
+
+## 5c. A default letter temperature for unfitted questions
+
+`experiments/default_temperature.py` (CPU only, saved rows only); write-up `results/calibration/default_temperature.md`, every number in `results/calibration/default_temperature.json`. The labelled decisions Gemma 4 12B Q8_0 left in `results/` (repeats, perturbed copies and other models excluded): 13,610 decisions from 19 tasks (typed-decisions, Laya's public suite, MASSIVE in 51 languages, XNLI, Laya's seven workflows, JevBench's public tiers through the runtime, SemIf and the voice router), letters read zero-shot. Read at T = 1 they are over-confident: mean confidence 0.977 against accuracy 0.768, mean ECE-15 0.218 over the tasks.
+
+One temperature per question type, a pooled NLL fit, with choice questions split by the options shown (a tournament counts the options of its final):
+
+| question | default T | tasks behind it | leave-one-task-out fits |
+|---|---:|---:|---:|
+| yes/no | **6.01** | 9 | 4.99–6.53 |
+| choice, up to 10 options shown | **4.71** | 9 | 4.36–5.10 |
+| choice, 11–26 options shown | **2.66** | 2 | 2.65–3.28 |
+| score | **5.18** | 3 | 4.48–6.25 |
+
+Leave-one-task-out (each task scored with temperatures fitted without it), mean over the 19 tasks:
+
+| | T = 1 | default, held out | per-task oracle |
+|---|---:|---:|---:|
+| ECE-15 | 0.218 | **0.132** | 0.065 |
+| NLL | 2.157 | **0.919** | 0.848 |
+| Brier | 0.441 | **0.348** | 0.319 |
+| mean ECE-15 over §1's 28 head-to-head entries | 0.212 | **0.140** | 0.090 |
+
+**No argmax changes**: the most probable option is the same on all 13,610 decisions, so accuracy does not move. The probabilities around it do: yes/no probabilities move towards 0.5 without crossing it, and a score question's expected level (`score`) moves towards the middle of the scale while its most probable level stays the same. Over the 1,218 score decisions, the expected level's error against the integer gold level rises (MAE 0.439 → 0.535) while its error against typed-decisions' gold expected score falls (0.482 → 0.309). For an integer level, take the most probable level from `probabilities`, or run with `--default-temperature off`.
+
+- **The most accurate tasks read under-confident.** Model routing (accuracy 0.970): mean confidence 0.993 → 0.645, ECE-15 0.030 → 0.325. Email spam (0.968): ECE-15 0.031 → 0.108. SemIf (0.047 → 0.067) and JevBench's 18 score items (0.182 → 0.194) also rise; every other task improves on ECE, NLL and Brier.
+- **One value for all choice questions fails.** The pooled choice fit, 3.15, is set by MASSIVE (55 % of the choice decisions); held out, MASSIVE gets 4.54, its ECE-15 goes 0.153 → 0.292, and the 28-entry mean rises to 0.241, worse than T = 1. A high temperature moves probability onto implausible options: at T = 4.71, MASSIVE's 20 options put 0.343 of the probability outside each decision's four best letters; at 2.66, 0.087. The split at 10 was chosen after seeing the fits of 3–5 and 6–10 options (4.59 and 4.85), so its margin over those buckets (ECE-15 0.132 against 0.139) is small.
+- **A few labels help once the fit starts from the default.** With `tez fit`'s temperature prior centred on 1, five labels give held-out NLL 1.153, worse than the default alone (0.900); centred on the default, 0.891 at five labels and 0.875 at ten. `tez fit` now centres it on the question's default.
+- **Thin cells.** The 11–26 value rests on MASSIVE (96 % of the cell) and voice; the score value on three tasks, one of 18 decisions. The pool mixes easy and hard tasks and NLL follows the hard ones, so traffic of mostly easy questions (routing, spam, intent) reads under-confident until fitted.
+
+The runtime applies the values only to Gemma 4 12B Q8_0 with the `gemma4` template, and only to letters answers that no fit calibrates; any other model is read at T = 1, and `--default-temperature off` restores T = 1. Each answer read at a default carries its `temperature` in the `tez` block. A threshold chosen on T = 1 confidences, such as §3's commit threshold (τ 0.9), needs choosing again, or `--default-temperature off`. As a check, the script reproduces §1's 0.212 at T = 1 and its 0.078 with one temperature per entry.
 
 ## 6. Audit trail
 
