@@ -84,6 +84,7 @@ class DecideRequest:
     alpha: float | None
     model: str
     layout: str = "auto"          # as requested (auto | question_first | state_first), before per-question resolution
+    extraction: Any = None        # tez.extract.Extraction when the request came with json_schema
 
 
 @dataclass
@@ -330,9 +331,16 @@ class Tez:
             if schema is None:
                 loaded = ", ".join(sorted(self.schemas)) or "none"
                 raise InvalidRequest(f"unknown schema '{name}' (loaded: {loaded})")
-        if body.get("questions") is None:
+        extraction = None
+        if body.get("json_schema") is not None:
+            if body.get("questions") is not None:
+                raise InvalidRequest("give questions or json_schema, not both")
+            from .extract import schema_from_json_schema
+            extracted = schema_from_json_schema(body["json_schema"], "json_schema")
+            questions, extraction = dict(extracted.questions), extracted.extraction
+        elif body.get("questions") is None:
             if schema is None:
-                raise InvalidRequest("questions is required (or name a loaded schema)")
+                raise InvalidRequest("questions is required (or json_schema, or name a loaded schema)")
             questions = dict(schema.questions)
         else:
             if limits is not None and isinstance(body["questions"], dict):
@@ -370,7 +378,7 @@ class Tez:
         else:
             layout = self.configured_layout(schema)
         return DecideRequest(state=state, questions=questions, schema=schema, readout=readout, abstain=abstain,
-                             alpha=alpha, model=model, layout=layout)
+                             alpha=alpha, model=model, layout=layout, extraction=extraction)
 
     def execute(self, body: Any, *, run_id: str | None = None, hooks: Any = None, limits: Limits | None = None,
                 parent_run_id: str | None = None, index: int | None = None) -> DecisionContext:
@@ -497,6 +505,22 @@ class Tez:
         body = self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout)
         return self.handle(body, run_id=run_id, hooks=hooks)
 
+    def extract(self, state: Any, schema_or_model: Any, *, alpha: float | None = None, return_details: bool = False,
+                readout: str = "auto", layout: str | None = None, hooks: Any = None) -> Any:
+        """Decide a state against a JSON schema, a pydantic model, a Schema or a loaded schema's name, and return the
+        answers as one object: a dict, or an instance of the pydantic model (tez/extract.py has the mapping).
+
+        alpha           gate every field; if any field escalates, EscalationRequired is raised (the extracted object
+                        is not certified) unless return_details is set
+        return_details  return an ExtractResult (value, values, decisions, escalated fields, the whole response)
+        """
+        from .extract import finish, prepare
+        if isinstance(schema_or_model, str) and schema_or_model not in self.schemas:
+            raise InvalidRequest(f"unknown schema '{schema_or_model}' (loaded: {', '.join(sorted(self.schemas)) or 'none'})")
+        extraction, fields = prepare(schema_or_model, self.schemas.get)
+        body = {**self.request_body(state, None, None, readout, False, alpha, None, DEFAULT_MODEL_ALIAS, layout), **fields}
+        return finish(extraction, self.handle(body, hooks=hooks), alpha, return_details)
+
     def request_body(self, state: Any, questions: Mapping | None = None, schema: Any = None, readout: str = "auto",
                      abstain: bool = False, alpha: float | None = None, gate: Any = None,
                      model: str = DEFAULT_MODEL_ALIAS, layout: str | None = None) -> dict:
@@ -560,6 +584,8 @@ class Tez:
         response = {"model": self.model_label(used), "answers": answers,
                     "usage": {"input_tokens": int(tokens), "output_tokens": 0},
                     "tez": {"latency_ms": round(latency, 1), "questions": metas}}
+        if req.extraction is not None:
+            response["tez"]["values"] = req.extraction.values(answers)
         ctx.response, ctx.usage, ctx.latency_ms = response, response["usage"], round(latency, 1)
         return response
 

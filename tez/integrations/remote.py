@@ -8,8 +8,8 @@ format (docs/API.md): `tez serve` on this machine or another one, or a Jev-compa
                                     "criteria": {"billing": None, "technical": None}}})
 
 The method names and return values match the in-process engine (tez.Tez): decide, handle, decide_many,
-decide_batch, handle_batch, health, models, schema_summaries, schema_detail and record_feedback, so every integration
-accepts either. Error responses raise the
+decide_batch, handle_batch, extract, health, models, schema_summaries, schema_detail and record_feedback, so every
+integration accepts either. Error responses raise the
 TezError subclasses the engine raises (InvalidRequest 422, NotFound 404, Unauthorized 401, BackendUnavailable 503);
 a server that cannot be reached, times out or answers with something other than JSON raises BackendUnavailable.
 
@@ -197,6 +197,23 @@ class RemoteTez:
         if tez:
             body["tez"] = tez
         return body
+
+    def extract(self, state: Any, schema_or_model: Any, *, alpha: float | None = None, return_details: bool = False,
+                readout: str | None = "auto", layout: str | None = None) -> Any:
+        """tez.Tez.extract over HTTP: a JSON schema or a pydantic model is sent as json_schema; a schema name uses the
+        server's schema (its questions are fetched once, to read the answers back as values)."""
+        from ..extract import finish, prepare
+        from ..schema import Schema, parse_questions
+
+        def loaded(name: str) -> Schema | None:
+            if not isinstance(schema_or_model, str) or name != schema_or_model:
+                return None
+            detail = self.schema_detail(name)
+            return Schema(name=name, questions=parse_questions(detail.get("questions") or {}))
+
+        extraction, fields = prepare(schema_or_model, loaded)
+        body = {**self.request_body(state, None, None, readout, False, alpha, None, None, layout), **fields}
+        return finish(extraction, self.handle(body), alpha, return_details)
 
     def handle_batch(self, body: Any) -> dict:
         """POST a wire-format batch body to /v1/systemone/batch and return the batch response."""

@@ -178,6 +178,50 @@ unexpected failure (a hook that raised, for example). Body: `{"error": {"type": 
 the types are `unauthorized`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`,
 `backend_unavailable` and `internal_error`.
 
+### Structured extraction (`json_schema`)
+
+In place of `questions`, a request may carry `json_schema`: a JSON schema of the object you want back. Tez turns its
+fields into questions, decides them like any others, and returns the object in `tez.values` (the answers are there too,
+keyed by the field's dotted path).
+
+```json
+{"state": "Charged twice for invoice 4411, please fix it today!",
+ "json_schema": {"type": "object", "properties": {
+   "department": {"enum": ["billing", "technical", "sales"], "description": "Which team should handle it?"},
+   "urgent": {"type": "boolean", "description": "Does it need a reply today?"},
+   "priority": {"type": "integer", "minimum": 1, "maximum": 3},
+   "customer": {"type": "object", "properties": {"tier": {"enum": [1, 2, 3]}}},
+   "refund": {"anyOf": [{"enum": ["full", "partial"]}, {"type": "null"}]}}}}
+```
+
+```json
+"tez": {"latency_ms": 480.2, "questions": {...},
+        "values": {"department": "billing", "urgent": true, "priority": 3, "customer": {"tier": 1}, "refund": null}}
+```
+
+| JSON schema | Question | Value |
+|---|---|---|
+| `enum`, `Literal[...]`, an `Enum` class, `oneOf`/`anyOf` of `const`s | `choice`, 2 to 255 options (a const's `description` describes its option) | the enum value as given (string, number, boolean, null) |
+| `"type": "boolean"` | `noul` | `true` / `false` |
+| `"type": "integer"` with `minimum` and `maximum` (or the exclusive bounds), 2 to 10 values | `score` | the most likely value |
+| one possible value (`const`, a one-value enum or range) | none: filled in | the value |
+| an object with `properties` (a nested model) | its fields, ids `parent.child` | a nested object |
+| optional (`anyOf` with `{"type": "null"}`, `"type": [..., "null"]`) | a choice gets a `null` option ("not stated, or does not apply") | `null` |
+| `description` | the question's instructions | |
+
+Local `$ref`s (`#/$defs/...`) and a one-element `allOf` are followed. Refused with a 422 that names the path
+(`json_schema.properties.note: a free-text string cannot be decided in one pass; ...`): free strings and numbers
+without an enum, arrays, integer ranges over 10 values, more than 255 options, unions of different types, references
+outside the document and recursive schemas. `json_schema` and `questions` cannot both be given; `schema` may name a
+loaded schema whose identical questions then use its fits.
+
+Python: `Schema.from_json_schema(js, name)`, `Schema.from_pydantic(Model)` (pydantic is never imported by Tez; the
+model's own JSON schema is read), and `Tez.extract(state, schema_or_model, *, alpha=None, return_details=False)`, which
+returns a dict or an instance of the pydantic model (a loaded schema's name works too: booleans, labels, level numbers).
+With `alpha`, a field the gate escalates raises `tez.EscalationRequired` (hand the case to a person or a larger model),
+unless `return_details=True` returns an `ExtractResult` (value, values, decisions, escalated fields, the response).
+`RemoteTez.extract` does the same over HTTP.
+
 ## `POST /v1/systemone/batch`
 
 Many states against the same questions. The body is a `/v1/systemone` request with `states` (an array) in place of

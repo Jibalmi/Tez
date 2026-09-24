@@ -14,6 +14,7 @@ from ._version import RELEASE_DATE, __version__
 from .backends import Backend, FakeBackend, LlamaCppBackend
 from .engine import Tez
 from .errors import BackendRequestError, BackendUnavailable, InvalidRequest, TezError
+from .extract import EscalationRequired, ExtractResult
 from .hooks import (BaseHook, Cache, DecisionContext, DecisionLog, Metrics, OTelHook, Redact, default_hooks,
                     set_default_hooks)
 from .schema import Question, Schema, load_schema, load_schemas, parse_question
@@ -22,5 +23,5 @@ __all__ = [
     "__version__", "RELEASE_DATE", "Tez", "Backend", "LlamaCppBackend", "FakeBackend", "Question", "Schema",
     "load_schema", "load_schemas", "parse_question", "TezError", "InvalidRequest", "BackendUnavailable",
     "BackendRequestError", "BaseHook", "DecisionContext", "DecisionLog", "Redact", "Cache", "Metrics", "OTelHook",
-    "set_default_hooks", "default_hooks",
+    "set_default_hooks", "default_hooks", "EscalationRequired", "ExtractResult",
 ]
