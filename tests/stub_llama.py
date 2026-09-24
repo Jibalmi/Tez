@@ -82,13 +82,11 @@ class StubLlama:
                     self.reply(200, {"model_path": stub.model_path, "chat_template": stub.template, "build_info": "b11100",
                                      "total_slots": stub.slots, "default_generation_settings": {"n_ctx": stub.n_ctx}})
                 elif self.path == "/v1/models":
-                    self.reply(200, {"object": "list", "data": [{"id": stub.model_path, "object": "model",
-                                                                 "meta": {"n_ctx_train": stub.n_ctx}}]})
+                    self.reply(200, {"object": "list", "data": [{"id": stub.model_path, "object": "model", "meta": {
+                        "n_params": 11_907_350_576, "n_embd": 3840, "n_ctx": stub.n_ctx, "n_ctx_train": stub.n_ctx,
+                        "ftype": "Q8_0"}}]})
                 elif self.path == "/slots":
                     self.reply(200, [{"id": i} for i in range(stub.slots)])
-                elif self.path == "/v1/models":
-                    self.reply(200, {"object": "list", "data": [{"id": stub.model_path, "meta": {
-                        "n_params": 11_907_350_576, "n_embd": 3840, "n_ctx": stub.n_ctx, "ftype": "Q8_0"}}]})
                 else:
                     self.reply(404, {"error": {"code": 404, "message": "not found"}})
 
