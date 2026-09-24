@@ -77,6 +77,61 @@ def post(sess, url: str, body: dict) -> tuple[float, dict, dict]:
                      "tokens": j["usage"]["input_tokens"]}
 
 
+class CpuMonitor:
+    """Total CPU load (Windows typeperf, one sample a second) during a measurement: llama.cpp's CPU threads meet at
+    barriers even with every layer on the GPU, so another process saturating the CPU slows every call."""
+
+    def __enter__(self):
+        import threading
+        self.samples: list[float] = []
+        self.p = subprocess.Popen(["typeperf", r"\Processor(_Total)\% Processor Time", "-si", "1"], stdout=subprocess.PIPE,
+                                  stderr=subprocess.DEVNULL, text=True)
+
+        def read():
+            for line in self.p.stdout:
+                parts = line.strip().split(",")
+                if len(parts) == 2:
+                    try:
+                        self.samples.append(float(parts[1].strip('"')))
+                    except ValueError:
+                        pass
+        threading.Thread(target=read, daemon=True).start()
+        return self
+
+    def __exit__(self, *exc):
+        self.p.terminate()
+
+    def summary(self) -> dict:
+        a = np.asarray(self.samples, float)
+        if not len(a):
+            return {"samples": 0}
+        return {"samples": int(len(a)), "cpu_pct_p50": round(float(np.median(a)), 1),
+                "cpu_pct_p90": round(float(np.percentile(a, 90)), 1), "cpu_pct_max": round(float(a.max()), 1)}
+
+
+BUSY_PS = ("$a = Get-Process | Select-Object Id,ProcessName,CPU; Start-Sleep -Seconds 1; "
+           "$b = Get-Process | Select-Object Id,ProcessName,CPU; "
+           "$b | ForEach-Object { $x = $_; $o = $a | Where-Object { $_.Id -eq $x.Id }; "
+           "if ($o -and $x.CPU) { '{0}|{1}|{2:N2}' -f $x.Id,$x.ProcessName,($x.CPU - $o.CPU) } }")
+
+
+def busy_processes(top: int = 5) -> list[dict]:
+    """The processes using the most CPU over one second (pid, name, cores used), for the record."""
+    try:
+        rows = subprocess.run(["powershell", "-NoProfile", "-Command", BUSY_PS], capture_output=True, text=True,
+                              timeout=120).stdout.splitlines()
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    out = []
+    for r in rows:
+        pid, name, cores = (r.split("|") + ["", "", ""])[:3]
+        try:
+            out.append({"pid": int(pid), "name": name, "cores": float(cores.replace(",", ""))})
+        except ValueError:
+            continue
+    return sorted(out, key=lambda x: -x["cores"])[:top]
+
+
 class Guard:
     """gpu_lock snapshots (and Ollama's loaded models) before and after, judged with speed_common's contamination rule;
     our own processes are tez serve and, for the HTTP arm, the llama-server behind it."""
@@ -125,7 +180,8 @@ def mode_laya(a: argparse.Namespace) -> dict:
         rec: dict[str, list] = {"walls": [], "tez_ms": [], "backend_ms": [], "tokens": [], "layouts": []}
         reps = a.reps if n < 50 else a.reps50
         out["gpu"][str(n)] = {"before": sc.wait_cool(a.cool, 240) if a.cool else sc.gpu_now()}
-        with sc.GpuMonitor() as mon:
+        out.setdefault("cpu", {})[str(n)] = {"busy_before": busy_processes()}
+        with sc.GpuMonitor() as mon, CpuMonitor() as cpu:
             for i in range(a.warmup + reps):
                 counter += 1
                 wall, j, info = post(sess, a.tez, {"model": "tez-latest", "state": sc.fresh_state(counter), "questions": qs})
@@ -140,6 +196,7 @@ def mode_laya(a: argparse.Namespace) -> dict:
                     rec["layouts"].append(info["layout"])
         g = mon.summary()
         out["gpu"][str(n)]["during"] = g
+        out["cpu"][str(n)]["during"] = cpu.summary()
         out["telemetry"][str(n)] = [list(r) for r in mon.rows]      # temp C, SM MHz, power W, util %, throttle flags
         st = sc.per_call_stats(rec["walls"], n)
         st["tez_reported_ms_p50"] = round(float(np.median(rec["tez_ms"])), 2)
@@ -151,7 +208,8 @@ def mode_laya(a: argparse.Namespace) -> dict:
         out["sizes"][str(n)] = st
         print(f"{a.tag:18s} {n:2d}q  p50 {st['p50']:8.1f}  p95 {st['p95']:8.1f}  per q {st['ms_per_question_p50']:6.2f}  "
               f"tez {st['tez_reported_ms_p50']:8.1f}  backend {st['backend_ms_p50']}  layout {st['layouts']}  "
-              f"sm {g.get('sm_mhz_busy_p50')} MHz {g.get('temp_c_p50')} C throttled {g.get('thermal_throttle_frac')}",
+              f"sm {g.get('sm_mhz_busy_p50')} MHz {g.get('temp_c_p50')} C throttled {g.get('thermal_throttle_frac')}  "
+              f"cpu {out['cpu'][str(n)]['during'].get('cpu_pct_p50')}%",
               flush=True)
     return out
 
@@ -180,7 +238,7 @@ def mode_td(a: argparse.Namespace) -> dict:
         rows = dict(list(rows.items())[: a.limit_rows])
     recs, walls, tez_ms = [], [], []
     t0 = time.perf_counter()
-    with sc.GpuMonitor() as mon:
+    with sc.GpuMonitor() as mon, CpuMonitor() as cpu:
         for r_i, row in enumerate(rows.values()):
             qs = {str(c["qkey"][1]): wire_question(c) for c in row}
             wall, j, info = post(sess, a.tez, {"model": "tez-latest", "state": row[0]["state"], "questions": qs})
@@ -199,7 +257,8 @@ def mode_td(a: argparse.Namespace) -> dict:
     kept = [c for c in cases if c["id"] in {r["id"] for r in recs}]
     out = {"n_decisions": len(recs), "n_rows": len(rows), "accuracy": round(sc.accuracy(preds, golds), 4),
            "by_type": sc.by_type(kept, preds), "per_row_call_ms": sc.stats(walls), "per_row_tez_ms": sc.stats(tez_ms),
-           "layouts": sorted({r["layout"] for r in recs}), "wall_s": round(time.perf_counter() - t0, 1), "gpu": mon.summary()}
+           "layouts": sorted({r["layout"] for r in recs}), "wall_s": round(time.perf_counter() - t0, 1), "gpu": mon.summary(),
+           "cpu": cpu.summary()}
     rows_file = sc.OUT / f"{a.tag}_td_rows.jsonl"
     rows_file.write_text("".join(json.dumps(r) + "\n" for r in recs), encoding="utf-8")
     out["rows_file"] = str(rows_file.relative_to(sc.ROOT)).replace("\\", "/")
