@@ -166,9 +166,9 @@ reorders them. The numbers around it do move, since all of them are read from th
   outwards).
 
 Where you need an integer level, take the most probable level (the argmax of `probabilities`), which no temperature
-changes, or run with `--default-temperature off`. The `tez` block carries `temperature` for every answer read at a default. Easy questions
-read under-confident until they are fitted; the gate is unaffected, because it only acts on fitted questions. Any other
-model or template is read at temperature 1.
+changes, or run with `--default-temperature off`. The `tez` block carries `temperature` for every answer read at a
+default other than 1. Easy questions read under-confident until they are fitted; the gate is unaffected, because it
+only acts on fitted questions. Any other model or template is read at temperature 1.
 `--default-temperature off` (env `TEZ_DEFAULT_TEMPERATURE`) restores temperature 1, and a number sets one temperature
 for every unfitted question. `tez fit` centres its temperature search on the same default, which makes a handful of
 labels help rather than hurt.
@@ -225,9 +225,9 @@ Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` inva
 than the model's context, with llama.cpp's message, and a body that is not strict JSON: `NaN`, `Infinity`, a number
 too large for a float such as `1e400`, or a string with a lone surrogate such as `"\ud800"`, refused before any hook
 or model call), `503` backend unavailable. Also `404` for an unknown route, or an unknown schema in the path
-(`GET /v1/schemas/{name}`), `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin that is not allowed,
-`413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure (a hook that raised,
-for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,
+(`GET /v1/schemas/{name}`), `405` for a wrong method, `403` for a `POST` (or a CORS preflight) from a browser origin
+that is not allowed, `413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure
+(a hook that raised, for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,
 `forbidden`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`, `backend_unavailable` and
 `internal_error` (any other `4xx` the web framework answers is `invalid_request`, any other `5xx` `internal_error`).
 A schema named in a request body that is not loaded (`schema` in a decision, a batch, a plan or feedback) is a field
