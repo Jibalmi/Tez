@@ -1,0 +1,11 @@
+ok    health      /health: ok
+ok    model       gemma-4-q8_0, build b11100-7ab4ee7ba, context 4096, 1 slot(s)
+ok    template    chat template matches --template gemma4
+ok    n_probs     top 200 log-probabilities, the option letters among them
+ok    cache       a repeated prompt is served from the cache (1 new tokens)
+ok    prefix      a second question about the same state reuses it (45 of 129 tokens new)
+ok    embeddings  /embedding works (3840 numbers): fitted probes can be served
+ok    slots       one slot: consecutive questions share one prompt cache
+info  cache-ram   llama.cpp's host-memory prompt cache (--cache-ram, 8 GiB by default) first copies a slot to RAM whenever a request keeps less than half of its tokens, which every new state does
+                  fix: start llama-server with --cache-ram 0
+0 failed, 0 warning(s)

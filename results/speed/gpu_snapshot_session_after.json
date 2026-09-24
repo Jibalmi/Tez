@@ -1,0 +1,38 @@
+{
+ "time": "2026-09-24T23:11:41+02:00",
+ "used_mb": 15214,
+ "total_mb": 16303,
+ "util_pct": 0,
+ "processes": [
+  {
+   "pid": 18520,
+   "name": "Code",
+   "kind": "dedicated",
+   "mb": 183
+  },
+  {
+   "pid": 3320,
+   "name": "dwm",
+   "kind": "dedicated",
+   "mb": 872
+  },
+  {
+   "pid": 48364,
+   "name": "llama-server",
+   "kind": "dedicated",
+   "mb": 14170
+  },
+  {
+   "pid": 58024,
+   "name": "explorer",
+   "kind": "dedicated",
+   "mb": 115
+  },
+  {
+   "pid": 48364,
+   "name": "llama-server",
+   "kind": "shared",
+   "mb": 104
+  }
+ ]
+}

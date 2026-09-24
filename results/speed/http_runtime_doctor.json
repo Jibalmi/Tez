@@ -1,0 +1,56 @@
+[
+  {
+    "name": "health",
+    "status": "ok",
+    "detail": "/health: ok",
+    "fix": null
+  },
+  {
+    "name": "model",
+    "status": "ok",
+    "detail": "gemma-4-q8_0, build b11100-7ab4ee7ba, context 4096, 1 slot(s)",
+    "fix": null
+  },
+  {
+    "name": "template",
+    "status": "ok",
+    "detail": "chat template matches --template gemma4",
+    "fix": null
+  },
+  {
+    "name": "n_probs",
+    "status": "ok",
+    "detail": "top 200 log-probabilities, the option letters among them",
+    "fix": null
+  },
+  {
+    "name": "cache",
+    "status": "ok",
+    "detail": "a repeated prompt is served from the cache (1 new tokens)",
+    "fix": null
+  },
+  {
+    "name": "prefix",
+    "status": "ok",
+    "detail": "a second question about the same state reuses it (45 of 129 tokens new)",
+    "fix": null
+  },
+  {
+    "name": "embeddings",
+    "status": "ok",
+    "detail": "/embedding works (3840 numbers): fitted probes can be served",
+    "fix": null
+  },
+  {
+    "name": "slots",
+    "status": "ok",
+    "detail": "one slot: consecutive questions share one prompt cache",
+    "fix": null
+  },
+  {
+    "name": "cache-ram",
+    "status": "info",
+    "detail": "llama.cpp's host-memory prompt cache (--cache-ram, 8 GiB by default) first copies a slot to RAM whenever a request keeps less than half of its tokens, which every new state does",
+    "fix": "start llama-server with --cache-ram 0"
+  }
+]
