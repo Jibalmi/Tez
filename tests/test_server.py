@@ -53,6 +53,9 @@ def test_models(client):
     r = client.get("/v1/models")
     assert r.status_code == 200
     assert r.json() == {"models": [{"name": "tez-latest", "description": "Tez local decision engine (fake, letters)",
+                                    "release_date": "2026-09-24"},
+                                   {"name": "jev-latest",
+                                    "description": "Alias of tez-latest: Tez local decision engine (fake, letters)",
                                     "release_date": "2026-09-24"}]}
 
 
@@ -199,6 +202,29 @@ def test_every_preflight_allows_private_network(client):
 def test_cors_can_be_switched_off(docs_request):
     c = TestClient(create_app(Tez(backend="fake"), cors=False))
     assert "access-control-allow-origin" not in c.get("/v1/models", headers=ORIGIN).headers
+
+
+def test_jev_alias_and_request_ids_everywhere(docs_request):
+    """Clients of TypeSafe's SDK look up jev-latest and read x-typesafe-request-id; every response has both headers."""
+    from tez.config import Limits
+    c = TestClient(create_app(Tez(backend="fake"), api_key="k", limits=Limits(max_body_bytes=100)))
+    auth = {"Authorization": "Bearer k"}
+    names = [m["name"] for m in c.get("/v1/models", headers=auth).json()["models"]]
+    assert names == ["tez-latest", "jev-latest"]
+    responses = [
+        c.get("/", headers=auth), c.get("/healthz"), c.get("/v1/models", headers=auth), c.get("/v1/schemas", headers=auth),
+        c.get("/nowhere"), c.get("/v1/systemone"), c.get("/v1/models"),                                   # 404, 405, 401
+        c.post("/v1/systemone", json={**docs_request, "model": "jev-latest"}, headers=auth),               # 413
+        c.post("/v1/feedback", json={}, headers={**auth, "Origin": "https://evil.test"}),                 # 403
+        c.options("/v1/systemone", headers={**ORIGIN, "Access-Control-Request-Method": "POST"}),          # preflight
+    ]
+    assert [r.status_code for r in responses] == [200, 200, 200, 200, 404, 405, 401, 413, 403, 200]
+    for r in responses:
+        assert len(r.headers["x-typesafe-request-id"]) == 32 and "total;dur=" in r.headers["server-timing"]
+        if r.status_code >= 400 and r.request.method != "OPTIONS":
+            assert set(r.json()["error"]) == {"type", "message"}
+    ok = TestClient(create_app(Tez(backend="fake"))).post("/v1/systemone", json={**docs_request, "model": "jev-latest"})
+    assert ok.status_code == 200 and set(ok.json()["answers"]) == {"is_urgent", "topic", "anger"}
 
 
 def test_unknown_route_and_method(client):

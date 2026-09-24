@@ -302,8 +302,13 @@ It sends a few tiny prompts and changes nothing on the server. `--json` prints t
 ## `GET /v1/models`
 
 ```json
-{"models": [{"name": "tez-latest", "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)", "release_date": "2026-09-24"}]}
+{"models": [{"name": "tez-latest", "description": "Tez local decision engine (gemma-4-12b-q8_0, letters)", "release_date": "2026-09-24"},
+            {"name": "jev-latest", "description": "Alias of tez-latest: Tez local decision engine (gemma-4-12b-q8_0, letters)",
+             "release_date": "2026-09-24"}]}
 ```
+
+`jev-latest` is listed so that clients written for TypeSafe's SDK, which look a model up by that name, find it. Every
+alias, and any other `model` string, is decided by the same engine.
 
 ## `GET /healthz`
 

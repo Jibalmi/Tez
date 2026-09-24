@@ -41,6 +41,7 @@ from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alp
 log = logging.getLogger("tez")
 READOUTS = ("auto", "letters", "probe")
 DEFAULT_MODEL_ALIAS = "tez-latest"
+JEV_ALIAS = "jev-latest"          # listed by GET /v1/models so clients of TypeSafe's SDK find a model they know
 
 
 @dataclass
@@ -793,10 +794,13 @@ class Tez:
         return f"tez-{__version__} ({name}, {'+'.join(readouts)})"
 
     def models(self) -> dict:
+        """The model aliases: tez-latest, and jev-latest for clients written for TypeSafe's SDK, which look a model up by
+        that name. Every alias (and any other model string) is decided by the same engine."""
         has_probe = any(self.probe_index().values())
         readouts = "letters+probe" if has_probe else "letters"
-        return {"models": [{"name": DEFAULT_MODEL_ALIAS,
-                            "description": f"Tez local decision engine ({self.backend.model_name()}, {readouts})",
+        described = f"Tez local decision engine ({self.backend.model_name()}, {readouts})"
+        return {"models": [{"name": DEFAULT_MODEL_ALIAS, "description": described, "release_date": RELEASE_DATE},
+                           {"name": JEV_ALIAS, "description": f"Alias of {DEFAULT_MODEL_ALIAS}: {described}",
                             "release_date": RELEASE_DATE}]}
 
     def health(self) -> dict:
