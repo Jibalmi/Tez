@@ -92,15 +92,18 @@ def main():
     q = sp["questions_per_call"]
     L.append("| system | " + " | ".join(f"{n} q / call" for n in q) + " | ms per question at 50 |")
     L.append("|---|" + "---:|" * (len(q) + 1))
-    for s, lab in (("tez", "**Tez** (tez serve, new ticket each call)"), ("laya", "laya (same GPU)"), ("laya-multilingual", "laya-multilingual (same GPU)")):
+    for s, lab in (("tez", "**Tez** (tez serve, question first, new ticket each call)"), ("laya", "laya (same GPU)"), ("laya-multilingual", "laya-multilingual (same GPU)")):
         r = sp["systems"].get(s)
         if not r:
             continue
         L.append(f"| {lab} | " + " | ".join(f"{v:,.0f} ms" for v in r["p50_ms_per_call"]) + f" | {r['p50_ms_per_question'][-1]:.1f} ms |")
     L.append("")
     L.append("Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass "
-             "per question and the state is read again for each, so its cost per question stays near 90–140 ms "
-             "(`experiments/probe_multiq.py` measures a state-first layout that would share it; the runtime does not use it yet).")
+             "per question. In these runs the runtime read every question first and the state after it, so the state was "
+             "evaluated again for each question and the cost per question stayed near 90–140 ms. The runtime now reads two "
+             "or more questions state first (`--layout auto`), so llama-server's prompt cache can keep the state for the "
+             "questions after the first; the runtime's own latency over HTTP with that layout has not been measured. §5b "
+             "measures the layout on direct `/completion` calls and in process.")
     L.append("")
     L.append("### Selective automation on typed-decisions (accuracy on the decisions acted on, most confident first; `experiments/vs_laya_selective.py`)")
     L.append("")
@@ -115,10 +118,11 @@ def main():
     su = sel.get("summary", {}).get("tez letters", {})
     if su:
         L.append("")
-        L.append(f"Tez's letters ship over-confident (ECE-15 {su.get('ece'):.3f}; most answers sit in the top confidence bin); "
-                 f"one out-of-fold temperature brings it to {su.get('ece_after_temperature'):.3f} on these rows (2-fold split "
-                 "of `bench_h2h.py`; §4c's 0.067 used the probe lab's split). laya-typed-decisions, fine-tuned on this "
-                 "benchmark, ranks its own errors better at every coverage.")
+        L.append(f"Tez's letters read at T = 1 are over-confident (ECE-15 {su.get('ece'):.3f}; most answers sit in the top "
+                 f"confidence bin); one out-of-fold temperature brings it to {su.get('ece_after_temperature'):.3f} on these rows "
+                 "(2-fold split of `bench_h2h.py`; §4c's 0.067 used the probe lab's split), and the default temperature Tez "
+                 "now applies to unfitted questions, fitted without typed-decisions, to 0.051 (§5c). laya-typed-decisions, "
+                 "fine-tuned on this benchmark, ranks its own errors better at every coverage.")
     L.append("")
     L.append(END)
     block = "\n".join(L)
