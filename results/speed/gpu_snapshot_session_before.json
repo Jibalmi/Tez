@@ -1,0 +1,50 @@
+{
+ "time": "2026-09-24T21:57:28+02:00",
+ "used_mb": 6388,
+ "total_mb": 16303,
+ "util_pct": 16,
+ "processes": [
+  {
+   "pid": 13820,
+   "name": "llama-server",
+   "kind": "dedicated",
+   "mb": 4423
+  },
+  {
+   "pid": 16972,
+   "name": "TradingView",
+   "kind": "dedicated",
+   "mb": 178
+  },
+  {
+   "pid": 18520,
+   "name": "Code",
+   "kind": "dedicated",
+   "mb": 306
+  },
+  {
+   "pid": 3320,
+   "name": "dwm",
+   "kind": "dedicated",
+   "mb": 1246
+  },
+  {
+   "pid": 36180,
+   "name": "chrome",
+   "kind": "dedicated",
+   "mb": 347
+  },
+  {
+   "pid": 37908,
+   "name": "msedgewebview2",
+   "kind": "dedicated",
+   "mb": 116
+  },
+  {
+   "pid": 58024,
+   "name": "explorer",
+   "kind": "dedicated",
+   "mb": 155
+  }
+ ]
+}

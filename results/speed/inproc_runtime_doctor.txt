@@ -1,0 +1,9 @@
+ok    library     C:\temp\llamacpp: llama.cpp b11100-7ab4ee7ba, libllama 0.4.1-dev
+ok    gpu         NVIDIA GeForce RTX 5080 Laptop GPU (1,148 of 16,302 MB free after the load); layers on the GPU: all
+ok    model       gemma-4-12b-q8_0: 11.9B parameters, 48 layers, 12,067 MB, loaded in 47.3 s; context 4096, n_batch 4096, 64 sequences
+ok    template    chat template matches --template gemma4
+ok    letters     the option letters hold 100% of the next-token probability (exact log-probabilities, 130 prompt tokens)
+ok    batch       two questions about one state: the state once (84 shared tokens), both suffixes in one decode; same answers as one by one, letter log-probabilities within 0.091 nats
+ok    embeddings  last-token states work (3840 numbers, the features llama-server --embeddings --pooling last returns): fitted probes can be served
+info  process     the model and its KV cache live in the Tez process: run one Tez process per GPU, and no llama-server holding the same model beside it
+0 failed, 0 warning(s)
