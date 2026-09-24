@@ -29,7 +29,7 @@
   <div class="container header-inner">
     <a class="brand" href="./index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
     <nav class="nav" id="site-nav" aria-label="Main">
-      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs.html">Docs</a><a href="./research.html">Research</a>
+      <a href="./usecases.html">Use cases</a><a href="./playground.html">Playground</a><a href="./benchmarks.html">Benchmarks</a><a href="./docs/index.html">Docs</a><a href="./research.html">Research</a>
     </nav>
     <div class="header-actions">
       <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
@@ -256,7 +256,7 @@
       <!-- ============================================================== readouts -->
       <section class="doc-section" aria-labelledby="readouts">
         <h2 id="readouts">Four ways to read a decision</h2>
-        <p>The same 2,000 typed-decisions test decisions, read four ways. Labels buy accuracy and calibration: a logistic probe is fitted with a proper scoring rule, so it comes out calibrated (ECE 0.023 as read), and the gain from labels is largest on ordinal score questions (+11 points over the 12B). How to choose a readout per request is in the <a href="./docs.html#readouts">docs</a>.</p>
+        <p>The same 2,000 typed-decisions test decisions, read four ways. Labels buy accuracy and calibration: a logistic probe is fitted with a proper scoring rule, so it comes out calibrated (ECE 0.023 as read), and the gain from labels is largest on ordinal score questions (+11 points over the 12B). How to choose a readout per request is in the <a href="./docs/guides.html#readouts">docs</a>.</p>
         <div data-table="readouts"></div>
         <p class="source"><span data-text="readouts-note"></span> Source: <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#calibration-and-decision-types-ece-15-and-nll-as-read-then-after-a-2-fold-out-of-fold-temperature">BENCHMARKS.md §4c Calibration and decision types</a>; references from §1.</p>
       </section>
@@ -323,7 +323,7 @@
       <!-- ============================================================== gate -->
       <section class="doc-section" aria-labelledby="gate">
         <h2 id="gate">Knowing when not to decide</h2>
-        <p>Conformal selection chooses which decisions to act on so that the error rate among them stays at or below a chosen bound; the rest are escalated. It is what <code>tez fit</code> computes for the <a href="./docs.html#gate">gate</a>.</p>
+        <p>Conformal selection chooses which decisions to act on so that the error rate among them stays at or below a chosen bound; the rest are escalated. It is what <code>tez fit</code> computes for the <a href="./docs/guides.html#gate">gate</a>.</p>
         <figure class="chart-figure" id="fig-gate">
           <figcaption class="chart-head">
             <h3 class="chart-title" id="fig-gate-title">At a 5 % error bound the probe acts on 40 % of decisions and the 12B's zero-shot letters on 24 %; the realised error stays at the bound</h3>
@@ -470,7 +470,7 @@
       </div>
       <div>
         <h2 class="footer-h">Docs</h2>
-        <ul><li><a href="./docs.html#quickstart">Quickstart</a></li><li><a href="./docs.html#api">API</a></li><li><a href="./docs.html#schemas">Schemas</a></li></ul>
+        <ul><li><a href="./docs/index.html#quickstart">Quickstart</a></li><li><a href="./docs/api.html#api">API</a></li><li><a href="./docs/guides.html#schemas">Schemas</a></li></ul>
       </div>
       <div>
         <h2 class="footer-h">Project</h2>

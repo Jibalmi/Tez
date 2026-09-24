@@ -65,10 +65,15 @@
       });
     }
 
-    var here = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+    // mark the header link for this page by its full path (the docs have their own index.html); pages that mark
+    // their link in the markup, like every docs page marking "Docs", keep it
+    function pagePath(url) { return url.pathname.replace(/\/index\.html$/i, "/").toLowerCase(); }
+    var here = pagePath(location);
     document.querySelectorAll(".nav a[href]").forEach(function (a) {
-      var target = (a.getAttribute("href") || "").split("/").pop().split("#")[0].toLowerCase();
-      if (target && target === here) a.setAttribute("aria-current", "page");
+      if (a.hasAttribute("aria-current")) return;
+      var target;
+      try { target = new URL(a.getAttribute("href"), location.href); } catch (e) { return; }
+      if (target.origin === location.origin && pagePath(target) === here) a.setAttribute("aria-current", "page");
     });
 
     document.addEventListener("click", function (e) {

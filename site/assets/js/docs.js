@@ -1,5 +1,5 @@
-/* Reading pages: section sidebar with scroll-spy (a disclosure on narrow screens), heading anchor links,
-   and a small highlighter for the code examples. Everything degrades to plain, working HTML without it. */
+/* Reading pages: the page map with scroll-spy (a disclosure on narrow screens), the docs tab strip, heading anchor
+   links, and a small highlighter for the code examples. Everything degrades to plain, working HTML without it. */
 (function () {
   "use strict";
 
@@ -79,6 +79,27 @@
     }
   }
 
+  /* ---------------------------------------------------------------- docs section tabs */
+  // On narrow screens the strip scrolls sideways: bring the current tab into view and fade the side that has more.
+  function initTabs(list) {
+    function mark() {
+      const max = list.scrollWidth - list.clientWidth;
+      if (max <= 1) { list.removeAttribute("data-more"); return; }
+      const atStart = list.scrollLeft <= 1;
+      const atEnd = list.scrollLeft >= max - 1;
+      list.setAttribute("data-more", atStart ? "end" : atEnd ? "start" : "both");
+    }
+    const current = list.querySelector('[aria-current="page"]');
+    if (current && list.scrollWidth > list.clientWidth + 1) {
+      const lr = list.getBoundingClientRect();
+      const cr = current.getBoundingClientRect();
+      list.scrollLeft += cr.left - lr.left - (lr.width - cr.width) / 2;
+    }
+    mark();
+    list.addEventListener("scroll", mark, { passive: true });
+    window.addEventListener("resize", mark);
+  }
+
   /* ---------------------------------------------------------------- heading anchors */
   function initAnchors(root) {
     root.querySelectorAll("h2[id], h3[id]").forEach((h) => {
@@ -127,6 +148,12 @@
       ["str", /@'[\s\S]*?'@|@"[\s\S]*?"@|'[^'\n]*'|"(?:[^"`\n]|`.)*"/y],
       ["num", /\$[\w:]+/y],
     ],
+    ts: [
+      ["com", /\/\/[^\n]*|\/\*[\s\S]*?\*\//y],
+      ["str", /`(?:[^`\\]|\\.)*`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/y],
+      ["num", /\b(?:import|from|export|const|let|var|function|return|await|async|new|if|else|for|of|in|type|interface|as|true|false|null|undefined)\b/y],
+      ["num", /\b\d+(?:\.\d+)?\b/y],
+    ],
   };
 
   function tokenize(lang, src) {
@@ -173,6 +200,7 @@
   }
 
   function init() {
+    document.querySelectorAll(".docs-tabs-list").forEach(initTabs);
     document.querySelectorAll("[data-toc]").forEach(initToc);
     document.querySelectorAll(".prose, [data-anchors]").forEach(initAnchors);
     document.querySelectorAll("pre > code[data-lang]").forEach(highlight);

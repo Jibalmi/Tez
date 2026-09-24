@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hooks · Tez docs</title>
+<meta name="description" content="Hooks run your code around every Tez decision: decision logs, OpenTelemetry tracing and your own callbacks.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Tez hooks">
+<meta property="og:description" content="Hooks run your code around every Tez decision: decision logs, OpenTelemetry tracing and your own callbacks.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/img/tez-mark.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/docs.css">
+<script>try{var t=localStorage.getItem("tez-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="../assets/js/site.js" defer></script>
+<script src="../assets/js/docs.js" defer></script>
+</head>
+<body class="docs-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="../usecases.html">Use cases</a><a href="../playground.html">Playground</a><a href="../benchmarks.html">Benchmarks</a><a href="./index.html" aria-current="page">Docs</a><a href="../research.html">Research</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <a class="btn btn-secondary btn-sm" href="https://github.com/Jibalmi/Tez" aria-label="Tez on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg><span class="btn-github-label">GitHub</span></a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+    </div>
+  </div>
+</header>
+<!-- docs-tabs:start -->
+<nav class="docs-tabs" aria-label="Documentation sections">
+  <div class="container">
+    <ul class="docs-tabs-list" role="list">
+      <li><a href="./index.html">Start</a></li>
+      <li><a href="./guides.html">Guides</a></li>
+      <li><a href="./recipes.html">Recipes</a></li>
+      <li><a href="./hooks.html" aria-current="page">Hooks<span class="tab-mark" aria-hidden="true"></span></a></li>
+      <li><a href="./integrations.html">Integrations</a></li>
+      <li><a href="./api.html">API</a></li>
+      <li><a href="./reference.html">Reference</a></li>
+    </ul>
+  </div>
+</nav>
+<!-- docs-tabs:end -->
+
+<main id="main">
+  <div class="container doc-shell">
+    <!-- docs-rail:start -->
+    <nav class="doc-nav" data-toc aria-label="On this page">
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false" aria-controls="toc-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg><span class="toc-current">On this page</span><svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="toc-panel" id="toc-panel">
+        <p class="toc-heading">On this page</p>
+        <ul class="toc-list">
+        </ul>
+        <a class="rail-edit" href="https://github.com/Jibalmi/Tez/edit/main/site/docs/hooks.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><span>Edit this page</span></a>
+      </div>
+    </nav>
+    <!-- docs-rail:end -->
+
+    <article class="doc-main prose">
+      <header class="page-head">
+        <h1>Hooks</h1>
+        <p class="lead">Hooks run your code around every decision.</p>
+      </header>
+
+
+
+      <!-- docs-pager:start -->
+      <nav class="pager" aria-label="Previous and next page">
+        <a class="pager-link pager-prev" href="./recipes.html" rel="prev" aria-label="Previous: Recipes"><span class="pager-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Recipes</span><span class="pager-desc">Tool calling, routing, guardrails, triage and voice</span></a>
+        <a class="pager-link pager-next" href="./integrations.html" rel="next" aria-label="Next: Integrations"><span class="pager-title">Integrations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span><span class="pager-desc">Python, TypeScript, LangChain, MCP and Docker</span></a>
+      </nav>
+      <!-- docs-pager:end -->
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="../index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-frame" x="1" y="1" width="30" height="30" rx="8"/><rect class="mark-side" x="7.5" y="16" width="4" height="8" rx="1.5"/><rect class="mark-main" x="14" y="8" width="4" height="16" rx="1.5"/><rect class="mark-side" x="20.5" y="19" width="4" height="5" rx="1.5"/></svg><span>Tez</span></a>
+        <p class="footer-blurb">An open, local decision engine: typed questions in, calibrated probabilities out, from one forward pass.</p>
+      </div>
+      <div>
+        <h2 class="footer-h">Product</h2>
+        <ul><li><a href="../usecases.html">Use cases</a></li><li><a href="../playground.html">Playground</a></li><li><a href="../benchmarks.html">Benchmarks</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Docs</h2>
+        <ul><li><a href="./index.html#quickstart">Quickstart</a></li><li><a href="./api.html#api">API</a></li><li><a href="./guides.html#schemas">Schemas</a></li></ul>
+      </div>
+      <div>
+        <h2 class="footer-h">Project</h2>
+        <ul><li><a href="https://github.com/Jibalmi/Tez">GitHub</a></li><li><a href="../research.html">Research report</a></li><li><a href="https://github.com/Jibalmi/Tez/blob/main/LICENSE">Licence (MIT)</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-base"><span>MIT licensed code. Gemma 4 and Qwen3.5 weights are Apache-2.0.</span><span>Numbers measured on an RTX 5080 laptop GPU; sources in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md">BENCHMARKS.md</a></span></div>
+  </div>
+</footer>
+</body>
+</html>

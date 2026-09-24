@@ -1,21 +1,60 @@
-/* Reading pages (docs, benchmarks, research): sticky section sidebar, long-form prose, reference tables,
-   callouts and code examples. Built on tokens.css and base.css. */
+/* Reading pages (docs, benchmarks, research): one reading column with the page map in a right-hand rail, long-form
+   prose, reference tables, callouts and code examples. The docs add a section tab strip under the site header.
+   Built on tokens.css and base.css. */
 
-/* ------------------------------------------------------------------ shell: sidebar + content */
+/* ------------------------------------------------------------------ sticky chrome heights */
+:root { --tabs-h: 48px; --chrome-h: var(--header-h); }
+html:has(.docs-tabs) { --chrome-h: calc(var(--header-h) + var(--tabs-h)); scroll-padding-top: calc(var(--chrome-h) + 16px); }
+
+/* ------------------------------------------------------------------ docs: section tabs under the header */
+.docs-tabs {
+  position: sticky; top: var(--header-h); z-index: 40;
+  height: var(--tabs-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.docs-tabs .container { height: 100%; }
+.docs-tabs-list {
+  display: flex; gap: 2px; height: 100%;
+  margin: 0 0 0 -12px; padding: 0; list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.docs-tabs-list::-webkit-scrollbar { display: none; }
+.docs-tabs-list a {
+  position: relative; display: flex; align-items: center; height: 100%; padding: 0 12px;
+  font-size: var(--fs-sm); font-weight: 520; color: var(--text-muted); text-decoration: none; white-space: nowrap;
+  transition: color var(--t-fast) var(--ease-out);
+}
+.docs-tabs-list a:hover { color: var(--text); }
+.docs-tabs-list a[aria-current="page"] { color: var(--text); }
+.docs-tabs-list a:focus-visible { outline-offset: -4px; }
+/* the current tab's underline; it carries the view transition between pages (see the end of this file) */
+.tab-mark {
+  position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px;
+  border-radius: 2px 2px 0 0; background: var(--accent);
+  view-transition-name: docs-tab-mark;
+}
+/* a strip that scrolls sideways fades at the side that has more (set by docs.js) */
+.docs-tabs-list[data-more="end"] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
+.docs-tabs-list[data-more="start"] { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent); }
+.docs-tabs-list[data-more="both"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
+
+/* ------------------------------------------------------------------ shell: reading column + right rail */
 .doc-shell {
   display: grid;
-  grid-template-columns: 232px minmax(0, 1fr);
-  gap: 0 56px;
+  grid-template-columns: minmax(0, 1fr) 224px;
+  gap: 0 64px;
   padding-bottom: var(--s-9);
 }
-.doc-main { min-width: 0; max-width: 780px; padding-top: var(--s-7); }
-.doc-shell.is-wide .doc-main { max-width: 920px; }
+.doc-main { grid-column: 1; grid-row: 1; min-width: 0; max-width: 780px; padding-top: var(--s-7); }
+.doc-shell.is-wide .doc-main { max-width: none; }
 
 .doc-nav {
-  position: sticky; top: var(--header-h); align-self: start;
-  max-height: calc(100vh - var(--header-h));
+  grid-column: 2; grid-row: 1;
+  position: sticky; top: var(--chrome-h); align-self: start;
+  max-height: calc(100vh - var(--chrome-h));
   overflow-y: auto; overscroll-behavior: contain;
-  padding: var(--s-7) 6px var(--s-6) 0;
+  padding: var(--s-7) 0 var(--s-6);
 }
 .toc-toggle { display: none; }
 .toc-group + .toc-group { margin-top: 22px; }
@@ -23,18 +62,53 @@
 .toc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
 .toc-list a {
   display: block; padding: 5px 10px; border-radius: var(--r-sm);
-  font-size: var(--fs-sm); line-height: 1.4; color: var(--text-muted); text-decoration: none;
+  font-size: 13.5px; line-height: 1.4; color: var(--text-muted); text-decoration: none;
   transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
 }
 .toc-list a:hover { color: var(--text); background: var(--bg-subtle); }
 .toc-list a[aria-current="true"] { color: var(--accent); background: var(--accent-soft); font-weight: 540; }
 .toc-list .toc-sub a { padding-left: 22px; font-size: 13px; }
+.rail-edit {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: var(--s-5); padding: 5px 10px;
+  font-size: 13px; color: var(--text-muted); text-decoration: none; border-radius: var(--r-sm);
+}
+.rail-edit svg { width: 14px; height: 14px; flex: none; }
+.rail-edit:hover { color: var(--text); background: var(--bg-subtle); }
+
+/* ------------------------------------------------------------------ docs: previous and next page */
+.prose .pager {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4);
+  margin-top: var(--s-8); padding-top: var(--s-6); border-top: 1px solid var(--border);
+}
+.pager-link {
+  display: grid; gap: 4px; padding: 14px 16px;
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  color: var(--text); text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+.pager-link:hover { color: var(--text); border-color: var(--border-strong); background: var(--bg-subtle); }
+.pager-next { grid-column: 2; text-align: right; }
+.pager-title { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.pager-next .pager-title { justify-content: flex-end; }
+.pager-title svg { width: 16px; height: 16px; flex: none; color: var(--accent); transition: transform var(--t-fast) var(--ease-out); }
+.pager-prev:hover .pager-title svg { transform: translateX(-2px); }
+.pager-next:hover .pager-title svg { transform: translateX(2px); }
+.pager-desc { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.45; }
+@media (max-width: 560px) {
+  .prose .pager { grid-template-columns: minmax(0, 1fr); }
+  .pager-next { grid-column: 1; }
+}
 
 @media (max-width: 960px) {
-  html { scroll-padding-top: calc(var(--header-h) + 64px); }
+  :root { --tabs-h: 44px; }
+  /* on narrow screens the tab strip scrolls away and the page map sticks under the header as a disclosure */
+  .docs-tabs { position: static; }
+  html:has(.docs-tabs), html { scroll-padding-top: calc(var(--header-h) + 64px); }
   .doc-shell { grid-template-columns: minmax(0, 1fr); }
-  .doc-main { padding-top: var(--s-6); }
+  .doc-main { grid-row: 2; padding-top: var(--s-6); }
   .doc-nav {
+    grid-column: 1; grid-row: 1;
     top: var(--header-h); z-index: 30;
     max-height: none; overflow: visible;
     padding: 0; margin-inline: calc(var(--gutter) * -1);
@@ -111,7 +185,7 @@ h2:hover > .heading-anchor, h3:hover > .heading-anchor, .heading-anchor:focus-vi
 .params td { line-height: 1.5; }
 .table-wrap + .source, .table-wrap + p.small { margin-top: var(--s-2); }
 
-.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 28px; margin: 0; font-size: 15px; line-height: 1.5; }
+.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 28px; font-size: 15px; line-height: 1.5; }
 .facts dt { color: var(--text-muted); }
 .facts dd { margin: 0; }
 @media (max-width: 560px) {
@@ -158,7 +232,7 @@ h2:hover > .heading-anchor, h3:hover > .heading-anchor, .heading-anchor:focus-vi
 .code-tabs .code-head { border-bottom-color: var(--code-border); }
 
 /* definition-style lists for CLI flags */
-.flag-list { margin: 0; padding: 0; display: grid; gap: 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+.flag-list { padding: 0; display: grid; gap: 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
 .flag-list > div { display: grid; grid-template-columns: minmax(180px, 34%) minmax(0, 1fr); gap: 4px 20px; padding: 10px 14px; border-top: 1px solid var(--border); font-size: var(--fs-sm); line-height: 1.55; }
 .flag-list > div:first-child { border-top: 0; }
 .flag-list dt { font-family: var(--font-mono); font-size: 12.5px; color: var(--text); overflow-wrap: anywhere; }
@@ -194,6 +268,18 @@ h2:hover > .heading-anchor, h3:hover > .heading-anchor, .heading-anchor:focus-vi
 .notfound li svg { width: 16px; height: 16px; }
 
 @media print {
-  .site-header, .doc-nav, .site-footer, .chart-toggle, .copy-btn, .heading-anchor { display: none !important; }
+  .site-header, .docs-tabs, .doc-nav, .pager, .site-footer, .chart-toggle, .copy-btn, .heading-anchor { display: none !important; }
   .doc-shell { display: block; }
+}
+
+/* ------------------------------------------------------------------ moving between reading pages
+   Same-origin navigations between pages that load this file cross-fade, and the current tab's underline slides from
+   the old tab to the new one. Browsers without cross-document view transitions simply load the page. */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+.docs-tabs { view-transition-name: docs-tabs; }
+::view-transition-group(docs-tab-mark) { animation-duration: var(--t-slow); animation-timing-function: var(--ease-out); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--t-med); }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
