@@ -375,7 +375,8 @@ fix for anything that is off (exit code 1 when a check fails): `/health`; the mo
 with the option letters among them; that a repeated prompt is served from the prompt cache and a second question about
 the same state reuses it (timings `prompt_n` and `cache_n`; the fix for Gemma is `--swa-full`); whether `/embedding`
 works (fitted probes need `--embeddings --pooling last`); one slot (`-np 1`); and the `--cache-ram 0` recommendation.
-It sends a few tiny prompts and changes nothing on the server. `--json` prints the checks.
+It sends a few tiny prompts and changes nothing on the server. `--json` prints the checks. With `--backend fake` there
+is no server behind it: one `info` check says there is nothing to diagnose, and the exit code is 0.
 
 `tez doctor --backend inproc:model.gguf --llama-lib DIR` checks an in-process model instead, loading it in the
 doctor's own process: the library and its build (b11100 is the tested one), that a GPU backend loaded and holds the

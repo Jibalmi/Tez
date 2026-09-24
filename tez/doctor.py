@@ -289,7 +289,11 @@ class Doctor:
 
 def run_doctor(url: str, template: str = "gemma4", n_probs: int = DEFAULT_N_PROBS, timeout: float = 60.0,
                session: requests.Session | None = None) -> list[Check]:
-    """Run every check against a llama-server; see the module docstring."""
+    """Run every check against a llama-server; see the module docstring. The fake backend ("fake", as tez serve
+    --backend fake takes it) has no server behind it: one info check says so, and nothing is sent anywhere."""
+    if url == "fake" or url.startswith("fake:"):
+        return [Check("backend", "info", "the fake backend is Tez's offline stand-in (keyword overlap, no model): there "
+                      "is no llama-server to diagnose", "give --backend the URL of a llama-server to check it")]
     return Doctor(url, template, n_probs, timeout, session).run()
 
 

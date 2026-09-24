@@ -160,6 +160,14 @@ def test_doctor_loading_and_unreachable():
     assert (only.name, only.status) == ("health", "fail") and "--swa-full --cache-ram 0" in only.fix
 
 
+def test_doctor_on_the_fake_backend_has_nothing_to_diagnose(capsys):
+    assert main(["doctor", "--backend", "fake"]) == 0
+    out = capsys.readouterr().out
+    assert "info  backend" in out and "no llama-server to diagnose" in out and "0 failed" in out
+    assert main(["doctor", "--backend", "fake", "--json"]) == 0
+    assert [r["status"] for r in json.loads(capsys.readouterr().out)] == ["info"]
+
+
 def test_doctor_cli(capsys):
     with StubLlama(template=QWEN_TEMPLATE) as srv:
         assert main(["doctor", "--backend", srv.url]) == 1                         # a failed check: exit 1
