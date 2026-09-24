@@ -1,6 +1,8 @@
 /**
  * Error types: the server's (docs/API.md, "Errors") and the client's own, for failures without a usable response.
  */
+import type { ResponseMeta } from "./meta.js";
+
 export type TezErrorType =
   | "unauthorized"
   /** A POST (or a CORS preflight) from a browser origin the server does not allow (403). */
@@ -19,7 +21,7 @@ export type TezErrorType =
   | "network_error"
   /** The server answered with a redirect, which the client never follows. */
   | "redirect"
-  /** A success status without a JSON object body. */
+  /** A success status without the JSON object body the endpoint defines. */
   | "invalid_response"
   /** An error status without the wire format's error body. */
   | "http_error"
@@ -30,20 +32,29 @@ export type TezErrorType =
  * signal's reason, an AbortError).
  *
  * `status` is the HTTP status, or 0 when no response arrived. `type` and `message` come from the error body
- * `{"error": {"type": ..., "message": ...}}` when there is one; `body` holds the parsed body.
+ * `{"error": {"type": ..., "message": ...}}` when there is one; `body` holds the parsed body. `meta` holds the
+ * response's status and headers (the request id, and the run id of a decision that reached the engine) when a
+ * response arrived.
  */
 export class TezError extends Error {
   readonly status: number;
   readonly type: TezErrorType;
   readonly body?: unknown;
+  readonly meta?: ResponseMeta;
   cause?: unknown;
 
-  constructor(status: number, type: TezErrorType, message: string, options: { cause?: unknown; body?: unknown } = {}) {
+  constructor(
+    status: number,
+    type: TezErrorType,
+    message: string,
+    options: { cause?: unknown; body?: unknown; meta?: ResponseMeta } = {},
+  ) {
     super(message);
     this.name = "TezError";
     this.status = status;
     this.type = type;
     if (options.body !== undefined) this.body = options.body;
+    if (options.meta !== undefined) this.meta = options.meta;
     if (options.cause !== undefined) this.cause = options.cause;
     Object.setPrototypeOf(this, new.target.prototype);
   }

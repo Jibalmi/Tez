@@ -9,6 +9,8 @@ export type {
 } from "./client.js";
 export { TezError } from "./errors.js";
 export type { TezErrorType } from "./errors.js";
+export { parseServerTiming } from "./meta.js";
+export type { HeadersLike, ResponseMeta, ServerTiming, WithMeta } from "./meta.js";
 export type {
   Answer,
   AnswerFor,

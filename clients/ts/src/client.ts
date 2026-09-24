@@ -1,5 +1,7 @@
 import { TezError } from "./errors.js";
 import type { TezErrorType } from "./errors.js";
+import { responseMeta, withMeta } from "./meta.js";
+import type { HeadersLike, ResponseMeta, WithMeta } from "./meta.js";
 import type {
   AnswersFor,
   DecideRequest,
@@ -27,7 +29,7 @@ export interface FetchResponseLike {
   readonly status: number;
   readonly statusText: string;
   readonly type?: string;
-  readonly headers: { get(name: string): string | null };
+  readonly headers: HeadersLike;
   text(): Promise<string>;
 }
 
@@ -123,9 +125,11 @@ function decideBody(state: State, options: DecideOptions<Questions>): DecideRequ
  *       questions: { topic: { type: "choice", instructions: "What is it about?", criteria: { billing: null, technical: null } } },
  *     });
  *     res.answers.topic.choice;                          // "billing" | "technical" | "__none__"
+ *     res.meta.runId;                                    // the X-Tez-Run-Id header
  *
- * Every method returns the response body exactly as the wire format defines it. Tez's extensions (`schema` and the
- * `tez` options) are sent only when set, so a Jev-only server sees a plain request. Redirects are never followed.
+ * Every method resolves to the response body exactly as the wire format defines it, with the response's status and
+ * headers in a non-enumerable `meta` property. Tez's extensions (`schema` and the `tez` options) are sent only when
+ * set, so a Jev-only server sees a plain request. Redirects are never followed.
  */
 export class TezClient {
   readonly baseUrl: string;
@@ -156,41 +160,49 @@ export class TezClient {
   decide<Q extends Questions = Questions>(
     state: State,
     options: DecideOptions<Q> = {},
-  ): Promise<DecideResponse<AnswersFor<Q>>> {
+  ): Promise<WithMeta<DecideResponse<AnswersFor<Q>>>> {
     return this.request("POST", "/v1/systemone", decideBody(state, options), options.signal);
   }
 
   /** POST a raw wire-format body to /v1/systemone. */
-  systemone(body: DecideRequest, options: RequestOptions = {}): Promise<DecideResponse> {
+  systemone(body: DecideRequest, options: RequestOptions = {}): Promise<WithMeta<DecideResponse>> {
     return this.request("POST", "/v1/systemone", body, options.signal);
   }
 
   /** The schemas the server loaded (GET /v1/schemas). */
-  schemas(options: RequestOptions = {}): Promise<SchemasResponse> {
+  schemas(options: RequestOptions = {}): Promise<WithMeta<SchemasResponse>> {
     return this.request("GET", "/v1/schemas", undefined, options.signal);
   }
 
   /** One schema: questions, probe status, calibration (GET /v1/schemas/{name}). */
-  schema(name: string, options: RequestOptions = {}): Promise<SchemaDetail> {
+  schema(name: string, options: RequestOptions = {}): Promise<WithMeta<SchemaDetail>> {
     return this.request("GET", `/v1/schemas/${encodeURIComponent(name)}`, undefined, options.signal);
   }
 
-  /** Record the correct label for a past decision (POST /v1/feedback); `tez fit` learns from these rows. */
-  feedback(body: FeedbackRequest, options: RequestOptions = {}): Promise<FeedbackResponse> {
+  /**
+   * Record the correct label for a past decision (POST /v1/feedback); `tez fit` learns from these rows. Pass the
+   * decision's `meta.runId` as `run_id` to link the row to it.
+   */
+  feedback(body: FeedbackRequest, options: RequestOptions = {}): Promise<WithMeta<FeedbackResponse>> {
     return this.request("POST", "/v1/feedback", body, options.signal);
   }
 
   /** Liveness, backend and readout status (GET /healthz; never needs the API key). */
-  health(options: RequestOptions = {}): Promise<HealthResponse> {
+  health(options: RequestOptions = {}): Promise<WithMeta<HealthResponse>> {
     return this.request("GET", "/healthz", undefined, options.signal);
   }
 
   /** Model aliases (GET /v1/models). */
-  models(options: RequestOptions = {}): Promise<ModelsResponse> {
+  models(options: RequestOptions = {}): Promise<WithMeta<ModelsResponse>> {
     return this.request("GET", "/v1/models", undefined, options.signal);
   }
 
-  private async request<T>(method: "GET" | "POST", path: string, body: unknown, signal?: AbortSignal): Promise<T> {
+  private async request<T extends object>(
+    method: "GET" | "POST",
+    path: string,
+    body: unknown,
+    signal?: AbortSignal,
+  ): Promise<WithMeta<T>> {
     const fetchImpl = this.fetchImpl ?? (globalThis as { fetch?: FetchLike }).fetch;
     if (typeof fetchImpl !== "function") {
       throw new TypeError("no fetch implementation available: pass options.fetch");
@@ -228,6 +240,7 @@ export class TezClient {
       } catch (err) {
         throw fail(err);
       }
+      const meta = responseMeta(response.status, response.headers);
       if (response.type === "opaqueredirect" || (response.status >= 300 && response.status < 400)) {
         const location = response.headers.get("location");
         throw new TezError(
@@ -235,6 +248,7 @@ export class TezClient {
           "redirect",
           `${url} answered with a redirect${location ? ` to ${location}` : ""}; the client does not follow ` +
             "redirects, so set baseUrl to the server itself",
+          { meta },
         );
       }
       let data: unknown;
@@ -243,11 +257,11 @@ export class TezClient {
       } catch {
         data = undefined;
       }
-      if (response.status >= 400) throw errorFromResponse(response, data, text);
+      if (response.status >= 400) throw errorFromResponse(response, data, text, meta);
       if (!isObject(data)) {
-        throw new TezError(response.status, "invalid_response", `${url} did not answer with a JSON object`);
+        throw new TezError(response.status, "invalid_response", `${url} did not answer with a JSON object`, { meta });
       }
-      return data as T;
+      return withMeta(data as T, meta);
     } finally {
       clearTimeout(timer);
       signal?.removeEventListener("abort", onAbort);
@@ -255,7 +269,7 @@ export class TezClient {
   }
 }
 
-function errorFromResponse(response: FetchResponseLike, data: unknown, text: string): TezError {
+function errorFromResponse(response: FetchResponseLike, data: unknown, text: string, meta: ResponseMeta): TezError {
   let type: string | undefined;
   let message: string | undefined;
   if (isObject(data)) {
@@ -272,5 +286,6 @@ function errorFromResponse(response: FetchResponseLike, data: unknown, text: str
   message = message || text.trim().slice(0, 300) || response.statusText || `HTTP ${response.status}`;
   return new TezError(response.status, type ?? STATUS_TYPES[response.status] ?? "http_error", message, {
     body: data ?? (text || undefined),
+    meta,
   });
 }
