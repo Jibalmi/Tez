@@ -46,7 +46,10 @@ Every number here was measured on one machine (RTX 5080 Laptop 16 GB, llama.cpp 
 | km | **0.790** | 0.000 | 0.210 | 0.050 |
 | **macro** | **0.885** | 0.354 | 0.524 | 0.345 |
 | languages > 3× random | **11/11** | 6/11 | 11/11 | 6/11 |
-| macro ECE (shipped) | **0.099** | 0.487 | 0.299 | 0.338 |
+| macro ECE as shipped (Tez at T = 1) | **0.099** | 0.487 | 0.299 | 0.338 |
+| macro ECE, Tez's default temperature fitted without the task (§5c) | 0.146 | — | — | — |
+
+On these eleven languages the default temperature (fitted without MASSIVE: 3.28 for 11–26 options) raises Tez's macro ECE from 0.099 to 0.146, still below every Laya checkpoint; over all 51 languages it lowers MASSIVE's from 0.153 to 0.104 (`results/calibration/default_temperature.json`, `anchor_28` and `loto.per_task`).
 
 ### XNLI (100 per language) — the one family where Laya's trained encoder is ahead
 
