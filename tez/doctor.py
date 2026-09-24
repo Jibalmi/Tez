@@ -373,7 +373,7 @@ def run_inproc_doctor(spec: str, template: str = "gemma4", options: Mapping[str,
         return checks
     mass = float(sum(math.exp(x) for x in one.logits))
     if mass >= 0.5:
-        add("letters", "ok", f"the option letters hold {mass:.0%} of the next-token probability (exact log-probabilities, "
+        add("letters", "ok", f"the option letters hold {mass:.0%} of the next-token probability (log-probabilities over the whole vocabulary, "
             f"{one.tokens} prompt tokens)")
     else:
         add("letters", "warn", f"the option letters hold only {mass:.0%} of the next-token probability",

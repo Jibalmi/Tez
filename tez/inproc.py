@@ -9,8 +9,8 @@ on PATH. Only numpy and ctypes are needed.
 
 What the backend reads
   letters    the logits of the bare option-letter tokens ("A", "B", ...) at the answer position, as log-probabilities
-             over the whole vocabulary: exact, nothing floored (llama-server lists only the top n_probs; --n-probs
-             does not apply here)
+             over the whole vocabulary: nothing floored (llama-server lists only the top n_probs; --n-probs does not
+             apply here), the normaliser summing every token within 25 nats of the top one (to within 4e-6 nats)
   embed      the last token's hidden state after the output norm: what llama-server --embeddings --pooling last
              returns, so probes fitted over HTTP read the same features (and the other way round)
   read_many  many prompts that share a prefix (the questions about one state, state first): the common token prefix is
@@ -44,7 +44,6 @@ import shutil
 import sys
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
@@ -480,10 +479,17 @@ def _common_prefix(a: Sequence[int], b: Sequence[int]) -> int:
     return i
 
 
+LSE_WINDOW = 25.0        # nats below the top logit beyond which tokens are left out of the normaliser
+
+
 def _log_normaliser(row: np.ndarray) -> float:
-    """log sum exp over the vocabulary, so that letter logits become log-probabilities."""
+    """log sum exp over the vocabulary, so that letter logits become log-probabilities. Only the tokens within
+    LSE_WINDOW nats of the top one are summed: together the others move the result by less than n_vocab * e^-25 (4e-6
+    nats for Gemma's 262,144 tokens; measured on Gemma 4 12B rows, within 1e-7 of the full sum), while reading a whole row
+    of llama.cpp's output buffer costs milliseconds (for 50 rows: 180-560 ms against 9-43 ms)."""
     m = float(row.max())
-    return m + float(np.log(np.exp(row - m).sum(dtype=np.float64)))
+    near = row[row > m - LSE_WINDOW]
+    return m + float(np.log(np.exp(near.astype(np.float64) - m).sum()))
 
 
 # ---------------------------------------------------------------------------------------------- the backend
@@ -539,7 +545,6 @@ class InprocBackend(Backend):
         self._cached: list[int] = []            # the tokens sequence 0 holds
         self._no_rollback = False
         self._lock = threading.RLock()
-        self._pool: ThreadPoolExecutor | None = None
         self.loads = 0                          # how many times a model was loaded (tests check laziness)
 
     def __repr__(self) -> str:
@@ -564,9 +569,6 @@ class InprocBackend(Backend):
                 self._m.close()
                 self._m = None
             self._cached = []
-            if self._pool is not None:
-                self._pool.shutdown(wait=False)
-                self._pool = None
 
     def _ensure(self) -> LlamaModel:
         if self._m is not None:
@@ -789,18 +791,10 @@ class InprocBackend(Backend):
         return pos_out
 
     def _letters_of(self, rows: list[np.ndarray], k: int | list[int]) -> list[np.ndarray]:
-        """Letter log-probabilities from output rows (views into llama.cpp's logits buffer, read before the next decode).
-        The log normalisers of many rows are computed on a few threads (numpy releases the GIL)."""
-        if len(rows) >= 4:
-            if self._pool is None:
-                self._pool = ThreadPoolExecutor(max_workers=min(8, max(2, (os.cpu_count() or 2) // 2)),
-                                                thread_name_prefix="tez-inproc")
-            norms = list(self._pool.map(_log_normaliser, rows))
-        else:
-            norms = [_log_normaliser(r) for r in rows]
+        """Letter log-probabilities from output rows (views into llama.cpp's logits buffer, read before the next decode)."""
         ks = k if isinstance(k, list) else [k] * len(rows)
         ids = self._letter_ids
-        return [r[ids[:kk]].astype(np.float64) - lse for r, kk, lse in zip(rows, ks, norms)]
+        return [r[ids[:kk]].astype(np.float64) - _log_normaliser(r) for r, kk in zip(rows, ks)]
 
     def _read_one(self, toks: list[int], k: int, want_embed: bool) -> tuple[np.ndarray | None, np.ndarray | None, int]:
         """One prompt on sequence 0, reusing what it shares with the previous one. (letters, state, tokens evaluated)."""
