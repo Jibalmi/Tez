@@ -121,7 +121,7 @@ checkpoints and Tez on byte-identical rows, same GPU, Laya's own datasets and pr
 | SST-5 / BoolQ / prompt-injections | **0.512 / 0.850 / 0.759** | 0.362 / 0.843 / 0.672 | 0.280 / 0.782 / 0.569 | 0.460 / 0.835 / 0.647 | — |
 | AG News / XNLI-en (in Laya's training mix) | 0.880 / 0.730 | **0.932** / 0.900 | 0.948 / 0.860 | 0.932 / **0.920** | 0.910 / — |
 | order flip at 20 options | **0.07** | 0.18 | 0.20 | 0.15 | 0.13 |
-| ECE as shipped → per-task refit (mean) | 0.212 → 0.078 | 0.323 → 0.071 | 0.253 → 0.103 | 0.226 → 0.068 | 0.246 |
+| ECE as shipped → per-task refit (mean; Tez as shipped = its default temperature, fitted without the task) | 0.140 → 0.078 (0.212 at T = 1) | 0.323 → 0.071 | 0.253 → 0.103 | 0.226 → 0.068 | 0.246 |
 | ms per decision (p50, this GPU) | 57–250 | 25–50 | 23–35 | 36–52 | 236–276 |
 
 Laya's published numbers reproduce in our harness (its base 0.362, fine-tuned 0.766, Khmer 0.000),
@@ -191,7 +191,7 @@ What worked:
 - **Label the typical rows first, and keep the zero-shot prior.** 50 typical labels per question on top of the 12B's
   zero-shot answers reach 0.766, the level of Laya's checkpoint fine-tuned on the whole train split.
 - **Calibrated as it comes.** A logistic probe is fitted with a proper scoring rule: ECE 0.023 as read, against 0.262
-  for the 12B's raw letters and 0.246 published for Jev.
+  for the 12B's raw letters at T = 1 (0.051 at the default temperature Tez now applies) and 0.246 published for Jev.
 - **A guaranteed error rate.** Conformal selection acts on 40 % of decisions with at most 5 % wrong (realised 5.2 %).
 - **Cold start works when the prior is strong.** Starting from the 12B zero-shot, escalating the unsure 5 % and
   learning from them automates 95 % at 0.707; with a 10 % random audit slice it automates 77 % at 0.777.
