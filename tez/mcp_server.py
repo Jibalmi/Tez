@@ -12,8 +12,8 @@
   TEZ_DATA_DIR   where tez_feedback writes (default <schemas>/.tez)
 
 Tools: tez_decide, tez_schemas, tez_schema, tez_feedback, tez_status. In process, requests get tez serve's limits
-(64 questions, 50,000-character states). The MCP SDK is imported only when the server is built, so the tool functions
-(TezTools) work and are tested without it.
+(64 questions, 50,000-character states). The MCP SDK (1.x's FastMCP or 2.x's MCPServer) is imported only when the
+server is built, so the tool functions (TezTools) work and are tested without it.
 """
 # No `from __future__ import annotations` here: FastMCP builds each tool's input schema from its annotations at run time,
 # and the tool functions are defined inside build_server with names that only exist there.
@@ -107,12 +107,24 @@ class TezTools:
                 "schemas": [s["name"] for s in self.engine.schema_summaries().get("schemas", [])]}
 
 
-def build_server(tools: TezTools) -> Any:
-    """The FastMCP server around the tools (imports the MCP SDK)."""
+def _server_class() -> Any:
+    """The MCP SDK's high-level server: FastMCP in mcp 1.x, MCPServer in mcp 2.x (the same constructor, add_tool and
+    run("stdio") for what Tez uses)."""
     try:
         from mcp.server.fastmcp import FastMCP
+        return FastMCP
+    except ImportError:
+        pass
+    try:
+        from mcp.server.mcpserver import MCPServer
+        return MCPServer
     except ImportError as exc:
         raise ImportError('the Tez MCP server needs the MCP SDK: pip install "tez-decisions[mcp]"') from exc
+
+
+def build_server(tools: TezTools) -> Any:
+    """The MCP server around the tools (imports the MCP SDK, 1.x or 2.x)."""
+    FastMCP = _server_class()               # noqa: N806 - a class chosen at run time
     from typing import Annotated, Literal, Optional, Union
 
     from pydantic import Field

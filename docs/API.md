@@ -25,7 +25,7 @@ that is not allowed (`403 forbidden`), so a web page elsewhere cannot write trai
 | `POST` | `/v1/plan` | Tez: what a `/v1/systemone` request would do, without calling the model |
 | `GET` | `/v1/models` | List model aliases (Jev-compatible) |
 | `GET` | `/healthz` | Liveness, backend and readout status |
-| `GET` | `/v1/schemas` | Tez: schemas loaded from `--schemas` |
+| `GET` | `/v1/schemas` | Tez: schemas loaded from `--schemas` (and `--presets`) |
 | `GET` | `/v1/schemas/{name}` | Tez: one schema (questions, probe status, calibration) |
 | `POST` | `/v1/feedback` | Tez: record a correct label for a past decision (feeds `tez fit`) |
 
@@ -173,10 +173,11 @@ Every response (errors and CORS preflights included) carries:
 - `x-typesafe-request-id`: 32 hex characters. For a decision it is the run id that hooks see (`ctx.run_id`), that a
   `DecisionLog` row records and that `POST /v1/feedback` accepts as `run_id`; for other routes a fresh id.
 - `server-timing`: `total;dur=<ms>` for every response; decisions add `tez;dur=<ms>` (the engine) and
-  `backend;dur=<ms>` (time spent in model calls), e.g. `tez;dur=212.4, backend;dur=205.1, total;dur=214.0`.
+  `backend;dur=<ms>` (time spent in model calls), in the form `tez;dur=<ms>, backend;dur=<ms>, total;dur=<ms>`.
 
-Decisions (`/v1/systemone`, successful or not) also carry `X-Tez-Run-Id` (the same id) and, when they got that far,
-`X-Tez-Layout` (`question_first`, `state_first` or `mixed`). Browsers can read all four (CORS `Expose-Headers`).
+Decisions (`/v1/systemone` and `/v1/systemone/batch`, successful or not) also carry `X-Tez-Run-Id` (the same id) and,
+for a single decision that got that far, `X-Tez-Layout` (`question_first`, `state_first` or `mixed`). Browsers can read
+all four (CORS `Expose-Headers`).
 
 ### Errors
 
@@ -205,9 +206,11 @@ keyed by the field's dotted path).
 ```
 
 ```json
-"tez": {"latency_ms": 480.2, "questions": {...},
+"tez": {"latency_ms": "...", "questions": {...},
         "values": {"department": "billing", "urgent": true, "priority": 3, "customer": {"tier": 1}, "refund": null}}
 ```
+
+(The shape of the values; which values come back depends on the model.)
 
 | JSON schema | Question | Value |
 |---|---|---|
@@ -246,8 +249,8 @@ Many states against the same questions. The body is a `/v1/systemone` request wi
 {"model": "tez-0.1.0 (gemma-4-12b-q8_0, letters)",
  "results": [{"model": "...", "answers": {...}, "usage": {...}, "tez": {...}},
              {"error": {"type": "invalid_request", "message": "state must be a string, object or array"}}],
- "usage": {"input_tokens": 1180, "output_tokens": 0},
- "tez": {"latency_ms": 402.7, "run_id": "5f0c..."}}
+ "usage": {"input_tokens": "<sum over the decided states>", "output_tokens": 0},
+ "tez": {"latency_ms": "<ms for the whole batch>", "run_id": "<32 hex characters>"}}
 ```
 
 - `results` has one entry per state, in input order: the state's `/v1/systemone` response, or `{"error": {"type",
@@ -272,17 +275,28 @@ readout it would use, its fit (`ready`, `stale` or `none`, with the reason, the 
 number of options, the backend calls, the layout, the prompt hash (`prompt_sha`, what `tez fit` records) and a token
 estimate (characters / 4), with the prefix the prompt cache would keep from the question read just before it.
 
+For the schema file below (`support-triage`, with its one worked example) and the state of the first example:
+
 ```json
 {"backend": "http://127.0.0.1:8091", "template": "gemma4", "model": null, "schema": "support-triage",
  "readout": "auto", "requested_layout": "auto", "layout": "state_first", "state_tokens": 12,
  "order": ["topic", "is_urgent", "anger"],
  "questions": {"topic": {"type": "choice", "options": 4, "layout": "state_first", "readout": "letters",
                          "fit": {"status": "none", "reason": "not fitted (tez fit --schema support-triage)"},
-                         "calls": {"letters": 1, "embed": 0}, "prompt_sha": "9f2c41d0a7b3e815",
-                         "prompt_tokens": 118, "cached_tokens": 0}, "...": {}},
- "totals": {"calls": {"letters": 3, "embed": 0}, "prompt_tokens": 322, "cached_tokens": 112, "evaluated_tokens": 210},
- "notes": ["state first: questions after the first reuse the cached state (...)"]}
+                         "calls": {"letters": 1, "embed": 0}, "prompt_sha": "8e1d7d48b9da936b",
+                         "prompt_tokens": 210, "cached_tokens": 0},
+               "is_urgent": {"type": "noul", "options": 2, "layout": "state_first", "readout": "letters",
+                             "fit": {"status": "none", "reason": "not fitted (tez fit --schema support-triage)"},
+                             "calls": {"letters": 1, "embed": 0}, "prompt_sha": "063d9da00ff17974",
+                             "prompt_tokens": 165, "cached_tokens": 69},
+               "anger": {"...": "..."}},
+ "totals": {"calls": {"letters": 3, "embed": 0}, "prompt_tokens": 528, "cached_tokens": 138, "evaluated_tokens": 390},
+ "notes": ["state first: questions after the first reuse the cached state (3 questions, back to back; needs llama.cpp prompt caching on one slot, --swa-full for Gemma)",
+           "model names not checked (the plan does not call the backend): a fit made on another model would not be used"]}
 ```
+
+Worked examples come before the input, so here the questions share only the instructions; without examples each
+question after the first reuses the whole state.
 
 A question that would fail (`tez.readout: "probe"` without a usable probe) has `"readout": null` and an `error`
 instead of failing the plan. Model names are compared only when the server already knows them (`model` is null
@@ -386,7 +400,8 @@ MCP client's configuration:
 | `--max-state-chars` | 50,000 | characters per state (an object or array counts as its JSON) |
 | `--max-batch` | 64 | states per `/v1/systemone/batch` request |
 
-`0` switches a limit off. The Python API applies none unless it is given `limits=tez.engine.Limits(...)`.
+`0` switches a limit off. The Python API applies none unless it is given `limits=tez.config.Limits(...)`
+(`handle`, `execute`, `handle_batch`, `plan`); the MCP server applies these defaults.
 
 ## Schema files (`schemas/*.yaml`)
 
@@ -464,7 +479,7 @@ prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically w
 question to train a probe; with fewer it calibrates the letters only and says so.
 
 The CLI reads its settings from the environment too (a flag wins): `TEZ_BACKEND`, `TEZ_TEMPLATE` and
-`TEZ_EMBED_BACKEND` for every command; for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
+`TEZ_EMBED_BACKEND` for the commands that talk to a model (`TEZ_DATA_DIR` for `tez fit` too); for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
 `TEZ_API_KEY`, `TEZ_LOG_LEVEL`, `TEZ_CORS_ORIGINS`, `TEZ_PRESETS` (`1` = `--presets`) and `TEZ_LAYOUT`. Each can be read
 from a file instead, for Docker and Compose secrets: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key` (surrounding
 whitespace stripped; setting both `X` and `X_FILE` is an error).

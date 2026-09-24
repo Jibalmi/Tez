@@ -88,24 +88,53 @@ def test_missing_sdk_names_the_extra(monkeypatch, tools):
 
 
 # ---------------------------------------------------------------------------------------------- with the MCP SDK
-def test_fastmcp_wiring(tools):
-    pytest.importorskip("mcp.server.fastmcp")
+def field(obj, snake: str, camel: str):
+    """mcp 2.x names model fields in snake_case (is_error, input_schema), 1.x in camelCase."""
+    return getattr(obj, snake) if hasattr(obj, snake) else getattr(obj, camel)
+
+
+def content_of(result):
+    """call_tool's result: a list of content blocks, a (content, structured) tuple (1.x) or a CallToolResult (2.x)."""
+    if isinstance(result, tuple):
+        result = result[0]
+    return result if isinstance(result, list) else result.content
+
+
+def sdk_available() -> bool:
+    try:
+        from tez.mcp_server import _server_class
+        _server_class()
+    except ImportError:
+        return False
+    return True
+
+
+def test_mcp_server_wiring(tools):
+    if not sdk_available():
+        pytest.skip("the MCP SDK is not installed")
     server = build_server(tools)
     listed = asyncio.run(server.list_tools())
     assert [t.name for t in listed] == ["tez_decide", "tez_schemas", "tez_schema", "tez_feedback", "tez_status"]
     decide = listed[0]
     assert ESCALATE in decide.description
-    assert set(decide.inputSchema["properties"]) == {"state", "questions", "schema", "readout", "abstain", "alpha"}
-    assert decide.inputSchema["required"] == ["state"]
+    schema = field(decide, "input_schema", "inputSchema")
+    assert set(schema["properties"]) == {"state", "questions", "schema", "readout", "abstain", "alpha"}
+    assert schema["required"] == ["state"]
     out = asyncio.run(server.call_tool("tez_decide", {"state": "Something is broken again", "schema": "support-triage"}))
-    content = out[0] if isinstance(out, tuple) else out
-    assert json.loads(content[0].text)["answers"]["topic"]["choice"] == "technical"
-    with pytest.raises(Exception, match="invalid_request: unknown schema 'nope'"):
-        asyncio.run(server.call_tool("tez_decide", {"state": "x", "schema": "nope"}))
+    assert json.loads(content_of(out)[0].text)["answers"]["topic"]["choice"] == "technical"
+    try:
+        failed = asyncio.run(server.call_tool("tez_decide", {"state": "x", "schema": "nope"}))
+    except Exception as exc:                        # the SDK raises the tool's error ...
+        message = f"{exc} {exc.__cause__}"
+    else:                                           # ... or returns it as an error result
+        assert field(failed, "is_error", "isError")
+        message = content_of(failed)[0].text
+    assert "invalid_request: unknown schema 'nope'" in message
 
 
 def test_stdio_transport(schema_dir):
-    pytest.importorskip("mcp")
+    if not sdk_available():
+        pytest.skip("the MCP SDK is not installed")
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
 
@@ -124,8 +153,8 @@ def test_stdio_transport(schema_dir):
                 return names, result, status
 
     names, result, status = asyncio.run(asyncio.wait_for(session_run(), timeout=60))
-    assert "tez_decide" in names and not result.isError
-    body = json.loads(result.content[0].text)
+    assert "tez_decide" in names and not field(result, "is_error", "isError")
+    body = json.loads(content_of(result)[0].text)
     assert body["answers"]["topic"]["choice"] == "billing"
     assert body["tez"]["questions"]["topic"]["decision"] == "escalate"
-    assert json.loads(status.content[0].text)["mode"] == "in-process"
+    assert json.loads(content_of(status)[0].text)["mode"] == "in-process"
