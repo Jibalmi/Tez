@@ -111,7 +111,11 @@ yours should too.
   object and array states are redacted, keys kept. Decisions are then made on the redacted text.
 - **`Cache(maxsize=1024)`** answers a repeated decision from memory (least recently used). The key covers the state,
   every question's definition, the schema and its calibration id, readout, abstain, the gate's alpha, the requested
-  layout, the model alias and the backend, so a new fit or another model never serves an old answer. A cached
+  layout, the model alias, and the engine's settings: the backend's URL, template, model name and `n_probs`, the
+  embedding backend's URL, template and model name, and the default temperature. So a new fit, another engine setting
+  or another model name never serves an old answer, even from one `Cache` shared by several engines. The model name is
+  the one the engine read from the backend, once: a model swapped behind the same URL while the engine runs keeps the
+  old name (the engine's fits do not notice it either), so call `clear()` after such a swap, or restart. A cached
   response has `tez.cached: true` and zero usage. `stats()`, `clear()`.
 - **`Metrics(window=10000)`** counts decisions, errors by type, cached decisions, questions by readout, layout and gate
   decision, input tokens and feedback rows, with latency percentiles over the last `window` decisions:

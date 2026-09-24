@@ -1,6 +1,6 @@
-"""A stub llama-server for `tez doctor` tests: /health, /props, /completion (with llama.cpp-style timings from a simulated
-one-slot prompt cache), /embedding and /slots, on 127.0.0.1 with an ephemeral port. No model: letters get fixed
-log-probabilities."""
+"""A stub llama-server for `tez doctor` tests: /health, /props, /v1/models, /completion (with llama.cpp-style timings
+from a simulated one-slot prompt cache), /embedding and /slots, on 127.0.0.1 with an ephemeral port. No model: letters
+get fixed log-probabilities."""
 from __future__ import annotations
 
 import json
@@ -81,6 +81,9 @@ class StubLlama:
                 elif self.path == "/props":
                     self.reply(200, {"model_path": stub.model_path, "chat_template": stub.template, "build_info": "b11100",
                                      "total_slots": stub.slots, "default_generation_settings": {"n_ctx": stub.n_ctx}})
+                elif self.path == "/v1/models":
+                    self.reply(200, {"object": "list", "data": [{"id": stub.model_path, "object": "model",
+                                                                 "meta": {"n_ctx_train": stub.n_ctx}}]})
                 elif self.path == "/slots":
                     self.reply(200, [{"id": i} for i in range(stub.slots)])
                 elif self.path == "/v1/models":

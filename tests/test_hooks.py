@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from conftest import DOCS_REQUEST, SYNTH_SCHEMA_YAML, synth_rows, write_jsonl
+from stub_llama import StubLlama
 from tez import (BaseHook, Cache, DecisionContext, DecisionLog, FakeBackend, InvalidRequest, Metrics, OTelHook, Redact,
                  Tez, default_hooks, set_default_hooks)
 from tez.cli import build_parser, main
@@ -305,6 +306,35 @@ def test_cache_is_invalidated_by_a_new_fit(tmp_path: Path):
         say=lambda m: None)
     res = tez.decide("invoice refund", schema="synth")
     assert "cached" not in res["tez"] and res["tez"]["questions"]["topic"]["readout"] == "probe"
+
+
+def test_a_shared_cache_keys_on_the_engine_settings_and_the_model_name():
+    cache = Cache()
+    set_default_hooks([cache])                                   # process-wide: every engine below shares it
+    gemma = "gemma-4-12b-q8_0"
+    q = {"urgent": {"type": "noul", "instructions": "Is this urgent?"}}
+
+    def run(tez):
+        return tez.decide("Server down, customers blocked!", questions=q)
+
+    run(Tez(backend="fake", model_name=gemma, default_temperature="off"))
+    assert run(Tez(backend="fake", model_name=gemma, default_temperature="off"))["tez"]["cached"] is True
+    tempered = run(Tez(backend="fake", model_name=gemma))       # default temperature auto: 6.01 for this model
+    assert "cached" not in tempered["tez"] and tempered["tez"]["questions"]["urgent"]["temperature"] == 6.01
+    for other in (Tez(backend="fake", model_name="another-model", default_temperature="off"),
+                  Tez(backend="fake", model_name=gemma, default_temperature="off", embed_backend="fake",
+                      embed_template="qwen3")):
+        assert "cached" not in run(other)["tez"]
+    with StubLlama() as stub:
+        wide = Tez(backend=stub.url, n_probs=200)
+        first = run(wide)
+        narrow = run(Tez(backend=stub.url, n_probs=1))            # letters past the first get the floor
+        assert "cached" not in narrow["tez"] and narrow["answers"] != first["answers"]
+        stub.model_path = "/models/another-model-Q8_0.gguf"       # the model is swapped behind the same URL
+        assert "cached" not in run(Tez(backend=stub.url, n_probs=200))["tez"]    # an engine reading the new name misses
+        assert run(wide)["tez"]["cached"] is True                 # one that read the old name keeps it (documented) ...
+        cache.clear()
+        assert "cached" not in run(wide)["tez"]                   # ... so a swap needs Cache.clear()
 
 
 # ---------------------------------------------------------------------------------------------- Metrics

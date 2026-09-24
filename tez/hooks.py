@@ -356,11 +356,21 @@ class Redact(BaseHook):
 
 
 # ---------------------------------------------------------------------------------------------- Cache
+def _model_name(backend: Any) -> str | None:
+    read = getattr(backend, "model_name", None)
+    return read() if callable(read) else None
+
+
 class Cache(BaseHook):
     """Answer a decision seen before from memory (least recently used, at most `maxsize` entries). The key is the
     state, every question's definition, the schema and its calibration id, readout, abstain, the gate's alpha, the
-    requested layout and the backend, so a new fit or another model never serves an old answer. A cached response
-    carries tez.cached = true and zero usage."""
+    requested layout, the model alias, and the engine's settings: the backend's URL, template, model name and n_probs,
+    the embedding backend's URL, template and model name, and the default temperature. So a new fit, another engine
+    setting or a model name that differs never serves an old answer, even with one Cache shared by several engines.
+
+    The model name is the one the engine read from the backend, and an engine reads it once. A model swapped behind the
+    same URL while the engine runs keeps the old name (the engine itself does not notice either, see its fits' model
+    check): call clear() after such a swap, or restart."""
 
     def __init__(self, maxsize: int = 1024):
         if isinstance(maxsize, bool) or not isinstance(maxsize, int) or maxsize < 1:
@@ -382,10 +392,15 @@ class Cache(BaseHook):
         if engine is not None and schema is not None and schema.name in getattr(engine, "fitted", {}):
             cal = engine.fitted[schema.name].calibration_id
         backend = getattr(engine, "backend", None)
+        embedder = getattr(engine, "embedder", None)
         parts = [state_key(ctx.state), [[qid, q.signature()] for qid, q in (ctx.questions or {}).items()],
                  schema.name if schema is not None else None, cal, ctx.readout, ctx.abstain, ctx.alpha,
                  ctx.requested_layout, ctx.model, getattr(backend, "url", None), getattr(backend, "template", None),
-                 getattr(ctx.request, "get", lambda k: None)("json_schema")]
+                 getattr(ctx.request, "get", lambda k: None)("json_schema"),
+                 _model_name(backend), getattr(backend, "n_probs", None),
+                 getattr(embedder, "url", None), getattr(embedder, "template", None),
+                 _model_name(embedder) if embedder is not backend else None,
+                 getattr(engine, "default_temperature", None)]
         return hashlib.sha256(json.dumps(parts, ensure_ascii=False, default=str).encode("utf-8")).hexdigest()
 
     def on_decide_start(self, ctx: DecisionContext) -> None:
