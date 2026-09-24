@@ -148,7 +148,9 @@ class Doctor:
         p = self.props
         gen = p.get("default_generation_settings") or {}
         n_ctx = gen.get("n_ctx") or p.get("n_ctx")
-        name = derive_model_name(p.get("model_path"), p.get("model_alias"), p.get("model_ftype"), None, self.template)
+        meta = self.models_meta()
+        name = derive_model_name(p.get("model_path"), p.get("model_alias"), p.get("model_ftype") or meta.get("ftype"),
+                                 meta.get("n_params"), self.template)
         slots = p.get("total_slots")
         detail = f"{name}" + (f", build {p['build_info']}" if p.get("build_info") else "") + \
                  (f", context {n_ctx}" if n_ctx else "") + (f", {slots} slot(s)" if slots else "")
@@ -167,6 +169,16 @@ class Doctor:
                      f"tez serve --template {family}")
         else:
             self.add("template", "ok", f"chat template matches --template {self.template}")
+
+    def models_meta(self) -> dict:
+        """/v1/models' metadata of the served model (n_params, ftype, ...), as LlamaCppBackend.info() reads it: a model
+        file with a hash name (an Ollama blob) is named from it (gemma-4-12b-q8_0, as the engine names it)."""
+        try:
+            r = self.get("/v1/models")
+            data = (r.json() or {}).get("data") or [] if r.status_code == 200 else []
+            return (data[0].get("meta") or {}) if data and isinstance(data[0], dict) else {}
+        except (requests.RequestException, ValueError, AttributeError):
+            return {}
 
     def check_n_probs(self) -> bool:
         prompt = build_prompt(Q1, STATE, self.template, layout="state_first")

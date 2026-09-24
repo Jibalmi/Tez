@@ -141,6 +141,14 @@ def test_doctor_finds_problems_and_names_the_fix(kwargs, template, name, status,
         assert fix in checks[name].fix
 
 
+def test_doctor_names_a_hash_named_model_like_the_engine():
+    blob = "C:/Users/me/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795"
+    with StubLlama(model_path=blob) as srv:
+        checks = by_name(run_doctor(srv.url, template="gemma4"))
+        assert checks["model"].detail.startswith("gemma-4-12b-q8_0,")
+        assert LlamaCppBackend(srv.url).model_name() == "gemma-4-12b-q8_0"
+
+
 def test_doctor_loading_and_unreachable():
     with StubLlama(health=503) as srv:
         checks = run_doctor(srv.url)

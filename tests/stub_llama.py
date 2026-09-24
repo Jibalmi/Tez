@@ -83,6 +83,9 @@ class StubLlama:
                                      "total_slots": stub.slots, "default_generation_settings": {"n_ctx": stub.n_ctx}})
                 elif self.path == "/slots":
                     self.reply(200, [{"id": i} for i in range(stub.slots)])
+                elif self.path == "/v1/models":
+                    self.reply(200, {"object": "list", "data": [{"id": stub.model_path, "meta": {
+                        "n_params": 11_907_350_576, "n_embd": 3840, "n_ctx": stub.n_ctx, "ftype": "Q8_0"}}]})
                 else:
                     self.reply(404, {"error": {"code": 404, "message": "not found"}})
 
