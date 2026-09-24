@@ -100,6 +100,19 @@
     window.addEventListener("resize", mark);
   }
 
+  /* ---------------------------------------------------------------- table labels */
+  // On phones reading-page tables reflow into labelled cells (docs.css). The docs pages carry data-label from
+  // build_docs.py and charts.js labels the tables it draws; this labels any other table from its header row.
+  function labelTable(table) {
+    const heads = Array.from(table.querySelectorAll("thead th")).map((th) => th.textContent.trim());
+    if (!heads.length) return;
+    table.querySelectorAll("tbody tr").forEach((tr) => {
+      Array.from(tr.children).forEach((cell, i) => {
+        if (!cell.hasAttribute("data-label") && heads[i]) cell.setAttribute("data-label", heads[i]);
+      });
+    });
+  }
+
   /* ---------------------------------------------------------------- heading anchors */
   function initAnchors(root) {
     root.querySelectorAll("h2[id], h3[id]").forEach((h) => {
@@ -201,6 +214,7 @@
 
   function init() {
     document.querySelectorAll(".docs-tabs-list").forEach(initTabs);
+    document.querySelectorAll(".doc-main .table-wrap table").forEach(labelTable);
     document.querySelectorAll("[data-toc]").forEach(initToc);
     document.querySelectorAll(".prose, [data-anchors]").forEach(initAnchors);
     document.querySelectorAll("pre > code[data-lang]").forEach(highlight);

@@ -770,6 +770,7 @@
       spec.columns.forEach((col, ci) => {
         const cell = document.createElement(ci === 0 && spec.rowHeaders !== false ? "th" : "td");
         if (cell.tagName === "TH") cell.scope = "row";
+        cell.setAttribute("data-label", col.label);          // the phone layout shows it above the value (docs.css)
         const v = col.get ? col.get(row) : row[col.key];
         cell.textContent = v === null || v === undefined || v === "" ? "—" : String(v);
         const cls = [];
