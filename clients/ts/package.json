@@ -50,7 +50,7 @@
     "build": "node scripts/clean.mjs && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/write-dist-packages.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "pretest": "npm run build",
-    "test": "npm run typecheck && node --test test/client.test.mjs test/cjs.test.cjs",
+    "test": "npm run typecheck && node --test test/client.test.mjs test/cjs.test.cjs test/e2e.test.mjs",
     "prepack": "npm run build"
   },
   "devDependencies": {
