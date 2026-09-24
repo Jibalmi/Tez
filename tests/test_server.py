@@ -12,7 +12,7 @@ from tez import FakeBackend, Tez, __version__
 from tez.fit import fit
 from tez.server import create_app
 
-ORIGIN = {"Origin": "https://tez.example"}
+ORIGIN = {"Origin": "http://localhost:5173"}           # allowed by the default CORS list (http://localhost:*)
 
 
 @pytest.fixture
@@ -123,7 +123,7 @@ def test_systemone_422(client, payload, fragment):
     assert r.status_code == 422
     err = r.json()["error"]
     assert err["type"] == "invalid_request" and fragment in err["message"]
-    assert r.headers["access-control-allow-origin"] == "*"                    # errors carry CORS headers too
+    assert r.headers["access-control-allow-origin"] == ORIGIN["Origin"]       # errors carry CORS headers too
 
 
 def test_backend_down_is_503(docs_request):
@@ -155,12 +155,12 @@ def test_any_bearer_accepted_without_key(client, docs_request):
 
 def test_cors_simple_and_preflight(client):
     r = client.get("/v1/models", headers=ORIGIN)
-    assert r.headers["access-control-allow-origin"] == "*"
+    assert r.headers["access-control-allow-origin"] == ORIGIN["Origin"]
     pre = client.options("/v1/systemone", headers={**ORIGIN, "Access-Control-Request-Method": "POST",
                                                    "Access-Control-Request-Headers": "content-type,authorization",
                                                    "Access-Control-Request-Private-Network": "true"})
     assert pre.status_code == 200
-    assert pre.headers["access-control-allow-origin"] == "*"
+    assert pre.headers["access-control-allow-origin"] == ORIGIN["Origin"]
     assert "POST" in pre.headers["access-control-allow-methods"]
     assert "authorization" in pre.headers["access-control-allow-headers"].lower()
     assert pre.headers["access-control-allow-private-network"] == "true"
@@ -180,7 +180,7 @@ def test_playground_private_network_preflight(path):
             "Access-Control-Request-Private-Network": "true"})
         assert r.status_code == 200
         assert r.headers["access-control-allow-private-network"] == "true"
-        assert r.headers["access-control-allow-origin"] == "*"
+        assert r.headers["access-control-allow-origin"] == PLAYGROUND
         methods = {m.strip() for m in r.headers["access-control-allow-methods"].split(",")}
         assert {"GET", "POST", "OPTIONS"} <= methods
         allowed = {h.strip().lower() for h in r.headers["access-control-allow-headers"].split(",")}
@@ -193,7 +193,7 @@ def test_every_preflight_allows_private_network(client):
     assert r.headers.get_list("access-control-allow-private-network") == ["true"]     # exactly once
     r = client.post("/v1/systemone", json={"state": "s", "questions": {"q": {"type": "noul", "instructions": "x"}}},
                     headers={"Origin": PLAYGROUND})
-    assert r.status_code == 200 and r.headers["access-control-allow-origin"] == "*"
+    assert r.status_code == 200 and r.headers["access-control-allow-origin"] == PLAYGROUND
 
 
 def test_cors_can_be_switched_off(docs_request):

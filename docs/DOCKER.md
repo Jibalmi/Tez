@@ -61,23 +61,28 @@ Compose reads these from the shell or from a `.env` file next to `compose.yaml`:
 | `TEZ_HOST_PORT` | `8787` | Host port for Tez (bound to 127.0.0.1) |
 | `LLAMA_IMAGE` | `ghcr.io/ggml-org/llama.cpp:server-cuda-b11096` | llama.cpp image (`compose.cpu.yaml`: `server-b11096`) |
 
-The Tez image itself (`docker/Dockerfile`) is configured by environment; `docker/entrypoint.py` turns it into
-`tez serve` flags:
+The Tez image itself (`docker/Dockerfile`) is configured by environment, which `tez serve` reads itself
+(`docker/entrypoint.py` only runs `tez serve` with the container's arguments):
 
 | Variable | Default in the image | Meaning |
 |---|---|---|
 | `TEZ_BACKEND` | the CLI's `http://127.0.0.1:8080` (compose sets `http://llama:8080`) | llama-server URL, or `fake` for the offline demo backend |
 | `TEZ_TEMPLATE` | `gemma4` | Prompt template |
 | `TEZ_SCHEMAS` | unset | Directory of `*.yaml` schemas (fitted artefacts in `<dir>/.tez/`) |
+| `TEZ_PRESETS` | unset | `1` also loads the built-in preset schemas |
 | `TEZ_DATA_DIR` | `/data` | Where `POST /v1/feedback` writes |
 | `TEZ_PORT` | `8787` | Listening port |
 | `TEZ_HOST` | `0.0.0.0` | Listening address inside the container |
 | `TEZ_API_KEY` | unset | Require `Authorization: Bearer <key>` (`/healthz` stays open) |
+| `TEZ_CORS_ORIGINS` | `http://127.0.0.1:*,http://localhost:*,https://jibalmi.github.io` | Browser origins CORS allows (`*` for any) |
+| `TEZ_LOG_LEVEL` | `info` | `critical`, `error`, `warning`, `info` or `debug` |
+| `TEZ_LAYOUT` | `auto` | Default prompt layout (docs/API.md, "Prompt layout") |
 | `TEZ_EMBED_BACKEND` | unset | Separate llama-server for probe features |
 
 Every variable in the second table can be read from a file instead: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key`. The
 file's surrounding whitespace is stripped, and setting both `X` and `X_FILE` is an error. Extra container arguments are
-appended to `tez serve` (for example `--log-level warning`). The process runs as user 10001, not root.
+appended to `tez serve` (for example `--log-level warning` or `--max-batch 128`). The process runs as user 10001, not
+root.
 
 ### Schemas, feedback and an API key
 

@@ -5,8 +5,16 @@ point its base URL at a Tez server (JevBench's own runner included). Everything 
 strict clients ignore.
 
 Default address: `http://127.0.0.1:8787`. Any `Authorization: Bearer <token>` (or `x-api-key`) is accepted: no key is
-needed locally, and `--api-key` on `tez serve` makes one required (`/healthz` stays open). CORS is open by default and
-preflights answer `Access-Control-Allow-Private-Network: true`, so the website playground can call a local server.
+needed locally, and `--api-key` on `tez serve` makes one required (`/healthz` stays open).
+
+Browsers: CORS allows only listed origins, by default `http://127.0.0.1:*` and `http://localhost:*` (pages served
+from this machine, any port) and `https://jibalmi.github.io` (the website playground). `--cors-origins LIST` (or
+`TEZ_CORS_ORIGINS`) replaces the list: origins, `host:*` for any port, `https://*.domain`, `null`, or `*` for any
+origin; `--no-cors` sends no CORS headers. A preflight from an allowed origin is answered with
+`Access-Control-Allow-Private-Network: true` (Chrome's Private Network Access, which the playground needs to reach a
+server on your machine); from any other origin it gets `403`. `POST /v1/feedback` refuses a request from an origin
+that is not allowed (`403 forbidden`), so a web page elsewhere cannot write training labels. Requests without an
+`Origin` header (curl, SDKs, other servers) are not affected.
 
 ## Endpoints
 
@@ -173,10 +181,11 @@ Decisions (`/v1/systemone`, successful or not) also carry `X-Tez-Run-Id` (the sa
 
 Same codes as Jev: `401` missing/invalid key (only with `--api-key`), `422` invalid request (including a prompt longer
 than the model's context, with llama.cpp's message), `503` backend unavailable. Also `404` for an unknown route or
-schema, `405` for a wrong method, `413` for a request over the server's limits (see "Limits") and `500` for an
-unexpected failure (a hook that raised, for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`;
-the types are `unauthorized`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`,
-`backend_unavailable` and `internal_error`.
+schema, `405` for a wrong method, `403` for feedback (or a CORS preflight) from a browser origin that is not allowed,
+`413` for a request over the server's limits (see "Limits") and `500` for an unexpected failure (a hook that raised,
+for example). Body: `{"error": {"type": "invalid_request", "message": "..."}}`; the types are `unauthorized`,
+`forbidden`, `invalid_request`, `not_found`, `method_not_allowed`, `payload_too_large`, `backend_unavailable` and
+`internal_error`.
 
 ### Structured extraction (`json_schema`)
 
@@ -410,6 +419,12 @@ prompt caching off in llama.cpp b11100 (`tez serve` turns it off automatically w
 
 ## Server defaults
 
-`tez serve` listens on `127.0.0.1:8787`. The backend defaults to `http://127.0.0.1:8080` (llama-server's own default)
-or the `TEZ_BACKEND` environment variable; `--backend fake` runs an offline demo backend whose answers mean nothing.
-`tez fit` needs at least 20 labels per question to train a probe; with fewer it calibrates the letters only and says so.
+`tez serve` listens on `127.0.0.1:8787`. The backend defaults to `http://127.0.0.1:8080` (llama-server's own default);
+`--backend fake` runs an offline demo backend whose answers mean nothing. `tez fit` needs at least 20 labels per
+question to train a probe; with fewer it calibrates the letters only and says so.
+
+The CLI reads its settings from the environment too (a flag wins): `TEZ_BACKEND`, `TEZ_TEMPLATE` and
+`TEZ_EMBED_BACKEND` for every command; for `tez serve` also `TEZ_HOST`, `TEZ_PORT`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR`,
+`TEZ_API_KEY`, `TEZ_LOG_LEVEL`, `TEZ_CORS_ORIGINS`, `TEZ_PRESETS` (`1` = `--presets`) and `TEZ_LAYOUT`. Each can be read
+from a file instead, for Docker and Compose secrets: `TEZ_API_KEY_FILE=/run/secrets/tez_api_key` (surrounding
+whitespace stripped; setting both `X` and `X_FILE` is an error).

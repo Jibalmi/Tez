@@ -1,20 +1,53 @@
-"""Command line: tez serve | decide | fit | suggest | eval | presets | truncate."""
+"""Command line: tez serve | decide | fit | suggest | eval | presets | truncate.
+
+Settings can come from the environment (containers, services): TEZ_BACKEND, TEZ_TEMPLATE, TEZ_EMBED_BACKEND for every
+command; for tez serve also TEZ_HOST, TEZ_PORT, TEZ_SCHEMAS, TEZ_DATA_DIR, TEZ_API_KEY, TEZ_LOG_LEVEL, TEZ_CORS_ORIGINS,
+TEZ_PRESETS and TEZ_LAYOUT. Each can be read from a file instead, for Docker and Compose secrets: TEZ_API_KEY_FILE=
+/run/secrets/tez_api_key (surrounding whitespace is stripped; setting both VAR and VAR_FILE is an error). A flag on the
+command line wins over the environment.
+"""
 from __future__ import annotations
 
 import argparse
 import json
 import logging
-import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from ._version import __version__
 from .backends import DEFAULT_BACKEND, DEFAULT_N_PROBS
-from .engine import READOUTS, Limits
+from .config import DEFAULT_CORS_ORIGINS, Env, Limits
+from .engine import READOUTS
 from .errors import TezError
 from .prompt import TEMPLATES
 from .schema import LAYOUTS
+
+LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
+ENV_VARS = ("TEZ_BACKEND", "TEZ_TEMPLATE", "TEZ_EMBED_BACKEND", "TEZ_HOST", "TEZ_PORT", "TEZ_SCHEMAS", "TEZ_DATA_DIR",
+            "TEZ_API_KEY", "TEZ_LOG_LEVEL", "TEZ_CORS_ORIGINS", "TEZ_PRESETS", "TEZ_LAYOUT")
+
+
+def _port(text: Any) -> int:
+    try:
+        n = int(str(text).strip())
+    except ValueError:
+        n = 0
+    if not 0 < n < 65536:
+        raise argparse.ArgumentTypeError(f"a port number from 1 to 65535 (--port or TEZ_PORT), got {text!r}")
+    return n
+
+
+def _choice(name: str, options: tuple) -> Any:
+    """An argparse type that checks a value (and an environment default, which argparse does not check) is one of
+    the options."""
+    def parse(text: Any) -> str:
+        value = str(text).strip().lower()
+        if value not in options:
+            raise argparse.ArgumentTypeError(f"{name} must be one of {', '.join(options)}, got {text!r}")
+        return value
+    parse.__name__ = name
+    return parse
 
 
 def _utf8_streams() -> None:
@@ -25,15 +58,15 @@ def _utf8_streams() -> None:
             pass
 
 
-def _backend_args(p: argparse.ArgumentParser, embed: bool = True) -> None:
-    p.add_argument("--backend", default=os.environ.get("TEZ_BACKEND", DEFAULT_BACKEND),
+def _backend_args(p: argparse.ArgumentParser, env: Env, embed: bool = True) -> None:
+    p.add_argument("--backend", default=env.get("TEZ_BACKEND", DEFAULT_BACKEND),
                    help=f"llama-server URL, or 'fake' for the offline demo backend (env TEZ_BACKEND; default {DEFAULT_BACKEND})")
-    p.add_argument("--template", default=os.environ.get("TEZ_TEMPLATE", "gemma4"), choices=sorted(TEMPLATES),
-                   help="prompt template of the model behind --backend (env TEZ_TEMPLATE; default gemma4)")
+    p.add_argument("--template", default=env.get("TEZ_TEMPLATE", "gemma4"), type=_choice("template", tuple(sorted(TEMPLATES))),
+                   help="prompt template of the model behind --backend: gemma4 or qwen3 (env TEZ_TEMPLATE; default gemma4)")
     if embed:
-        p.add_argument("--embed-backend", default=os.environ.get("TEZ_EMBED_BACKEND"),
+        p.add_argument("--embed-backend", default=env.get("TEZ_EMBED_BACKEND"),
                        help="separate llama-server for probe features, started with --embeddings --pooling last "
-                            "(default: --backend)")
+                            "(env TEZ_EMBED_BACKEND; default: --backend)")
         p.add_argument("--embed-template", default=None, choices=sorted(TEMPLATES),
                        help="prompt template of the embedding model (default: --template)")
     p.add_argument("--no-cache-prompt", action="store_true",
@@ -122,21 +155,32 @@ def _table(rows: list[list[str]]) -> str:
 def cmd_serve(args: argparse.Namespace) -> int:
     import uvicorn
 
-    from .server import create_app
+    from .server import OriginPolicy, create_app
+    logging.getLogger("tez").setLevel(args.log_level.upper())
+    try:
+        origins = OriginPolicy(cors_origins(args.cors_origins))
+    except ValueError as exc:
+        raise TezError(str(exc)) from exc
     tez = _make_tez(args, schemas=args.schemas, layout=args.layout or "auto")
     if args.presets:
         tez.add_presets()
     limits = Limits(*(v or None for v in (args.max_body_bytes, args.max_questions, args.max_state_chars, args.max_batch)))
-    app = create_app(tez, api_key=args.api_key, cors=not args.no_cors, limits=limits)
+    app = create_app(tez, api_key=args.api_key, cors=not args.no_cors, limits=limits, cors_origins=origins.patterns)
     probes = sum(len(v) for v in tez.probe_index().values())
     print(f"tez {__version__} on http://{args.host}:{args.port}  backend {tez.backend.url} ({tez.template})"
           + (f", embeddings {tez.embedder.url} ({tez.embedder.template})" if tez.embedder is not tez.backend else "")
           + f", {len(tez.schemas)} schema(s), {probes} probe(s), layout {tez.layout}"
           + (f", hooks: {', '.join(type(h).__name__ for h in tez.hooks)}" if tez.hooks else "")
-          + (", API key required" if args.api_key else ""),
+          + (", API key required" if args.api_key else "")
+          + (", no CORS" if args.no_cors else f", browsers: {', '.join(origins.patterns) or 'none'}"),
           file=sys.stderr, flush=True)
     uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level)
     return 0
+
+
+def cors_origins(value: str | None) -> list[str]:
+    """The --cors-origins / TEZ_CORS_ORIGINS list: comma- or space-separated origins."""
+    return [p for p in str(value or "").replace(",", " ").split() if p]
 
 
 def cmd_decide(args: argparse.Namespace) -> int:
@@ -283,24 +327,37 @@ def cmd_truncate(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------------------------- parser
-def build_parser() -> argparse.ArgumentParser:
+def build_parser(environ: Mapping[str, str] | None = None) -> argparse.ArgumentParser:
+    """The command line. `environ` (default os.environ) supplies the TEZ_* defaults; raises TezError for a bad
+    VAR_FILE."""
+    env = Env(environ)
     parser = argparse.ArgumentParser(prog="tez", description="Tez: an open local System One decision engine.")
     parser.add_argument("--version", action="version", version=f"tez {__version__}")
     sub = parser.add_subparsers(dest="cmd", metavar="COMMAND")
 
     p = sub.add_parser("serve", help="run the HTTP server (Jev-compatible /v1/systemone)")
-    _backend_args(p)
-    p.add_argument("--schemas", help="directory of *.yaml schemas (trained artefacts in <dir>/.tez/)")
-    p.add_argument("--presets", action="store_true",
-                   help="also load the built-in presets (tez presets); a schema of the same name in --schemas wins")
-    p.add_argument("--data-dir", help="where POST /v1/feedback writes (default: <schemas>/.tez)")
-    p.add_argument("--host", default="127.0.0.1")
-    p.add_argument("--port", type=int, default=8787)
-    p.add_argument("--api-key", default=os.environ.get("TEZ_API_KEY"), help="require Authorization: Bearer <key> (env TEZ_API_KEY)")
-    p.add_argument("--no-cors", action="store_true", help="do not send CORS headers (open to every origin by default)")
-    p.add_argument("--log-level", default="info", choices=["critical", "error", "warning", "info", "debug"])
-    _layout_arg(p, "default prompt layout for requests and schemas that name none: auto (state_first for 2+ questions, "
-                   "question_first for one), question_first or state_first (default auto)")
+    _backend_args(p, env)
+    p.add_argument("--schemas", default=env.get("TEZ_SCHEMAS"),
+                   help="directory of *.yaml schemas (trained artefacts in <dir>/.tez/) (env TEZ_SCHEMAS)")
+    p.add_argument("--presets", action="store_true", default=env.flag("TEZ_PRESETS"),
+                   help="also load the built-in presets (tez presets); a schema of the same name in --schemas wins "
+                        "(env TEZ_PRESETS=1)")
+    p.add_argument("--data-dir", default=env.get("TEZ_DATA_DIR"),
+                   help="where POST /v1/feedback writes (env TEZ_DATA_DIR; default: <schemas>/.tez)")
+    p.add_argument("--host", default=env.get("TEZ_HOST", "127.0.0.1"), help="address to bind (env TEZ_HOST; default 127.0.0.1)")
+    p.add_argument("--port", type=_port, default=env.get("TEZ_PORT", "8787"), help="port (env TEZ_PORT; default 8787)")
+    p.add_argument("--api-key", default=env.get("TEZ_API_KEY"),
+                   help="require Authorization: Bearer <key> (env TEZ_API_KEY or TEZ_API_KEY_FILE)")
+    p.add_argument("--cors-origins", default=env.get("TEZ_CORS_ORIGINS", ",".join(DEFAULT_CORS_ORIGINS)), metavar="LIST",
+                   help="browser origins allowed by CORS, comma-separated: an origin, host:* for any port, "
+                        "https://*.domain, null, or * for any origin (env TEZ_CORS_ORIGINS; default "
+                        f"{','.join(DEFAULT_CORS_ORIGINS)}); POST /v1/feedback refuses other origins")
+    p.add_argument("--no-cors", action="store_true", help="send no CORS headers (browsers on other origins cannot call it)")
+    p.add_argument("--log-level", default=env.get("TEZ_LOG_LEVEL", "info"), type=_choice("log level", LOG_LEVELS),
+                   help=f"{', '.join(LOG_LEVELS)} (env TEZ_LOG_LEVEL; default info)")
+    p.add_argument("--layout", default=env.get("TEZ_LAYOUT"), type=_choice("layout", LAYOUTS),
+                   help="default prompt layout for requests and schemas that name none: auto (state_first for 2+ "
+                        "questions, question_first for one), question_first or state_first (env TEZ_LAYOUT; default auto)")
     _hook_args(p)
     lim = Limits()
     for flag, default, what in (("--max-body-bytes", lim.max_body_bytes, "request body size in bytes"),
@@ -312,7 +369,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_serve)
 
     p = sub.add_parser("decide", help="decide one state (or a file of states) and print the wire-format JSON")
-    _backend_args(p)
+    _backend_args(p, env)
     p.add_argument("text", nargs="?", help="the state as text (or use --state, --state-file or --states-file)")
     p.add_argument("--schema", help="schema YAML file (its fitted probes and calibration are used)")
     p.add_argument("--preset", metavar="NAME", help="a built-in preset schema (tez presets lists them)")
@@ -332,11 +389,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_decide)
 
     p = sub.add_parser("fit", help="train probes, temperatures and gate thresholds for a schema")
-    _backend_args(p)
+    _backend_args(p, env)
     p.add_argument("--schema", required=True, help="schema YAML file; artefacts go to <dir>/.tez/<name>/")
     p.add_argument("--labels", action="append", default=[], metavar="FILE",
                    help="labelled JSONL rows {\"state\": ..., \"labels\": {question: label}} (repeatable)")
-    p.add_argument("--data-dir", help="where recorded feedback lives (default: <schema dir>/.tez)")
+    p.add_argument("--data-dir", default=env.get("TEZ_DATA_DIR"),
+                   help="where recorded feedback lives (env TEZ_DATA_DIR; default: <schema dir>/.tez)")
     p.add_argument("--no-feedback", action="store_true", help="ignore rows recorded through POST /v1/feedback")
     p.add_argument("--holdout", type=float, default=0.3, help="share of each question's labels held out for calibration")
     p.add_argument("--min-labels", type=int, default=20, help="fewest labels for which a probe is trained")
@@ -348,7 +406,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_fit)
 
     p = sub.add_parser("suggest", help="pick the most typical unlabelled states to label first")
-    _backend_args(p)
+    _backend_args(p, env)
     p.add_argument("--schema", required=True)
     p.add_argument("--unlabelled", required=True, help="JSONL rows with a state (or one state per line)")
     p.add_argument("--n", type=int, default=25)
@@ -358,7 +416,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_suggest)
 
     p = sub.add_parser("eval", help="accuracy and calibration (ECE) per question on labelled rows")
-    _backend_args(p)
+    _backend_args(p, env)
     p.add_argument("--schema", required=True)
     p.add_argument("--labels", action="append", required=True, metavar="FILE")
     p.add_argument("--readout", choices=READOUTS, default="auto")
@@ -382,7 +440,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     _utf8_streams()
-    parser = build_parser()
+    try:
+        parser = build_parser()
+    except TezError as exc:            # a TEZ_*_FILE that cannot be read
+        print(f"error: {exc.message}", file=sys.stderr)
+        return 2
     args = parser.parse_args(argv)
     if not getattr(args, "cmd", None):
         parser.print_help()

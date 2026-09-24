@@ -136,34 +136,37 @@ def test_dockerfile_runs_as_non_root_through_the_entrypoint():
     assert {"!tez/", "!pyproject.toml", "!README.md", "!LICENSE", "!docker/entrypoint.py"} <= set(rules)
 
 
-def test_entrypoint_reads_file_secrets(tmp_path):
-    ep = load_script("docker/entrypoint.py")
+def test_the_cli_reads_file_secrets(tmp_path):
+    """The entrypoint used to resolve VAR_FILE secrets itself; `tez serve` does now (tests/test_config.py has the rest)."""
+    from tez.cli import Env
+    from tez.errors import TezError
     key = tmp_path / "key"
     key.write_text("s3cret\n", encoding="utf-8")
-    env = ep.resolve_env({"TEZ_API_KEY_FILE": str(key), "TEZ_PORT": "9000", "OTHER": "x"})
-    assert env == {"TEZ_API_KEY": "s3cret", "TEZ_PORT": "9000", "OTHER": "x"}
-    with pytest.raises(ep.ConfigError, match="not both"):
-        ep.resolve_env({"TEZ_API_KEY": "a", "TEZ_API_KEY_FILE": str(key)})
-    with pytest.raises(ep.ConfigError, match="cannot read TEZ_SCHEMAS_FILE"):
-        ep.resolve_env({"TEZ_SCHEMAS_FILE": str(tmp_path / "missing")})
+    env = Env({"TEZ_API_KEY_FILE": str(key), "TEZ_PORT": "9000", "OTHER": "x"})
+    assert env.get("TEZ_API_KEY") == "s3cret" and env.get("TEZ_PORT") == "9000" and env.get("TEZ_HOST", "d") == "d"
+    with pytest.raises(TezError, match="not both"):
+        Env({"TEZ_API_KEY": "a", "TEZ_API_KEY_FILE": str(key)}).get("TEZ_API_KEY")
+    with pytest.raises(TezError, match="cannot read TEZ_SCHEMAS_FILE"):
+        Env({"TEZ_SCHEMAS_FILE": str(tmp_path / "missing")}).get("TEZ_SCHEMAS")
     (tmp_path / "empty").write_text("\n", encoding="utf-8")
-    with pytest.raises(ep.ConfigError, match="is empty"):
-        ep.resolve_env({"TEZ_BACKEND_FILE": str(tmp_path / "empty")})
+    with pytest.raises(TezError, match="is empty"):
+        Env({"TEZ_BACKEND_FILE": str(tmp_path / "empty")}).get("TEZ_BACKEND")
 
 
 def test_entrypoint_command_line():
     ep = load_script("docker/entrypoint.py")
-    assert ep.serve_argv({}) == ["tez", "serve", "--host", "0.0.0.0", "--port", "8787"]
-    argv = ep.serve_argv({"TEZ_PORT": "9000", "TEZ_HOST": "127.0.0.1", "TEZ_SCHEMAS": "/schemas", "TEZ_DATA_DIR": "/data"},
-                         ["--log-level", "warning"])
-    assert argv == ["tez", "serve", "--host", "127.0.0.1", "--port", "9000", "--schemas", "/schemas", "--data-dir", "/data",
-                    "--log-level", "warning"]
+    assert ep.serve_argv() == ["tez", "serve"]
+    assert ep.serve_argv(["--log-level", "warning"]) == ["tez", "serve", "--log-level", "warning"]
+    from tez.cli import build_parser               # the container's environment reaches `tez serve` directly
+    env = {"TEZ_PORT": "9000", "TEZ_HOST": "0.0.0.0", "TEZ_SCHEMAS": "/schemas", "TEZ_DATA_DIR": "/data"}
+    args = build_parser(env).parse_args(ep.serve_argv(["--log-level", "warning"])[1:])
+    assert (args.port, args.host, args.schemas, args.data_dir, args.log_level) == (9000, "0.0.0.0", "/schemas", "/data", "warning")
     for bad in ("http", "0", "70000", "-1"):
-        with pytest.raises(ep.ConfigError, match="TEZ_PORT"):
-            ep.serve_argv({"TEZ_PORT": bad})
-    from tez.cli import build_parser               # every flag the entrypoint writes exists on `tez serve`
-    args = build_parser().parse_args(argv[1:])
-    assert (args.port, args.host, args.schemas, args.data_dir, args.log_level) == (9000, "127.0.0.1", "/schemas", "/data", "warning")
+        with pytest.raises(SystemExit):
+            build_parser({"TEZ_PORT": bad}).parse_args(["serve"])
+    dockerfile = (ROOT / "docker" / "Dockerfile").read_text(encoding="utf-8") if (ROOT / "docker" / "Dockerfile").exists() else ""
+    if dockerfile:
+        assert "TEZ_HOST=0.0.0.0" in dockerfile and "TEZ_PORT=8787" in dockerfile
 
 
 # ---------------------------------------------------------------------------------------------- scripts

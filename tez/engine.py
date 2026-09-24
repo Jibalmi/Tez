@@ -28,8 +28,8 @@ import numpy as np
 from ._version import RELEASE_DATE, __version__
 from .artifacts import Fitted, FittedQuestion, load_artifacts
 from .backends import DEFAULT_N_PROBS, Backend, make_backend
-from .errors import (BackendRequestError, BackendUnavailable, InternalError, InvalidRequest, NotFound, PayloadTooLarge,
-                     TezError)
+from .config import Limits
+from .errors import BackendRequestError, BackendUnavailable, InternalError, InvalidRequest, NotFound, TezError
 from .gate import decide as gate_decide
 from .gate import lookup
 from .hooks import DecisionContext, HookSet, default_hooks, new_run_id, normalise_hooks
@@ -41,37 +41,6 @@ from .schema import LAYOUTS, NONE_KEY, Question, Schema, load_schemas, parse_alp
 log = logging.getLogger("tez")
 READOUTS = ("auto", "letters", "probe")
 DEFAULT_MODEL_ALIAS = "tez-latest"
-
-
-@dataclass(frozen=True)
-class Limits:
-    """Request limits (413 payload_too_large past any of them). The defaults are tez serve's; the Python API applies
-    none unless given limits=. None switches one off."""
-
-    max_body_bytes: int | None = 2 * 1024 * 1024
-    max_questions: int | None = 64
-    max_state_chars: int | None = 50_000
-    max_batch: int | None = 64
-
-    @classmethod
-    def unlimited(cls) -> Limits:
-        return cls(None, None, None, None)
-
-    def check_questions(self, n: int) -> None:
-        if self.max_questions is not None and n > self.max_questions:
-            raise PayloadTooLarge(f"too many questions: {n} (the limit is {self.max_questions}; tez serve --max-questions)")
-
-    def check_state(self, state: Any, where: str = "state") -> None:
-        if self.max_state_chars is None:
-            return
-        n = len(state) if isinstance(state, str) else len(json.dumps(state, ensure_ascii=False))
-        if n > self.max_state_chars:
-            raise PayloadTooLarge(f"{where} is too large: {n:,} characters (the limit is {self.max_state_chars:,}; "
-                                  f"tez serve --max-state-chars)")
-
-    def check_batch(self, n: int) -> None:
-        if self.max_batch is not None and n > self.max_batch:
-            raise PayloadTooLarge(f"too many states in one batch: {n} (the limit is {self.max_batch}; tez serve --max-batch)")
 
 
 @dataclass

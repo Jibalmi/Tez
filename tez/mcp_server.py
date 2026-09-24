@@ -17,12 +17,12 @@ Tools: tez_decide, tez_schemas, tez_schema, tez_feedback, tez_status. In process
 """
 # No `from __future__ import annotations` here: FastMCP builds each tool's input schema from its annotations at run time,
 # and the tool functions are defined inside build_server with names that only exist there.
-import os
 import sys
 from typing import Any, Mapping
 
 from ._version import __version__
-from .engine import Limits, Tez
+from .config import Env, Limits
+from .engine import Tez
 from .errors import TezError
 
 ESCALATE = ("A gate decision of `escalate` means: do not act on that answer yourself; hand the case to a person or to "
@@ -52,23 +52,17 @@ DESCRIPTIONS = {
 }
 
 
-def _truthy(value: Any) -> bool:
-    return str(value or "").strip().lower() in ("1", "true", "yes", "on")
-
-
 def engine_from_env(environ: Mapping[str, str] | None = None) -> Any:
-    """A RemoteTez for TEZ_URL, otherwise an in-process Tez from TEZ_BACKEND, TEZ_TEMPLATE, TEZ_SCHEMAS, TEZ_DATA_DIR
-    and TEZ_PRESETS."""
-    env = os.environ if environ is None else environ
+    """A RemoteTez for TEZ_URL, otherwise an in-process Tez from TEZ_BACKEND, TEZ_TEMPLATE, TEZ_SCHEMAS, TEZ_DATA_DIR,
+    TEZ_LAYOUT and TEZ_PRESETS (each also as VAR_FILE, like tez serve)."""
+    env = Env(environ)
     if env.get("TEZ_URL"):
         from .integrations.remote import RemoteTez
-        return RemoteTez(env["TEZ_URL"], api_key=env.get("TEZ_API_KEY") or None,
-                         timeout=float(env.get("TEZ_TIMEOUT") or 120.0))
+        return RemoteTez(env.get("TEZ_URL"), api_key=env.get("TEZ_API_KEY"), timeout=float(env.get("TEZ_TIMEOUT", 120.0)))
     from .backends import DEFAULT_BACKEND
-    tez = Tez(backend=env.get("TEZ_BACKEND") or DEFAULT_BACKEND, template=env.get("TEZ_TEMPLATE") or "gemma4",
-              schemas=env.get("TEZ_SCHEMAS") or None, data_dir=env.get("TEZ_DATA_DIR") or None,
-              layout=env.get("TEZ_LAYOUT") or "auto")
-    if _truthy(env.get("TEZ_PRESETS")):
+    tez = Tez(backend=env.get("TEZ_BACKEND", DEFAULT_BACKEND), template=env.get("TEZ_TEMPLATE", "gemma4"),
+              schemas=env.get("TEZ_SCHEMAS"), data_dir=env.get("TEZ_DATA_DIR"), layout=env.get("TEZ_LAYOUT", "auto"))
+    if env.flag("TEZ_PRESETS"):
         tez.add_presets()
     return tez
 
