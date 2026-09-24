@@ -12,10 +12,11 @@ from email.parser import Parser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ("tez/__init__.py", "tez/cli.py", "tez/server.py", "tez/hooks.py", "tez/integrations/__init__.py",
-            "tez/integrations/langchain.py", "tez/integrations/remote.py", "tez/presets/__init__.py",
-            "tez/presets/support-triage.yaml", "tez/presets/prompt-injection-guard.yaml")
+REQUIRED = ("tez/__init__.py", "tez/cli.py", "tez/server.py", "tez/hooks.py", "tez/extract.py", "tez/mcp_server.py",
+            "tez/integrations/__init__.py", "tez/integrations/langchain.py", "tez/integrations/remote.py",
+            "tez/presets/__init__.py", "tez/presets/support-triage.yaml", "tez/presets/prompt-injection-guard.yaml")
 EXTRAS = ("fit", "truncate", "langchain", "otel", "mcp", "all")
+SCRIPTS = {"tez": "tez.cli:main", "tez-mcp": "tez.mcp_server:main"}
 
 
 def source_versions() -> dict[str, str]:
@@ -32,6 +33,11 @@ def check_wheel(path: Path) -> list[str]:
         names = z.namelist()
         meta_name = next((n for n in names if n.endswith(".dist-info/METADATA")), None)
         meta = Parser().parsestr(z.read(meta_name).decode("utf-8")) if meta_name else None
+        ep_name = next((n for n in names if n.endswith(".dist-info/entry_points.txt")), None)
+        entry_points = z.read(ep_name).decode("utf-8") if ep_name else ""
+    for script, target in SCRIPTS.items():
+        if not re.search(rf"^{re.escape(script)}\s*=\s*{re.escape(target)}\s*$", entry_points, flags=re.M):
+            problems.append(f"console script {script} = {target} is missing")
     for n in names:
         top = n.split("/", 1)[0]
         if not (top == "tez" or top.endswith(".dist-info")):

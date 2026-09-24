@@ -302,6 +302,30 @@ Hooks run in the engine around every decision (docs/HOOKS.md): `tez serve --hook
 `--decision-log PATH` (a JSONL row per decision, the format `tez fit` reads once labels are filled in) and
 `--hook-errors raise|log` (whether a failing hook fails the request).
 
+## MCP server
+
+`tez-mcp` (install the `mcp` extra: `pip install "tez-decisions[mcp]"`) serves Tez to agents over the Model Context
+Protocol on stdio. Tools:
+
+| Tool | Does |
+|---|---|
+| `tez_decide(state, questions=None, schema=None, readout="auto", abstain=False, alpha=None)` | a `/v1/systemone` decision; returns the response |
+| `tez_schemas()` | the loaded schemas (`GET /v1/schemas`) |
+| `tez_schema(name)` | one schema's questions and fit status (the detail without calibration tables) |
+| `tez_feedback(schema, question, state, label)` | records a correct label (`POST /v1/feedback`) |
+| `tez_status()` | version, in-process or remote, backend health, schema names |
+
+The tool descriptions tell the agent that a gate decision of `escalate` means: do not act on that answer yourself, hand
+the case to a person or to a larger model. Configuration is by environment: `TEZ_URL` forwards every call to a running
+`tez serve` (with `TEZ_API_KEY` as the bearer token); otherwise Tez runs in the MCP process from `TEZ_BACKEND`,
+`TEZ_TEMPLATE`, `TEZ_SCHEMAS`, `TEZ_DATA_DIR` and `TEZ_PRESETS=1`, with `tez serve`'s request limits. For example, in an
+MCP client's configuration:
+
+```json
+{"mcpServers": {"tez": {"command": "tez-mcp",
+                        "env": {"TEZ_BACKEND": "http://127.0.0.1:8091", "TEZ_TEMPLATE": "gemma4", "TEZ_PRESETS": "1"}}}}
+```
+
 ## Limits
 
 `tez serve` refuses oversized requests with `413` and `{"error": {"type": "payload_too_large", "message": "..."}}`:
