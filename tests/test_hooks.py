@@ -464,6 +464,13 @@ def test_load_hook(tmp_path: Path, monkeypatch):
             load_hook(bad)
     with pytest.raises(TypeError, match="not a hook"):
         load_hook("myhooks:not_a_hook")
+    (tmp_path / "here").mkdir()
+    (tmp_path / "here" / "localhooks_xyz.py").write_text("from tez import Metrics\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path / "here")                     # a file here is not importable: the path is not widened
+    with pytest.raises(ValueError, match=r"localhooks_xyz is in the current directory.*PYTHONPATH=\."):
+        load_hook("localhooks_xyz:Metrics")
+    with pytest.raises(ValueError, match="must be installed or on PYTHONPATH"):
+        load_hook("elsewhere_xyz:Hook")
     args = build_parser().parse_args(["serve", "--hook", "myhooks:Counter", "--hook", "myhooks:shared",
                                       "--decision-log", str(tmp_path / "d.jsonl"), "--hook-errors", "log"])
     from tez.cli import _make_tez

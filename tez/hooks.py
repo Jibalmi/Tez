@@ -170,7 +170,11 @@ class HookSet:
 
 def load_hook(spec: str) -> Any:
     """A hook from `package.module:object` (tez serve --hook): a class is instantiated without arguments, a hook
-    instance is used as it is, any other callable is called and must return a hook."""
+    instance is used as it is, any other callable is called and must return a hook.
+
+    The module is imported from the import path as it is: an installed package, or a directory on PYTHONPATH. The
+    current directory is deliberately not added (a server started somewhere others can write would import their
+    files), so a hook file next to you needs PYTHONPATH=. (or `python -m tez serve`, which puts it on the path)."""
     if not isinstance(spec, str):
         raise ValueError(f"a hook is named package.module:object, got {spec!r}")
     module_name, sep, attr = spec.partition(":")
@@ -179,7 +183,15 @@ def load_hook(spec: str) -> Any:
     try:
         obj: Any = importlib.import_module(module_name.strip())
     except ImportError as exc:
-        raise ValueError(f"cannot import {module_name!r} for hook {spec!r}: {exc}") from exc
+        top = module_name.strip().split(".")[0]
+        hint = ""
+        if isinstance(exc, ModuleNotFoundError) and exc.name == top:
+            if Path(f"{top}.py").is_file() or Path(top, "__init__.py").is_file():
+                hint = (f" ({top} is in the current directory, which is not on the import path: run with PYTHONPATH=. "
+                        "or install it)")
+            else:
+                hint = " (a hook module must be installed or on PYTHONPATH)"
+        raise ValueError(f"cannot import {module_name!r} for hook {spec!r}: {exc}{hint}") from exc
     for part in attr.strip().split("."):
         if not hasattr(obj, part):
             raise ValueError(f"{module_name!r} has no {attr!r} (hook {spec!r})")

@@ -75,6 +75,12 @@ hook that records anything should read `ctx.state`, not `ctx.request["state"]`).
 a hook instance is used as it is, any other callable is called and must return a hook. `--decision-log PATH` adds a
 `DecisionLog`. Hooks given on the command line run in the order given, the decision log last.
 
+The module is imported from Python's import path as it is: an installed package, or a directory on `PYTHONPATH`. The
+current directory is not added on purpose (a server started in a directory others can write to would import their
+files), so for a `myhooks.py` next to you run `PYTHONPATH=. tez serve --hook myhooks:AuditHook` (PowerShell:
+`$env:PYTHONPATH = "."` first), or `python -m tez serve ...`, which puts the current directory on the path itself. When
+the module is not found, the error says which of these applies.
+
 ## Failure rules
 
 `Tez(hooks_raise=True)` is the default (`tez serve --hook-errors raise`):

@@ -139,7 +139,8 @@ def _layout_arg(p: argparse.ArgumentParser, what: str) -> None:
 def _hook_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--hook", action="append", default=[], metavar="MODULE:OBJECT",
                    help="load a hook (docs/HOOKS.md): a class is instantiated, a hook instance used as is, a factory "
-                        "called (repeatable; they run in the order given)")
+                        "called (repeatable; they run in the order given). The module must be installed or on "
+                        "PYTHONPATH; for a file in the current directory run with PYTHONPATH=.")
     p.add_argument("--decision-log", metavar="PATH",
                    help="append every decision to this JSONL file (rows tez fit reads once labels are filled in)")
     p.add_argument("--hook-errors", choices=["raise", "log"], default="raise",
