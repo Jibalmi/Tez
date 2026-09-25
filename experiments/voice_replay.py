@@ -377,7 +377,7 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     oos = [r for r in rows if r["gold"] in none_keys]
     lat_dec, lat_all, lat_act, lat_proj, emit_delay, emit_lag, disp = [], [], [], [], [], [], []
     by_class: dict[str, list[float]] = {}
-    harmful, harm_rows, final_ok, final_ok_alt, first_words, before = 0, [], 0, 0, [], 0
+    harmful, harm_rows, final_ok, final_ok_alt, first_words, before, heard = 0, [], 0, 0, [], 0, []
     wer_e, wer_n, missed_decisive = 0, 0, 0
     decide_ms = [u["decide_ms"] for r in rows for u in r["updates"]]
     commit_ms = [u["commit_ms"] for r in rows for u in r["updates"]]
@@ -440,8 +440,9 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
         final_ok += final == r["gold"]
         final_ok_alt += final in accepted
         if ex:
-            k = sum(1 for w in r["words"] if r["t0"] + w["end"] <= ex[0]["t_issued"])
+            k = ex[0].get("word") or 0                   # words in the transcript when the first action fired
             first_words.append(k)
+            heard.append(sum(1 for w in r["words"] if r["t0"] + w["end"] <= ex[0]["t_issued"]))
             before += r["commit_word"] > 0 and k <= r["commit_word"]
     oos_false = [{"id": r["id"], "text": r["text"], "executed": [a["name"] for a in r["executed"] if not a.get("gated")]}
                  for r in oos if any(not a.get("gated") for a in r["executed"])]
@@ -467,6 +468,7 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
             "harmful": harmful, "harmful_rate": round(harmful / len(act), 4) if act else None,
             "oos_false_actions": len(oos_false), "oos_approval_requests": oos_gated,
             "first_action_word_mean": round(statistics.mean(first_words), 3) if first_words else None,
+            "first_action_words_fully_heard_mean": round(statistics.mean(heard), 3) if heard else None,
             "first_action_at_or_before_decisive": round(before / len(act), 4) if act else None,
             "harmful_detail": harm_rows, "oos_false_detail": oos_false})
     return out
