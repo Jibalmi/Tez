@@ -178,10 +178,37 @@ def plan_runtime(out: Path, log: Log) -> None:
         serve.wait(timeout=60)
 
 
-PLANS = {"runtime": (plan_runtime, 240)}   # name: (function, lock minutes)
+TTS_PY = str(ROOT / ".venv-tts" / "Scripts" / "python.exe")
+LLM_PORT = 8095   # a resident 12B for the text-to-speech co-residency conditions (outside Theioma's 8791-8818)
 
 
-def restore_prod(log: Log) -> None:
+def plan_tts(out: Path, log: Log) -> None:
+    """Text-to-speech round 1 (docs/plans/voice-tts-plan.md): A alone on the GPU, B beside a resident Gemma 4 12B, C
+    while that 12B decodes."""
+    suite = [TTS_PY, "experiments/tts_bench.py", "suite"]
+    if prod_pid() is not None:
+        run(["powershell", "-NoProfile", "-File", SERVERS_PS1, "stop-prod"], log)
+    run([*suite, "--name", "control,gpu,cpu", "--tag", "r1-A", "--lock", "none"], log, timeout=4 * 3600)
+    run_detached(["powershell", "-NoProfile", "-File", SERVERS_PS1, "start", "-Port", str(LLM_PORT)], log)
+    try:
+        if wait_http(f"http://127.0.0.1:{LLM_PORT}/health", 300, log):
+            run([*suite, "--name", "gpu,cpu", "--tag", "r1-B", "--lock", "none"], log, timeout=4 * 3600)
+            run([*suite, "--name", "gpu", "--tag", "r1-C", "--lock", "none", "--contend-url",
+                 f"http://127.0.0.1:{LLM_PORT}"], log, timeout=4 * 3600)
+    finally:
+        run(["powershell", "-NoProfile", "-File", SERVERS_PS1, "stop", "-Port", str(LLM_PORT)], log)
+
+
+PLANS = {"runtime": (plan_runtime, 240), "tts": (plan_tts, 480)}   # name: (function, lock minutes)
+
+
+def restore_prod(log: Log, was_running: bool) -> None:
+    """Leave the production llama-server as it was found: other sessions need the 14 GB when it is not in use."""
+    if not was_running:
+        if prod_pid() is not None:
+            run(["powershell", "-NoProfile", "-File", SERVERS_PS1, "stop-prod"], log)
+        log("production llama-server left stopped, as found")
+        return
     if prod_pid() is None:
         run_detached(["powershell", "-NoProfile", "-File", SERVERS_PS1, "start-prod"], log)
     ok = wait_http("http://127.0.0.1:8091/health", 300, log)
@@ -224,6 +251,7 @@ def main() -> int:
             "--pid", str(psutil.Process().pid)], log) != 0:
         log("could not take the GPU lock")
         return 3
+    prod_was_running = prod_pid() is not None
     try:
         (out / "gpu_before.json").write_text(subprocess.run([*LOCK, "snapshot"], capture_output=True, text=True).stdout)
         fn(out, log)
@@ -231,7 +259,7 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - always restore below
         log(f"step failed: {exc!r}")
     finally:
-        restore_prod(log)
+        restore_prod(log, prod_was_running)
         run([*LOCK, "release", "--owner", OWNER], log)
     log("done")
     return 0
