@@ -179,8 +179,8 @@ is the speed study's direct `/completion` and in-process measurements, with the 
 [BENCHMARKS.md §5b](BENCHMARKS.md#many-questions-about-one-state-layas-latency-protocol-with-distinct-questions-a-new-ticket-every-call-p50-ms-per-call)
 prints: in process, with the state evaluated once and every question's suffix in one decode, 50 questions take
 1,357 ms, against 10,511 ms for `tez serve` as deployed when measured. The runtime now reads two or more questions
-state first, and its in-process backend reads them in one decode; the runtime's own HTTP timing with that layout has not
-been re-measured on an idle machine yet.
+state first, and its in-process backend reads them in one decode: measured through `tez serve` on an idle machine,
+50 questions take 2,878 ms over llama-server and 1,147 ms in process (23 ms each), against 10,511 ms before.
 
 ![50 questions about one state: 1,357 ms in process with one decode for every question's suffix (27.1 ms each), against 10,511 ms for tez serve as deployed when measured](docs/figures/panels/speed_many_questions.png)
 

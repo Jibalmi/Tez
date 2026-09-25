@@ -102,7 +102,7 @@ def main():
              "per question. In these runs the runtime read every question first and the state after it, so the state was "
              "evaluated again for each question and the cost per question stayed near 90–140 ms. The runtime now reads two "
              "or more questions state first (`--layout auto`), so llama-server's prompt cache can keep the state for the "
-             "questions after the first; the runtime's own latency over HTTP with that layout has not been measured. §5b "
+             "questions after the first. On an idle machine the runtime now answers 50 questions in 2,878 ms over llama-server and 1,147 ms in process (23 ms each; §5b). §5b "
              "measures the layout on direct `/completion` calls and in process.")
     L.append("")
     L.append("### Selective automation on typed-decisions (accuracy on the decisions acted on, most confident first; `experiments/vs_laya_selective.py`)")

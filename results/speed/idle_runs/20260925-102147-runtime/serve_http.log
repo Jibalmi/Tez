@@ -1,0 +1,55 @@
+tez 0.1.0 on http://127.0.0.1:8788  backend http://127.0.0.1:8091 (gemma4), 0 schema(s), 0 probe(s), layout auto, browsers: http://127.0.0.1:*, http://localhost:*, https://jibalmi.github.io
+INFO:     Started server process [40688]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8788 (Press CTRL+C to quit)
+INFO:     127.0.0.1:55843 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55859 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51706 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55936 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59263 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65005 - "POST /v1/systemone HTTP/1.1" 200 OK

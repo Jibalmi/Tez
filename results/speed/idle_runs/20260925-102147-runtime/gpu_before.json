@@ -1,0 +1,38 @@
+{
+ "time": "2026-09-25T12:52:22+02:00",
+ "used_mb": 14287,
+ "total_mb": 16303,
+ "util_pct": 0,
+ "processes": [
+  {
+   "pid": 16580,
+   "name": "msedgewebview2",
+   "kind": "dedicated",
+   "mb": 111
+  },
+  {
+   "pid": 18520,
+   "name": "Code",
+   "kind": "dedicated",
+   "mb": 177
+  },
+  {
+   "pid": 3320,
+   "name": "dwm",
+   "kind": "dedicated",
+   "mb": 887
+  },
+  {
+   "pid": 48364,
+   "name": "llama-server",
+   "kind": "dedicated",
+   "mb": 13209
+  },
+  {
+   "pid": 58024,
+   "name": "explorer",
+   "kind": "dedicated",
+   "mb": 128
+  }
+ ]
+}

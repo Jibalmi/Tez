@@ -1,0 +1,2 @@
+2026-09-25T10:20:49+02:00  plan runtime: The runtime timings on an idle machine: tez serve over HTTP, then tez serve in process.  (pid 64712)
+2026-09-25T10:21:29+02:00  not idle: CPU averaged 92 % over 10 s (limit 25 %; busiest: MsMpEng.exe 304 %, svchost.exe 82 %, python.exe 70 %)

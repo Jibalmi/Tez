@@ -1193,8 +1193,8 @@ PANELS = [
           draw_latency, h=3.4, needs=H2H, section="Speed"),
     Panel("speed_many_questions", "Many questions about one state (§5b)", finding_speed5b,
           "p50 per call with 50 distinct questions about one state; row labels as BENCHMARKS.md §5b prints them",
-          SPEED_SETUP + " The runtime now reads two or more questions state first; its own latency over HTTP with that "
-          "layout has not been re-measured on an idle machine: the state-first rows are direct /completion calls or in "
+          SPEED_SETUP + " The state-first rows are the study's direct /completion calls and in-process code; measured "
+          "later through tez serve on an idle machine, 50 questions took 2,878 ms over llama-server and 1,147 ms in "
           "process.",
           "BENCHMARKS.md §5b (Many questions about one state; results/speed/summary.json, results/speed/tables.md).",
           draw_speed5b, h=3.9, left=2.95, needs=("results/speed/summary.json",), section="Speed"),

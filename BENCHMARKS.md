@@ -122,7 +122,7 @@ Tez beats Laya's router in every language (the smallest margin is English, 0.90 
 | laya (same GPU) | 36 ms | 50 ms | 75 ms | 370 ms | 7.4 ms |
 | laya-multilingual (same GPU) | 30 ms | 33 ms | 38 ms | 141 ms | 2.8 ms |
 
-Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass per question. In these runs the runtime read every question first and the state after it, so the state was evaluated again for each question and the cost per question stayed near 90–140 ms. The runtime now reads two or more questions state first (`--layout auto`), so llama-server's prompt cache can keep the state for the questions after the first; the runtime's own latency over HTTP with that layout has not been measured. §5b measures the layout on direct `/completion` calls and in process.
+Laya batches: its cost per question falls to 2.8–7.4 ms at 50 questions per call. Tez runs one forward pass per question. In these runs the runtime read every question first and the state after it, so the state was evaluated again for each question and the cost per question stayed near 90–140 ms. The runtime now reads two or more questions state first (`--layout auto`), so llama-server's prompt cache can keep the state for the questions after the first. On an idle machine the runtime now answers 50 questions in 2,878 ms over llama-server and 1,147 ms in process (23 ms each; §5b). §5b measures the layout on direct `/completion` calls and in process.
 
 ### Selective automation on typed-decisions (accuracy on the decisions acted on, most confident first; `experiments/vs_laya_selective.py`)
 
@@ -617,7 +617,7 @@ Indicative only; Tez has not been submitted to the leaderboard.
 
 `experiments/speed_multiq.py`, `speed_multiq_inproc.py`, `speed_probe_multiq.py`, `speed_voice.py`, `speed_overhead.py`; every table in `results/speed/tables.md`, every number in `results/speed/summary.json`, per-decision rows in `results/speed/td_rows_*.jsonl` (commit b6a8e0a). Clean reruns under a GPU lock, each with VRAM snapshots before and after (the `guard` field); earlier runs made while another process held VRAM are kept apart in `results/speed/contaminated/` and not used. Gemma 4 12B Q8_0 letters unless stated, on the production llama-server (`-c 4096 -b 512 -np 1 --swa-full --embeddings --pooling last`) or in process through llama.dll.
 
-*Question first* is the layout the runtime used when these were measured: instructions, question and options, then the state, so every question evaluates the state again. *State first* puts the state before the question, so with prompt caching the state is evaluated once per call and each further question evaluates only its own suffix. The runtime now reads two or more questions state first (`--layout auto`), but **its own latency over HTTP with that layout has not been measured**: the state-first rows below are direct `/completion` calls or in process.
+*Question first* is the layout the runtime used when these were measured: instructions, question and options, then the state, so every question evaluates the state again. *State first* puts the state before the question, so with prompt caching the state is evaluated once per call and each further question evaluates only its own suffix. The runtime now reads two or more questions state first (`--layout auto`); the rows below are the study's direct `/completion` calls and in-process code, and the runtime itself is measured in the next table.
 
 ### Many questions about one state (Laya's latency protocol with distinct questions, a new ticket every call, p50 ms per call)
 
@@ -630,6 +630,25 @@ Indicative only; Tez has not been submitted to the leaderboard.
 | in process, the state once and all question suffixes in one decode | 120 | 187 | 289 | **1,357** | **27.1** |
 
 On the same server, direct `/completion` calls, read state first, answer 50 questions in 4,255 ms against 10,722 ms question first; for a single question state first gains nothing (158 against 129 ms). In process, with the state evaluated once and every question's suffix in one `llama_decode`, 50 questions take 1,357 ms (27 ms each). On Laya's verbatim protocol (the questions alternate a 3-option choice and a yes/no), the same rerun has tez serve, question first, at 153 / 632 / 1,199 / 5,880 ms for 1 / 5 / 10 / 50 questions, direct `/completion` state first at 152 / 437 / 856 / 4,117 ms, and the in-process single decode at 96 / 183 / 274 / 1,114 ms (22.3 ms per question at 50; laya: 7.4, §1b). Rows for other llama-server settings, including parallel slots, are in `tables.md`.
+
+### The runtime itself, on an idle machine
+
+`tez serve` with its default layout (`auto`: state first for two or more questions), on the same protocol and pacing,
+run by `experiments/run_when_idle.py` once the laptop was quiet: CPU load 9 to 22 % during the runs, the GPU at 58 to
+66 °C and not throttled, no other process on the GPU (`results/speed/http_runtime_idle_laya.json`,
+`results/speed/inproc_runtime_idle_laya.json`; run log in `results/speed/idle_runs/`). p50 / p95 ms per call:
+
+| `tez serve` backend | 1 q | 5 q | 10 q | 50 q | ms per question at 50 |
+|---|---:|---:|---:|---:|---:|
+| llama-server (the production settings above), state first | 145 / 158 | 415 / 427 | 659 / 740 | 2,878 / 2,898 | 57.6 |
+| in process (`--backend inproc:`), one decode per request | 75 / 88 | 164 / 175 | 252 / 258 | **1,147 / 1,149** | **23.0** |
+
+Against `tez serve` as deployed before the layout change (question first: 155 / 950 / 1,786 / 10,511 ms above), the
+runtime answers 50 questions 3.7 times faster over llama-server and 9.2 times faster in process, and one question in
+75 ms instead of 155. The in-process runtime comes in under the study's own in-process arm (1,357 ms) because the GPU
+ran cooler; measured interleaved on one loaded model, the runtime adds 1 to 3 % to that arm
+(`results/speed/inproc_runtime_ab.json`). Timings taken earlier while other sessions held the CPU at 80 to 100 %
+(`results/speed/inproc_runtime_*laya.json`, `http_runtime_laya.json`) are superseded by these.
 
 **Accuracy by layout** (typed-decisions test split, 400 rows × 5 questions = 2,000 decisions, zero-shot letters):
 

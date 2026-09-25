@@ -1,0 +1,2 @@
+2026-09-25T10:19:50+02:00  plan runtime: The runtime timings on an idle machine: tez serve over HTTP, then tez serve in process.  (pid 24700)
+2026-09-25T10:20:28+02:00  not idle: dwm (pid 3320) holds 818 MB of GPU memory; CPU averaged 83 % over 10 s (limit 25 %; busiest: System Idle Process 348 %, MsMpEng.exe 281 %, System 74 %)

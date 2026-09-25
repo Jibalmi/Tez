@@ -64,6 +64,16 @@ def run(cmd: list[str], log: Log, timeout: float | None = None) -> int:
     return p.returncode
 
 
+def run_detached(cmd: list[str], log: Log, timeout: float = 180) -> int:
+    """For commands that start a long-lived process (speed_servers.ps1 start-prod): no output pipes, because the
+    server inherits them and a captured run would wait for it to exit."""
+    log("$ " + " ".join(cmd))
+    code = subprocess.run(cmd, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                          timeout=timeout).returncode
+    log(f"  exit {code}")
+    return code
+
+
 def http_ok(url: str) -> bool:
     try:
         with urllib.request.urlopen(url, timeout=3) as r:
@@ -173,7 +183,7 @@ PLANS = {"runtime": (plan_runtime, 240)}   # name: (function, lock minutes)
 
 def restore_prod(log: Log) -> None:
     if prod_pid() is None:
-        run(["powershell", "-NoProfile", "-File", SERVERS_PS1, "start-prod"], log)
+        run_detached(["powershell", "-NoProfile", "-File", SERVERS_PS1, "start-prod"], log)
     ok = wait_http("http://127.0.0.1:8091/health", 300, log)
     log(f"production llama-server on :8091 {'ok' if ok else 'NOT healthy: check it'} (pid {prod_pid()})")
 

@@ -1,0 +1,44 @@
+2026-09-25T10:21:47+02:00  plan runtime: The runtime timings on an idle machine: tez serve over HTTP, then tez serve in process.  (pid 68648)
+2026-09-25T10:25:31+02:00  not idle: CPU averaged 91 % over 180 s (limit 25 %; busiest: MsMpEng.exe 299 %, svchost.exe 88 %, com.docker.backend.exe 78 %)
+2026-09-25T10:34:02+02:00  not idle: CPU averaged 85 % over 180 s (limit 25 %; busiest: MsMpEng.exe 271 %, com.docker.backend.exe 76 %, python.exe 63 %)
+2026-09-25T10:42:42+02:00  not idle: CPU averaged 92 % over 180 s (limit 25 %; busiest: python.exe 1456 %, MsMpEng.exe 135 %, node.exe 135 %)
+2026-09-25T10:51:06+02:00  not idle: CPU averaged 55 % over 180 s (limit 25 %; busiest: python.exe 396 %, MsMpEng.exe 345 %, python.exe 54 %)
+2026-09-25T10:59:18+02:00  not idle: CPU averaged 49 % over 180 s (limit 25 %; busiest: MsMpEng.exe 374 %, Code.exe 58 %, python.exe 54 %)
+2026-09-25T11:07:35+02:00  not idle: CPU averaged 63 % over 180 s (limit 25 %; busiest: python.exe 1123 %, MsMpEng.exe 372 %, python.exe 59 %)
+2026-09-25T11:16:36+02:00  not idle: GPU lock held by projects-37-tts (TTS harness smoke test); python (pid 64180) holds 1242 MB of GPU memory; CPU averaged 99 % over 180 s (limit 25 %; busiest: python.exe 1372 %, MsMpEng.exe 164 %, Code.exe 115 %)
+2026-09-25T11:26:15+02:00  not idle: GPU lock held by projects-37-tts (TTS harness smoke test); python (pid 57944) holds 728 MB of GPU memory; CPU averaged 93 % over 180 s (limit 25 %; busiest: MsMpEng.exe 298 %, svchost.exe 119 %, WmiPrvSE.exe 97 %)
+2026-09-25T11:34:58+02:00  not idle: CPU averaged 96 % over 180 s (limit 25 %; busiest: MsMpEng.exe 528 %, svchost.exe 68 %, python.exe 66 %)
+2026-09-25T11:43:41+02:00  not idle: CPU averaged 98 % over 180 s (limit 25 %; busiest: MsMpEng.exe 337 %, python.exe 192 %, svchost.exe 84 %)
+2026-09-25T11:52:28+02:00  not idle: CPU averaged 98 % over 180 s (limit 25 %; busiest: MsMpEng.exe 386 %, node.exe 201 %, python.exe 197 %)
+2026-09-25T12:01:08+02:00  not idle: CPU averaged 96 % over 180 s (limit 25 %; busiest: MsMpEng.exe 328 %, python.exe 219 %, node.exe 97 %)
+2026-09-25T12:09:48+02:00  not idle: CPU averaged 97 % over 180 s (limit 25 %; busiest: MsMpEng.exe 411 %, python.exe 249 %, node.exe 148 %)
+2026-09-25T12:18:32+02:00  not idle: CPU averaged 97 % over 180 s (limit 25 %; busiest: MsMpEng.exe 436 %, python.exe 266 %, node.exe 91 %)
+2026-09-25T12:27:12+02:00  not idle: CPU averaged 96 % over 180 s (limit 25 %; busiest: MsMpEng.exe 469 %, node.exe 210 %, python.exe 140 %)
+2026-09-25T12:35:53+02:00  not idle: CPU averaged 96 % over 180 s (limit 25 %; busiest: MsMpEng.exe 461 %, python.exe 194 %, python.exe 66 %)
+2026-09-25T12:44:15+02:00  not idle: CPU averaged 50 % over 180 s (limit 25 %; busiest: MsMpEng.exe 335 %, python.exe 53 %, claude.exe 11 %)
+2026-09-25T12:52:18+02:00  idle
+2026-09-25T12:52:18+02:00  $ C:\Python314\python.exe C:/temp/gpu_lock.py acquire --owner projects-37-idle-timing --purpose idle rerun: runtime --minutes 240 --pid 68648
+2026-09-25T12:52:19+02:00    acquired: {"owner": "projects-37-idle-timing", "purpose": "idle rerun: runtime", "since": "2026-09-25T12:52:19+02:00", "until": "2026-09-25T16:52:19+02:00", "pid": 68648}
+2026-09-25T12:52:19+02:00    exit 0
+2026-09-25T12:52:33+02:00  CPU before HTTP arm: 8 %
+2026-09-25T12:52:33+02:00  $ C:\Python314\python.exe experiments/inproc_runtime_bench.py laya --tez http://127.0.0.1:8788 --kind http --llama-port 8091 --tag http_runtime_idle
+2026-09-25T12:54:22+02:00    http_runtime_idle   1q  p50    144.7  p95    158.3  per q 144.66  tez    141.2  backend 140.85  layout ['question_first']  sm 191.0 MHz 58.0 C throttled 0.0  cpu 11.7%
+2026-09-25T12:54:22+02:00    http_runtime_idle   5q  p50    415.2  p95    427.0  per q  83.04  tez    411.1  backend 409.5  layout ['state_first']  sm 723.5 MHz 62.0 C throttled 0.0  cpu 12.0%
+2026-09-25T12:54:22+02:00    http_runtime_idle  10q  p50    658.8  p95    740.0  per q  65.88  tez    655.8  backend 653.55  layout ['state_first']  sm 1582.0 MHz 65.0 C throttled 0.0  cpu 22.0%
+2026-09-25T12:54:22+02:00    http_runtime_idle  50q  p50   2878.1  p95   2898.1  per q  57.56  tez   2872.8  backend 2859.65  layout ['state_first']  sm 1650.0 MHz 66.0 C throttled 0.0  cpu 10.6%
+2026-09-25T12:54:22+02:00    gpu_guard contaminated: False []
+2026-09-25T12:54:22+02:00    wrote C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\results\speed\http_runtime_idle_laya.json
+2026-09-25T12:54:22+02:00    exit 0
+2026-09-25T12:54:22+02:00  $ powershell -NoProfile -File C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_servers.ps1 stop-prod
+2026-09-25T12:54:27+02:00    stopped production llama-server pid 48364
+2026-09-25T12:54:27+02:00    exit 0
+2026-09-25T12:54:54+02:00  CPU before in-process arm: 20 %
+2026-09-25T12:54:54+02:00  $ C:\Python314\python.exe experiments/inproc_runtime_bench.py laya --tez http://127.0.0.1:8789 --kind inproc --tag inproc_runtime_idle
+2026-09-25T12:55:55+02:00    inproc_runtime_idle  1q  p50     74.7  p95     88.3  per q  74.72  tez     71.8  backend 71.6  layout ['question_first']  sm 592.0 MHz 64.0 C throttled 0.0  cpu 8.7%
+2026-09-25T12:55:55+02:00    inproc_runtime_idle  5q  p50    164.2  p95    174.8  per q  32.85  tez    161.2  backend 160.6  layout ['state_first']  sm 180.0 MHz 65.0 C throttled 0.0  cpu 9.5%
+2026-09-25T12:55:55+02:00    inproc_runtime_idle 10q  p50    251.6  p95    257.7  per q  25.16  tez    248.2  backend 247.25  layout ['state_first']  sm 360.0 MHz 65.5 C throttled 0.0  cpu 9.3%
+2026-09-25T12:55:55+02:00    inproc_runtime_idle 50q  p50   1147.4  p95   1149.2  per q  22.95  tez   1142.5  backend 1137.9  layout ['state_first']  sm 1447.0 MHz 66.0 C throttled 0.0  cpu 15.2%
+2026-09-25T12:55:55+02:00    gpu_guard contaminated: False []
+2026-09-25T12:55:55+02:00    wrote C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\results\speed\inproc_runtime_idle_laya.json
+2026-09-25T12:55:55+02:00    exit 0
+2026-09-25T12:56:01+02:00  $ powershell -NoProfile -File C:\Users\migue\OneDrive\Desktop\Personal\AILABS\Tez\experiments\speed_servers.ps1 start-prod

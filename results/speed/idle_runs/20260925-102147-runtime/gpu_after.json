@@ -1,0 +1,26 @@
+{
+ "time": "2026-09-25T12:56:00+02:00",
+ "used_mb": 1070,
+ "total_mb": 16303,
+ "util_pct": 0,
+ "processes": [
+  {
+   "pid": 18520,
+   "name": "Code",
+   "kind": "dedicated",
+   "mb": 195
+  },
+  {
+   "pid": 3320,
+   "name": "dwm",
+   "kind": "dedicated",
+   "mb": 883
+  },
+  {
+   "pid": 58024,
+   "name": "explorer",
+   "kind": "dedicated",
+   "mb": 128
+  }
+ ]
+}

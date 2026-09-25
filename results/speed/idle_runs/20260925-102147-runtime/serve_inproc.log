@@ -1,0 +1,57 @@
+tez: inproc: loaded C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795 in 18.5 s (NVIDIA GeForce RTX 5080 Laptop GPU)
+loaded gemma-4-12b-q8_0 in this process in 20.0 s (NVIDIA GeForce RTX 5080 Laptop GPU; llama.cpp b11100-7ab4ee7ba, libllama 0.4.1-dev; n_ctx 4096, n_batch 4096, 64 sequences)
+tez 0.1.0 on http://127.0.0.1:8789  backend inproc:C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795 (gemma4), 0 schema(s), 0 probe(s), layout auto, browsers: http://127.0.0.1:*, http://localhost:*, https://jibalmi.github.io
+INFO:     Started server process [38288]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8789 (Press CTRL+C to quit)
+INFO:     127.0.0.1:60023 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55631 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64211 - "POST /v1/systemone HTTP/1.1" 200 OK

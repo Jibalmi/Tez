@@ -437,24 +437,20 @@ When to use which:
 | Memory | the model in the Tez process: one Tez process per GPU; restarting Tez reloads it (47 s for the 12B in the `tez doctor` run, `results/speed/inproc_runtime_doctor.txt`) | the model in llama-server: several Tez processes or clients share it, and Tez restarts without reloading it |
 | Setup | a llama.cpp release directory | a running llama-server; also the Docker images (`compose.yaml`), Ollama's GGUFs or a GPU on another machine |
 
-Measured with `tez serve` on the laptop's RTX 5080 (16 GB), Gemma 4 12B Q8_0, llama.cpp b11100: Laya's protocol with
+Measured with `tez serve` on the laptop's RTX 5080 (16 GB), Gemma 4 12B Q8_0, llama.cpp b11100, on an idle machine
+(CPU load 9 to 22 %, GPU not throttled, nothing else on the GPU; `experiments/run_when_idle.py`): Laya's protocol with
 distinct questions (a new ticket per call, 3-option choice and yes/no questions alternating; the speed study's pacing),
-p50 / p95 per call in ms, from `experiments/inproc_runtime_bench.py` (`results/speed/inproc_runtime_*laya.json`,
-`results/speed/http_runtime_laya.json`):
+p50 / p95 per call in ms, from `experiments/inproc_runtime_bench.py` (`results/speed/inproc_runtime_idle_laya.json`,
+`results/speed/http_runtime_idle_laya.json`):
 
-| `tez serve` backend | 1 question | 5 | 10 | 50 | ms per question at 50 | CPU load from other processes |
-|---|---:|---:|---:|---:|---:|---|
-| in process, run 1 | 80 / 88 | 182 / 191 | 347 / 436 | 1,652 / 1,805 | 33.0 | not recorded |
-| in process, run 2 | 87 / 139 | 231 / 316 | 381 / 675 | 1,807 / 1,905 | 36.1 | not recorded |
-| in process, run 3 | 81 / 114 | 180 / 288 | 318 / 770 | 1,832 / 2,912 | 36.6 | 88-100 % |
-| llama-server (the production settings above, `-np 1`), state first | 155 / 215 | 627 / 1,132 | 2,234 / 3,373 | 10,832 / 13,593 | 216.7 | 100 % |
+| `tez serve` backend | 1 question | 5 | 10 | 50 | ms per question at 50 |
+|---|---:|---:|---:|---:|---:|
+| in process | 75 / 88 | 164 / 175 | 252 / 258 | 1,147 / 1,149 | 23.0 |
+| llama-server (the production settings above, `-np 1`), state first | 145 / 158 | 415 / 427 | 659 / 740 | 2,878 / 2,898 | 57.6 |
 
-Other sessions kept the laptop's CPU at 80-100 % during most of these runs, and llama.cpp's threads meet at barriers
-even with every layer on the GPU, so they are slower and noisier than an idle machine gives: in the speed study, on an
-idle CPU, the same llama-server answered state-first questions sent straight to `/completion` in 752 / 4,255 ms at 10 /
-50 questions, and its in-process batched arm took 1,357 ms at 50 (`results/speed/tables.md`); within this session the
-engine called directly and through `tez serve` took the same time (medians 1,821 and 1,617 ms at 10 questions over
-llama-server, interleaved). Measured instead in one process on one loaded model, interleaved call by call so the load
+Earlier runs while other sessions held the CPU at 80-100 % were slower and noisier (llama.cpp's threads meet at
+barriers even with every layer on the GPU; `results/speed/inproc_runtime_*laya.json`, `http_runtime_laya.json`) and are
+superseded by these. Measured in one process on one loaded model, interleaved call by call so the load
 hits every arm alike, the runtime adds 1-3 % to the study's batched arm at 50 questions: 1,436 ms p50 for the study's
 logic, 1,443-1,486 for the backend's batched read, 1,451-1,470 for the whole engine (`experiments/inproc_ab.py`,
 `results/speed/inproc_runtime_ab.json`; the same letters).
