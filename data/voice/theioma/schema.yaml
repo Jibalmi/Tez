@@ -1,0 +1,69 @@
+# Theioma's voice commands as one Tez choice question: 23 tools of Theioma's voice tool registry
+# (AILABS/Jarvis apps/web/src/lib/voice-tools, read 2026-09-25) plus none, chosen to cover every action class of the
+# voice design (docs/plans/theioma-voice-design.md, "Early-commit rules for Theioma's action classes"):
+#   R0 instant, reversible     opens, focus, media keys, dashboard pages, read-only questions
+#   R1 refinable               play X on Y, search X, open a project's section: the ancestor opens early
+#   R2 deferred, stateful      typing, messages to agents, reminders, delegation, answers that need the whole query
+#   R3 gated                   approvals, closing windows, killing processes, shell commands: never executed by the
+#                              loop, only turned into an approval request at the end of the utterance
+# The descriptions paraphrase the registry's own (option id = tool name). Classes follow the design; the registry's
+# approval-gated tools (essential-tools.ts APPROVAL_GATED_VOICE_TOOLS) are all R3 or excluded.
+name: theioma-voice
+description: Theioma voice tools (a 23-tool subset of the registry) plus none.
+layout: question_first
+questions:
+  action:
+    type: choice
+    instructions: >-
+      You are the command router of Theioma, a voice-controlled assistant on a Windows desktop. The input is the
+      transcript of what the user has said so far. Decide which ONE tool they are asking for. Choose none if it is
+      chit-chat, a remark, a question none of the tools answers, or too unclear to act on.
+    criteria:
+      system.open_app: Launch or switch to a desktop application (Spotify, Chrome, VS Code, the terminal, Notepad, ...).
+      system.open_url: Open a website by name or address in the browser (YouTube, Gmail, GitHub, ...).
+      media.key: Press a media key for whatever is playing (play or pause, next, previous, louder, quieter, mute).
+      navigate.app: Go to a page of the Theioma dashboard (approvals, sessions, settings, the voice page, ...).
+      window.minimize: Minimize the current window.
+      window.maximize: Maximize the current window.
+      media.now_playing: Say which song or video is playing right now.
+      theioma.list_sessions: List the agent sessions and say which ones are busy.
+      screen.describe: Look at the screen and describe what is on it.
+      youtube.play: Play a video, channel or topic on YouTube.
+      spotify.play: Play a song, artist, album, playlist or the liked songs on Spotify.
+      system.web_search: Open a web search for something in the browser.
+      theioma.open_project_section: Open a section (plan, sessions, approvals, orchestrator, ...) of a named Theioma project.
+      keyboard.type: Type dictated text into the focused window.
+      web.search_and_summarize: Look up the answer to a factual question online (weather, news, facts) and read it out.
+      memory.note_event: Remember an event or a reminder (a delivery, a meeting, a deadline).
+      theioma.send_message: Send a message or an instruction to a named agent session.
+      delegate.orchestrator: Hand a new project or a large goal to the master orchestrator to plan and build.
+      system.volume_set: Set the system volume to a given level.
+      resolve_approval: Approve or deny the pending approval request.
+      window.close: Close a window or an application.
+      process.kill: Force-kill a running process or program.
+      shell.run: Run a shell or git command in the Theioma repository.
+      none: "Nothing to do: chit-chat, a remark, a question none of the tools answers, or too unclear to act on."
+actions:
+  system.open_app: {class: R0}
+  system.open_url: {class: R0}
+  media.key: {class: R0, stable: 2}
+  navigate.app: {class: R0}
+  window.minimize: {class: R0, stable: 2}
+  window.maximize: {class: R0, stable: 2}
+  media.now_playing: {class: R0, stable: 2}
+  theioma.list_sessions: {class: R0, stable: 2}
+  screen.describe: {class: R0, stable: 2}
+  youtube.play: {class: R1, stable: 2, refines: system.open_url}
+  spotify.play: {class: R1, stable: 2, refines: system.open_app}
+  system.web_search: {class: R1, stable: 2, refines: system.open_app}
+  theioma.open_project_section: {class: R1, stable: 2, refines: navigate.app}
+  keyboard.type: {class: R2, refines: system.open_app}
+  web.search_and_summarize: {class: R2}
+  memory.note_event: {class: R2}
+  theioma.send_message: {class: R2}
+  delegate.orchestrator: {class: R2}
+  system.volume_set: {class: R2}
+  resolve_approval: {class: R3}
+  window.close: {class: R3}
+  process.kill: {class: R3}
+  shell.run: {class: R3}

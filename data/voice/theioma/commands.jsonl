@@ -1,0 +1,269 @@
+{"id": "t001", "text": "open spotify", "intent": "system.open_app", "slots": {"app": "spotify"}, "style": "canonical", "commit_word": 2}
+{"id": "t002", "text": "open vs code", "intent": "system.open_app", "slots": {"app": "vs code"}, "style": "canonical", "commit_word": 2}
+{"id": "t003", "text": "launch the terminal", "intent": "system.open_app", "slots": {"app": "terminal"}, "style": "canonical", "commit_word": 3}
+{"id": "t004", "text": "start discord", "intent": "system.open_app", "slots": {"app": "discord"}, "style": "canonical", "commit_word": 2}
+{"id": "t005", "text": "fire up notepad for me", "intent": "system.open_app", "slots": {"app": "notepad"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t006", "text": "can you bring up the calculator", "intent": "system.open_app", "slots": {"app": "calculator"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t007", "text": "i need excel open", "intent": "system.open_app", "slots": {"app": "excel"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t008", "text": "um open uh slack", "intent": "system.open_app", "slots": {"app": "slack"}, "style": "noisy", "commit_word": 4}
+{"id": "t009", "text": "hey theioma could you please launch obsidian", "intent": "system.open_app", "slots": {"app": "obsidian"}, "style": "noisy", "commit_word": 7}
+{"id": "t010", "text": "open the uh the file explorer", "intent": "system.open_app", "slots": {"app": "file explorer"}, "style": "noisy", "commit_word": 6}
+{"id": "t011", "text": "open notepad and type buy milk", "intent": "system.open_app", "slots": {"app": "notepad", "text": "buy milk"}, "style": "compound", "commit_word": 2, "then": "keyboard.type"}
+{"id": "t012", "text": "open chrome and search for cheap flights to lisbon", "intent": "system.open_app", "slots": {"app": "chrome", "query": "cheap flights to lisbon"}, "style": "compound", "commit_word": 2, "then": "system.web_search"}
+{"id": "t013", "text": "open spotify and play my liked songs", "intent": "system.open_app", "slots": {"app": "spotify", "query": "my liked songs"}, "style": "compound", "commit_word": 2, "then": "spotify.play"}
+{"id": "t014", "text": "open vs code then run git status", "intent": "system.open_app", "slots": {"app": "vs code", "command": "git status"}, "style": "compound", "commit_word": 2, "then": "shell.run"}
+{"id": "t015", "text": "open the terminal and run npm install", "intent": "system.open_app", "slots": {"app": "terminal", "command": "npm install"}, "style": "compound", "commit_word": 3, "then": "shell.run"}
+{"id": "t016", "text": "open youtube", "intent": "system.open_url", "slots": {"url": "youtube"}, "style": "canonical", "commit_word": 2}
+{"id": "t017", "text": "open gmail", "intent": "system.open_url", "slots": {"url": "gmail"}, "style": "canonical", "commit_word": 2}
+{"id": "t018", "text": "go to github dot com", "intent": "system.open_url", "slots": {"url": "github dot com"}, "style": "canonical", "commit_word": 3}
+{"id": "t019", "text": "take me to reddit", "intent": "system.open_url", "slots": {"url": "reddit"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t020", "text": "can you pull up wikipedia", "intent": "system.open_url", "slots": {"url": "wikipedia"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t021", "text": "bring up google docs", "intent": "system.open_url", "slots": {"url": "google docs"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t022", "text": "hey theioma open gmail please", "intent": "system.open_url", "slots": {"url": "gmail"}, "style": "noisy", "commit_word": 4}
+{"id": "t023", "text": "um open uh netflix dot com", "intent": "system.open_url", "slots": {"url": "netflix dot com"}, "style": "noisy", "commit_word": 5}
+{"id": "t024", "text": "open youtube and play lofi beats", "intent": "system.open_url", "slots": {"url": "youtube", "query": "lofi beats"}, "style": "compound", "commit_word": 2, "then": "youtube.play"}
+{"id": "t025", "text": "open gmail and type thanks for the update", "intent": "system.open_url", "slots": {"url": "gmail", "text": "thanks for the update"}, "style": "compound", "commit_word": 2, "then": "keyboard.type"}
+{"id": "t026", "text": "open github", "intent": "system.open_url", "slots": {"url": "github"}, "style": "ambiguous", "commit_word": 2, "alt": "system.open_app"}
+{"id": "t027", "text": "pause", "intent": "media.key", "slots": {"key": "play_pause"}, "style": "canonical", "commit_word": 1}
+{"id": "t028", "text": "next track", "intent": "media.key", "slots": {"key": "next"}, "style": "canonical", "commit_word": 1}
+{"id": "t029", "text": "previous song", "intent": "media.key", "slots": {"key": "previous"}, "style": "canonical", "commit_word": 1}
+{"id": "t030", "text": "mute", "intent": "media.key", "slots": {"key": "mute"}, "style": "canonical", "commit_word": 1}
+{"id": "t031", "text": "can you pause the music", "intent": "media.key", "slots": {"key": "play_pause"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t032", "text": "skip this song", "intent": "media.key", "slots": {"key": "next"}, "style": "paraphrase", "commit_word": 1}
+{"id": "t033", "text": "go back to the last song", "intent": "media.key", "slots": {"key": "previous"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t034", "text": "make it a bit louder", "intent": "media.key", "slots": {"key": "vol_up"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t035", "text": "um turn it down a little", "intent": "media.key", "slots": {"key": "vol_down"}, "style": "noisy", "commit_word": 4}
+{"id": "t036", "text": "um could you mute that", "intent": "media.key", "slots": {"key": "mute"}, "style": "noisy", "commit_word": 4}
+{"id": "t037", "text": "hey theioma resume the uh the music", "intent": "media.key", "slots": {"key": "play_pause"}, "style": "noisy", "commit_word": 3}
+{"id": "t038", "text": "pause the music and open the approvals page", "intent": "media.key", "slots": {"key": "play_pause", "page": "approvals"}, "style": "compound", "commit_word": 1, "then": "navigate.app"}
+{"id": "t039", "text": "turn it down and tell the orchestrator to pause", "intent": "media.key", "slots": {"key": "vol_down", "session": "orchestrator", "message": "pause"}, "style": "compound", "commit_word": 3, "then": "theioma.send_message"}
+{"id": "t040", "text": "mute the music and ask the tez session for a status update", "intent": "media.key", "slots": {"key": "mute", "session": "tez", "message": "a status update"}, "style": "compound", "commit_word": 1, "then": "theioma.send_message"}
+{"id": "t041", "text": "pause it then tell the tez session to stop", "intent": "media.key", "slots": {"key": "play_pause", "session": "tez", "message": "stop"}, "style": "compound", "commit_word": 1, "then": "theioma.send_message"}
+{"id": "t042", "text": "stop that", "intent": "media.key", "slots": {"key": "play_pause"}, "style": "ambiguous", "commit_word": 2, "alt": "window.close"}
+{"id": "t043", "text": "kill the music", "intent": "media.key", "slots": {"key": "play_pause"}, "style": "ambiguous", "commit_word": 3, "alt": "process.kill"}
+{"id": "t044", "text": "open the approvals page", "intent": "navigate.app", "slots": {"page": "approvals"}, "style": "canonical", "commit_word": 4}
+{"id": "t045", "text": "open theioma settings", "intent": "navigate.app", "slots": {"page": "settings"}, "style": "canonical", "commit_word": 3}
+{"id": "t046", "text": "show the sessions page", "intent": "navigate.app", "slots": {"page": "sessions"}, "style": "canonical", "commit_word": 4}
+{"id": "t047", "text": "go to the voice page", "intent": "navigate.app", "slots": {"page": "voice"}, "style": "canonical", "commit_word": 5}
+{"id": "t048", "text": "take me to the cost dashboard", "intent": "navigate.app", "slots": {"page": "cost"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t049", "text": "bring up the analytics page", "intent": "navigate.app", "slots": {"page": "analytics"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t050", "text": "can you switch to the roadmap", "intent": "navigate.app", "slots": {"page": "roadmap"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t051", "text": "um go to the uh approvals page", "intent": "navigate.app", "slots": {"page": "approvals"}, "style": "noisy", "commit_word": 7}
+{"id": "t052", "text": "hey theioma open the knowledge page please", "intent": "navigate.app", "slots": {"page": "knowledge"}, "style": "noisy", "commit_word": 6}
+{"id": "t053", "text": "okay so take me to the errors page", "intent": "navigate.app", "slots": {"page": "errors"}, "style": "noisy", "commit_word": 8}
+{"id": "t054", "text": "go to the arm project and open its plan", "intent": "navigate.app", "slots": {"project": "arm", "section": "plan"}, "style": "compound", "commit_word": 5, "then": "theioma.open_project_section"}
+{"id": "t055", "text": "open the approvals page and approve it", "intent": "navigate.app", "slots": {"page": "approvals", "decision": "approve"}, "style": "compound", "commit_word": 4, "then": "resolve_approval"}
+{"id": "t056", "text": "open the approvals", "intent": "navigate.app", "slots": {"page": "approvals"}, "style": "ambiguous", "commit_word": 3, "alt": "theioma.open_project_section"}
+{"id": "t057", "text": "show me the sessions", "intent": "navigate.app", "slots": {"page": "sessions"}, "style": "ambiguous", "commit_word": 4, "alt": "theioma.list_sessions"}
+{"id": "t058", "text": "minimize this window", "intent": "window.minimize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t059", "text": "minimize", "intent": "window.minimize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t060", "text": "minimize it", "intent": "window.minimize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t061", "text": "hide this window for now", "intent": "window.minimize", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "t062", "text": "send this window to the taskbar", "intent": "window.minimize", "slots": {}, "style": "paraphrase", "commit_word": 6}
+{"id": "t063", "text": "can you minimize that", "intent": "window.minimize", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "t064", "text": "uh minimize minimize this", "intent": "window.minimize", "slots": {}, "style": "noisy", "commit_word": 2}
+{"id": "t065", "text": "hey theioma could you minimize the window", "intent": "window.minimize", "slots": {}, "style": "noisy", "commit_word": 5}
+{"id": "t066", "text": "minimize this window and open slack", "intent": "window.minimize", "slots": {"app": "slack"}, "style": "compound", "commit_word": 1, "then": "system.open_app"}
+{"id": "t067", "text": "maximize this window", "intent": "window.maximize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t068", "text": "maximize", "intent": "window.maximize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t069", "text": "maximize it", "intent": "window.maximize", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t070", "text": "make this window fill the screen", "intent": "window.maximize", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "t071", "text": "can you maximize that", "intent": "window.maximize", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "t072", "text": "expand this window to full size", "intent": "window.maximize", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "t073", "text": "um maximize uh this window", "intent": "window.maximize", "slots": {}, "style": "noisy", "commit_word": 2}
+{"id": "t074", "text": "okay so maximize the the window", "intent": "window.maximize", "slots": {}, "style": "noisy", "commit_word": 3}
+{"id": "t075", "text": "maximize this window and describe the screen", "intent": "window.maximize", "slots": {}, "style": "compound", "commit_word": 1, "then": "screen.describe"}
+{"id": "t076", "text": "what song is this", "intent": "media.now_playing", "slots": {}, "style": "canonical", "commit_word": 4}
+{"id": "t077", "text": "what is playing right now", "intent": "media.now_playing", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "t078", "text": "who sings this song", "intent": "media.now_playing", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "t079", "text": "what am i listening to", "intent": "media.now_playing", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "t080", "text": "tell me the name of this song", "intent": "media.now_playing", "slots": {}, "style": "paraphrase", "commit_word": 7}
+{"id": "t081", "text": "which video is this", "intent": "media.now_playing", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "t082", "text": "um what song is uh playing", "intent": "media.now_playing", "slots": {}, "style": "noisy", "commit_word": 6}
+{"id": "t083", "text": "hey theioma what is this song called", "intent": "media.now_playing", "slots": {}, "style": "noisy", "commit_word": 6}
+{"id": "t084", "text": "list the sessions", "intent": "theioma.list_sessions", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "t085", "text": "which sessions are busy", "intent": "theioma.list_sessions", "slots": {}, "style": "canonical", "commit_word": 2}
+{"id": "t086", "text": "list all the agent sessions", "intent": "theioma.list_sessions", "slots": {}, "style": "canonical", "commit_word": 5}
+{"id": "t087", "text": "what are the agents working on right now", "intent": "theioma.list_sessions", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "t088", "text": "how many sessions are running", "intent": "theioma.list_sessions", "slots": {}, "style": "paraphrase", "commit_word": 3}
+{"id": "t089", "text": "are any of my sessions busy", "intent": "theioma.list_sessions", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "t090", "text": "uh which uh sessions are still running", "intent": "theioma.list_sessions", "slots": {}, "style": "noisy", "commit_word": 4}
+{"id": "t091", "text": "hey theioma list list the sessions", "intent": "theioma.list_sessions", "slots": {}, "style": "noisy", "commit_word": 6}
+{"id": "t092", "text": "list the sessions and then open the orchestrator for tez", "intent": "theioma.list_sessions", "slots": {"project": "tez", "section": "orchestrator"}, "style": "compound", "commit_word": 3, "then": "theioma.open_project_section"}
+{"id": "t093", "text": "describe my screen", "intent": "screen.describe", "slots": {}, "style": "canonical", "commit_word": 3}
+{"id": "t094", "text": "what is on my screen", "intent": "screen.describe", "slots": {}, "style": "canonical", "commit_word": 5}
+{"id": "t095", "text": "look at my screen", "intent": "screen.describe", "slots": {}, "style": "canonical", "commit_word": 4}
+{"id": "t096", "text": "what am i looking at", "intent": "screen.describe", "slots": {}, "style": "paraphrase", "commit_word": 4}
+{"id": "t097", "text": "can you see what is on the screen", "intent": "screen.describe", "slots": {}, "style": "paraphrase", "commit_word": 8}
+{"id": "t098", "text": "tell me what this window shows", "intent": "screen.describe", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "t099", "text": "um what is uh on my screen right now", "intent": "screen.describe", "slots": {}, "style": "noisy", "commit_word": 7}
+{"id": "t100", "text": "hey theioma describe describe the screen", "intent": "screen.describe", "slots": {}, "style": "noisy", "commit_word": 6}
+{"id": "t101", "text": "play lofi beats on youtube", "intent": "youtube.play", "slots": {"query": "lofi beats"}, "style": "canonical", "commit_word": 5}
+{"id": "t102", "text": "youtube play bob ross painting", "intent": "youtube.play", "slots": {"query": "bob ross painting"}, "style": "canonical", "commit_word": 2}
+{"id": "t103", "text": "play the champions league highlights on youtube", "intent": "youtube.play", "slots": {"query": "the champions league highlights"}, "style": "canonical", "commit_word": 5}
+{"id": "t104", "text": "on youtube play the new dune trailer", "intent": "youtube.play", "slots": {"query": "the new dune trailer"}, "style": "canonical", "commit_word": 3}
+{"id": "t105", "text": "put on rain sounds for sleeping on youtube", "intent": "youtube.play", "slots": {"query": "rain sounds for sleeping"}, "style": "paraphrase", "commit_word": 8}
+{"id": "t106", "text": "show me a video of cats falling asleep", "intent": "youtube.play", "slots": {"query": "cats falling asleep"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t107", "text": "i want to watch the mkbhd phone review", "intent": "youtube.play", "slots": {"query": "the mkbhd phone review"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t108", "text": "uh play the um ted talk about sleep on youtube", "intent": "youtube.play", "slots": {"query": "the ted talk about sleep"}, "style": "noisy", "commit_word": 10}
+{"id": "t109", "text": "could you please play the gordon ramsay omelette video", "intent": "youtube.play", "slots": {"query": "the gordon ramsay omelette video"}, "style": "noisy", "commit_word": 9}
+{"id": "t110", "text": "play play the new zelda trailer on youtube", "intent": "youtube.play", "slots": {"query": "the new zelda trailer"}, "style": "noisy", "commit_word": 6}
+{"id": "t111", "text": "play a jazz piano livestream on youtube and then set the volume to twenty", "intent": "youtube.play", "slots": {"query": "a jazz piano livestream", "level": "twenty"}, "style": "compound", "commit_word": 5, "then": "system.volume_set"}
+{"id": "t112", "text": "play the daily show", "intent": "youtube.play", "slots": {"query": "the daily show"}, "style": "ambiguous", "commit_word": 4, "alt": "spotify.play"}
+{"id": "t113", "text": "play taylor swift on spotify", "intent": "spotify.play", "slots": {"query": "taylor swift"}, "style": "canonical", "commit_word": 5}
+{"id": "t114", "text": "spotify play some fleetwood mac", "intent": "spotify.play", "slots": {"query": "fleetwood mac"}, "style": "canonical", "commit_word": 2}
+{"id": "t115", "text": "play my liked songs on spotify", "intent": "spotify.play", "slots": {"query": "my liked songs"}, "style": "canonical", "commit_word": 4}
+{"id": "t116", "text": "play the album rumours on spotify", "intent": "spotify.play", "slots": {"query": "the album rumours"}, "style": "canonical", "commit_word": 3}
+{"id": "t117", "text": "put on my discover weekly playlist", "intent": "spotify.play", "slots": {"query": "my discover weekly playlist"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t118", "text": "shuffle my running playlist", "intent": "spotify.play", "slots": {"query": "my running playlist"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t119", "text": "stick on some jazz from spotify", "intent": "spotify.play", "slots": {"query": "jazz"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t120", "text": "um play uh hotel california on spotify", "intent": "spotify.play", "slots": {"query": "hotel california"}, "style": "noisy", "commit_word": 7}
+{"id": "t121", "text": "okay so play some uh daft punk on spotify", "intent": "spotify.play", "slots": {"query": "daft punk"}, "style": "noisy", "commit_word": 9}
+{"id": "t122", "text": "could you please put on the album abbey road", "intent": "spotify.play", "slots": {"query": "the album abbey road"}, "style": "noisy", "commit_word": 7}
+{"id": "t123", "text": "put on some music", "intent": "spotify.play", "slots": {}, "style": "ambiguous", "commit_word": 4, "alt": "media.key"}
+{"id": "t124", "text": "play the lex fridman podcast", "intent": "spotify.play", "slots": {"query": "the lex fridman podcast"}, "style": "ambiguous", "commit_word": 5, "alt": "youtube.play"}
+{"id": "t125", "text": "google standing desks under two hundred pounds", "intent": "system.web_search", "slots": {"query": "standing desks under two hundred pounds"}, "style": "canonical", "commit_word": 2}
+{"id": "t126", "text": "search the web for noise cancelling headphones", "intent": "system.web_search", "slots": {"query": "noise cancelling headphones"}, "style": "canonical", "commit_word": 3}
+{"id": "t127", "text": "do a web search for used bikes near me", "intent": "system.web_search", "slots": {"query": "used bikes near me"}, "style": "canonical", "commit_word": 3}
+{"id": "t128", "text": "open a search for ergonomic office chairs", "intent": "system.web_search", "slots": {"query": "ergonomic office chairs"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t129", "text": "pull up search results for waterproof hiking boots", "intent": "system.web_search", "slots": {"query": "waterproof hiking boots"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t130", "text": "can you google best pizza near me", "intent": "system.web_search", "slots": {"query": "best pizza near me"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t131", "text": "um google uh second hand road bikes", "intent": "system.web_search", "slots": {"query": "second hand road bikes"}, "style": "noisy", "commit_word": 4}
+{"id": "t132", "text": "search search the web for cheap hotels in porto", "intent": "system.web_search", "slots": {"query": "cheap hotels in porto"}, "style": "noisy", "commit_word": 4}
+{"id": "t133", "text": "search for the weather in london", "intent": "system.web_search", "slots": {"query": "the weather in london"}, "style": "ambiguous", "commit_word": 2, "alt": "web.search_and_summarize"}
+{"id": "t134", "text": "open the plan for the arm project", "intent": "theioma.open_project_section", "slots": {"project": "arm", "section": "plan"}, "style": "canonical", "commit_word": 3}
+{"id": "t135", "text": "open the sessions tab of the tez project", "intent": "theioma.open_project_section", "slots": {"project": "tez", "section": "sessions"}, "style": "canonical", "commit_word": 4}
+{"id": "t136", "text": "open the orchestrator for j pex", "intent": "theioma.open_project_section", "slots": {"project": "j pex", "section": "orchestrator"}, "style": "canonical", "commit_word": 3}
+{"id": "t137", "text": "take me to the milestones of the arm project", "intent": "theioma.open_project_section", "slots": {"project": "arm", "section": "milestones"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t138", "text": "i want to see the errors in the perp bot project", "intent": "theioma.open_project_section", "slots": {"project": "perp bot", "section": "errors"}, "style": "paraphrase", "commit_word": 9}
+{"id": "t139", "text": "pull up the tez plan", "intent": "theioma.open_project_section", "slots": {"project": "tez", "section": "plan"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t140", "text": "um open the uh plan for j pex", "intent": "theioma.open_project_section", "slots": {"project": "j pex", "section": "plan"}, "style": "noisy", "commit_word": 5}
+{"id": "t141", "text": "hey theioma open the arm project uh the sessions tab", "intent": "theioma.open_project_section", "slots": {"project": "arm", "section": "sessions"}, "style": "noisy", "commit_word": 9}
+{"id": "t142", "text": "open the arm project", "intent": "theioma.open_project_section", "slots": {"project": "arm"}, "style": "ambiguous", "commit_word": 4, "alt": "navigate.app"}
+{"id": "t143", "text": "type hello world", "intent": "keyboard.type", "slots": {"text": "hello world"}, "style": "canonical", "commit_word": 1}
+{"id": "t144", "text": "type see you at the standup tomorrow", "intent": "keyboard.type", "slots": {"text": "see you at the standup tomorrow"}, "style": "canonical", "commit_word": 1}
+{"id": "t145", "text": "type thanks for the quick reply", "intent": "keyboard.type", "slots": {"text": "thanks for the quick reply"}, "style": "canonical", "commit_word": 1}
+{"id": "t146", "text": "type in the invoice is attached", "intent": "keyboard.type", "slots": {"text": "the invoice is attached"}, "style": "canonical", "commit_word": 1}
+{"id": "t147", "text": "dictate this dear team the release is delayed", "intent": "keyboard.type", "slots": {"text": "dear team the release is delayed"}, "style": "paraphrase", "commit_word": 1}
+{"id": "t148", "text": "can you type out sounds good to me", "intent": "keyboard.type", "slots": {"text": "sounds good to me"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t149", "text": "write the words happy friday everyone", "intent": "keyboard.type", "slots": {"text": "happy friday everyone"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t150", "text": "um type uh meeting moved to thursday", "intent": "keyboard.type", "slots": {"text": "meeting moved to thursday"}, "style": "noisy", "commit_word": 2}
+{"id": "t151", "text": "type type call me back when you can", "intent": "keyboard.type", "slots": {"text": "call me back when you can"}, "style": "noisy", "commit_word": 1}
+{"id": "t152", "text": "could you please type see you soon", "intent": "keyboard.type", "slots": {"text": "see you soon"}, "style": "noisy", "commit_word": 4}
+{"id": "t153", "text": "what is the weather in london today", "intent": "web.search_and_summarize", "slots": {"query": "what is the weather in london today"}, "style": "canonical", "commit_word": 4}
+{"id": "t154", "text": "who won the arsenal game last night", "intent": "web.search_and_summarize", "slots": {"query": "who won the arsenal game last night"}, "style": "canonical", "commit_word": 2}
+{"id": "t155", "text": "how tall is the eiffel tower", "intent": "web.search_and_summarize", "slots": {"query": "how tall is the eiffel tower"}, "style": "canonical", "commit_word": 2}
+{"id": "t156", "text": "what is the latest news about nvidia", "intent": "web.search_and_summarize", "slots": {"query": "what is the latest news about nvidia"}, "style": "canonical", "commit_word": 5}
+{"id": "t157", "text": "is it going to rain tomorrow", "intent": "web.search_and_summarize", "slots": {"query": "is it going to rain tomorrow"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t158", "text": "find out the euro to dollar exchange rate", "intent": "web.search_and_summarize", "slots": {"query": "the euro to dollar exchange rate"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t159", "text": "give me a quick summary of the headlines today", "intent": "web.search_and_summarize", "slots": {"query": "the headlines today"}, "style": "paraphrase", "commit_word": 8}
+{"id": "t160", "text": "um what is the uh weather like in paris", "intent": "web.search_and_summarize", "slots": {"query": "what is the weather like in paris"}, "style": "noisy", "commit_word": 6}
+{"id": "t161", "text": "hey theioma who who wrote the great gatsby", "intent": "web.search_and_summarize", "slots": {"query": "who wrote the great gatsby"}, "style": "noisy", "commit_word": 5}
+{"id": "t162", "text": "okay so how old is uh tom hanks", "intent": "web.search_and_summarize", "slots": {"query": "how old is tom hanks"}, "style": "noisy", "commit_word": 4}
+{"id": "t163", "text": "check the weather in madrid and then open spotify", "intent": "web.search_and_summarize", "slots": {"query": "the weather in madrid", "app": "spotify"}, "style": "compound", "commit_word": 3, "then": "system.open_app"}
+{"id": "t164", "text": "look up the population of portugal", "intent": "web.search_and_summarize", "slots": {"query": "the population of portugal"}, "style": "ambiguous", "commit_word": 4, "alt": "system.web_search"}
+{"id": "t165", "text": "remind me to call the dentist at four", "intent": "memory.note_event", "slots": {"event": "call the dentist at four"}, "style": "canonical", "commit_word": 1}
+{"id": "t166", "text": "remember that my parcel arrives on friday", "intent": "memory.note_event", "slots": {"event": "my parcel arrives on friday"}, "style": "canonical", "commit_word": 4}
+{"id": "t167", "text": "note that the board meeting moved to monday", "intent": "memory.note_event", "slots": {"event": "the board meeting moved to monday"}, "style": "canonical", "commit_word": 2}
+{"id": "t168", "text": "do not let me forget the tax deadline on the thirty first", "intent": "memory.note_event", "slots": {"event": "the tax deadline on the thirty first"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t169", "text": "make a note that the plumber is coming tomorrow morning", "intent": "memory.note_event", "slots": {"event": "the plumber is coming tomorrow morning"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t170", "text": "keep in mind that my flight leaves at six in the morning", "intent": "memory.note_event", "slots": {"event": "my flight leaves at six in the morning"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t171", "text": "um remind me uh to renew the car insurance", "intent": "memory.note_event", "slots": {"event": "renew the car insurance"}, "style": "noisy", "commit_word": 2}
+{"id": "t172", "text": "hey theioma remember remember the delivery comes at noon", "intent": "memory.note_event", "slots": {"event": "the delivery comes at noon"}, "style": "noisy", "commit_word": 6}
+{"id": "t173", "text": "remind me about the gas bill on monday and then pause the music", "intent": "memory.note_event", "slots": {"event": "the gas bill on monday", "key": "play_pause"}, "style": "compound", "commit_word": 1, "then": "media.key"}
+{"id": "t174", "text": "write that down", "intent": "memory.note_event", "slots": {}, "style": "ambiguous", "commit_word": 3, "alt": "keyboard.type"}
+{"id": "t175", "text": "tell the arm session to run the tests", "intent": "theioma.send_message", "slots": {"session": "arm", "message": "run the tests"}, "style": "canonical", "commit_word": 3}
+{"id": "t176", "text": "message the tez session that the api is ready", "intent": "theioma.send_message", "slots": {"session": "tez", "message": "the api is ready"}, "style": "canonical", "commit_word": 3}
+{"id": "t177", "text": "ask the frontend session to fix the login bug", "intent": "theioma.send_message", "slots": {"session": "frontend", "message": "fix the login bug"}, "style": "canonical", "commit_word": 4}
+{"id": "t178", "text": "let the arm session know the build is green", "intent": "theioma.send_message", "slots": {"session": "arm", "message": "the build is green"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t179", "text": "send a message to the tez session saying the schema changed", "intent": "theioma.send_message", "slots": {"session": "tez", "message": "the schema changed"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t180", "text": "tell the builder session to push its branch", "intent": "theioma.send_message", "slots": {"session": "builder", "message": "push its branch"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t181", "text": "um tell the uh arm session to stop", "intent": "theioma.send_message", "slots": {"session": "arm", "message": "stop"}, "style": "noisy", "commit_word": 5}
+{"id": "t182", "text": "hey theioma tell the the tez session to commit its work", "intent": "theioma.send_message", "slots": {"session": "tez", "message": "commit its work"}, "style": "noisy", "commit_word": 6}
+{"id": "t183", "text": "stop the orchestrator", "intent": "theioma.send_message", "slots": {"session": "orchestrator", "message": "stop"}, "style": "ambiguous", "commit_word": 3, "alt": "process.kill"}
+{"id": "t184", "text": "start a new project to build a budgeting app", "intent": "delegate.orchestrator", "slots": {"goal": "build a budgeting app"}, "style": "canonical", "commit_word": 4}
+{"id": "t185", "text": "give the orchestrator a new project to build an ad blocker", "intent": "delegate.orchestrator", "slots": {"goal": "build an ad blocker"}, "style": "canonical", "commit_word": 6}
+{"id": "t186", "text": "delegate building a client tracker for my freelance work", "intent": "delegate.orchestrator", "slots": {"goal": "building a client tracker for my freelance work"}, "style": "canonical", "commit_word": 2}
+{"id": "t187", "text": "i need a new project for a wedding website", "intent": "delegate.orchestrator", "slots": {"goal": "a wedding website"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t188", "text": "spin up a new project to build a discord bot for my server", "intent": "delegate.orchestrator", "slots": {"goal": "build a discord bot for my server"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t189", "text": "kick off a new project for a personal finance dashboard", "intent": "delegate.orchestrator", "slots": {"goal": "a personal finance dashboard"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t190", "text": "um delegate uh a new project a recipe planner", "intent": "delegate.orchestrator", "slots": {"goal": "a recipe planner"}, "style": "noisy", "commit_word": 6}
+{"id": "t191", "text": "hey theioma start a new uh project for a home inventory app", "intent": "delegate.orchestrator", "slots": {"goal": "a home inventory app"}, "style": "noisy", "commit_word": 7}
+{"id": "t192", "text": "start a new project for a travel planner and then open the sessions page", "intent": "delegate.orchestrator", "slots": {"goal": "a travel planner", "page": "sessions"}, "style": "compound", "commit_word": 4, "then": "navigate.app"}
+{"id": "t193", "text": "tell the orchestrator to build a weather app", "intent": "delegate.orchestrator", "slots": {"goal": "build a weather app"}, "style": "ambiguous", "commit_word": 5, "alt": "theioma.send_message"}
+{"id": "t194", "text": "set the volume to thirty percent", "intent": "system.volume_set", "slots": {"level": "thirty"}, "style": "canonical", "commit_word": 3}
+{"id": "t195", "text": "volume fifty", "intent": "system.volume_set", "slots": {"level": "fifty"}, "style": "canonical", "commit_word": 2}
+{"id": "t196", "text": "set volume to twenty", "intent": "system.volume_set", "slots": {"level": "twenty"}, "style": "canonical", "commit_word": 2}
+{"id": "t197", "text": "turn the volume down to ten percent", "intent": "system.volume_set", "slots": {"level": "ten"}, "style": "paraphrase", "commit_word": 5}
+{"id": "t198", "text": "put the sound at eighty", "intent": "system.volume_set", "slots": {"level": "eighty"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t199", "text": "make the volume forty five percent", "intent": "system.volume_set", "slots": {"level": "forty five"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t200", "text": "um set the uh volume to sixty", "intent": "system.volume_set", "slots": {"level": "sixty"}, "style": "noisy", "commit_word": 5}
+{"id": "t201", "text": "hey theioma volume to to twenty five percent", "intent": "system.volume_set", "slots": {"level": "twenty five"}, "style": "noisy", "commit_word": 4}
+{"id": "t202", "text": "set the volume to forty and play some jazz on spotify", "intent": "system.volume_set", "slots": {"level": "forty", "query": "jazz"}, "style": "compound", "commit_word": 3, "then": "spotify.play"}
+{"id": "t203", "text": "approve it", "intent": "resolve_approval", "slots": {"decision": "approve"}, "style": "canonical", "commit_word": 1}
+{"id": "t204", "text": "deny the deploy request", "intent": "resolve_approval", "slots": {"decision": "deny"}, "style": "canonical", "commit_word": 1}
+{"id": "t205", "text": "yes approve the print job", "intent": "resolve_approval", "slots": {"decision": "approve"}, "style": "canonical", "commit_word": 2}
+{"id": "t206", "text": "go ahead and approve that", "intent": "resolve_approval", "slots": {"decision": "approve"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t207", "text": "reject the pending request", "intent": "resolve_approval", "slots": {"decision": "deny"}, "style": "paraphrase", "commit_word": 1}
+{"id": "t208", "text": "decline that approval request", "intent": "resolve_approval", "slots": {"decision": "deny"}, "style": "paraphrase", "commit_word": 1}
+{"id": "t209", "text": "um approve uh approve the request", "intent": "resolve_approval", "slots": {"decision": "approve"}, "style": "noisy", "commit_word": 2}
+{"id": "t210", "text": "hey theioma deny it", "intent": "resolve_approval", "slots": {"decision": "deny"}, "style": "noisy", "commit_word": 3}
+{"id": "t211", "text": "approve it and open the sessions page", "intent": "resolve_approval", "slots": {"decision": "approve", "page": "sessions"}, "style": "compound", "commit_word": 1, "then": "navigate.app"}
+{"id": "t212", "text": "deny the request and tell the arm session to try again", "intent": "resolve_approval", "slots": {"decision": "deny", "session": "arm", "message": "try again"}, "style": "compound", "commit_word": 1, "then": "theioma.send_message"}
+{"id": "t213", "text": "close this window", "intent": "window.close", "slots": {}, "style": "canonical", "commit_word": 1}
+{"id": "t214", "text": "close notepad", "intent": "window.close", "slots": {"app": "notepad"}, "style": "canonical", "commit_word": 1}
+{"id": "t215", "text": "close the terminal", "intent": "window.close", "slots": {"app": "terminal"}, "style": "canonical", "commit_word": 1}
+{"id": "t216", "text": "get rid of this window", "intent": "window.close", "slots": {}, "style": "paraphrase", "commit_word": 5}
+{"id": "t217", "text": "i am done with excel close it", "intent": "window.close", "slots": {"app": "excel"}, "style": "paraphrase", "commit_word": 6}
+{"id": "t218", "text": "quit vs code", "intent": "window.close", "slots": {"app": "vs code"}, "style": "paraphrase", "commit_word": 1}
+{"id": "t219", "text": "um close uh the browser", "intent": "window.close", "slots": {"app": "browser"}, "style": "noisy", "commit_word": 2}
+{"id": "t220", "text": "could you please close the discord window", "intent": "window.close", "slots": {"app": "discord"}, "style": "noisy", "commit_word": 4}
+{"id": "t221", "text": "close this window and open excel", "intent": "window.close", "slots": {"app": "excel"}, "style": "compound", "commit_word": 1, "then": "system.open_app"}
+{"id": "t222", "text": "close spotify", "intent": "window.close", "slots": {"app": "spotify"}, "style": "ambiguous", "commit_word": 1, "alt": "process.kill"}
+{"id": "t223", "text": "kill chrome", "intent": "process.kill", "slots": {"process": "chrome"}, "style": "canonical", "commit_word": 2}
+{"id": "t224", "text": "force quit the frozen game", "intent": "process.kill", "slots": {"process": "frozen game"}, "style": "canonical", "commit_word": 2}
+{"id": "t225", "text": "end the python process", "intent": "process.kill", "slots": {"process": "python"}, "style": "canonical", "commit_word": 4}
+{"id": "t226", "text": "chrome is frozen kill it", "intent": "process.kill", "slots": {"process": "chrome"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t227", "text": "force close excel", "intent": "process.kill", "slots": {"process": "excel"}, "style": "paraphrase", "commit_word": 2}
+{"id": "t228", "text": "terminate the node server", "intent": "process.kill", "slots": {"process": "node server"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t229", "text": "um kill uh the spotify process", "intent": "process.kill", "slots": {"process": "spotify"}, "style": "noisy", "commit_word": 5}
+{"id": "t230", "text": "hey theioma force force quit steam", "intent": "process.kill", "slots": {"process": "steam"}, "style": "noisy", "commit_word": 5}
+{"id": "t231", "text": "kill the stuck installer and then open discord", "intent": "process.kill", "slots": {"process": "stuck installer", "app": "discord"}, "style": "compound", "commit_word": 3, "then": "system.open_app"}
+{"id": "t232", "text": "run git status", "intent": "shell.run", "slots": {"command": "git status"}, "style": "canonical", "commit_word": 2}
+{"id": "t233", "text": "show me the git log", "intent": "shell.run", "slots": {"command": "git log"}, "style": "canonical", "commit_word": 4}
+{"id": "t234", "text": "run npm test", "intent": "shell.run", "slots": {"command": "npm test"}, "style": "canonical", "commit_word": 2}
+{"id": "t235", "text": "pull the latest changes from main", "intent": "shell.run", "slots": {"command": "pull the latest changes from main"}, "style": "paraphrase", "commit_word": 4}
+{"id": "t236", "text": "check the git diff", "intent": "shell.run", "slots": {"command": "git diff"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t237", "text": "list the files in the repo", "intent": "shell.run", "slots": {"command": "list the files in the repo"}, "style": "paraphrase", "commit_word": 3}
+{"id": "t238", "text": "um run uh git status", "intent": "shell.run", "slots": {"command": "git status"}, "style": "noisy", "commit_word": 4}
+{"id": "t239", "text": "hey theioma show me the the git log", "intent": "shell.run", "slots": {"command": "git log"}, "style": "noisy", "commit_word": 7}
+{"id": "t240", "text": "thanks that was great", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t241", "text": "good morning theioma", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t242", "text": "never mind", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t243", "text": "how are you doing today", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t244", "text": "tell me a joke", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t245", "text": "youtube is down again", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t246", "text": "spotify raised its prices", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t247", "text": "the arm session is taking forever", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t248", "text": "my approvals page looks weird today", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t249", "text": "i listened to that song all day yesterday", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t250", "text": "chrome keeps eating all my memory", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t251", "text": "the orchestrator did a great job on that plan", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t252", "text": "who even uses notepad anymore", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t253", "text": "the tez project is almost finished", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t254", "text": "that playlist was better last year", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t255", "text": "i will approve it after lunch", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t256", "text": "the sessions page loads so slowly", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t257", "text": "these speakers sound terrible at high volume", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t258", "text": "what do you think of this design", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t259", "text": "are you listening", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t260", "text": "what is your favourite colour", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t261", "text": "open the", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t262", "text": "can you", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t263", "text": "play the", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t264", "text": "tell the", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t265", "text": "honey can you grab the door", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t266", "text": "i will call you back in five minutes", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t267", "text": "yeah put it on the table thanks", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t268", "text": "did you feed the cat", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
+{"id": "t269", "text": "okay so um", "intent": "none", "slots": {}, "style": "oos", "commit_word": -1}
