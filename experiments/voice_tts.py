@@ -70,7 +70,9 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
     import kokoro
+    import torch
     from kokoro import KPipeline
+    torch.set_num_threads(min(6, torch.get_num_threads()))
     rows = [json.loads(line) for line in (DATA / "commands.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
     if args.limit:
         rows = rows[: args.limit]

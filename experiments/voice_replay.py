@@ -47,6 +47,7 @@ import hashlib
 import json
 import math
 import multiprocessing as mp
+import os
 import statistics
 import subprocess
 import sys
@@ -170,9 +171,10 @@ def oracle_emissions(row: dict) -> list[tuple[float, str]]:
     return out
 
 
-def realtime_process() -> dict:
+def realtime_process(high_priority: bool = False) -> dict:
     """What a voice loop's process does on Windows: a 1 ms timer period (timeBeginPeriod) so short sleeps wake on
-    time, and the high priority class so a busy machine delays its frames less. Returns what was set."""
+    time, and (only when asked: shared machines run heavy jobs below normal, C:/temp/run_heavy.py) the high priority
+    class, so a busy machine delays its frames less. Returns what was set."""
     out = {}
     if sys.platform != "win32":
         return out
@@ -181,6 +183,8 @@ def realtime_process() -> dict:
         out["timer_period_ms"] = 1
     except Exception as exc:  # noqa: BLE001
         out["timer_error"] = str(exc)
+    if not high_priority:
+        return out
     try:
         import psutil
         psutil.Process().nice(psutil.HIGH_PRIORITY_CLASS)
@@ -498,6 +502,9 @@ def main() -> None:
                     help="keep the WAVs' own silence (default: 0.3 s before the first word, 0.5 s after the last)")
     ap.add_argument("--gap", type=float, default=0.3, help="seconds between utterances")
     ap.add_argument("--warmup", type=int, default=3)
+    ap.add_argument("--threads", type=int, default=int(os.environ.get("RUN_HEAVY_THREADS", "6")),
+                    help="CPU threads for llama.cpp (default 6, or run_heavy's cap)")
+    ap.add_argument("--high-priority", action="store_true", help="raise this process to the high priority class")
     ap.add_argument("--parity", type=int, default=0, help="after the run, compare N utterances' updates with whole-prompt "
                                                           "decide_question reads (total variation)")
     ap.add_argument("--tag", default=None)
@@ -517,7 +524,7 @@ def main() -> None:
     tag = args.tag or f"{args.set}_{args.asr.split(':')[0]}_{Path(args.backend).stem if args.backend != 'none' else 'asr'}"
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {"script": "experiments/voice_replay.py", "date": time.strftime("%Y-%m-%dT%H:%M:%S"), "args": vars(args),
-                "process": realtime_process() if args.realtime else {},
+                "process": {**(realtime_process(args.high_priority) if args.realtime else {}), "threads": args.threads},
                 "set": args.set, "data_sha256": hashes, "schema": str(schema_path), "rows": len(rows),
                 "gpu_before": gpu_snapshot()}
     # ---- the recogniser
@@ -526,7 +533,7 @@ def main() -> None:
     if args.asr.startswith("nemocpp:"):
         kw = {"right_context": args.rc, "gpu": args.asr_gpu}
     elif args.asr.startswith("sherpa:"):
-        kw = {"threads": args.asr_threads}
+        kw = {"threads": min(args.asr_threads, 4)}
     if args.asr != "oracle":
         if args.asr_proc or args.asr.startswith("nemocpp:"):
             from voice_asr import asr_worker
@@ -552,7 +559,8 @@ def main() -> None:
     executor, undos = NoopExecutor(), []
     if args.backend != "none":
         from tez import Tez
-        inproc = {"lib": args.lib, "n_ctx": args.n_ctx, "n_seq_max": args.n_seq_max, "n_outputs": args.n_outputs}
+        inproc = {"lib": args.lib, "n_ctx": args.n_ctx, "n_seq_max": args.n_seq_max, "n_outputs": args.n_outputs,
+                  "n_threads": args.threads}
         tez = Tez(backend=args.backend, template=args.template, schemas=[schema], inproc=inproc,
                   default_temperature=args.default_temperature)
         t = time.perf_counter()

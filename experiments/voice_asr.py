@@ -32,6 +32,7 @@ from typing import Any
 import numpy as np
 
 SR = 16000
+FRAME_SAMPLES = 160                      # 10 ms feature hop
 NEMO_SPEECH_DIR = os.environ.get("NEMO_SPEECH_DIR", r"C:\temp\nemo-speech\x\bin")
 
 
@@ -242,6 +243,7 @@ class Sherpa(Asr):
     """sherpa-onnx's online transducer recogniser; a step runs whenever the stream has a full chunk."""
 
     def __init__(self, model_dir: str, threads: int = 4, provider: str = "cpu"):
+        threads = min(int(threads), 4)
         import sherpa_onnx
         d = Path(model_dir)
 
@@ -305,6 +307,122 @@ class Sherpa(Asr):
                 "load_s": round(self.load_s, 2)}
 
 
+# ---------------------------------------------------------------------------------------------- NeMo (PyTorch)
+class NemoTorch(Asr):
+    """A NeMo cache-aware streaming model through NeMo's own PyTorch code (conformer_stream_step), fed as audio arrives:
+    whenever the audio received holds the next chunk (plus one feature frame, whose window reaches past it), the
+    features of the audio so far are computed and the chunk goes through one cache-aware step. For models NeMo-Speech.cpp
+    does not run (parakeet_realtime_eou_120m-v1, which also emits an end-of-utterance token)."""
+
+    def __init__(self, path: str, right_context: int = 1, device: str = "cuda"):
+        import types
+
+        import torch
+        name = "nv_one_logger.training_telemetry.integration.pytorch_lightning"
+        try:                                         # NeMo 2.7.3 imports a training-telemetry module the PyPI package
+            __import__(name)                         # no longer ships; inference never calls it
+        except ImportError:
+            stub = types.ModuleType(name)
+            stub.TimeEventCallback = type("TimeEventCallback", (), {"__init__": lambda self, *a, **k: None})
+            sys.modules[name] = stub
+        torch.set_num_threads(min(6, torch.get_num_threads()))
+        import nemo.collections.asr as nemo_asr
+        from nemo.collections.asr.parts.utils.streaming_utils import CacheAwareStreamingAudioBuffer
+        from omegaconf import open_dict
+        self.torch, self.Buffer = torch, CacheAwareStreamingAudioBuffer
+        t0 = time.perf_counter()
+        m = nemo_asr.models.ASRModel.restore_from(path, map_location=device)
+        m.eval()
+        if hasattr(m.encoder, "set_default_att_context_size"):
+            m.encoder.set_default_att_context_size([70, int(right_context)])
+        m.encoder.setup_streaming_params()
+        dc = m.cfg.decoding
+        with open_dict(dc):
+            dc.strategy = "greedy_batch"
+            dc.greedy.max_symbols = 10
+            dc.fused_batch_size = -1
+        m.change_decoding_strategy(dc)
+        self.m = m
+        cfg = m.encoder.streaming_cfg
+        shift = cfg.shift_size[1] if isinstance(cfg.shift_size, list) else cfg.shift_size
+        self.chunk_s = round(shift * 0.01, 3)
+        self.load_s = time.perf_counter() - t0
+        self.name = f"nemo-{Path(path).stem}-rc{right_context}-{device}"
+        self.path, self.right_context, self.device = path, right_context, device
+
+    def reset(self) -> None:
+        self.audio: list[np.ndarray] = []
+        self.n = 0
+        self.buf = self.Buffer(self.m, online_normalization=False)
+        self.cache = self.m.encoder.get_initial_cache_state(batch_size=1)
+        self.hyp = None
+        self.pred = None
+        self.step = 0
+        self._text = ""
+        self.eou: list[float] = []
+        self.steps, self.busy_ms = [], 0.0
+
+    def _next_end(self) -> int:
+        cfg = self.buf.streaming_cfg
+        size = cfg.chunk_size
+        size = (size[0] if self.buf.buffer_idx == 0 else size[1]) if isinstance(size, list) else size
+        return self.buf.buffer_idx + size
+
+    def _step(self, final: bool) -> list[Emission]:
+        torch = self.torch
+        t0 = time.perf_counter()
+        x = np.concatenate(self.audio).astype(np.float32)
+        feats, _ = self.buf.preprocess_audio(x)
+        if not final:
+            feats = feats[:, :, :-1]                     # the last frame's window reaches past the audio
+        self.buf.buffer = feats
+        self.buf.streams_length = torch.tensor([feats.size(-1)], device=feats.device)
+        chunk, lengths = next(iter(self.buf))
+        cfg = self.m.encoder.streaming_cfg
+        with torch.inference_mode():
+            (self.pred, texts, c1, c2, c3, self.hyp) = self.m.conformer_stream_step(
+                processed_signal=chunk, processed_signal_length=lengths, cache_last_channel=self.cache[0],
+                cache_last_time=self.cache[1], cache_last_channel_len=self.cache[2],
+                keep_all_outputs=final, previous_hypotheses=self.hyp, previous_pred_out=self.pred,
+                drop_extra_pre_encoded=0 if self.step == 0 else cfg.drop_extra_pre_encoded, return_transcription=True)
+        self.cache = (c1, c2, c3)
+        self.step += 1
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        ms = (time.perf_counter() - t0) * 1000.0
+        self.steps.append(ms)
+        self.busy_ms += ms
+        raw = texts[0].text if texts and hasattr(texts[0], "text") else (texts[0] if texts else "")
+        audio_s = min(self.buf.buffer_idx, feats.size(-1)) * 0.01
+        if "<EOU>" in raw:
+            self.eou.append(audio_s)
+        text = normalise(raw.replace("<EOU>", " "))
+        if text != self._text:
+            self._text = text
+            return [Emission(text, audio_s, ms, time.perf_counter(), final)]
+        return []
+
+    def push(self, x: np.ndarray) -> list[Emission]:
+        self.audio.append(np.asarray(x, np.float32))
+        self.n += len(x)
+        out = []
+        while self.n // FRAME_SAMPLES - 1 >= self._next_end():
+            out += self._step(False)
+        return out
+
+    def finish(self) -> list[Emission]:
+        out = []
+        self.audio.append(np.zeros(int(0.3 * SR), np.float32))
+        self.n += int(0.3 * SR)
+        while self.n // FRAME_SAMPLES - 1 >= self._next_end():
+            out += self._step(False)
+        return out
+
+    def info(self) -> dict:
+        return {"name": self.name, "engine": "NeMo (PyTorch)", "model": self.path, "right_context": self.right_context,
+                "chunk_s": self.chunk_s, "device": self.device, "load_s": round(self.load_s, 2)}
+
+
 # ---------------------------------------------------------------------------------------------- faster-whisper
 class WhisperRedecode(Asr):
     """faster-whisper re-decoding the whole buffer every `step` seconds (greedy, no VAD): experiments/asr_bench.py."""
@@ -314,7 +432,7 @@ class WhisperRedecode(Asr):
             add_nvidia_dlls()
         from faster_whisper import WhisperModel
         t0 = time.perf_counter()
-        self.m = WhisperModel(model, device=device, compute_type=compute_type)
+        self.m = WhisperModel(model, device=device, compute_type=compute_type, cpu_threads=4)
         self.load_s = time.perf_counter() - t0
         self.name = f"whisper-{model}-{device}-{int(step * 1000)}ms"
         self.model, self.device, self.chunk_s = model, device, step
@@ -362,7 +480,9 @@ def make_asr(spec: str, **kw: Any) -> Asr:
         return Sherpa(arg, **kw)
     if kind == "whisper":
         return WhisperRedecode(arg or "base.en", **kw)
-    raise ValueError(f"unknown recogniser {spec!r} (nemocpp:GGUF, sherpa:DIR, whisper:NAME)")
+    if kind == "nemo":
+        return NemoTorch(arg, **kw)
+    raise ValueError(f"unknown recogniser {spec!r} (nemocpp:GGUF, sherpa:DIR, whisper:NAME, nemo:.nemo)")
 
 
 # ---------------------------------------------------------------------------------------------- worker process
@@ -372,11 +492,9 @@ def asr_worker(conn: Any, spec: str, kw: dict) -> None:
     would have been captured; t_start None pushes them as fast as the recogniser takes them), ("quit",). Messages out: ("ready", info), then per utterance ("emit", text, audio_s,
     compute_ms, t, final) for every step that changed the text and ("done", t_last_push). perf_counter is the system's
     QueryPerformanceCounter on Windows, so both processes read one clock."""
-    if sys.platform == "win32":                       # as the harness does for itself (voice_replay.realtime_process)
+    if sys.platform == "win32":                       # a 1 ms timer period, as the harness sets for itself
         try:
             C.windll.winmm.timeBeginPeriod(1)
-            import psutil
-            psutil.Process().nice(psutil.HIGH_PRIORITY_CLASS)
         except Exception:  # noqa: BLE001 - best effort
             pass
     asr = make_asr(spec, **kw)

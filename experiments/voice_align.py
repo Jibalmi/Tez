@@ -94,7 +94,7 @@ def main() -> None:
     ap.add_argument("--compute-type", default="int8")
     ap.add_argument("--check", default=None, help="a data directory with a Kokoro align.jsonl to score against")
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--threads", type=int, default=0, help="CPU threads (0: CTranslate2's default)")
+    ap.add_argument("--threads", type=int, default=4, help="CPU threads")
     args = ap.parse_args()
     if args.device == "cuda":
         import sys
