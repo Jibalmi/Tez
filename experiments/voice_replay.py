@@ -233,6 +233,7 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
     if session is not None:
         session.reset()
     updates, emits = [], []
+    steps, busy = [], None
     t0 = time.perf_counter() + 0.03                  # sample 0 is captured at t0
 
     def on_emit(e: Emission, t_recv: float) -> None:
@@ -260,7 +261,7 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
             msg = conn.recv()
             t_recv = time.perf_counter()
             if msg[0] == "done":
-                t_last = msg[1]
+                t_last, steps, busy = msg[1], msg[2], msg[3]
                 break
             _, text, audio_s, ms, t_emit, final = msg
             on_emit(Emission(text, audio_s, ms, t_emit, final), t_recv)
@@ -275,6 +276,7 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
             e.final = True
             on_emit(e, time.perf_counter())
         t_last = time.perf_counter()
+        steps, busy = list(asr.steps), asr.busy_ms
     end = None
     if session is not None:
         if session.words and not session._final:
@@ -287,6 +289,7 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
     return {"id": row["id"], "style": row.get("style"), "gold": row["intent"], "then": row.get("then"), "alt": row.get("alt"),
             "commit_word": row.get("commit_word", -1), "text": row["text"], "voice": row.get("voice"),
             "words": row["words"], "t0": t0, "t_last": t_last, "duration_s": len(x) / SR, "emissions": emits,
+            "asr_steps_ms": [round(s, 3) for s in steps], "asr_busy_ms": busy,
             "updates": updates, "end": end, "executed": [dict(a) for a in executor.log], "undos": list(undos)}
 
 
@@ -333,7 +336,9 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     wer_e, wer_n, missed_decisive = 0, 0, 0
     decide_ms = [u["decide_ms"] for r in rows for u in r["updates"]]
     commit_ms = [u["commit_ms"] for r in rows for u in r["updates"]]
-    asr_ms = [e["asr_ms"] for r in rows for e in r["emissions"] if e.get("asr_ms")]
+    asr_ms = [s for r in rows for s in r.get("asr_steps_ms") or []]
+    busy_per_chunk = [r["asr_busy_ms"] / max(1, r["duration_s"] / chunk_s) for r in rows
+                      if r.get("asr_busy_ms") is not None and chunk_s]
     pipe_ms = [(e["t_recv"] - e["t_emit"]) * 1000.0 for r in rows for e in r["emissions"] if e.get("t_emit") and e.get("t_recv")]
     late_ms = [e["late_ms"] for r in rows for e in r["emissions"] if e.get("late_ms") is not None]
     for r in rows:
@@ -400,6 +405,7 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     has_decisions = any(r["updates"] for r in rows)
     out = {"rows": len(rows), "actionable": len(act), "oos": len(oos),
            "asr": {"wer": round(wer_e / wer_n, 4) if wer_n else None, "step_compute_ms": stats(asr_ms),
+                   "busy_ms_per_chunk": stats(busy_per_chunk),
                    "emission_delay_ms": stats(emit_delay), "emission_lag_beyond_chunk_ms": stats(emit_lag),
                    "pipe_ms": stats(pipe_ms), "decisive_word_missed": missed_decisive},
            "emission_arrival_after_audio_ms": stats(late_ms)}

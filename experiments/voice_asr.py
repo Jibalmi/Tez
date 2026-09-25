@@ -169,6 +169,7 @@ class NemoSpeechCpp(Asr):
         self.audio_s = 0.0
         self._finals = ""
         self._text = ""
+        self.steps, self.busy_ms = [], 0.0
 
     def _drain(self, final_pass: bool = False) -> list[Emission]:
         out = []
@@ -177,8 +178,10 @@ class NemoSpeechCpp(Asr):
             r = C.c_void_p()
             self._check(self.lib.nemo_speech_asr_stream_next(self.stream, C.byref(r)), "next")
             ms = (time.perf_counter() - t0) * 1000.0
+            self.busy_ms += ms
             if not r.value:
                 break
+            self.steps.append(ms)
             try:
                 n = self.lib.nemo_speech_asr_result_alternative_count(r)
                 raw = self.lib.nemo_speech_asr_result_transcript(r, 0).decode("utf-8", "replace") if n else ""
@@ -196,9 +199,11 @@ class NemoSpeechCpp(Asr):
 
     def push(self, x: np.ndarray) -> list[Emission]:
         x = np.ascontiguousarray(x, dtype=np.float32)
+        t0 = time.perf_counter()
         self._check(self.lib.nemo_speech_asr_stream_push_f32(self.stream, x.ctypes.data_as(C.POINTER(C.c_float)), len(x),
                                                              SR), "push")
         self.audio_s += len(x) / SR
+        self.busy_ms += (time.perf_counter() - t0) * 1000.0
         return self._drain()
 
     def finish(self) -> list[Emission]:
@@ -241,14 +246,21 @@ class Sherpa(Asr):
         self.load_s = time.perf_counter() - t0
         self.name = f"sherpa-{d.name}-{provider}{threads}"
         self.model_dir, self.threads, self.provider = str(d), threads, provider
-        self.chunk_s = 0.08 if "80ms" in d.name or "nemotron" in d.name else 0.32
         self.version = sherpa_onnx.__version__
+        s = self.rec.create_stream()             # the step size, measured: steps over 4 s of silence
+        s.accept_waveform(SR, np.zeros(4 * SR, np.float32))
+        n = 0
+        while self.rec.is_ready(s):
+            self.rec.decode_stream(s)
+            n += 1
+        self.chunk_s = round(4.0 / max(1, n), 3)
         self.stream = None
 
     def reset(self) -> None:
         self.stream = self.rec.create_stream()
         self.audio_s = 0.0
         self._text = ""
+        self.steps, self.busy_ms = [], 0.0
 
     def _steps(self, final: bool = False) -> list[Emission]:
         out = []
@@ -256,6 +268,8 @@ class Sherpa(Asr):
             t0 = time.perf_counter()
             self.rec.decode_stream(self.stream)
             ms = (time.perf_counter() - t0) * 1000.0
+            self.steps.append(ms)
+            self.busy_ms += ms
             text = normalise(self.rec.get_result(self.stream))
             if text != self._text:
                 self._text = text
@@ -294,6 +308,7 @@ class WhisperRedecode(Asr):
         self.buf = np.zeros(0, np.float32)
         self.next_s = self.chunk_s
         self._text = ""
+        self.steps, self.busy_ms = [], 0.0
 
     def _decode(self, final: bool) -> list[Emission]:
         t0 = time.perf_counter()
@@ -301,6 +316,8 @@ class WhisperRedecode(Asr):
                                     condition_on_previous_text=False)
         text = normalise(" ".join(s.text for s in segs))
         ms = (time.perf_counter() - t0) * 1000.0
+        self.steps.append(ms)
+        self.busy_ms += ms
         if text != self._text or final:
             self._text = text
             return [Emission(text, len(self.buf) / SR, ms, time.perf_counter(), final)]
@@ -369,6 +386,6 @@ def asr_worker(conn: Any, spec: str, kw: dict) -> None:
                 conn.send(("emit", e.text, e.audio_s, e.compute_ms, e.t, e.final))
         for e in asr.finish():
             conn.send(("emit", e.text, e.audio_s, e.compute_ms, e.t, True))
-        conn.send(("done", time.perf_counter()))
+        conn.send(("done", time.perf_counter(), list(asr.steps), asr.busy_ms, len(x) / SR))
     asr.close()
     conn.close()
