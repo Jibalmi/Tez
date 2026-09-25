@@ -43,25 +43,16 @@ asr-cpu)           # the CPU recognisers, alone (never beside a GPU run)
   $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4; sleep 60
   $R --set theioma --asr nemocpp:$NEMO_EN --asr-gpu -1 --rc 0 --no-realtime --gap 0 --limit 60 --tag theioma_asr_nemotron_en_80_cpu
   ;;
-decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B); $2 = one set
-  for s in ${2:-theioma tez220}; do
-    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag ${s}_oracle_12b_q4km
-    sleep 60
-    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --commit fold --tag ${s}_oracle_12b_q4km_fold
-    sleep 60
-  done
+decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B), ~40 min
+  $R --set theioma --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag theioma_oracle_12b_q4km; sleep 60
+  $R --set theioma --asr oracle --backend inproc:$Q4 --lib $LIB --commit fold --tag theioma_oracle_12b_q4km_fold; sleep 60
+  $R --set tez220 --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag tez220_oracle_12b_q4km
   ;;
-decide-q8)
-  for s in ${2:-theioma tez220}; do
-    $R --set $s --asr oracle --backend inproc:$Q8 --lib $LIB --tag ${s}_oracle_12b_q8
-    sleep 60
-  done
-  ;;
-decide-http)       # the same Q4_K_M on a llama-server of our own with :8797's flags, read over HTTP
-  for s in ${2:-theioma tez220}; do
-    $PY experiments/voice_server_arm.py --gguf $Q4 -- --set $s --asr oracle --tag ${s}_oracle_12b_q4km_http
-    sleep 60
-  done
+decide2)           # Q8_0 in process, and the Q4_K_M over HTTP from a llama-server with :8797's flags, ~50 min
+  $R --set theioma --asr oracle --backend inproc:$Q8 --lib $LIB --tag theioma_oracle_12b_q8; sleep 60
+  $R --set tez220 --asr oracle --backend inproc:$Q8 --lib $LIB --tag tez220_oracle_12b_q8; sleep 60
+  $PY experiments/voice_server_arm.py --gguf $Q4 -- --set theioma --asr oracle --tag theioma_oracle_12b_q4km_http; sleep 60
+  $PY experiments/voice_server_arm.py --gguf $Q4 -- --set tez220 --asr oracle --tag tez220_oracle_12b_q4km_http
   ;;
 probe)
   for s in ${2:-theioma tez220}; do
@@ -81,7 +72,7 @@ e2e)
   done
   ;;
 *)
-  echo "usage: $0 data|asr|asr-cpu|decide|decide-q8|decide-http|probe|e2e" >&2
+  echo "usage: $0 data|asr|asr-cpu|decide|decide2|probe|e2e" >&2
   exit 2
   ;;
 esac
