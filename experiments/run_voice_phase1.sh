@@ -38,8 +38,8 @@ asr)
   $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4
   $R --set theioma --asr whisper:base.en --no-realtime --gap 0 --tag theioma_asr_whisper_base_200
   ;;
-decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B), then Q8_0
-  for s in theioma tez220; do
+decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B); $2 = one set
+  for s in ${2:-theioma tez220}; do
     $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag ${s}_oracle_12b_q4km
     sleep 60
     $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --commit fold --tag ${s}_oracle_12b_q4km_fold
@@ -47,19 +47,19 @@ decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's s
   done
   ;;
 decide-q8)
-  for s in theioma tez220; do
+  for s in ${2:-theioma tez220}; do
     $R --set $s --asr oracle --backend inproc:$Q8 --lib $LIB --tag ${s}_oracle_12b_q8
     sleep 60
   done
   ;;
 decide-http)       # the same Q4_K_M on a llama-server of our own with :8797's flags, read over HTTP
-  for s in theioma tez220; do
+  for s in ${2:-theioma tez220}; do
     $PY experiments/voice_server_arm.py --gguf $Q4 -- --set $s --asr oracle --tag ${s}_oracle_12b_q4km_http
     sleep 60
   done
   ;;
 probe)
-  for s in theioma tez220; do
+  for s in ${2:-theioma tez220}; do
     $PY experiments/voice_probe_labels.py --set $s --out C:/temp/voice-fit
     for f in 0 1; do
       d=C:/temp/voice-fit/$s/fold$f
@@ -71,7 +71,7 @@ probe)
   done
   ;;
 e2e)
-  for s in theioma tez220; do
+  for s in ${2:-theioma tez220}; do
     $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag ${s}_e2e_nemotron80_12b_q4km
   done
   ;;
