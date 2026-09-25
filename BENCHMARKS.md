@@ -1,8 +1,6 @@
 # Tez benchmarks
 
-Every number here was measured on one machine (RTX 5080 Laptop 16 GB, llama.cpp b11100, Gemma 4 12B Q8_0 unless stated), frozen, zero training. Laya's three checkpoints answered **byte-identical rows on the same GPU**; SemIf's published figures are on SemIf's own public fixtures; **Jev was never run here** (closed API) — its figures are third-party published and marked as such. Raw rows and manifests: `results/`. Figures: `docs/figures/`, all-in-one: `docs/figures/tez_dashboard.png`.
-
-![dashboard](docs/figures/tez_dashboard.png)
+Every number here was measured on one machine (RTX 5080 Laptop 16 GB, llama.cpp b11100, Gemma 4 12B Q8_0 unless stated), frozen, zero training. Laya's three checkpoints answered **byte-identical rows on the same GPU**; SemIf's published figures are on SemIf's own public fixtures; **Jev was never run here** (closed API) — its figures are third-party published and marked as such. Raw rows and manifests: `results/`. Charts, one per finding, each with its source: [`docs/figures/panels/`](docs/figures/panels/README.md); the same panels on one page: [`docs/figures/tez_dashboard.png`](docs/figures/tez_dashboard.png) and [`docs/figures/tez_lab.png`](docs/figures/tez_lab.png).
 
 ---
 
