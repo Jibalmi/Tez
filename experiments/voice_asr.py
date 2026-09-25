@@ -338,9 +338,11 @@ class NemoTorch(Asr):
         m.encoder.setup_streaming_params()
         dc = m.cfg.decoding
         with open_dict(dc):
-            dc.strategy = "greedy_batch"
+            dc.strategy = "greedy"
             dc.greedy.max_symbols = 10
             dc.fused_batch_size = -1
+            dc.compute_timestamps = False
+            dc.preserve_alignments = False
         m.change_decoding_strategy(dc)
         self.m = m
         cfg = m.encoder.streaming_cfg
@@ -394,7 +396,7 @@ class NemoTorch(Asr):
         self.busy_ms += ms
         raw = texts[0].text if texts and hasattr(texts[0], "text") else (texts[0] if texts else "")
         audio_s = min(self.buf.buffer_idx, feats.size(-1)) * 0.01
-        if "<EOU>" in raw:
+        if raw.count("<EOU>") > len(self.eou):         # the transcript is cumulative: count new end-of-utterance tokens
             self.eou.append(audio_s)
         text = normalise(raw.replace("<EOU>", " "))
         if text != self._text:
