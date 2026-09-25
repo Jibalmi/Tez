@@ -122,10 +122,107 @@
       <section class="doc-section" aria-labelledby="probe-lab">
         <h2 id="probe-lab">The probe lab</h2>
         <p>A second round asked what makes the mid-depth probe usable on any schema, borrowing methods from other fields. Almost everything runs on one cache of every layer's hidden state of the frozen Qwen3.5-4B (and layers 0 to 40 of Gemma 4 12B) for the 8,000 typed-decisions prompts, so each idea is cheap to test and every table reuses the same states.</p>
-        <figure class="lab-figure">
-          <a class="paper" href="./assets/figures/tez_lab.png"><img src="./assets/figures/tez_lab.png" width="2087" height="2002" loading="lazy" decoding="async" alt="The probe lab figure: sixteen panels on reading decisions from the middle of a frozen model. Open full size."></a>
-          <figcaption>Reading decisions from the middle of a frozen model, sixteen panels (a to p), typed-decisions with 2,000 test decisions unless stated. Select the figure to open it full size; the tables behind every panel are in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">BENCHMARKS.md §4c</a>.</figcaption>
-        </figure>
+        <!-- lab-panels:start -->
+        <p>Each experiment as a chart of its own, titled with what it found; the numbers behind every one are in <a href="https://github.com/Jibalmi/Tez/blob/main/BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy">BENCHMARKS.md §4c</a>. Select a chart to open it full size. The same charts on one page: <a href="./assets/figures/tez_lab.png">tez_lab.png</a> (2464 × 1771).</p>
+        <ul class="figure-grid">
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_logit_lens.png"><img src="./assets/figures/panels/web/lab_logit_lens.webp" width="1000" height="787" loading="lazy" decoding="async" alt="Read through the logit lens, the 4B&#x27;s letters score best at layer 29 (0.583), 9.7 points above its top layer; the 12B&#x27;s letters rise late and keep improving to full depth (0.704). Open full size."></a>
+              <figcaption><span class="fig-name">Logit lens: where the letter readout is best</span><span class="fig-desc">Read through the logit lens, the 4B&#x27;s letters score best at layer 29 (0.583), 9.7 points above its top layer; the 12B&#x27;s letters rise late and keep improving to full depth (0.704)</span><span class="fig-meta">Where and what to read · lab_logit_lens.png · 1800 × 1417</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_layer_without_labels.png"><img src="./assets/figures/panels/web/lab_layer_without_labels.webp" width="1000" height="860" loading="lazy" decoding="async" alt="The layer can be chosen without labels: past its peak, the intrinsic dimension of unlabelled states bottoms out at layers 24–28, inside the probe&#x27;s accuracy plateau (layers 20–28). Open full size."></a>
+              <figcaption><span class="fig-name">Choosing the layer without labels</span><span class="fig-desc">The layer can be chosen without labels: past its peak, the intrinsic dimension of unlabelled states bottoms out at layers 24–28, inside the probe&#x27;s accuracy plateau (layers 20–28)</span><span class="fig-meta">Where and what to read · lab_layer_without_labels.png · 1800 × 1548</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_anytime_depth.png"><img src="./assets/figures/panels/web/lab_anytime_depth.webp" width="1000" height="770" loading="lazy" decoding="async" alt="An adaptive stop only ties a fixed cut: stopping when the probe is sure reaches 0.789 at 22.0 layers on average; a fixed cut at 22 layers reaches 0.792. Open full size."></a>
+              <figcaption><span class="fig-name">Anytime decisions: an adaptive stop ties a fixed cut</span><span class="fig-desc">An adaptive stop only ties a fixed cut: stopping when the probe is sure reaches 0.789 at 22.0 layers on average; a fixed cut at 22 layers reaches 0.792</span><span class="fig-meta">Where and what to read · lab_anytime_depth.png · 1800 × 1386</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_code_size.png"><img src="./assets/figures/panels/web/lab_code_size.webp" width="1000" height="808" loading="lazy" decoding="async" alt="A decision needs 64 numbers: one PCA learned from unlabelled states keeps 0.790 of the full 0.793 with 64 of the state&#x27;s 2,560 numbers. Open full size."></a>
+              <figcaption><span class="fig-name">64 numbers carry the decision</span><span class="fig-desc">A decision needs 64 numbers: one PCA learned from unlabelled states keeps 0.790 of the full 0.793 with 64 of the state&#x27;s 2,560 numbers</span><span class="fig-meta">Where and what to read · lab_code_size.png · 1800 × 1454</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_probe_families.png"><img src="./assets/figures/panels/web/lab_probe_families.webp" width="1000" height="739" loading="lazy" decoding="async" alt="On layer 26, plain logistic regression (0.793) is as good as any of the 9 probe families tried; nearest centroid scores 0.700. Open full size."></a>
+              <figcaption><span class="fig-name">Probe families on layer 26: plain logistic wins</span><span class="fig-desc">On layer 26, plain logistic regression (0.793) is as good as any of the 9 probe families tried; nearest centroid scores 0.700</span><span class="fig-meta">Probes and labels · lab_probe_families.png · 1800 × 1330</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_without_labels.png"><img src="./assets/figures/panels/web/lab_without_labels.webp" width="1000" height="787" loading="lazy" decoding="async" alt="Without labels the probe only matches its teacher: taught by the 12B&#x27;s zero-shot letters it scores 0.709 against the teacher&#x27;s 0.705; gold labels give 0.793. Open full size."></a>
+              <figcaption><span class="fig-name">Without labels the probe only matches its teacher</span><span class="fig-desc">Without labels the probe only matches its teacher: taught by the 12B&#x27;s zero-shot letters it scores 0.709 against the teacher&#x27;s 0.705; gold labels give 0.793</span><span class="fig-meta">Probes and labels · lab_without_labels.png · 1800 × 1417</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_few_labels.png"><img src="./assets/figures/panels/web/lab_few_labels.webp" width="1000" height="872" loading="lazy" decoding="async" alt="With few labels, label the most typical rows first and keep the 12B&#x27;s zero-shot answers as a prior: 50 per question reach 0.766, the level of laya-typed-decisions fine-tuned on all 300 (0.766). Open full size."></a>
+              <figcaption><span class="fig-name">With few labels, choose which rows to label</span><span class="fig-desc">With few labels, label the most typical rows first and keep the 12B&#x27;s zero-shot answers as a prior: 50 per question reach 0.766, the level of laya-typed-decisions fine-tuned on all 300 (0.766)</span><span class="fig-meta">Probes and labels · lab_few_labels.png · 1800 × 1569</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_cold_start.png"><img src="./assets/figures/panels/web/lab_cold_start.webp" width="1000" height="855" loading="lazy" decoding="async" alt="Cold start: learning only from escalations trails the same number of random labels (0.775 against 0.783 at 2,987 labels); with a random audit slice it keeps pace (0.790 against 0.784 at 3,944). Open full size."></a>
+              <figcaption><span class="fig-name">Cold start: learn from escalations, but audit at random</span><span class="fig-desc">Cold start: learning only from escalations trails the same number of random labels (0.775 against 0.783 at 2,987 labels); with a random audit slice it keeps pace (0.790 against 0.784 at 3,944)</span><span class="fig-meta">Probes and labels · lab_cold_start.png · 1800 × 1539</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_conformal_selection.png"><img src="./assets/figures/panels/web/lab_conformal_selection.webp" width="1000" height="829" loading="lazy" decoding="async" alt="A guaranteed error rate: allowed 5 % wrong, the probe acts on 40 % of decisions and is wrong on 5.2 % of them; the 12B&#x27;s zero-shot letters act on 24 %. Open full size."></a>
+              <figcaption><span class="fig-name">A guaranteed error rate on what it acts on</span><span class="fig-desc">A guaranteed error rate: allowed 5 % wrong, the probe acts on 40 % of decisions and is wrong on 5.2 % of them; the 12B&#x27;s zero-shot letters act on 24 %</span><span class="fig-meta">Guarantees and transfer · lab_conformal_selection.png · 1800 × 1492</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_unseen_workflows.png"><img src="./assets/figures/panels/web/lab_unseen_workflows.webp" width="1000" height="802" loading="lazy" decoding="async" alt="On a workflow it has never seen, one &#x27;is this answer right?&#x27; probe trained on the other three scores 0.622 on average, against 0.490 for the 4B&#x27;s own letters and 0.704 for the 12B&#x27;s. Open full size."></a>
+              <figcaption><span class="fig-name">One head for workflows it has never seen</span><span class="fig-desc">On a workflow it has never seen, one &#x27;is this answer right?&#x27; probe trained on the other three scores 0.622 on average, against 0.490 for the 4B&#x27;s own letters and 0.704 for the 12B&#x27;s</span><span class="fig-meta">Guarantees and transfer · lab_unseen_workflows.png · 1800 × 1443</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_many_decisions.png"><img src="./assets/figures/panels/web/lab_many_decisions.webp" width="1000" height="846" loading="lazy" decoding="async" alt="Five questions read after one state in one pass cost 2.7× fewer tokens than one prompt per question, for 1.5 points (0.778 against 0.793 at the best layer). Open full size."></a>
+              <figcaption><span class="fig-name">Many decisions from one forward pass</span><span class="fig-desc">Five questions read after one state in one pass cost 2.7× fewer tokens than one prompt per question, for 1.5 points (0.778 against 0.793 at the best layer)</span><span class="fig-meta">Guarantees and transfer · lab_many_decisions.png · 1800 × 1523</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_crosslingual.png"><img src="./assets/figures/panels/web/lab_crosslingual.webp" width="1000" height="828" loading="lazy" decoding="async" alt="Trained on English only, a MASSIVE probe scores 0.803 macro over 11 languages, against 0.524 for laya-multilingual and 0.885 for the 12B&#x27;s zero-shot letters. Open full size."></a>
+              <figcaption><span class="fig-name">MASSIVE: trained in English only, 11 languages</span><span class="fig-desc">Trained on English only, a MASSIVE probe scores 0.803 macro over 11 languages, against 0.524 for laya-multilingual and 0.885 for the 12B&#x27;s zero-shot letters</span><span class="fig-meta">Guarantees and transfer · lab_crosslingual.png · 1800 × 1490</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_pruned_served.png"><img src="./assets/figures/panels/web/lab_pruned_served.webp" width="1000" height="830" loading="lazy" decoding="async" alt="Cut the served 4B where the decision is made: with 24 of its 32 blocks its probe scores 0.793 in 58 ms, against 0.776 in 84 ms for the whole model. Open full size."></a>
+              <figcaption><span class="fig-name">Cut the served 4B: the probe keeps its accuracy, faster</span><span class="fig-desc">Cut the served 4B where the decision is made: with 24 of its 32 blocks its probe scores 0.793 in 58 ms, against 0.776 in 84 ms for the whole model</span><span class="fig-meta">Serving it · lab_pruned_served.png · 1800 × 1494</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_cut_public_suite.png"><img src="./assets/figures/panels/web/lab_cut_public_suite.webp" width="1000" height="764" loading="lazy" decoding="async" alt="Cut to 29 blocks, the 4B&#x27;s zero-shot letters lose 3.7 points on average over Laya&#x27;s public suite (28 entries), cut to 24 they lose 17.4: cut for probes, validate per task for letters. Open full size."></a>
+              <figcaption><span class="fig-name">The cut 4B on Laya&#x27;s public suite (zero-shot)</span><span class="fig-desc">Cut to 29 blocks, the 4B&#x27;s zero-shot letters lose 3.7 points on average over Laya&#x27;s public suite (28 entries), cut to 24 they lose 17.4: cut for probes, validate per task for letters</span><span class="fig-meta">Serving it · lab_cut_public_suite.png · 1800 × 1375</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_voice_commit_bound.png"><img src="./assets/figures/panels/web/lab_voice_commit_bound.webp" width="1000" height="789" loading="lazy" decoding="async" alt="A collapsing commit bound buys nothing: on final transcripts it matches the default rule; on partial ones it fires earlier (word 3.56 against 3.87) only with 3 harmful actions instead of 1. Open full size."></a>
+              <figcaption><span class="fig-name">Voice: a shrinking commit bound buys nothing</span><span class="fig-desc">A collapsing commit bound buys nothing: on final transcripts it matches the default rule; on partial ones it fires earlier (word 3.56 against 3.87) only with 3 harmful actions instead of 1</span><span class="fig-meta">Serving it · lab_voice_commit_bound.png · 1800 × 1420</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/lab_decide_then_bind.png"><img src="./assets/figures/panels/web/lab_decide_then_bind.webp" width="1000" height="748" loading="lazy" decoding="async" alt="Decide first, bind later: a probe trained on one option order reads reversed options with no loss up to layer 14, 2.4 points down at layer 18, but 20.5 down at layer 26. Open full size."></a>
+              <figcaption><span class="fig-name">Decide, then bind: reversing the options</span><span class="fig-desc">Decide first, bind later: a probe trained on one option order reads reversed options with no loss up to layer 14, 2.4 points down at layer 18, but 20.5 down at layer 26</span><span class="fig-meta">Serving it · lab_decide_then_bind.png · 1800 × 1346</span></figcaption>
+            </figure>
+          </li>
+        </ul>
+        <!-- lab-panels:end -->
         <h3 id="lab-results">Headline results</h3>
         <ul>
           <li><strong>The layer can be chosen without labels.</strong> The intrinsic dimension of unlabelled states bottoms out at layers 24 to 28 of the 4B, exactly the probe's accuracy plateau (0.79); the model's own confidence picks the wrong layer.</li>
@@ -144,20 +241,172 @@
       <!-- ============================================================== figures -->
       <section class="doc-section" aria-labelledby="figures">
         <h2 id="figures">Figures</h2>
-        <p>Every figure in <code>docs/figures/</code>, as published with the report. Select one to open it full size; the numbers behind each are in BENCHMARKS.md.</p>
+        <p>Every figure in <code>docs/figures/</code>. Select one to open it full size; the numbers behind each are in BENCHMARKS.md.</p>
+        <!-- result-panels:start -->
+        <h3 id="figures-results">Every measurement, one chart per finding</h3>
+        <p>Accuracy against Laya and Jev, languages, calibration, speed, voice, SemIf's benchmark and the probes, each chart titled with its finding and sourced in its footer; the list with sources is in <a href="https://github.com/Jibalmi/Tez/blob/main/docs/figures/panels/README.md">docs/figures/panels/README.md</a>. The same charts on one page: <a href="./assets/figures/tez_dashboard.png">tez_dashboard.png</a> (2479 × 3006).</p>
         <ul class="figure-grid">
           <li>
-            <figure class="fig-card is-tall">
-              <a class="paper" href="./assets/figures/tez_dashboard.png"><img src="./assets/figures/tez_dashboard.png" width="2123" height="3960" loading="lazy" decoding="async" alt="Dashboard: every Tez measurement on one page. Open full size."></a>
-              <figcaption><span class="fig-name">Dashboard</span><span class="fig-desc">Every measurement on one page, 25 panels: the head-to-head with Laya, languages, calibration, SemIf, voice, conformal selection and the probes.</span><span class="fig-meta">tez_dashboard.png · 2123 × 3960</span></figcaption>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/public_tasks.png"><img src="./assets/figures/panels/web/public_tasks.webp" width="1000" height="921" loading="lazy" decoding="async" alt="Zero-shot Tez leads every Laya checkpoint on 5 of 9 public tasks on identical rows; Laya leads the other 4, and Jev&#x27;s published figures lead 3 of the 4 they cover. Open full size."></a>
+              <figcaption><span class="fig-name">Accuracy on Laya&#x27;s public tasks, same rows</span><span class="fig-desc">Zero-shot Tez leads every Laya checkpoint on 5 of 9 public tasks on identical rows; Laya leads the other 4, and Jev&#x27;s published figures lead 3 of the 4 they cover</span><span class="fig-meta">Accuracy against Laya and Jev · public_tasks.png · 1800 × 1657</span></figcaption>
             </figure>
           </li>
           <li>
             <figure class="fig-card">
-              <a class="paper" href="./assets/figures/tez_lab.png"><img src="./assets/figures/tez_lab.png" width="2087" height="2002" loading="lazy" decoding="async" alt="Probe lab: sixteen panels on reading decisions from the middle of the network. Open full size."></a>
-              <figcaption><span class="fig-name">Probe lab</span><span class="fig-desc">Sixteen panels on reading decisions from the middle of the network: choosing the layer without labels, few labels, cold start, conformal selection, the cut 4B and decide-then-bind.</span><span class="fig-meta">tez_lab.png · 2087 × 2002</span></figcaption>
+              <a class="paper" href="./assets/figures/panels/typed_decisions.png"><img src="./assets/figures/panels/web/typed_decisions.webp" width="1000" height="907" loading="lazy" decoding="async" alt="On typed-decisions zero-shot Tez scores 0.704 (0.725 with 4 worked examples), against Jev&#x27;s published 0.727 and 0.766 for laya-typed-decisions, fine-tuned on the benchmark; laya&#x27;s base checkpoints score 0.362 and 0.352. Open full size."></a>
+              <figcaption><span class="fig-name">typed-decisions (2,000 decisions)</span><span class="fig-desc">On typed-decisions zero-shot Tez scores 0.704 (0.725 with 4 worked examples), against Jev&#x27;s published 0.727 and 0.766 for laya-typed-decisions, fine-tuned on the benchmark; laya&#x27;s base checkpoints score 0.362 and 0.352</span><span class="fig-meta">Accuracy against Laya and Jev · typed_decisions.png · 1800 × 1633</span></figcaption>
             </figure>
           </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/typed_decisions_by_workflow.png"><img src="./assets/figures/panels/web/typed_decisions_by_workflow.webp" width="1000" height="721" loading="lazy" decoding="async" alt="By workflow, laya-typed-decisions (fine-tuned on this benchmark) leads zero-shot Tez on 3 of 4, by up to 14.0 points on agent-trace observability; Tez leads on customer service. Open full size."></a>
+              <figcaption><span class="fig-name">typed-decisions by workflow</span><span class="fig-desc">By workflow, laya-typed-decisions (fine-tuned on this benchmark) leads zero-shot Tez on 3 of 4, by up to 14.0 points on agent-trace observability; Tez leads on customer service</span><span class="fig-meta">Accuracy against Laya and Jev · typed_decisions_by_workflow.png · 1800 × 1297</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/teacher_distribution.png"><img src="./assets/figures/panels/web/teacher_distribution.webp" width="1000" height="735" loading="lazy" decoding="async" alt="Scored against the teacher&#x27;s full distribution, zero-shot Tez&#x27;s soft accuracy is 0.575 (Jev published 0.580); laya-typed-decisions, trained on it, has the lowest Brier, 0.061. Open full size."></a>
+              <figcaption><span class="fig-name">Teacher-distribution match (soft acc ↑, Brier ↓)</span><span class="fig-desc">Scored against the teacher&#x27;s full distribution, zero-shot Tez&#x27;s soft accuracy is 0.575 (Jev published 0.580); laya-typed-decisions, trained on it, has the lowest Brier, 0.061</span><span class="fig-meta">Accuracy against Laya and Jev · teacher_distribution.png · 1800 × 1323</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/languages_massive.png"><img src="./assets/figures/panels/web/languages_massive.webp" width="1000" height="855" loading="lazy" decoding="async" alt="One frozen decoder reads all 11 MASSIVE languages at 0.790–0.930; Laya&#x27;s English checkpoint falls to 0.000 (km) and laya-multilingual to 0.210 (km). Open full size."></a>
+              <figcaption><span class="fig-name">One frozen decoder vs two trained encoders, per language</span><span class="fig-desc">One frozen decoder reads all 11 MASSIVE languages at 0.790–0.930; Laya&#x27;s English checkpoint falls to 0.000 (km) and laya-multilingual to 0.210 (km)</span><span class="fig-meta">Languages · languages_massive.png · 1800 × 1539</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/calibration.png"><img src="./assets/figures/panels/web/calibration.webp" width="1000" height="804" loading="lazy" decoding="async" alt="Tez ships at a mean ECE-15 of 0.140 (0.212 at T = 1, before its default temperature); one temperature per task brings Tez to 0.078 and Laya&#x27;s checkpoints to 0.068–0.103. Open full size."></a>
+              <figcaption><span class="fig-name">Calibration: T = 1, as shipped and one temperature per task</span><span class="fig-desc">Tez ships at a mean ECE-15 of 0.140 (0.212 at T = 1, before its default temperature); one temperature per task brings Tez to 0.078 and Laya&#x27;s checkpoints to 0.068–0.103</span><span class="fig-meta">Calibration, robustness and abstention · calibration.png · 1800 × 1447</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/order_flip.png"><img src="./assets/figures/panels/web/order_flip.webp" width="1000" height="732" loading="lazy" decoding="async" alt="Reversing the 20 options of MASSIVE-en changes 0.07 of Tez&#x27;s answers, against 0.15–0.20 for Laya&#x27;s checkpoints and 0.13 published for Jev. Open full size."></a>
+              <figcaption><span class="fig-name">Option-order robustness (first 100 rows)</span><span class="fig-desc">Reversing the 20 options of MASSIVE-en changes 0.07 of Tez&#x27;s answers, against 0.15–0.20 for Laya&#x27;s checkpoints and 0.13 published for Jev</span><span class="fig-meta">Calibration, robustness and abstention · order_flip.png · 1800 × 1318</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/conformal.png"><img src="./assets/figures/panels/web/conformal.webp" width="1000" height="828" loading="lazy" decoding="async" alt="At 90 % coverage, conformal sets let zero-shot Tez act on 50 % of typed-decisions at 0.853 accuracy and escalate the rest; laya-typed-decisions, fine-tuned on it, acts on 63 % at 0.876. Open full size."></a>
+              <figcaption><span class="fig-name">Conformal act / escalate (typed-decisions)</span><span class="fig-desc">At 90 % coverage, conformal sets let zero-shot Tez act on 50 % of typed-decisions at 0.853 accuracy and escalate the rest; laya-typed-decisions, fine-tuned on it, acts on 63 % at 0.876</span><span class="fig-meta">Calibration, robustness and abstention · conformal.png · 1800 × 1490</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/batch_calibration.png"><img src="./assets/figures/panels/web/batch_calibration.webp" width="1000" height="811" loading="lazy" decoding="async" alt="Batch Calibration (Zhou et al. 2023), fitted out of fold, lowers NLL on 10 of the 11 sets shown, most on prompt-injections (2.89 → 1.03). Open full size."></a>
+              <figcaption><span class="fig-name">Batch Calibration (Zhou 2023), NLL</span><span class="fig-desc">Batch Calibration (Zhou et al. 2023), fitted out of fold, lowers NLL on 10 of the 11 sets shown, most on prompt-injections (2.89 → 1.03)</span><span class="fig-meta">Calibration, robustness and abstention · batch_calibration.png · 1800 × 1459</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/latency_per_task.png"><img src="./assets/figures/panels/web/latency_per_task.webp" width="1000" height="795" loading="lazy" decoding="async" alt="One question per call, Laya&#x27;s checkpoints answer in 24–56 ms; Tez over HTTP, with the question-first layout of §1, took 65–589 ms per decision on these tasks. Open full size."></a>
+              <figcaption><span class="fig-name">Latency, same GPU (Tez over HTTP, question first)</span><span class="fig-desc">One question per call, Laya&#x27;s checkpoints answer in 24–56 ms; Tez over HTTP, with the question-first layout of §1, took 65–589 ms per decision on these tasks</span><span class="fig-meta">Speed · latency_per_task.png · 1800 × 1431</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/speed_many_questions.png"><img src="./assets/figures/panels/web/speed_many_questions.webp" width="1000" height="836" loading="lazy" decoding="async" alt="50 questions about one state: 1,357 ms in process with one decode for every question&#x27;s suffix (27.1 ms each), against 10,511 ms for tez serve as deployed when measured. Open full size."></a>
+              <figcaption><span class="fig-name">Many questions about one state (§5b)</span><span class="fig-desc">50 questions about one state: 1,357 ms in process with one decode for every question&#x27;s suffix (27.1 ms each), against 10,511 ms for tez serve as deployed when measured</span><span class="fig-meta">Speed · speed_many_questions.png · 1800 × 1504</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/voice_partial_transcripts.png"><img src="./assets/figures/panels/web/voice_partial_transcripts.webp" width="1000" height="782" loading="lazy" decoding="async" alt="On the first fifth of a command the top answer is &#x27;none&#x27; (0.744 of prefixes) far more often than the gold action (0.222); by the last fifth the gold action leads (0.845): a confident &#x27;none&#x27; on a prefix means keep listening. Open full size."></a>
+              <figcaption><span class="fig-name">Voice: partial-transcript predictions</span><span class="fig-desc">On the first fifth of a command the top answer is &#x27;none&#x27; (0.744 of prefixes) far more often than the gold action (0.222); by the last fifth the gold action leads (0.845): a confident &#x27;none&#x27; on a prefix means keep listening</span><span class="fig-meta">Voice · voice_partial_transcripts.png · 1800 × 1408</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/voice_outcomes.png"><img src="./assets/figures/panels/web/voice_outcomes.webp" width="1000" height="742" loading="lazy" decoding="async" alt="Voice to action on 220 commands: intent accuracy 0.905 (0.982 accepting the second action of compound commands), and 1 harmful action in 198 actionable utterances with the class-aware commit. Open full size."></a>
+              <figcaption><span class="fig-name">Voice → action outcomes (220 commands)</span><span class="fig-desc">Voice to action on 220 commands: intent accuracy 0.905 (0.982 accepting the second action of compound commands), and 1 harmful action in 198 actionable utterances with the class-aware commit</span><span class="fig-meta">Voice · voice_outcomes.png · 1800 × 1336</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/voice_budget.png"><img src="./assets/figures/panels/web/voice_budget.webp" width="1000" height="587" loading="lazy" decoding="async" alt="About 85 ms from a spoken word to an action: 40 ms for the ASR partial, 30 ms to decide, 15 ms of HTTP and under 1 ms of policy; before --swa-full the decision alone took 205 ms. Open full size."></a>
+              <figcaption><span class="fig-name">Per-word budget (~85 ms word → action)</span><span class="fig-desc">About 85 ms from a spoken word to an action: 40 ms for the ASR partial, 30 ms to decide, 15 ms of HTTP and under 1 ms of policy; before --swa-full the decision alone took 205 ms</span><span class="fig-meta">Voice · voice_budget.png · 1800 × 1056</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/voice_per_word.png"><img src="./assets/figures/panels/web/voice_per_word.webp" width="1000" height="766" loading="lazy" decoding="async" alt="Streamed voice in the clean rerun: 41.6 ms per word on the production server, 35.6 ms in process; a 4B probe trained on prefixes takes 19.6 ms, with 3 harmful actions instead of 1. Open full size."></a>
+              <figcaption><span class="fig-name">Streamed voice, word to action (§5b)</span><span class="fig-desc">Streamed voice in the clean rerun: 41.6 ms per word on the production server, 35.6 ms in process; a 4B probe trained on prefixes takes 19.6 ms, with 3 harmful actions instead of 1</span><span class="fig-meta">Voice · voice_per_word.png · 1800 × 1378</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/asr.png"><img src="./assets/figures/panels/web/asr.webp" width="1000" height="703" loading="lazy" decoding="async" alt="faster-whisper base.en returns a partial transcript in 41 ms (p50) at 7.8 % WER, and the intent read from it agrees with the true text on 97.3 %; small.en takes 120 ms for 7.3 % WER. Open full size."></a>
+              <figcaption><span class="fig-name">ASR stage (faster-whisper, synthetic speech)</span><span class="fig-desc">faster-whisper base.en returns a partial transcript in 41 ms (p50) at 7.8 % WER, and the intent read from it agrees with the true text on 97.3 %; small.en takes 120 ms for 7.3 % WER</span><span class="fig-meta">Voice · asr.png · 1800 × 1266</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/semif_scale.png"><img src="./assets/figures/panels/web/semif_scale.webp" width="1000" height="742" loading="lazy" decoding="async" alt="Symbol binding is scale-gated: on SemIf&#x27;s authored144, Gemma 4 12B Q8 scores 0.943 (SemIf published 0.813 for its 4B) and Llama 3.2 3B Q4 0.358, near chance. Open full size."></a>
+              <figcaption><span class="fig-name">Scale-gated symbol binding (SemIf, 95 % CI)</span><span class="fig-desc">Symbol binding is scale-gated: on SemIf&#x27;s authored144, Gemma 4 12B Q8 scores 0.943 (SemIf published 0.813 for its 4B) and Llama 3.2 3B Q4 0.358, near chance</span><span class="fig-meta">SemIf&#x27;s benchmark · semif_scale.png · 1800 × 1335</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/semif_calibration_recipes.png"><img src="./assets/figures/panels/web/semif_calibration_recipes.webp" width="1000" height="785" loading="lazy" decoding="async" alt="On SemIf, averaging six option orderings plus a temperature cuts NLL from 0.478 to 0.158 at the same accuracy; Zhao&#x27;s contextual calibration drops accuracy from 0.951 to 0.778. Open full size."></a>
+              <figcaption><span class="fig-name">Calibration recipes, Gemma 4 12B Q8</span><span class="fig-desc">On SemIf, averaging six option orderings plus a temperature cuts NLL from 0.478 to 0.158 at the same accuracy; Zhao&#x27;s contextual calibration drops accuracy from 0.951 to 0.778</span><span class="fig-meta">SemIf&#x27;s benchmark · semif_calibration_recipes.png · 1800 × 1413</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/cascade.png"><img src="./assets/figures/panels/web/cascade.webp" width="1000" height="737" loading="lazy" decoding="async" alt="A small-to-large cascade is not worth it: escalating when the 4B&#x27;s two orderings disagree gives 0.854 at 117 ms, against 0.951 at 110 ms for the 12B alone. Open full size."></a>
+              <figcaption><span class="fig-name">Small → large cascade: not worth it</span><span class="fig-desc">A small-to-large cascade is not worth it: escalating when the 4B&#x27;s two orderings disagree gives 0.854 at 117 ms, against 0.951 at 110 ms for the 12B alone</span><span class="fig-meta">SemIf&#x27;s benchmark · cascade.png · 1800 × 1326</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/probes_typed_decisions.png"><img src="./assets/figures/panels/web/probes_typed_decisions.webp" width="1000" height="806" loading="lazy" decoding="async" alt="A linear probe on the frozen Qwen3.5-4B reads typed-decisions at 0.794 (layer −12), above the fine-tuned laya-typed-decisions (0.766), from a model whose own letters score 0.489. Open full size."></a>
+              <figcaption><span class="fig-name">Probes on frozen hidden states (typed-decisions)</span><span class="fig-desc">A linear probe on the frozen Qwen3.5-4B reads typed-decisions at 0.794 (layer −12), above the fine-tuned laya-typed-decisions (0.766), from a model whose own letters score 0.489</span><span class="fig-meta">Probes · probes_typed_decisions.png · 1800 × 1450</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/probe_depth.png"><img src="./assets/figures/panels/web/probe_depth.webp" width="1000" height="764" loading="lazy" decoding="async" alt="The 4B probe plateaus at 0.793 from layer 20 to 28 of 32, well below the top; the 12B peaks at 0.787 at layer 34 of 48, so the bigger backbone buys no better probe. Open full size."></a>
+              <figcaption><span class="fig-name">Probe accuracy by depth, 4B vs 12B</span><span class="fig-desc">The 4B probe plateaus at 0.793 from layer 20 to 28 of 32, well below the top; the 12B peaks at 0.787 at layer 34 of 48, so the bigger backbone buys no better probe</span><span class="fig-meta">Probes · probe_depth.png · 1800 × 1376</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/probe_data_efficiency.png"><img src="./assets/figures/panels/web/probe_data_efficiency.webp" width="1000" height="726" loading="lazy" decoding="async" alt="With 50 labelled rows per question the 4B probe reaches 0.741, with 200 0.788, past laya-typed-decisions&#x27; 0.766 after fine-tuning on all 300. Open full size."></a>
+              <figcaption><span class="fig-name">Probe data efficiency</span><span class="fig-desc">With 50 labelled rows per question the 4B probe reaches 0.741, with 200 0.788, past laya-typed-decisions&#x27; 0.766 after fine-tuning on all 300</span><span class="fig-meta">Probes · probe_data_efficiency.png · 1800 × 1306</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/early_readout.png"><img src="./assets/figures/panels/web/early_readout.webp" width="1000" height="843" loading="lazy" decoding="async" alt="Reading early is cheap latency: the 4B&#x27;s probe accuracy plateaus from layer 20 to 28, and the model cut to 24 or 20 of its 32 layers prefills 1.30× or 1.54× faster. Open full size."></a>
+              <figcaption><span class="fig-name">Early readout: probe accuracy and prefill speed-up (4B)</span><span class="fig-desc">Reading early is cheap latency: the 4B&#x27;s probe accuracy plateaus from layer 20 to 28, and the model cut to 24 or 20 of its 32 layers prefills 1.30× or 1.54× faster</span><span class="fig-meta">Probes · early_readout.png · 1800 × 1517</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/task_probes.png"><img src="./assets/figures/panels/web/task_probes.webp" width="1000" height="824" loading="lazy" decoding="async" alt="One probe per task on the frozen 4B beats laya-typed-decisions on 5 of 6 of Laya&#x27;s public tasks and reaches 0.860 on Banking77, against Jev&#x27;s published 0.870. Open full size."></a>
+              <figcaption><span class="fig-name">One probe per task, 2,000 rows</span><span class="fig-desc">One probe per task on the frozen 4B beats laya-typed-decisions on 5 of 6 of Laya&#x27;s public tasks and reaches 0.860 on Banking77, against Jev&#x27;s published 0.870</span><span class="fig-meta">Probes · task_probes.png · 1800 × 1484</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/banking77_shortlist.png"><img src="./assets/figures/panels/web/banking77_shortlist.webp" width="1000" height="783" loading="lazy" decoding="async" alt="On Banking77&#x27;s 77 intents, a MiniLM shortlist of 20 lets the 12B reach 0.733 in one pass (the chunked tournament: 0.713 in five); Jev&#x27;s published 0.870 stays ahead. Open full size."></a>
+              <figcaption><span class="fig-name">Banking77: shortlist, then decide</span><span class="fig-desc">On Banking77&#x27;s 77 intents, a MiniLM shortlist of 20 lets the 12B reach 0.733 in one pass (the chunked tournament: 0.713 in five); Jev&#x27;s published 0.870 stays ahead</span><span class="fig-meta">Other levers · banking77_shortlist.png · 1800 × 1409</span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="fig-card">
+              <a class="paper" href="./assets/figures/panels/option_elimination.png"><img src="./assets/figures/panels/web/option_elimination.webp" width="1000" height="760" loading="lazy" decoding="async" alt="Eliminating options and rescoring the survivors moves accuracy by at most 2.0 points on any task and costs up to a second pass: a negative result. Open full size."></a>
+              <figcaption><span class="fig-name">Option elimination: no gain</span><span class="fig-desc">Eliminating options and rescoring the survivors moves accuracy by at most 2.0 points on any task and costs up to a second pass: a negative result</span><span class="fig-meta">Other levers · option_elimination.png · 1800 × 1368</span></figcaption>
+            </figure>
+          </li>
+        </ul>
+        <!-- result-panels:end -->
+        <h3 id="figures-h2h">The head-to-head figures of the report</h3>
+        <p>The first comparison figures, as published with the report: Laya's public tasks, typed-decisions, languages, calibration, option order and latency.</p>
+        <ul class="figure-grid">
           <li>
             <figure class="fig-card">
               <a class="paper" href="./assets/figures/tez_vs_laya_vs_jev.png"><img src="./assets/figures/tez_vs_laya_vs_jev.png" width="1890" height="720" loading="lazy" decoding="async" alt="Bar chart of accuracy on Laya's nine public tasks for Tez, Laya and Jev. Open full size."></a>
