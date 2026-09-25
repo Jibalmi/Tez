@@ -160,11 +160,12 @@ def sample() -> None:
     print(collections.Counter(r["source"] for r in rows))
 
 
-def filt(k_clusters: int = 64, embed_threads: int = 6) -> None:
+def filt(k_clusters: int = 64, device: str = "cuda") -> None:
     from datasketch import MinHashLSH
 
     rows = read_jsonl(RAW)
-    eval_h = json.loads((DATA / "eval_hashes.json").read_text(encoding="utf-8"))
+    from eval_hashes import load_hashes
+    eval_h = load_hashes()
     ex_set, nm_set = set(), set()
     for v in eval_h["sources"].values():
         ex_set.update(v["exact"])
@@ -200,7 +201,7 @@ def filt(k_clusters: int = 64, embed_threads: int = 6) -> None:
     from datasketch import MinHash
     from common import MINHASH_SEED
     for i, s in enumerate(ev["sigs"]):
-        lsh.insert(f"e{i}", MinHash(num_perm=len(s), seed=MINHASH_SEED, hashvalues=s.astype(np.uint64)))
+        lsh.insert(f"e{i}", MinHash(num_perm=len(s), seed=MINHASH_SEED, hashvalues=s, scheme="affine32"))
     keep = []
     for r in rows:
         m = minhash(norm_text(r["state"]))
@@ -208,7 +209,7 @@ def filt(k_clusters: int = 64, embed_threads: int = 6) -> None:
         best = 0.0
         for h in hits:
             s = ev["sigs"][int(h[1:])]
-            best = max(best, float(np.mean(s.astype(np.uint64) == m.hashvalues)))
+            best = max(best, float(np.mean(s == m.hashvalues.astype(np.uint32))))
         if best >= 0.8:
             dropped["2_minhash_ge_0.8"] += 1
             drops.append({"id": r["id"], "step": "minhash", "jaccard": round(best, 3)})
@@ -217,14 +218,8 @@ def filt(k_clusters: int = 64, embed_threads: int = 6) -> None:
     rows = keep
 
     # 3. MiniLM cosine >= 0.95 ; 4. domain filter
-    import torch
-    from sentence_transformers import SentenceTransformer
-    from eval_hashes import EMBEDDER
-    torch.set_num_threads(embed_threads)
-    m = SentenceTransformer(EMBEDDER, device="cpu")
-    emb = m.encode([norm_text(r["state"])[:2000] for r in rows], batch_size=64, normalize_embeddings=True,
-                   convert_to_numpy=True, show_progress_bar=False).astype(np.float32)
-    del m
+    from eval_hashes import embed_texts
+    emb = embed_texts([norm_text(r["state"]) for r in rows], device).astype(np.float32)
     ee = np.load(RUNS / "eval_emb.npz")
     E, esrc = ee["emb"].astype(np.float32), ee["src"]
     best = np.full(len(rows), -1.0, dtype=np.float32)
@@ -289,8 +284,9 @@ def filt(k_clusters: int = 64, embed_threads: int = 6) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("step", choices=["sample", "filter"])
+    ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
-    sample() if args.step == "sample" else filt()
+    sample() if args.step == "sample" else filt(device=args.device)
 
 
 if __name__ == "__main__":

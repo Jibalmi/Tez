@@ -9,8 +9,8 @@ workflows (the three held-out ones gate G1: model routing, jailbreak, toxicity),
 options; km unseen in training), SemIf authored144 and perturbations108 (mean family balanced accuracy, SemIf's own
 evaluator). MASSIVE is also read with the options reversed (order flip at 20 options).
 
-Probabilities are reported as read (T = 1) and with the student's per-type temperatures fitted on the teacher-labelled
-validation split ("cal"; no evaluation labels involved). Rows: results/h2h/rows_<task>_tez-s-<arm>.jsonl (the plan's
+Probabilities are reported as read (T = 1; the rows files hold these) and with the student's per-type temperatures
+fitted on the teacher-labelled validation split ("cal"; no evaluation labels involved). Rows: results/h2h/rows_<task>_tez-s-<arm>.jsonl (the plan's
 naming), metrics: results/pilot/eval_<arm>.json, with the weights' SHA-256 in the manifest.
 """
 from __future__ import annotations
@@ -140,6 +140,47 @@ class PredictC:
         return out
 
 
+class PredictGLiClass:
+    """Baseline: knowledgator/gliclass-x-base (mdeberta-v3-base, Apache-2.0), zero-shot, off the shelf. One question
+    per call: the rendered state is the text, the question's instructions the task prompt, each option's text
+    ("label: description", as the student sees it) a label; single-label softmax over the labels."""
+
+    def __init__(self, arm: str = "gliclass-x-base", device: str = "cuda"):
+        from gliclass import GLiClassModel, ZeroShotClassificationPipeline
+        from huggingface_hub import snapshot_download
+        from transformers import AutoTokenizer
+        path = snapshot_download("knowledgator/gliclass-x-base")
+        model = GLiClassModel.from_pretrained(path)
+        tok = AutoTokenizer.from_pretrained(path, add_prefix_space=True)
+        self.pipe = ZeroShotClassificationPipeline(model, tok, classification_type="single-label", device=f"{device}:0",
+                                                   progress_bar=False)
+        self.info = {"temperatures": {}}
+        self.weights = {"model": file_sha256(f"{path}/model.safetensors")}
+
+    @torch.no_grad()
+    def groups(self, groups: list[list[dict]], batch: int = 16) -> list[list[np.ndarray]]:
+        from student import option_text, render_state
+        flat = [(gi, c) for gi, g in enumerate(groups) for c in g]
+        res: list = [None] * len(flat)
+        for s in range(0, len(flat), batch):
+            chunk = flat[s:s + batch]
+            texts = [render_state(c["state"]) for _, c in chunk]
+            labels = [[option_text(k, d) for k, d in c["options"]] for _, c in chunk]
+            # duplicate option texts would collapse in the pipeline's label handling: make them unique
+            labels = [[f"{t} ({i})" if lab.count(t) > 1 else t for i, t in enumerate(lab)] for lab in labels]
+            prompts = [c["instructions"] for _, c in chunk]
+            inputs = self.pipe.prepare_inputs(texts, labels, same_labels=False, prompt=prompts)
+            out = self.pipe.model(**inputs, max_num_classes=self.pipe._resolve_max_num_classes(labels, False))
+            logits = out.logits.float()
+            for j, (_, c) in enumerate(chunk):
+                z = logits[j, : len(c["options"])]
+                res[s + j] = torch.log_softmax(z, -1).cpu().numpy()
+        out_g = [[] for _ in groups]
+        for (gi, _), r in zip(flat, res):
+            out_g[gi].append(r)
+        return out_g
+
+
 # ------------------------------------------------------------------------------------------------ metrics
 def temp_of(temps: dict, qtype: str, k: int) -> float:
     if qtype == "choice":
@@ -243,7 +284,7 @@ def score_task(task: str, cases: list[dict], lps: list[np.ndarray], temps: dict,
             if task.startswith("semif_"):
                 res["semif_12b"] = semif_score(task, [{"id": i, "probabilities": rows[i]["probabilities"]} for i in ids])
     res["same_rows"] = comp
-    return res, recs_cal
+    return res, recs          # rows as read (T = 1), like the 12B's rows
 
 
 def main() -> None:
@@ -252,7 +293,12 @@ def main() -> None:
     ap.add_argument("--tasks", default="all")
     args = ap.parse_args()
     t0 = time.time()
-    pred = PredictC(args.arm) if args.arm.startswith("c-") else PredictA(args.arm)
+    if args.arm.startswith("c-"):
+        pred = PredictC(args.arm)
+    elif args.arm.startswith("gliclass"):
+        pred = PredictGLiClass(args.arm)
+    else:
+        pred = PredictA(args.arm)
     temps = pred.info.get("temperatures", {})
     S = suites()
     if args.tasks != "all":
@@ -277,11 +323,11 @@ def main() -> None:
             by_wf = defaultdict(list)
             for r in recs:
                 by_wf[r["workflow"]].append(r)
-            res["by_workflow_cal"] = {w: summarise(v) for w, v in sorted(by_wf.items())}
+            res["by_workflow"] = {w: summarise(v) for w, v in sorted(by_wf.items())}
             by_q = defaultdict(list)
             for r in recs:
                 by_q[r["qtype"]].append(r)
-            res["by_qtype_cal"] = {w: {"n": len(v), "accuracy": summarise(v)["accuracy"]} for w, v in sorted(by_q.items())}
+            res["by_qtype"] = {w: {"n": len(v), "accuracy": summarise(v)["accuracy"]} for w, v in sorted(by_q.items())}
         else:
             lps = [g[0] for g in pred.groups([[c] for c in cases])]
             res, recs = score_task(task, cases, lps, temps, args.arm)

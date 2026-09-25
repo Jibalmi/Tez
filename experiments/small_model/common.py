@@ -86,7 +86,7 @@ MINHASH_SEED = 13
 
 def minhash(text: str):
     from datasketch import MinHash
-    m = MinHash(num_perm=MINHASH_PERM, seed=MINHASH_SEED)
+    m = MinHash(num_perm=MINHASH_PERM, seed=MINHASH_SEED, scheme="affine32")   # datasketch 2.0's default, uint32
     for s in shingles(text):
         m.update(s.encode("utf-8"))
     return m

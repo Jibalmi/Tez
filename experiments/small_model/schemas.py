@@ -92,7 +92,9 @@ def gold_prompt(dataset: str, examples: list[dict]) -> str:
 
 def generate(server: str, prompt: str, schema: dict, n_predict: int, temperature: float, seed: int) -> tuple[str, dict]:
     body = {"prompt": TMPL[0] + prompt + TMPL[1], "n_predict": n_predict, "temperature": temperature, "top_p": 0.95,
-            "seed": seed, "json_schema": schema, "cache_prompt": False}
+            "seed": seed, "cache_prompt": False}
+    if schema is not None:
+        body["json_schema"] = schema
     r = requests.post(f"{server}/completion", json=body, timeout=1800)
     r.raise_for_status()
     d = r.json()
@@ -120,7 +122,8 @@ def cluster() -> None:
                 clusters.append({"cid": f"{g}-{c:02d}", "group": g, "lang": g if g in LANG_NAME else None,
                                  "members": [pool[m]["id"] for m in members]})
     # gold rows join the nearest cluster centroid of their language group (English group for English gold rows)
-    cents = {c["cid"]: emb[[i for i, r in enumerate(pool) if r["id"] in set(c["members"])]].mean(0) for c in clusters}
+    pos = {r["id"]: i for i, r in enumerate(pool)}
+    cents = {c["cid"]: emb[[pos[m] for m in c["members"]]].mean(0) for c in clusters}
     by_id = {c["cid"]: c for c in clusters}
     for i, r in enumerate(pool):
         if not r.get("gold_q"):
@@ -133,7 +136,7 @@ def cluster() -> None:
     print(f"{len(clusters)} clusters:", collections.Counter(c["group"] for c in clusters))
 
 
-def write(server: str, parallel: int) -> None:
+def write(server: str, parallel: int, limit: int = 0) -> None:
     pool = {r["id"]: r for r in read_jsonl(RUNS / "pool.jsonl")}
     clusters = read_jsonl(RUNS / "clusters.jsonl")
     out_path = RUNS / "schemas_raw.jsonl"
@@ -146,9 +149,11 @@ def write(server: str, parallel: int) -> None:
         for sid in ex:
             st = pool[sid]["state"]
             t = json.dumps(st, ensure_ascii=False) if not isinstance(st, str) else st
-            texts.append(t[:700] + (" ..." if len(t) > 700 else ""))
+            texts.append(t[:500] + (" ..." if len(t) > 500 else ""))
         if c["cid"] not in done:
             jobs.append((c, texts))
+    if limit:
+        jobs = jobs[:limit]
     gold_jobs = []
     gold_done = {r["dataset"] for r in read_jsonl(RUNS / "gold_questions.jsonl")} if (RUNS / "gold_questions.jsonl").exists() else set()
     by_ds = collections.defaultdict(list)
@@ -156,7 +161,7 @@ def write(server: str, parallel: int) -> None:
         if r.get("gold_q"):
             by_ds[r["gold_q"]["dataset"]].append(r)
     for ds, rows in by_ds.items():
-        if ds not in gold_done:
+        if ds not in gold_done and not limit:
             gold_jobs.append((ds, [r for r in rows if r["lang"] == "en"][:3] or rows[:3]))
     print(f"{len(jobs)} clusters and {len(gold_jobs)} gold datasets to write", flush=True)
     t0 = time.time()
@@ -167,8 +172,9 @@ def write(server: str, parallel: int) -> None:
         seed = int(c["cid"].encode().hex()[-6:], 16)
         for attempt in range(3):
             try:
-                content, tm = generate(server, schema_prompt(texts, c["lang"]), SCHEMA_JSON, 3500, 0.7, seed + attempt)
-                items = json.loads(content)
+                sch = SCHEMA_JSON if attempt < 2 else None      # last try without the grammar
+                content, tm = generate(server, schema_prompt(texts, c["lang"]), sch, 2500, 0.7, seed + attempt)
+                items = json.loads(content[content.index("["): content.rindex("]") + 1])
                 return {"cid": c["cid"], "lang": c["lang"], "items": items, "timings": tm, "attempt": attempt}
             except Exception as exc:  # noqa: BLE001
                 err = str(exc)[:200]
@@ -186,11 +192,14 @@ def write(server: str, parallel: int) -> None:
                    "additionalProperties": False}
     with open(RUNS / "gold_questions.jsonl", "a", encoding="utf-8") as f:
         for ds, rows in gold_jobs:
-            content, tm = generate(server, gold_prompt(ds, rows), gold_schema, 200, 0.0, SEED)
-            f.write(json.dumps({"dataset": ds, "instructions": json.loads(content)["instructions"], "timings": tm},
-                               ensure_ascii=False) + "\n")
-            print(f"  gold {ds}: {json.loads(content)['instructions']}", flush=True)
-    dump(RESULTS / "schema_generation_timing.json", {"tokens": tok[0], "seconds": round(time.time() - t0, 1),
+            try:
+                content, tm = generate(server, gold_prompt(ds, rows), gold_schema, 200, 0.0, SEED)
+            except Exception:  # noqa: BLE001
+                content, tm = generate(server, gold_prompt(ds, rows), None, 200, 0.0, SEED)
+            instr = json.loads(content[content.index("{"): content.rindex("}") + 1])["instructions"]
+            f.write(json.dumps({"dataset": ds, "instructions": instr, "timings": tm}, ensure_ascii=False) + "\n")
+            print(f"  gold {ds}: {instr}", flush=True)
+    dump(RESULTS / f"schema_generation_timing_p{parallel}.json", {"tokens": tok[0], "seconds": round(time.time() - t0, 1),
                                                      "tok_per_s_aggregate": round(tok[0] / max(time.time() - t0, 1e-9), 1),
                                                      "parallel_slots": parallel, "clusters": len(jobs)})
 
@@ -225,12 +234,9 @@ def eval_option_sets() -> list[set[str]]:
     return sets
 
 
-def assign() -> None:
-    from sentence_transformers import SentenceTransformer
-    import torch
-    from eval_hashes import EMBEDDER
+def assign(device: str = "cuda") -> None:
+    from eval_hashes import embed_texts
     from tez.schema import parse_question
-    torch.set_num_threads(6)
     rng = random.Random(SEED)
     raw = read_jsonl(RUNS / "schemas_raw.jsonl")
     stats = collections.Counter()
@@ -273,9 +279,8 @@ def assign() -> None:
         seen_sets.add(key)
         keep.append(s)
     schemas = keep
-    m = SentenceTransformer(EMBEDDER, device="cpu")
     texts = [json.dumps(s["q"], ensure_ascii=False) for s in schemas]
-    E = m.encode(texts, batch_size=64, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False)
+    E = embed_texts(texts, device).astype(np.float32)
     keep_idx = []
     for i in range(len(schemas)):
         if keep_idx and float((E[keep_idx] @ E[i]).max()) >= 0.9:
@@ -328,13 +333,15 @@ def main() -> None:
     ap.add_argument("step", choices=["cluster", "write", "assign"])
     ap.add_argument("--server", default="http://127.0.0.1:8851")
     ap.add_argument("--parallel", type=int, default=6)
+    ap.add_argument("--device", default="cuda", help="embedding device for assign (cosine dedupe)")
+    ap.add_argument("--limit", type=int, default=0, help="only the first N clusters (the single-stream rate check)")
     args = ap.parse_args()
     if args.step == "cluster":
         cluster()
     elif args.step == "write":
-        write(args.server, args.parallel)
+        write(args.server, args.parallel, args.limit)
     else:
-        assign()
+        assign(args.device)
 
 
 if __name__ == "__main__":
