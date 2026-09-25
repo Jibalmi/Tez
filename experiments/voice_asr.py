@@ -23,6 +23,7 @@ from __future__ import annotations
 import ctypes as C
 import os
 import re
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -336,9 +337,16 @@ def make_asr(spec: str, **kw: Any) -> Asr:
 def asr_worker(conn: Any, spec: str, kw: dict) -> None:
     """Run a recogniser in its own process (multiprocessing target). Messages in: ("utt", pcm float32 bytes, t_start)
     to stream one utterance in real time from perf_counter t_start (10 ms frames, each pushed when its last sample
-    would have been captured), ("quit",). Messages out: ("ready", info), then per utterance ("emit", text, audio_s,
+    would have been captured; t_start None pushes them as fast as the recogniser takes them), ("quit",). Messages out: ("ready", info), then per utterance ("emit", text, audio_s,
     compute_ms, t, final) for every step that changed the text and ("done", t_last_push). perf_counter is the system's
     QueryPerformanceCounter on Windows, so both processes read one clock."""
+    if sys.platform == "win32":                       # as the harness does for itself (voice_replay.realtime_process)
+        try:
+            C.windll.winmm.timeBeginPeriod(1)
+            import psutil
+            psutil.Process().nice(psutil.HIGH_PRIORITY_CLASS)
+        except Exception:  # noqa: BLE001 - best effort
+            pass
     asr = make_asr(spec, **kw)
     conn.send(("ready", asr.info()))
     frame = int(0.01 * SR)
@@ -350,7 +358,7 @@ def asr_worker(conn: Any, spec: str, kw: dict) -> None:
         x = np.frombuffer(raw, np.float32)
         asr.reset()
         for i in range(0, len(x), frame):
-            due = t_start + (i + frame) / SR
+            due = t_start + (i + frame) / SR if t_start is not None else 0.0     # None: as fast as it can
             while True:
                 now = time.perf_counter()
                 if now >= due:

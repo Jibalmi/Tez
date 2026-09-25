@@ -170,6 +170,26 @@ def oracle_emissions(row: dict) -> list[tuple[float, str]]:
     return out
 
 
+def realtime_process() -> dict:
+    """What a voice loop's process does on Windows: a 1 ms timer period (timeBeginPeriod) so short sleeps wake on
+    time, and the high priority class so a busy machine delays its frames less. Returns what was set."""
+    out = {}
+    if sys.platform != "win32":
+        return out
+    try:
+        C.windll.winmm.timeBeginPeriod(1)
+        out["timer_period_ms"] = 1
+    except Exception as exc:  # noqa: BLE001
+        out["timer_error"] = str(exc)
+    try:
+        import psutil
+        psutil.Process().nice(psutil.HIGH_PRIORITY_CLASS)
+        out["priority"] = "high"
+    except Exception as exc:  # noqa: BLE001
+        out["priority_error"] = str(exc)
+    return out
+
+
 def sleep_until(t: float) -> None:
     while True:
         now = time.perf_counter()
@@ -179,8 +199,9 @@ def sleep_until(t: float) -> None:
             time.sleep(t - now - 0.0015)
 
 
-def record_update(u, t_in: float, e: Emission | None) -> dict:
+def record_update(u, t_in: float, e: Emission | None, due: float | None = None) -> dict:
     return {"t_in": t_in, "t_decided": t_in + u.timings.get("decide_ms", 0.0) / 1000.0, "text": u.transcript, "k": u.k,
+            "late_ms": round((t_in - due) * 1000.0, 3) if due is not None else None,
             "partial": u.partial, "decision": u.decision, "p": round(u.confidence, 5), "stable": u.stable,
             "committed": u.committed, "actions": [a.name for a in u.actions if a.kind != "undo"][-2:],
             "decide_ms": round(u.timings.get("decide_ms", 0.0), 3), "commit_ms": round(u.timings.get("commit_ms", 0.0), 3),
@@ -191,8 +212,22 @@ def record_update(u, t_in: float, e: Emission | None) -> dict:
             "t_emit": e.t if e is not None else None}
 
 
+def trim(row: dict, x: np.ndarray, lead: float = 0.3, tail: float = 0.5) -> tuple[np.ndarray, list[dict]]:
+    """The audio from `lead` s before the first word to `tail` s after the last (the synthetic WAVs carry more
+    silence than that), with the word times shifted to the cut."""
+    w = row["words"]
+    a = max(0.0, w[0]["start"] - lead)
+    b = min(len(x) / SR, w[-1]["end"] + tail)
+    i, j = int(a * SR) // FRAME * FRAME, int(math.ceil(b * SR))
+    shift = i / SR
+    return x[i:j], [{**v, "start": v["start"] - shift, "end": v["end"] - shift} for v in w]
+
+
 def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor, undos: list) -> dict:
     x = read_wav(row["wav"])
+    if args.trim:
+        x, words = trim(row, x)
+        row = {**row, "words": words}
     executor.log.clear()
     undos.clear()
     if session is not None:
@@ -202,13 +237,13 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
 
     def on_emit(e: Emission, t_recv: float) -> None:
         emits.append({"text": e.text, "audio_s": e.audio_s, "asr_ms": round(e.compute_ms, 3), "t_emit": e.t,
-                      "t_recv": t_recv, "final": e.final})
+                      "t_recv": t_recv, "final": e.final, "late_ms": round((t_recv - (t0 + e.audio_s)) * 1000.0, 3)})
         if session is None or not e.text:
             return
         t_in = time.perf_counter()
         u = session.update(e.text, final=e.final)
         if u is not None:
-            updates.append(record_update(u, t_in, e))
+            updates.append(record_update(u, t_in, e, t0 + e.audio_s))
 
     if args.asr == "oracle":
         for audio_s, text in oracle_emissions(row):
@@ -220,7 +255,7 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
         t_last = time.perf_counter()
     elif worker is not None:
         conn = worker
-        conn.send(("utt", x.tobytes(), t0))
+        conn.send(("utt", x.tobytes(), t0 if args.realtime else None))
         while True:
             msg = conn.recv()
             t_recv = time.perf_counter()
@@ -300,6 +335,7 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     commit_ms = [u["commit_ms"] for r in rows for u in r["updates"]]
     asr_ms = [e["asr_ms"] for r in rows for e in r["emissions"] if e.get("asr_ms")]
     pipe_ms = [(e["t_recv"] - e["t_emit"]) * 1000.0 for r in rows for e in r["emissions"] if e.get("t_emit") and e.get("t_recv")]
+    late_ms = [e["late_ms"] for r in rows for e in r["emissions"] if e.get("late_ms") is not None]
     for r in rows:
         ref = [w["w"] for w in r["words"]]
         texts = [e["text"] for e in r["emissions"]]
@@ -365,7 +401,8 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     out = {"rows": len(rows), "actionable": len(act), "oos": len(oos),
            "asr": {"wer": round(wer_e / wer_n, 4) if wer_n else None, "step_compute_ms": stats(asr_ms),
                    "emission_delay_ms": stats(emit_delay), "emission_lag_beyond_chunk_ms": stats(emit_lag),
-                   "pipe_ms": stats(pipe_ms), "decisive_word_missed": missed_decisive}}
+                   "pipe_ms": stats(pipe_ms), "decisive_word_missed": missed_decisive},
+           "emission_arrival_after_audio_ms": stats(late_ms)}
     if has_decisions:
         out.update({
             "word_end_to_decision_ms": stats(lat_dec), "word_end_to_decision_by_class_ms": {k: stats(v) for k, v in
@@ -424,6 +461,8 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--ids", default=None, help="a file of ids (one per line) to replay")
     ap.add_argument("--no-realtime", dest="realtime", action="store_false")
+    ap.add_argument("--no-trim", dest="trim", action="store_false",
+                    help="keep the WAVs' own silence (default: 0.3 s before the first word, 0.5 s after the last)")
     ap.add_argument("--gap", type=float, default=0.3, help="seconds between utterances")
     ap.add_argument("--warmup", type=int, default=3)
     ap.add_argument("--tag", default=None)
@@ -439,6 +478,7 @@ def main() -> None:
     tag = args.tag or f"{args.set}_{args.asr.split(':')[0]}_{Path(args.backend).stem if args.backend != 'none' else 'asr'}"
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {"script": "experiments/voice_replay.py", "date": time.strftime("%Y-%m-%dT%H:%M:%S"), "args": vars(args),
+                "process": realtime_process() if args.realtime else {},
                 "set": args.set, "data_sha256": hashes, "schema": str(schema_path), "rows": len(rows),
                 "gpu_before": gpu_snapshot()}
     # ---- the recogniser
