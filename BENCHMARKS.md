@@ -195,7 +195,7 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 ## 4. Abstention, debiasing, cascades
 
-- **Conformal sets, typed-decisions (2,000 decisions, Mondrian by question type, calibrated on half the cases):** at 90 % target coverage Tez covers 90.1 %, acts (set size 1) on **52 %** of decisions at **0.853** accuracy, escalates the rest, zero fallbacks; at 95 %: acts on 37 % at 0.912. Laya fine-tuned: 63 % at 0.876; Laya base: 5 %. (`experiments/conformal_td.py`)
+- **Conformal sets, typed-decisions (2,000 decisions, Mondrian by question type, calibrated on half the cases):** at 90 % target coverage Tez covers 90.1 %, acts (set size 1) on **50 %** of decisions at **0.853** accuracy, escalates the rest, zero fallbacks; at 95 %: acts on 37 % at 0.912. Laya fine-tuned: 63 % at 0.876; Laya base: 5 %. (`experiments/conformal_td.py`)
 - **Batch Calibration (Zhou et al. 2023), out-of-fold:** NLL improves on 30/33 sets (prompt-injections 2.89 → 1.03, XNLI-th 2.18 → 1.26, SST-5 4.04 → 3.26, typed-decisions 1.75 → 1.42); accuracy +1–4 pts on XNLI and prompt-injections, unchanged on most tasks, −4 on Khmer, −1 on typed-decisions. (`experiments/batch_calibration.py`)
 - **Small→large cascade (Gemma 3 4B → 12B, escalate on ordering disagreement): negative result** — 0.854 at 117 ms vs the 12B alone 0.951 at 110 ms. (`experiments/cascade_analysis.py`)
 
@@ -211,7 +211,7 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 | answer symbols: digits / lowercase / uppercase letters (SemIf rows) | 0.947 / 0.943 / 0.943 — **no effect at 12B** |
 | ordinal expected-value readout instead of argmax (SST-5, score questions) | no change for Tez; hurts Laya-td — **null** |
 | Batch Calibration (out-of-fold) | NLL down on 30/33 sets; accuracy ±1–4 pts task-dependent |
-| conformal sets (90 % coverage) | act on 52 % of decisions at 0.853 accuracy |
+| conformal sets (90 % coverage) | act on 50 % of decisions at 0.853 accuracy |
 | 4B → 12B cascade | 0.854 @ 117 ms vs 12B alone 0.951 @ 110 ms — **negative** |
 
 ### Hidden-state probe (Hidden Calibration, `experiments/hidden_probe.py`) — frozen Qwen3.5-4B, typed-decisions
@@ -225,7 +225,7 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 | nearest-centroid, layer −12 | 0.715 | — |
 | Gemma 4 12B Q8, final-layer last-token state via llama-server `--embeddings --pooling last` (L2-normalised), logreg / centroid | 0.735 / 0.724 | 0.67 |
 
-**Full layer sweep (Qwen3.5-4B, 33 layers, `hidden_probe_sweep.py`):** 0.483 (layer 0) · 0.574 (12) · 0.661 (14) · 0.737 (16) · 0.777 (18) · **0.790–0.793 (20–28, best 26)** · 0.787 (30) · 0.772 (32). **Data efficiency at layer 26 (rows per question, 3 seeds):** 10 → 0.669 · 25 → 0.707 · 50 → 0.741 · 100 → 0.760 · 200 → 0.788 · all 300 → 0.793. **Ensemble** probe ⊕ letter logits (w = 0.25): 0.799. **Conformal on the probe, 90 % coverage:** act on 66.6 % at 0.884 accuracy (12B letters: 52 % @ 0.853; laya-td: 63 % @ 0.876).
+**Full layer sweep (Qwen3.5-4B, 33 layers, `hidden_probe_sweep.py`):** 0.483 (layer 0) · 0.574 (12) · 0.661 (14) · 0.737 (16) · 0.777 (18) · **0.790–0.793 (20–28, best 26)** · 0.787 (30) · 0.772 (32). **Data efficiency at layer 26 (rows per question, 3 seeds):** 10 → 0.669 · 25 → 0.707 · 50 → 0.741 · 100 → 0.760 · 200 → 0.788 · all 300 → 0.793. **Ensemble** probe ⊕ letter logits (w = 0.25): 0.799. **Conformal on the probe, 90 % coverage:** act on 66.6 % at 0.884 accuracy (12B letters: 50 % @ 0.853; laya-td: 63 % @ 0.876).
 
 **Early readout (`early_exit_bench.py`, Qwen3.5-4B truncated to its first N layers, 200 typed-decisions prompts, 227 tokens mean, eager PyTorch bf16, CUDA-synchronised):**
 
