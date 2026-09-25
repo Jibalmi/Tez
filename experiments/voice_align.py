@@ -94,6 +94,7 @@ def main() -> None:
     ap.add_argument("--compute-type", default="int8")
     ap.add_argument("--check", default=None, help="a data directory with a Kokoro align.jsonl to score against")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--threads", type=int, default=0, help="CPU threads (0: CTranslate2's default)")
     args = ap.parse_args()
     if args.device == "cuda":
         import sys
@@ -102,7 +103,7 @@ def main() -> None:
         add_nvidia_dlls()
     from faster_whisper import WhisperModel
     t0 = time.perf_counter()
-    model = WhisperModel(args.model, device=args.device, compute_type=args.compute_type)
+    model = WhisperModel(args.model, device=args.device, compute_type=args.compute_type, cpu_threads=args.threads)
     print(f"loaded {args.model} in {time.perf_counter() - t0:.0f} s", flush=True)
     if args.check:
         d = ROOT / args.check

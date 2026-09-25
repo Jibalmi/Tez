@@ -276,7 +276,7 @@ class StreamSession:
     def __init__(self, engine: Tez, schema: Schema | str | None = None, question: str | Question | None = None, *,
                  policy: Policy | None = None, readout: str = "auto", alpha: float | None = None,
                  on_action: Callable[[Action], Any] | None = None, on_undo: Callable[[Action], Any] | None = None,
-                 incremental: bool = True, clock: Callable[[], float] = time.perf_counter):
+                 incremental: bool = True, commit: str = "gap", clock: Callable[[], float] = time.perf_counter):
         self.engine = engine
         if isinstance(schema, str):
             if schema not in engine.schemas:
@@ -311,9 +311,14 @@ class StreamSession:
                 self._parts[i] = ("both", head, tail, len(s.options), True)
             else:
                 self._parts.append(("letters", head, tail, len(s.options), False))
+        if commit not in ("gap", "fold"):
+            raise InvalidRequest("commit must be gap (a decode of its own after the decision) or fold (inside the next "
+                                 "decision's decode)")
+        self.commit_mode = commit
         self._reader = None
         if incremental and self._parts and hasattr(engine.backend, "stream_reader"):
-            self._reader = engine.backend.stream_reader([(h, t, k, e) for _, h, t, k, e in self._parts])
+            self._reader = engine.backend.stream_reader([(h, t, k, e) for _, h, t, k, e in self._parts],
+                                                        fold=commit == "fold")
         self.reset()
 
     @staticmethod

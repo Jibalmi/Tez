@@ -487,6 +487,7 @@ def main() -> None:
     ap.add_argument("--readout", default="auto")
     ap.add_argument("--default-temperature", default="auto")
     ap.add_argument("--tau", type=float, default=0.9)
+    ap.add_argument("--commit", choices=["gap", "fold"], default="gap")
     ap.add_argument("--n-ctx", type=int, default=2048)
     ap.add_argument("--n-seq-max", type=int, default=8)
     ap.add_argument("--n-outputs", type=int, default=64)
@@ -554,7 +555,7 @@ def main() -> None:
                   default_temperature=args.default_temperature)
         t = time.perf_counter()
         session = tez.stream(schema=schema.name, policy=policy, readout=args.readout, on_action=executor,
-                             on_undo=undo_log(undos)).load()
+                             on_undo=undo_log(undos), commit=args.commit).load()
         manifest["decision"] = {"backend": args.backend, "template": args.template, "load_s": round(time.perf_counter() - t, 1),
                                 "model": tez.backend.model_name(), "readout": session.setup.use_probe and "probe" or "letters",
                                 "parts": [p[0] for p in session._parts], "incremental": session.incremental,

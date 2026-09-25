@@ -104,6 +104,27 @@ def test_only_the_new_word_and_the_tail_are_evaluated(gguf: Path):
     assert s._reader.restored == 0
 
 
+def test_folded_commits_cost_one_decode_per_word_and_answer_the_same(gguf: Path):
+    api = StubApi()
+    tez, ref = engines(gguf, api=api)
+    s = tez.stream(schema="voice-desktop", commit="fold").load()
+    tail = len(s._parts[0][2].encode())
+    for i, w in enumerate(WORDS):
+        n0 = len(api.decodes)
+        u = s.feed(w)
+        assert len(api.decodes) == n0 + 1                                     # the decision's decode, nothing else
+        prev = len((" " if i > 1 else "") + WORDS[i - 1]) + (1 if i == 1 else 0) if i else 0
+        piece = len((" " if i else "") + w) + (0 if i else 1)
+        assert api.decodes[n0]["n"] == 2 * prev + piece + tail and u.timings["commit_tokens"] == 0   # A and S
+        assert np.allclose(list(u.probabilities.values()), reference(ref, s, u.state).probabilities, atol=1e-6)
+    for text, final in (("open no", False), ("open notes", False), ("open notes and", False), ("shut it", True)):
+        s.reset() if text == "open no" else None
+        u = s.update(text, final=final)
+        assert np.allclose(list(u.probabilities.values()), reference(ref, s, text).probabilities, atol=1e-6)
+    with pytest.raises(InvalidRequest, match="commit must be"):
+        tez.stream(schema="voice-desktop", commit="later")
+
+
 def test_the_same_session_twice_and_a_new_session_reuse_nothing_stale(gguf: Path):
     tez, ref = engines(gguf)
     s = tez.stream(schema="voice-desktop")

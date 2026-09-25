@@ -747,11 +747,12 @@ class InprocBackend(Backend):
             out.append((ls, em))
         return out
 
-    def stream_reader(self, parts: Sequence[tuple[str, str, int, bool]]) -> InprocStreamReader:
+    def stream_reader(self, parts: Sequence[tuple[str, str, int, bool]], fold: bool = False) -> InprocStreamReader:
         """A reader of prompts head + state + tail whose state grows between reads (InprocStreamReader). parts: one
         (head, tail, k, embed) per prompt read together at every step: k option letters (0: none) and whether the
-        last-token state is read."""
-        return InprocStreamReader(self, parts)
+        last-token state is read. fold: commit words inside the next read's decode instead of in a decode of their own
+        (see InprocStreamReader)."""
+        return InprocStreamReader(self, parts, fold=fold)
 
     def _reserve(self, n: int) -> list[int]:
         """n sequence ids for a stream reader, from the top of the range; at least one other stays free for the
@@ -996,9 +997,14 @@ class InprocStreamReader:
     so hybrid and recurrent models (Qwen3.5) work the same way: their copies copy the recurrent state.
     When the state's tokens stop extending the committed ones (a word that merges with the next, a revised
     transcript, a new residual), A_j is rebuilt from P_j. A cleared cache (a failed read elsewhere, close()) is noticed
-    through the backend's epoch and the heads are evaluated again."""
+    through the backend's epoch and the heads are evaluated again.
+    fold=True defers each commit into the next read's llama_decode: the committed tokens go to A_j and, with the new
+    words and the tail, to S_j (copied from A_j before them) in the same batch. A step then costs one forward pass
+    instead of two, which matters for a large attention model, whose decode costs about the same for 2 tokens as for
+    12 (the weights are read either way). Hybrid and recurrent models split a batch that spans two sequences into
+    several, so for them the default (a commit decode of its own, in the gap) is the faster one."""
 
-    def __init__(self, backend: InprocBackend, parts: Sequence[tuple[str, str, int, bool]]):
+    def __init__(self, backend: InprocBackend, parts: Sequence[tuple[str, str, int, bool]], fold: bool = False):
         if not parts:
             raise ValueError("a stream reader needs at least one prompt")
         self.backend = backend
@@ -1018,6 +1024,8 @@ class InprocStreamReader:
         self._epoch: int | None = None
         self.restored = 0                               # times A_j was rebuilt from its head
         self.head_ms = 0.0
+        self.fold = bool(fold)
+        self._pending: list[list[int] | None] = [None] * len(self.parts)   # fold: what A_j should hold next
 
     # ------------------------------------------------------------------ set-up (the backend lock is held)
     def _ensure(self) -> LlamaModel:
@@ -1043,6 +1051,7 @@ class InprocStreamReader:
             self._P.append(p)
             self._C.append(list(p))
         self._last = None
+        self._pending = [None] * len(self.parts)
         self._epoch = b._epoch
         self.head_ms = (time.perf_counter() - t0) * 1000.0
         return m
@@ -1084,20 +1093,25 @@ class InprocStreamReader:
     def _read(self, m: LlamaModel, state: str, t0: float) -> list[tuple[LetterScores | None, Embedding | None]]:
         b = self.backend
         toks = [m.tokenize(head + state + tail) for head, tail, _, _ in self.parts]
-        starts, rests = [], []
+        starts, rests, exts, targets = [], [], [], []
         for j, T in enumerate(toks):
             b._fits(T)
+            target, self._pending[j] = self._pending[j], None
             if _common_prefix(self._C[j], T) < len(self._C[j]):
                 if _common_prefix(self._P[j], T) < len(self._P[j]):
                     raise BackendRequestError("the prompt no longer starts with the stream's head")
                 self._rebuild(m, j)
             c = len(self._C[j])
+            if target is not None and (len(target) <= c or _common_prefix(target, T) < len(target)):
+                target = None                            # a folded commit this prompt no longer extends
             _, sa, ss = self._seqs[j]
             m.seq_rm(ss)
             m.seq_cp(sa, ss)
             starts.append(c)
             rests.append(T[c:])
-        total = sum(len(r) for r in rests)
+            exts.append(target[c:] if target is not None else [])
+            targets.append(target)
+        total = sum(len(r) for r in rests) + sum(len(x) for x in exts)
         m.set_embeddings(self.want_embed)
         limit = min(m.cap, m.n_outputs) if self.want_embed else m.cap
         if total <= limit:
@@ -1106,6 +1120,11 @@ class InprocStreamReader:
             bs: list[int] = []
             bo: list[bool] = []
             for j, rest in enumerate(rests):
+                if exts[j]:                              # the folded commit: A_j's new tokens, no output
+                    bt += exts[j]
+                    bp += range(starts[j], starts[j] + len(exts[j]))
+                    bs += [self._seqs[j][1]] * len(exts[j])
+                    bo += [False] * len(exts[j])
                 bt += rest
                 bp += range(starts[j], starts[j] + len(rest))
                 bs += [self._seqs[j][2]] * len(rest)
@@ -1113,11 +1132,16 @@ class InprocStreamReader:
             outs = m.decode(bt, bp, bs, bo)
         else:                                            # rare (a rebuild): the bodies first, then the last tokens
             for j, rest in enumerate(rests):
+                if exts[j]:
+                    self._decode_on(m, self._seqs[j][1], exts[j], starts[j])
                 if len(rest) > 1:
                     self._decode_on(m, self._seqs[j][2], rest[:-1], starts[j])
             n = len(rests)
             outs = m.decode([r[-1] for r in rests], [starts[j] + len(rests[j]) - 1 for j in range(n)],
                             [self._seqs[j][2] for j in range(n)], [True] * n)
+        for j, target in enumerate(targets):
+            if target is not None:
+                self._C[j] = list(target)
         rows = []
         for (_, _, k, e), p in zip(self.parts, outs):
             z = b._letters_of([m.logits_row(p)], k)[0] if k else None
@@ -1154,6 +1178,11 @@ class InprocStreamReader:
             toks = self._last[1]
         else:
             toks = [m.tokenize(head + state + tail) for head, tail, _, _ in self.parts]
+        if self.fold:                                    # the next read evaluates them, in its own decode
+            for j, ((head, _, _, _), T) in enumerate(zip(self.parts, toks)):
+                s = _common_prefix(m.tokenize(head + state), T)
+                self._pending[j] = list(T[:s]) if s > len(self._P[j]) else None
+            return 0
         m.set_embeddings(self.want_embed)
         n_eval = 0
         for j, ((head, _, _, _), T) in enumerate(zip(self.parts, toks)):
@@ -1183,6 +1212,7 @@ class InprocStreamReader:
                     m.seq_cp(sp, sa)
                     self._C[j] = list(self._P[j])
             self._last = None
+            self._pending = [None] * len(self.parts)
 
     def close(self) -> None:
         """Free this reader's sequences."""

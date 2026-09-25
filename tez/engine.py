@@ -615,7 +615,9 @@ class Tez:
 
         schema: a loaded schema's name or a Schema; question: its id (default: the schema's only choice question).
         Keywords: policy (tez.stream.Policy; default from the schema's `actions:` block), readout, alpha, on_action,
-        on_undo, incremental (default True: with the in-process backend only the new words are evaluated)."""
+        on_undo, incremental (default True: with the in-process backend only the new words are evaluated), commit
+        (gap: each word is committed in a decode of its own after the decision; fold: inside the next decision's
+        decode, one forward pass per step, better for large attention models)."""
         from .stream import StreamSession
         return StreamSession(self, schema, question, **kw)
 
