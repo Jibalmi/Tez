@@ -445,6 +445,32 @@ def rescore(rows_path: Path, tau: float | None, schema_path: Path | None) -> dic
     return score(rows, pol, meta["manifest"].get("asr_chunk_s"))
 
 
+def report(paths: list[str]) -> None:
+    """One line per finished run: the numbers the Phase 1 write-up quotes."""
+    def g(d, *ks):
+        for k in ks:
+            if not isinstance(d, dict):
+                return None
+            d = d.get(k)
+        return d
+    cols = ["tag", "set", "asr", "decision", "n", "dec p50", "dec p95", "act p50", "act p95", "proj p50", "decide p50",
+            "acc", "acc t/a", "harm", "oos", "1st word", "asr step p50", "busy/chunk", "emit delay", "lag>chunk", "WER",
+            "cpu%"]
+    print(" | ".join(cols))
+    for path in paths:
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        m, s = d["manifest"], d["summary"]
+        row = [Path(path).stem.replace("replay_", ""), m["set"], g(m, "asr", "name"), g(m, "decision", "model") or "-",
+               s["rows"], g(s, "word_end_to_decision_ms", "p50"), g(s, "word_end_to_decision_ms", "p95"),
+               g(s, "word_end_to_first_action_ms", "p50"), g(s, "word_end_to_first_action_ms", "p95"),
+               g(s, "projected_word_end_to_action_ms", "p50"), g(s, "decide_ms_per_update", "p50"),
+               s.get("intent_accuracy"), s.get("intent_accuracy_then_alt"), s.get("harmful"), s.get("oos_false_actions"),
+               s.get("first_action_word_mean"), g(s, "asr", "step_compute_ms", "p50"), g(s, "asr", "busy_ms_per_chunk", "p50"),
+               g(s, "asr", "emission_delay_ms", "mean"), g(s, "asr", "emission_lag_beyond_chunk_ms", "mean"),
+               g(s, "asr", "wer"), g(m, "load", "cpu_pct_mean")]
+        print(" | ".join("-" if v is None else str(v) for v in row))
+
+
 # ---------------------------------------------------------------------------------------------- main
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -473,7 +499,11 @@ def main() -> None:
     ap.add_argument("--warmup", type=int, default=3)
     ap.add_argument("--tag", default=None)
     ap.add_argument("--rescore", default=None)
+    ap.add_argument("--report", nargs="+", default=None, help="print one line per finished run (result JSON files)")
     args = ap.parse_args()
+    if args.report:
+        report(args.report)
+        return
     if args.rescore:
         res = rescore(Path(args.rescore), args.tau, Path(args.schema) if args.schema else None)
         print(json.dumps({k: v for k, v in res.items() if not k.endswith("detail")}, indent=1))
