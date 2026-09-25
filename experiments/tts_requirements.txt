@@ -1,0 +1,45 @@
+# Environment for experiments/tts_bench.py: .venv-tts in the repo root (git-ignored). Python 3.11, because
+# hexgrad's `kokoro` and `misaki` 0.9.4 require Python < 3.13 and onnxruntime 1.30 requires >= 3.11.
+# Installed 2026-09-25 in four steps; each run records the versions it actually imported in its manifest.
+#
+#   py -3.11 -m venv .venv-tts          (or any CPython 3.11: here the uv-managed one, ~/.local/bin/python3.11.exe)
+#   .venv-tts\Scripts\python -m pip install -U pip
+#
+# 1. One onnxruntime only: the GPU build, which also has the CPU provider. kokoro-onnx, piper-tts and
+#    faster-whisper all declare a dependency on the CPU `onnxruntime` wheel, which unpacks into the same
+#    directory and silently takes the CUDA provider away (Theioma hit this, packages/kokoro-tts/README.md), so
+#    they are installed with --no-deps in step 2.
+#   .venv-tts\Scripts\python -m pip install "numpy>=2.0.2,<2.4" soundfile psutil nvidia-ml-py sounddevice ^
+#       "onnxruntime-gpu[cuda,cudnn]==1.30.0" "espeakng-loader>=0.2.4" "phonemizer>=3.4.0" pathvalidate ^
+#       huggingface-hub ctranslate2 tokenizers av tqdm
+#
+# 2. ONNX engines and the ASR used for scoring, without their onnxruntime pin
+#   .venv-tts\Scripts\python -m pip install --no-deps kokoro-onnx==0.6.1 piper-tts==1.8.0 faster-whisper==1.2.1 ^
+#       sherpa-onnx==1.13.8 sherpa-onnx-core==1.13.8
+#
+# 3. PyTorch engines (and UTMOS for scoring): torch built for CUDA 13.0 (sm_120), matching the CUDA 13 runtime
+#    onnxruntime-gpu 1.30 uses
+#   .venv-tts\Scripts\python -m pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cu130
+#   .venv-tts\Scripts\python -m pip install scipy loguru transformers addict regex num2words spacy ^
+#       spacy-curated-transformers einops fastapi "pydantic>=2" python-multipart requests safetensors ^
+#       sentencepiece typer uvicorn
+#   .venv-tts\Scripts\python -m pip install --no-deps kokoro==0.9.4 misaki==0.9.4 pocket-tts==3.3.0
+#    (misaki[en] wants phonemizer-fork, which installs the same `phonemizer` module as phonemizer 3.4.0; 3.4.0
+#    already has EspeakWrapper.set_data_path, so the fork is not installed. On its first English pipeline misaki
+#    pip-installs spaCy's en_core_web_sm 3.8.0 into the venv by itself; pre-install it to keep runs offline:
+#    .venv-tts\Scripts\python -m spacy download en_core_web_sm)
+#
+# 4. Model files (tools/ is git-ignored)
+#   tools/tts/kokoro-onnx/   kokoro-v1.0.onnx, kokoro-v1.0.fp16.onnx, kokoro-v1.0.int8.onnx, voices-v1.0.bin
+#                            from https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.0
+#   tools/tts/piper/         en_US-lessac-medium.onnx(.json), en_GB-alan-medium.onnx(.json)
+#                            from https://huggingface.co/rhasspy/piper-voices
+#   tools/tts/sherpa/<name>/ extracted <name>.tar.bz2 from https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models
+#                            (kokoro-int8-multi-lang-v1_0, kitten-nano-en-v0_8-int8, kitten-mini-en-v0_8,
+#                            sherpa-onnx-supertonic-3-tts-int8-2026-05-11)
+#   kokoro-torch and pocket-tts download their weights from Hugging Face on first load (hexgrad/Kokoro-82M,
+#   kyutai/pocket-tts-without-voice-cloning); faster-whisper uses Systran/faster-whisper-* from the HF cache.
+#
+# Behind a TLS-intercepting proxy, scope any workaround to the one command that failed, e.g.
+#   set CURL_CA_BUNDLE= & set REQUESTS_CA_BUNDLE= & <that one command>
+# never globally.

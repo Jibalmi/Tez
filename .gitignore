@@ -1,5 +1,8 @@
 # engines, weights, caches
 tools/
+# the TTS harness's own environment and its audio samples (experiments/tts_bench.py)
+.venv-tts/
+results/tts/samples/
 *.gguf
 *.safetensors
 __pycache__/

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "about": "Fixed utterance set for experiments/tts_bench.py (plan: docs/plans/voice-tts-plan.md section 3). `text` is what the engine is given; `spoken` is what a listener should hear, used for WER after normalisation. Tiers: earcon (tones, never synthesised live), clip (fixed confirmations, pre-rendered once and played from RAM; also synthesised live to measure the fallback), short (a confirmation with a dynamic slot), medium (one status sentence), long (a conversational reply), stress (numbers, times, abbreviations, names), barge (a long passage that is interrupted), i18n (optional, only for engines that support the language).",
+  "earcons": [
+    {"id": "ec_ack", "tones_hz": [880, 1320], "ms": 70, "meaning": "command understood, action fired"},
+    {"id": "ec_listen", "tones_hz": [660, 990], "ms": 90, "meaning": "microphone armed"},
+    {"id": "ec_undo", "tones_hz": [990, 660], "ms": 90, "meaning": "action undone"},
+    {"id": "ec_error", "tones_hz": [440, 330], "ms": 140, "meaning": "not understood or failed"}
+  ],
+  "utterances": [
+    {"id": "clip_open_spotify", "tier": "clip", "text": "Opening Spotify.", "spoken": "opening spotify"},
+    {"id": "clip_open_notepad", "tier": "clip", "text": "Opening Notepad.", "spoken": "opening notepad"},
+    {"id": "clip_done", "tier": "clip", "text": "Done.", "spoken": "done"},
+    {"id": "clip_paused", "tier": "clip", "text": "Paused.", "spoken": "paused"},
+    {"id": "clip_next_track", "tier": "clip", "text": "Next track.", "spoken": "next track"},
+    {"id": "clip_volume_up", "tier": "clip", "text": "Volume up.", "spoken": "volume up"},
+    {"id": "clip_on_it", "tier": "clip", "text": "On it.", "spoken": "on it"},
+    {"id": "clip_undone", "tier": "clip", "text": "Undone.", "spoken": "undone"},
+    {"id": "clip_approval", "tier": "clip", "text": "That needs your approval.", "spoken": "that needs your approval"},
+    {"id": "clip_didnt_catch", "tier": "clip", "text": "Sorry, I didn't catch that.", "spoken": "sorry i didn't catch that"},
+
+    {"id": "short_open_blender", "tier": "short", "text": "Opening Blender.", "spoken": "opening blender"},
+    {"id": "short_play_youtube", "tier": "short", "text": "Playing lofi beats on YouTube.", "spoken": "playing lofi beats on youtube"},
+    {"id": "short_search_flights", "tier": "short", "text": "Searching for flights to Lisbon.", "spoken": "searching for flights to lisbon"},
+    {"id": "short_open_project", "tier": "short", "text": "Opening the drone project.", "spoken": "opening the drone project"},
+    {"id": "short_agent_sent", "tier": "short", "text": "Sent to the build agent.", "spoken": "sent to the build agent"},
+    {"id": "short_timer", "tier": "short", "text": "Timer set for ten minutes.", "spoken": "timer set for ten minutes"},
+    {"id": "short_which_one", "tier": "short", "text": "Notepad or Notion?", "spoken": "notepad or notion"},
+    {"id": "short_typing", "tier": "short", "text": "Typing it now.", "spoken": "typing it now"},
+
+    {"id": "med_agents", "tier": "medium", "text": "Three agents are running, and one approval is waiting for you.", "spoken": "three agents are running and one approval is waiting for you"},
+    {"id": "med_build", "tier": "medium", "text": "The build finished in four minutes with two warnings and no errors.", "spoken": "the build finished in four minutes with two warnings and no errors"},
+    {"id": "med_calendar", "tier": "medium", "text": "You have nothing else on your calendar until tomorrow morning.", "spoken": "you have nothing else on your calendar until tomorrow morning"},
+    {"id": "med_email", "tier": "medium", "text": "There are five new emails, and the one from Sarah looks urgent.", "spoken": "there are five new emails and the one from sarah looks urgent"},
+    {"id": "med_confirm_delete", "tier": "medium", "text": "Do you want me to delete the old branch, or keep it for now?", "spoken": "do you want me to delete the old branch or keep it for now"},
+    {"id": "med_weather", "tier": "medium", "text": "It will be sunny this afternoon, with a light wind from the north.", "spoken": "it will be sunny this afternoon with a light wind from the north"},
+    {"id": "med_music", "tier": "medium", "text": "I paused the music because you started a call.", "spoken": "i paused the music because you started a call"},
+    {"id": "med_escalate", "tier": "medium", "text": "I am not sure which tool you meant, so I asked the larger model.", "spoken": "i am not sure which tool you meant so i asked the larger model"},
+
+    {"id": "long_summary", "tier": "long", "text": "Here is where things stand. The simulation finished overnight and the results look consistent with last week. Two of the agents are still waiting on reviews, and the deploy is blocked until you approve the database change. Would you like me to open the approval now?", "spoken": "here is where things stand the simulation finished overnight and the results look consistent with last week two of the agents are still waiting on reviews and the deploy is blocked until you approve the database change would you like me to open the approval now"},
+    {"id": "long_explain", "tier": "long", "text": "The voice loop listens in short steps, decides as soon as the command is clear, and only then speaks. Short confirmations come from a cache, so they play almost instantly. Longer answers like this one are synthesised sentence by sentence while you listen.", "spoken": "the voice loop listens in short steps decides as soon as the command is clear and only then speaks short confirmations come from a cache so they play almost instantly longer answers like this one are synthesised sentence by sentence while you listen"},
+    {"id": "long_plan", "tier": "long", "text": "First I will pull the latest changes, then run the tests on the new branch. If they pass, I will open a pull request and ask the reviewer agent to look at it. You will get a notification when it is ready.", "spoken": "first i will pull the latest changes then run the tests on the new branch if they pass i will open a pull request and ask the reviewer agent to look at it you will get a notification when it is ready"},
+    {"id": "long_apology", "tier": "long", "text": "I could not finish that. The file was open in another program, so the write failed. Close it and say try again, or tell me to save a copy somewhere else.", "spoken": "i could not finish that the file was open in another program so the write failed close it and say try again or tell me to save a copy somewhere else"},
+    {"id": "long_recipe", "tier": "long", "text": "Preheat the oven, then whisk the eggs with the sugar until pale. Fold in the flour gently, pour the batter into the tin, and bake it for about twenty five minutes.", "spoken": "preheat the oven then whisk the eggs with the sugar until pale fold in the flour gently pour the batter into the tin and bake it for about twenty five minutes"},
+
+    {"id": "stress_time", "tier": "stress", "text": "Your meeting with Dr. Okafor starts at 3:45 PM in room 12B.", "spoken": "your meeting with doctor okafor starts at three forty five p m in room twelve b"},
+    {"id": "stress_gpu", "tier": "stress", "text": "The GPU is at 87% and 14.2 GB are in use.", "spoken": "the gpu is at eighty seven percent and fourteen point two g b are in use"},
+    {"id": "stress_git", "tier": "stress", "text": "Push to origin/main failed with exit code 128.", "spoken": "push to origin slash main failed with exit code one hundred twenty eight"},
+    {"id": "stress_names", "tier": "stress", "text": "Theioma asked Tez, and Tez picked Nemotron over Kokoro.", "spoken": "theioma asked tez and tez picked nemotron over kokoro"},
+    {"id": "stress_money", "tier": "stress", "text": "The invoice is $1,250.40, due on September 30th.", "spoken": "the invoice is one thousand two hundred fifty dollars and forty cents due on september thirtieth"},
+    {"id": "stress_acronyms", "tier": "stress", "text": "The API returned a 404, so the MCP tool fell back to HTTP.", "spoken": "the a p i returned a four o four so the m c p tool fell back to h t t p"},
+
+    {"id": "barge_passage", "tier": "barge", "text": "Let me walk you through the whole report. The first section covers the aerodynamic results, which improved by about six percent after the new wing profile. The second section is about the battery, where the thermal margins are tighter than we hoped. The third section lists the open questions for the design review, and there are quite a few of them. After that there is an appendix with every run, its settings and its logs, in case you want to check anything yourself.", "spoken": "let me walk you through the whole report the first section covers the aerodynamic results which improved by about six percent after the new wing profile the second section is about the battery where the thermal margins are tighter than we hoped the third section lists the open questions for the design review and there are quite a few of them after that there is an appendix with every run its settings and its logs in case you want to check anything yourself"},
+
+    {"id": "i18n_pt", "tier": "i18n", "lang": "pt-br", "text": "A abrir o Spotify. A tua reunião começa daqui a dez minutos.", "spoken": "a abrir o spotify a tua reunião começa daqui a dez minutos"},
+    {"id": "i18n_es", "tier": "i18n", "lang": "es", "text": "Abriendo el correo. Tienes tres mensajes nuevos.", "spoken": "abriendo el correo tienes tres mensajes nuevos"}
+  ]
+}
