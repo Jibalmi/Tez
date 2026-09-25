@@ -180,14 +180,15 @@ class Policy:
             return None
         return ("approval" if self.spec(decision).cls == "R3" else "end", decision)
 
-    def replay(self, steps: list[tuple[str, float, int]], none_keys=NONE_KEYS) -> list[tuple[int, str, str]]:
-        """The actions a sequence of steps (decision, p, word count) fires, as (word, kind, option): the policy alone,
-        on logged decisions (the replay harness re-scores thresholds with it). Stability counts words, the latest
-        reading of each word standing for it. No retraction or residual segments (those change what is read)."""
+    def replay(self, steps: list[tuple[str, float, int]], none_keys=NONE_KEYS) -> list[tuple[int, int, str, str]]:
+        """The actions a sequence of steps (decision, p, word count) fires, as (step index, word, kind, option): the
+        policy alone, on logged decisions (the replay harness re-scores thresholds with it); an end action carries
+        the last step's index. Stability counts words, the latest reading of each word standing for it. No
+        retraction or residual segments (those change what is read)."""
         by_k: dict[int, tuple[str, int]] = {}
         live: list[str] = []
-        out: list[tuple[int, str, str]] = []
-        for decision, p, k in steps:
+        out: list[tuple[int, int, str, str]] = []
+        for i, (decision, p, k) in enumerate(steps):
             for j in [j for j in by_k if j >= k]:
                 del by_k[j]
             prev = by_k.get(k - 1)
@@ -196,12 +197,12 @@ class Policy:
             got = self.early(decision, p, stable, live, none_keys)
             if got is not None:
                 live.append(got[1])
-                out.append((k, got[0], got[1]))
+                out.append((i, k, got[0], got[1]))
         if steps:
             decision, p, k = steps[-1]
             got = self.at_end(decision, p, live, none_keys)
             if got is not None and got[0] != "handoff":
-                out.append((k, got[0], got[1]))
+                out.append((len(steps) - 1, k, got[0], got[1]))
         return out
 
 

@@ -273,7 +273,7 @@ def test_policy_replay_on_logged_steps_matches_the_session_and_stream_policy_py(
         traj = [(rng.choice(keys), rng.choice([0.5, 0.95, 0.99])) for _ in range(rng.randint(1, 6))]
         expected = sp.executed_sequence([{"k": k, "pred": a, "pmax": p} for k, (a, p) in enumerate(traj, 1)], 0.9, 2, 2, 2)
         got = pol.replay([(a, p, k) for k, (a, p) in enumerate(traj, 1)])
-        assert [(k, name) for k, _, name in got] == expected
+        assert [(k, name) for _, k, _, name in got] == expected
 
 
 def test_none_on_a_prefix_waits_and_none_at_the_end_hands_off():
