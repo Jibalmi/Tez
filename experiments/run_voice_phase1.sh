@@ -38,10 +38,24 @@ asr)
   $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4
   $R --set theioma --asr whisper:base.en --no-realtime --gap 0 --tag theioma_asr_whisper_base_200
   ;;
-decide)
+decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B), then Q8_0
   for s in theioma tez220; do
-    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --tag ${s}_oracle_12b_q4km
+    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag ${s}_oracle_12b_q4km
+    sleep 60
+    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --commit fold --tag ${s}_oracle_12b_q4km_fold
+    sleep 60
+  done
+  ;;
+decide-q8)
+  for s in theioma tez220; do
     $R --set $s --asr oracle --backend inproc:$Q8 --lib $LIB --tag ${s}_oracle_12b_q8
+    sleep 60
+  done
+  ;;
+decide-http)       # the same Q4_K_M on a llama-server of our own with :8797's flags, read over HTTP
+  for s in theioma tez220; do
+    $PY experiments/voice_server_arm.py --gguf $Q4 -- --set $s --asr oracle --tag ${s}_oracle_12b_q4km_http
+    sleep 60
   done
   ;;
 probe)
@@ -62,7 +76,7 @@ e2e)
   done
   ;;
 *)
-  echo "usage: $0 data|asr|decide|probe|e2e" >&2
+  echo "usage: $0 data|asr|decide|decide-q8|decide-http|probe|e2e" >&2
   exit 2
   ;;
 esac

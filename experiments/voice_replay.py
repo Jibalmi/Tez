@@ -505,6 +505,7 @@ def main() -> None:
     ap.add_argument("--threads", type=int, default=int(os.environ.get("RUN_HEAVY_THREADS", "6")),
                     help="CPU threads for llama.cpp (default 6, or run_heavy's cap)")
     ap.add_argument("--high-priority", action="store_true", help="raise this process to the high priority class")
+    ap.add_argument("--server-cmd", default=None, help="(set by voice_server_arm.py) the llama-server command line")
     ap.add_argument("--parity", type=int, default=0, help="after the run, compare N utterances' updates with whole-prompt "
                                                           "decide_question reads (total variation)")
     ap.add_argument("--tag", default=None)
@@ -566,7 +567,8 @@ def main() -> None:
         t = time.perf_counter()
         session = tez.stream(schema=schema.name, policy=policy, readout=args.readout, on_action=executor,
                              on_undo=undo_log(undos), commit=args.commit).load()
-        manifest["decision"] = {"backend": args.backend, "template": args.template, "load_s": round(time.perf_counter() - t, 1),
+        manifest["decision"] = {"backend": args.backend, "server_cmd": args.server_cmd, "template": args.template,
+                                "load_s": round(time.perf_counter() - t, 1),
                                 "model": tez.backend.model_name(), "readout": session.setup.use_probe and "probe" or "letters",
                                 "parts": [p[0] for p in session._parts], "incremental": session.incremental,
                                 "default_temperature": args.default_temperature}
