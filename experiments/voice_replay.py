@@ -646,7 +646,7 @@ def main() -> None:
                                                                        "size_mb", "hybrid", "desc")}
             manifest["decision"]["head_ms"] = round(session._reader.head_ms, 1) if session._reader else None
     manifest["policy"] = {"tau": policy.tau, "classes": {k: v.cls for k, v in policy.actions.items()}}
-    if args.realtime:
+    if args.realtime or args.asr != "oracle":                 # anything whose timings are reported
         cool, th, waited = wait_cool(args.gpu_max_c, args.cool_wait)
         manifest["thermal_before"] = {**(th or {}), "cool": cool, "waited_s": waited, "limit_c": args.gpu_max_c}
         if not cool and not args.allow_hot:
