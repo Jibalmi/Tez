@@ -1,0 +1,51 @@
+# The 16 desktop actions of data/voice/intents.json as one Tez choice question, for the streaming session
+# (tez/stream.py) and the replay harness (experiments/voice_replay.py). The `actions:` block is the early-commit
+# contract of experiments/stream_policy.py, written as data:
+#   R0 instant, reversible     commits on a confident step (stable: consecutive steps with the same answer first)
+#   R1 refinable               opens its ancestor (refines) after `stable` consistent steps; itself at the end
+#   R2 deferred                end of utterance only
+#   R3 gated                   never executed by the loop; at the end it becomes an approval request
+# `none` on a prefix means keep listening; `none` at the end hands the transcript to the conversational path.
+name: voice-desktop
+description: Voice commands for a desktop assistant (Tez's 220-command voice set, 16 actions including none).
+layout: question_first
+questions:
+  action:
+    type: choice
+    instructions: >-
+      You are the command router of a voice-controlled computer assistant. The input is the transcript of what the
+      user has said so far. Decide which ONE action they are asking for. Choose none if the request is chit-chat, a
+      question, out of scope, or too unclear to act on.
+    criteria:
+      open_notes: Open the notes or notepad application.
+      type_text: Type the dictated text into the app that is currently in focus.
+      open_youtube: Open YouTube without playing anything in particular.
+      play_youtube: Search for and play a specific video, channel or topic on YouTube.
+      open_spotify: Open Spotify without playing anything in particular.
+      play_liked_songs: Play the user's own liked or saved songs collection on Spotify.
+      play_spotify: Play a specific song, artist, album or playlist on Spotify.
+      pause_media: Pause or stop whatever is currently playing.
+      resume_media: Resume or continue playback that was paused.
+      next_track: Skip to the next track or video.
+      volume_up: Make the sound louder by increasing the volume.
+      volume_down: Make the sound quieter by decreasing the volume.
+      open_browser: Open the web browser without searching for anything.
+      search_web: Search the web or look something up online for the user.
+      close_app: Close the current window or a named application.
+      none: "Out of scope: chit-chat, a question, or a request for something the assistant cannot do."
+actions:
+  open_notes: {class: R0}
+  open_youtube: {class: R0}
+  open_spotify: {class: R0}
+  open_browser: {class: R0}
+  pause_media: {class: R0, stable: 2}
+  resume_media: {class: R0, stable: 2}
+  next_track: {class: R0, stable: 2}
+  volume_up: {class: R0, stable: 2}
+  volume_down: {class: R0, stable: 2}
+  play_liked_songs: {class: R0, stable: 2, refines: open_spotify}
+  play_youtube: {class: R1, stable: 2, refines: open_youtube}
+  play_spotify: {class: R1, stable: 2, refines: open_spotify}
+  search_web: {class: R1, stable: 2, refines: open_browser}
+  type_text: {class: R2, refines: open_notes}
+  close_app: {class: R2}

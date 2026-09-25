@@ -232,6 +232,7 @@ class Schema:
     layout: str | None = None         # auto | question_first | state_first; None inherits the server's default
     builtin: bool = False             # a preset shipped with Tez (tez/presets/): zero-shot, never loads artefacts
     extraction: Any = None            # set by from_json_schema / from_pydantic: how answers become values
+    actions: dict | None = None       # the `actions:` block for streaming (tez/stream.py), as written in the file
 
     @property
     def base_dir(self) -> Path:
@@ -329,8 +330,13 @@ def parse_schema(raw: Any, source: str = "schema", default_name: str | None = No
     description = raw.get("description") or ""
     state = raw.get("state") or ""
     layout = parse_layout(raw["layout"], f"{source}: layout") if raw.get("layout") is not None else None
+    actions = raw.get("actions")
+    if actions is not None:
+        if not isinstance(actions, dict) or not all(isinstance(v, (dict, str)) or v is None for v in actions.values()):
+            raise InvalidRequest(f"{source}: actions must map option ids to settings like {{class: R0, stable: 2}}")
+        actions = {_key(k): v for k, v in actions.items()}
     return Schema(name=name, questions=questions, description=as_text(description), state=as_text(state),
-                  gate_alpha=gate_alpha, examples=examples, layout=layout)
+                  gate_alpha=gate_alpha, examples=examples, layout=layout, actions=actions)
 
 
 class _Loader(yaml.SafeLoader):

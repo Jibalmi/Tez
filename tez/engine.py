@@ -606,6 +606,19 @@ class Tez:
         body = self.request_body(state, questions, schema, readout, abstain, alpha, gate, model, layout)
         return self.handle(body, run_id=run_id, hooks=hooks)
 
+    def stream(self, schema: Any = None, question: Any = None, **kw: Any) -> Any:
+        """A streaming decision session over one choice question, fed word by word (tez.stream.StreamSession):
+
+            session = tez.stream(schema="voice-desktop", on_action=run)
+            u = session.feed("open")          # decision, confidence, committed, action
+            u = session.end()
+
+        schema: a loaded schema's name or a Schema; question: its id (default: the schema's only choice question).
+        Keywords: policy (tez.stream.Policy; default from the schema's `actions:` block), readout, alpha, on_action,
+        on_undo, incremental (default True: with the in-process backend only the new words are evaluated)."""
+        from .stream import StreamSession
+        return StreamSession(self, schema, question, **kw)
+
     def extract(self, state: Any, schema_or_model: Any, *, alpha: float | None = None, return_details: bool = False,
                 readout: str = "auto", layout: str | None = None, hooks: Any = None) -> Any:
         """Decide a state against a JSON schema, a pydantic model, a Schema or a loaded schema's name, and return the
