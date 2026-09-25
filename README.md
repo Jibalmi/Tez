@@ -12,9 +12,12 @@ published technique rather than on Jev's outputs (which its terms forbid).
 > [`docs/REPORT.md`](docs/REPORT.md) for the method; it was audited before release and §3.7 lists what the first
 > draft got wrong.
 
-![Tez dashboard — every measurement on one page](docs/figures/tez_dashboard.png)
+![Zero-shot Tez leads every Laya checkpoint on 5 of 9 public tasks on identical rows; Laya leads the other 4, and Jev's published figures lead 3 of the 4 they cover](docs/figures/panels/public_tasks.png)
 
-Full tables: [`BENCHMARKS.md`](BENCHMARKS.md). Individual figures: `docs/figures/`.
+![Tez is usable in 51 of 51 MASSIVE languages; Laya's router in 48 of 51 on the same rows](docs/figures/vs/panels/language_coverage.png)
+
+More charts, one per finding, under [What we measured](#what-we-measured); every chart with its source in
+[`docs/figures/panels/`](docs/figures/panels/README.md). Full tables: [`BENCHMARKS.md`](BENCHMARKS.md).
 
 ## Use it
 
@@ -85,37 +88,20 @@ curl http://127.0.0.1:8787/v1/systemone -H 'Content-Type: application/json' -d '
 
 ## What we measured
 
-Frozen models, zero training, SemIf's exact prompt and public fixtures (144 three-option decisions),
-RTX 5080 laptop. Mean-family balanced accuracy, classes keyed by option id, 95 % CI by source-group
-bootstrap:
+Everything here ran on one RTX 5080 laptop (16 GB) with llama.cpp b11100: frozen models, no LLM training. Laya's
+three checkpoints answered byte-identical rows on the same GPU; Jev was never run here, and its figures are
+third-party published. Each chart states its finding in its title, its conditions under it and its source in its
+footer. Every chart, one per finding: [`docs/figures/panels/`](docs/figures/panels/README.md); Laya's own charts,
+redrawn with Tez in Laya's place: [`docs/figures/vs/`](docs/figures/vs/README.md); the same panels on one page, for
+anyone who wants them all at once: [`tez_dashboard.png`](docs/figures/tez_dashboard.png) and
+[`tez_lab.png`](docs/figures/tez_lab.png). Full tables: [`BENCHMARKS.md`](BENCHMARKS.md).
 
-| Model | Authored | Perturbation | NLL (raw → best) | Reversal flips / 36 | p50 fresh |
-|---|---:|---:|---:|---:|---:|
-| **Gemma 4 12B Q8_0** | **0.943** (0.897–0.981) | **0.992** | 0.478 → **0.158** | **0** (≤ 9.6 %) | 110 ms |
-| Gemma 4 12B Q4_K_M | 0.918 (0.871–0.958) | 0.981 | 0.549 → 0.184 | 1 | 100 ms |
-| Qwen3.5-4B BF16 (SemIf's model, reproduced in-process) | 0.813 | — | 0.427 | — | 224 ms* |
-| Qwen3.5-4B + 6-permutation average, one batch | **0.912** | — | — | — | 321 ms* |
-| Gemma 3 4B Q4_K_M | 0.646 | 0.729 | 3.433 → 0.696 | 13 (36 %) | 40 ms |
-| Llama 3.2 3B Q4_K_M | 0.358 (≈ chance) | 0.496 | 1.673 → 1.043 | 10 (28 %) | 25 ms |
-| SemIf published: Qwen3.5-4B / EXL3 27B | 0.813 / 0.958 | 0.766 / — | — | — | — |
-
-\* transformers, not llama.cpp. Best calibration recipe: **six-ordering permutation average +
-out-of-fold temperature** (Q8: NLL 0.158, Brier 0.075, error-detection AUROC 0.906). Paired tests:
-12B vs SemIf's 4B p < 10⁻⁴; 12B vs the 4B *with* permutation averaging p = 0.18 — roughly half the
-"scale" gap is removable option-order bias. Q4 vs Q8: p = 0.25.
-
-**Voice → action, built and measured** (220 spoken commands, 16 actions, Gemma 4 12B Q8_0):
-intent accuracy **0.905** (0.982 accepting the second action of compound commands); out-of-scope
-recall 1.00 / precision 0.92; **30 ms compute / 45 ms round-trip per streamed word** because the
-action list is a cached prefix and only the transcript is re-evaluated (`--swa-full` is what makes
-llama-server actually reuse it); class-aware early commit: **1 harmful action in 198 utterances**,
-Notepad open at +652 ms into "open notes and type hello world" from audio; compound commands scored
-as two decisions on the residual: 22/22. ASR (faster-whisper base.en): 7.8 % WER on synthetic
-speech, 97 % intent agreement with the true text.
+### Accuracy against Laya and Jev
 
 **Head-to-head with Laya** (the open encoder-based "System One" that claims to beat Jev), its three
 checkpoints and Tez on byte-identical rows, same GPU, Laya's own datasets and protocol
-(`experiments/bench_h2h.py`, figures in `docs/figures/`):
+(`experiments/bench_h2h.py`, [BENCHMARKS.md §1](BENCHMARKS.md#1-same-rows-same-machine-tez-vs-laya-layas-own-benchmarks);
+the nine public tasks are the first chart at the top of this page):
 
 | task | **Tez (zero-shot)** | laya | laya-multilingual | laya-typed-decisions | Jev (published) |
 |---|---:|---:|---:|---:|---:|
@@ -136,50 +122,136 @@ Laya's published numbers reproduce in our harness (its base 0.362, fine-tuned 0.
 so the comparison is controlled. Zero-shot Tez wins six of nine English tasks and every language;
 Laya wins where it was trained (AG News, NLI) and on single-question latency.
 
-**Laya's own charts, redrawn with Tez in Laya's place** (`docs/figures/vs/`, [BENCHMARKS.md §1b](BENCHMARKS.md)).
+On typed-decisions, the benchmark Laya fine-tuned a checkpoint for, zero-shot Tez sits just under Jev's published
+figure; four worked examples bring it within 0.002 of Jev, fifty labels per question level with the fine-tuned
+checkpoint, and a probe on a frozen 4B past both
+([BENCHMARKS.md §1, §4b, §4c](BENCHMARKS.md#4b-ablations-on-the-12b-typed-decisions-unless-stated)):
+
+![typed-decisions: zero-shot Tez (0.704) trails Jev's published 0.727; 4 examples reach 0.725, 50 labels per question 0.766 and a probe 0.793](docs/figures/vs/panels/typed_decisions_ladder.png)
+
 On Laya's seven application workflows, same 400 rows each, zero-shot Tez wins the three held out of Laya's training
 (model routing 0.970 vs Laya's best 0.659, jailbreak guardrails 0.865 vs 0.805, toxicity 0.713 vs 0.535) and Laya wins
-the four in its training mix. Tez clears 3× random in all 51 MASSIVE languages (mean 0.816) against 48 for Laya's router
-(mean 0.403). Laya batches far better: 2.8–7.4 ms per question at 50 questions per call, against Tez's 93 ms.
+the four in its training mix ([BENCHMARKS.md §1b](BENCHMARKS.md#1b-on-layas-own-benchmarks-layas-charts-redrawn-with-tez);
+chart: [`workflows_every_checkpoint.png`](docs/figures/vs/panels/workflows_every_checkpoint.png)).
 
-![Tez vs Jev, with Laya on the same rows](docs/figures/vs/tez_vs_jev.png)
+### Languages
 
-Findings worth knowing before you build anything like this:
+Tez clears 3× random in all 51 MASSIVE languages (mean 0.816) against 48 for Laya's router (mean 0.403), the second
+chart at the top of this page ([BENCHMARKS.md §1b](BENCHMARKS.md#massive-intent-in-all-51-languages-20-options-100-rows-each-experimentsvs_laya_massive51py)).
+Per language, one frozen decoder holds its accuracy where Laya's English checkpoint falls to 0.000–0.120 on Arabic,
+Hindi, Thai, Korean and Khmer ([BENCHMARKS.md §1, Languages](BENCHMARKS.md#languages--massive-intent-20-options-100-cases-each)):
 
-- **The frozen model knows more than its letter logits say.** A per-question linear probe on the frozen
-  Qwen3.5-4B's hidden state (12 layers below the top) scores **0.794** on typed-decisions — above Laya's
-  fine-tuned 0.766 and Jev's 0.727 — from a model whose own one-pass letter readout gets 0.49. Minutes of
-  logistic regression, no LLM training, and the top third of the network can be skipped.
-- **Reading early is cheap latency.** Truncating the 4B to 20–24 of its 32 layers cuts prefill 1.30–1.54× with
-  no loss in probe accuracy. The same probe recipe on Laya's tasks beats Laya's fine-tuned checkpoint on five of six,
-  and reaches 0.860 on Banking77 (Jev 0.870) in one pass.
-- **Two cheap levers barely moved.** A MiniLM shortlist lifts Banking77 from 0.713 to 0.738 in 1.1 passes;
-  eliminate-then-rescore (PoE) is within ±2 points everywhere and is recorded as negative.
-- **Worked examples in the cached prefix are free accuracy** (+2 pts on 2,000 decisions, +5 on schema-specific
-  questions); thinking budgets before the readout, ordinal expected-value readouts and digit/lowercase answer
-  symbols are null or negative at 12B.
-- **Symbol-logit decisions are scale-gated.** A 3B model is at chance with 28 % order sensitivity
-  and no calibration trick recovers it; a 4B sits at 0.646 with a third of decisions flipping under
-  option reversal. Screen the backbone for symbol binding first.
-- **Permutation averaging is the cheapest accuracy in the stack**: +10 points on Qwen3.5-4B, +7 on
-  Gemma 3 4B, in one batched forward pass.
-- **Zhao et al. contextual calibration is harmful here** (0.951 → 0.778, and averaging three
-  placeholders does not rescue it): with the evidence blanked the model *correctly* answers
-  "insufficient", so dividing that out deletes real answers. Never apply it to option sets that
-  contain an abstain-style answer.
-- **Prompt layout is a systems decision**: constant material first, variable last. Transcript-last
-  cut per-word latency 7× *and* raised accuracy (0.868 → 0.905).
-- **A confident `none` on a partial transcript means "keep listening", never "do nothing"** — the one
-  rule that makes early commit work.
+![One frozen decoder reads all 11 MASSIVE languages at 0.790–0.930; Laya's English checkpoint falls to 0.000 (km) and laya-multilingual to 0.210 (km)](docs/figures/panels/languages_massive.png)
 
-## The probe lab: reading decisions from the middle of the network
+XNLI is the exception: there laya-multilingual, trained on NLI, stays ahead in every language but Hindi, where it ties
+([BENCHMARKS.md §1, XNLI](BENCHMARKS.md#xnli-100-per-language--the-one-family-where-layas-trained-encoder-is-ahead)):
 
-![probe lab](docs/figures/tez_lab.png)
+![Tez holds its accuracy outside English (MASSIVE 0.900 → 0.883) while laya falls from 0.830 to 0.306; on XNLI laya-multilingual stays ahead (0.787 outside English)](docs/figures/vs/panels/english_vs_rest.png)
+
+### Calibration
+
+Tez now ships a default letter temperature for the questions no fit calibrates, fitted on 13,610 labelled decisions
+from 19 tasks; its figures below score each task with temperatures fitted without that task
+([BENCHMARKS.md §5c](BENCHMARKS.md#5c-a-default-letter-temperature-for-unfitted-questions)). The charts show Tez in
+three states: at T = 1 (outlined, before the default), as shipped (tinted) and with one temperature
+fitted per task (solid). Mean ECE-15 over the head-to-head tasks goes 0.212 → 0.140 → 0.078
+([BENCHMARKS.md §1](BENCHMARKS.md#calibration-order-robustness-latency)); the default changes no answer, only the
+probabilities around it:
+
+![One temperature per task brings every model to 0.068–0.103, from 0.140 for Tez as shipped (0.212 at T = 1) and 0.226–0.323 for Laya; Tez's probe reads 0.023](docs/figures/vs/panels/calibration_shipped_vs_temperature.png)
+
+The same three states on typed-decisions alone, bin by bin:
+[`reliability.png`](docs/figures/vs/panels/reliability.png).
+
+### Speed
+
+For one question per call Laya's encoders are fastest. These per-decision figures come from the head-to-head harness
+([BENCHMARKS.md §1](BENCHMARKS.md#calibration-order-robustness-latency)): Tez over HTTP with the question first and the
+state last, so the state was evaluated again for every question. In the speed study's clean rerun
+([BENCHMARKS.md §5b](BENCHMARKS.md#one-question-where-the-time-goes-production-llama-server-p50--p95-ms)), one question
+through `tez serve` takes 144.8 ms p50, about 5 ms more than the same question sent straight to llama-server; the voice
+loop's 30 ms per word is §3's figure, 33.5 ms in the clean rerun.
+
+![Laya answers fastest (23–52 ms); Tez's probe takes 58 ms and its 12B letters 57–250 ms, against Jev's published 236–276 ms](docs/figures/vs/panels/speed_per_decision.png)
+
+Tez's time goes into reading the state, so the speed that matters is many questions about one state. The chart below
+is the speed study's direct `/completion` and in-process measurements, with the row labels
+[BENCHMARKS.md §5b](BENCHMARKS.md#many-questions-about-one-state-layas-latency-protocol-with-distinct-questions-a-new-ticket-every-call-p50-ms-per-call)
+prints: in process, with the state evaluated once and every question's suffix in one decode, 50 questions take
+1,357 ms, against 10,511 ms for `tez serve` as deployed when measured. The runtime now reads two or more questions
+state first, and its in-process backend reads them in one decode; the runtime's own HTTP timing with that layout has not
+been re-measured on an idle machine yet.
+
+![50 questions about one state: 1,357 ms in process with one decode for every question's suffix (27.1 ms each), against 10,511 ms for tez serve as deployed when measured](docs/figures/panels/speed_many_questions.png)
+
+Laya still batches better: 2.8–7.4 ms per question at 50 questions per call
+([BENCHMARKS.md §1b](BENCHMARKS.md#speed-per-call-one-state-p50-experimentsvs_laya_speedpy)), against 22.3 ms for Tez
+in process on the same protocol (§5b) and 93 ms through the runtime's question-first layout when §1b was measured.
+
+### Voice
+
+**Voice → action, built and measured** (220 spoken commands, 16 actions, Gemma 4 12B Q8_0,
+[BENCHMARKS.md §3](BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions)):
+intent accuracy **0.905** (0.982 accepting the second action of compound commands); out-of-scope
+recall 1.00 / precision 0.92; **30 ms compute / 45 ms round-trip per streamed word** because the
+action list is a cached prefix and only the transcript is re-evaluated (`--swa-full` is what makes
+llama-server actually reuse it); class-aware early commit: **1 harmful action in 198 utterances**,
+Notepad open at +652 ms into "open notes and type hello world" from audio; compound commands scored
+as two decisions on the residual: 22/22. ASR (faster-whisper base.en): 7.8 % WER on synthetic
+speech, 97 % intent agreement with the true text.
+
+The speed study's clean rerun of the same loop measures 33.5 ms compute and 41.6 ms round trip per word on the
+production server, 35.6 ms round trip in process
+([BENCHMARKS.md §5b](BENCHMARKS.md#streamed-voice-word-to-action-220-commands-1158-words-words-after-the-first); row
+labels as printed there):
+
+![Streamed voice in the clean rerun: 41.6 ms per word on the production server, 35.6 ms in process; a 4B probe trained on prefixes takes 19.6 ms, with 3 harmful actions instead of 1](docs/figures/panels/voice_per_word.png)
+
+Early commit works because a confident `none` on a partial transcript is read as "keep listening"
+([BENCHMARKS.md §3](BENCHMARKS.md#3-voice--instant-action-220-commands-16-actions)):
+
+![On the first fifth of a command the top answer is 'none' (0.744 of prefixes) far more often than the gold action (0.222); by the last fifth the gold action leads (0.845)](docs/figures/panels/voice_partial_transcripts.png)
+
+### SemIf's benchmark
+
+Frozen models, zero training, SemIf's exact prompt and public fixtures (144 three-option decisions),
+RTX 5080 laptop. Mean-family balanced accuracy, classes keyed by option id, 95 % CI by source-group
+bootstrap ([BENCHMARKS.md §2](BENCHMARKS.md#2-semifs-benchmark-authored144--perturbations108-frozen-models)):
+
+| Model | Authored | Perturbation | NLL (raw → best) | Reversal flips / 36 | p50 fresh |
+|---|---:|---:|---:|---:|---:|
+| **Gemma 4 12B Q8_0** | **0.943** (0.897–0.981) | **0.992** | 0.478 → **0.158** | **0** (≤ 9.6 %) | 110 ms |
+| Gemma 4 12B Q4_K_M | 0.918 (0.871–0.958) | 0.981 | 0.549 → 0.184 | 1 | 100 ms |
+| Qwen3.5-4B BF16 (SemIf's model, reproduced in-process) | 0.813 | — | 0.427 | — | 224 ms* |
+| Qwen3.5-4B + 6-permutation average, one batch | **0.912** | — | — | — | 321 ms* |
+| Gemma 3 4B Q4_K_M | 0.646 | 0.729 | 3.433 → 0.696 | 13 (36 %) | 40 ms |
+| Llama 3.2 3B Q4_K_M | 0.358 (≈ chance) | 0.496 | 1.673 → 1.043 | 10 (28 %) | 25 ms |
+| SemIf published: Qwen3.5-4B / EXL3 27B | 0.813 / 0.958 | 0.766 / — | — | — | — |
+
+\* transformers, not llama.cpp. Best calibration recipe: **six-ordering permutation average +
+out-of-fold temperature** (Q8: NLL 0.158, Brier 0.075, error-detection AUROC 0.906). Paired tests:
+12B vs SemIf's 4B p < 10⁻⁴; 12B vs the 4B *with* permutation averaging p = 0.18 — roughly half the
+"scale" gap is removable option-order bias. Q4 vs Q8: p = 0.25.
+
+![Symbol binding is scale-gated: on SemIf's authored144, Gemma 4 12B Q8 scores 0.943 (SemIf published 0.813 for its 4B) and Llama 3.2 3B Q4 0.358, near chance](docs/figures/panels/semif_scale.png)
+
+### Probes and the probe lab
+
+A per-question logistic probe on a frozen model's hidden state reads more than the model's own letters say
+([BENCHMARKS.md §4b](BENCHMARKS.md#hidden-state-probe-hidden-calibration-experimentshidden_probepy--frozen-qwen35-4b-typed-decisions)):
+
+![A linear probe on the frozen Qwen3.5-4B reads typed-decisions at 0.794 (layer −12), above the fine-tuned laya-typed-decisions (0.766), from a model whose own letters score 0.489](docs/figures/panels/probes_typed_decisions.png)
+
+#### The probe lab: reading decisions from the middle of the network
 
 A second round asked what makes the mid-depth probe usable on *any* schema, borrowing methods from other fields
 (two commissioned notes: `docs/research/abstract-methods-survey.md`, `docs/research/novelty-check.md`).
 Almost everything runs on one cache of every layer's hidden state (`experiments/probe_lab.py`); full tables in
-`BENCHMARKS.md` §4c, discussion in the paper's probe-lab section.
+[`BENCHMARKS.md` §4c](BENCHMARKS.md#4c-probe-lab-experiments-on-cached-hidden-states-experimentsprobe_labpy),
+discussion in the paper's probe-lab section, and one chart per experiment in
+[`docs/figures/panels/`](docs/figures/panels/README.md#the-probe-lab). The one that changes how to serve a probe:
+
+![Cut the served 4B where the decision is made: with 24 of its 32 blocks its probe scores 0.793 in 58 ms, against 0.776 in 84 ms for the whole model](docs/figures/panels/lab_pruned_served.png)
 
 What worked:
 
@@ -219,6 +291,45 @@ model over several readouts (0.617); uncertainty-only labelling from a weak prio
 batch calibration of the teacher; DoLa; adaptive depth (ties a fixed cut); LDA with an unlabelled covariance;
 select-and-copy attention heads (0.50–0.53, the letters' level); a collapsing commit bound for voice.
 
+### Where others lead
+
+Laya wins where it was trained (AG News, NLI), on the four application workflows in its training mix, narrowly on DAIR
+Emotion, and on speed; Jev's published figures lead Banking77 (0.870 against 0.713 zero-shot; a probe reaches 0.860),
+AG News (0.910 against 0.880) and zero-shot typed-decisions (0.727 against 0.704)
+([BENCHMARKS.md §1, §1b, §4b](BENCHMARKS.md#1-same-rows-same-machine-tez-vs-laya-layas-own-benchmarks)):
+
+![Where others lead: Laya on speed, on AG News and XNLI (both in its training), on all 4 workflow themes in its training and narrowly on DAIR Emotion; Jev's published figures on Banking77 and zero-shot typed-decisions](docs/figures/vs/panels/where_others_lead.png)
+
+### Findings worth knowing
+
+Before you build anything like this:
+
+- **The frozen model knows more than its letter logits say.** A per-question linear probe on the frozen
+  Qwen3.5-4B's hidden state (12 layers below the top) scores **0.794** on typed-decisions — above Laya's
+  fine-tuned 0.766 and Jev's 0.727 — from a model whose own one-pass letter readout gets 0.49. Minutes of
+  logistic regression, no LLM training, and the top third of the network can be skipped.
+- **Reading early is cheap latency.** Truncating the 4B to 20–24 of its 32 layers cuts prefill 1.30–1.54× with
+  no loss in probe accuracy. The same probe recipe on Laya's tasks beats Laya's fine-tuned checkpoint on five of six,
+  and reaches 0.860 on Banking77 (Jev 0.870) in one pass.
+- **Two cheap levers barely moved.** A MiniLM shortlist lifts Banking77 from 0.713 to 0.738 in 1.1 passes;
+  eliminate-then-rescore (PoE) is within ±2 points everywhere and is recorded as negative.
+- **Worked examples in the cached prefix are free accuracy** (+2 pts on 2,000 decisions, +5 on schema-specific
+  questions); thinking budgets before the readout, ordinal expected-value readouts and digit/lowercase answer
+  symbols are null or negative at 12B.
+- **Symbol-logit decisions are scale-gated.** A 3B model is at chance with 28 % order sensitivity
+  and no calibration trick recovers it; a 4B sits at 0.646 with a third of decisions flipping under
+  option reversal. Screen the backbone for symbol binding first.
+- **Permutation averaging is the cheapest accuracy in the stack**: +10 points on Qwen3.5-4B, +7 on
+  Gemma 3 4B, in one batched forward pass.
+- **Zhao et al. contextual calibration is harmful here** (0.951 → 0.778, and averaging three
+  placeholders does not rescue it): with the evidence blanked the model *correctly* answers
+  "insufficient", so dividing that out deletes real answers. Never apply it to option sets that
+  contain an abstain-style answer.
+- **Prompt layout is a systems decision**: constant material first, variable last. Transcript-last
+  cut per-word latency 7× *and* raised accuracy (0.868 → 0.905).
+- **A confident `none` on a partial transcript means "keep listening", never "do nothing"** — the one
+  rule that makes early commit work.
+
 ## Layout
 
 ```
@@ -250,7 +361,9 @@ experiments/voice_demo.py        live loop: --text / --wav / --mic → ASR parti
 experiments/bench_h2h.py         Laya's public benchmarks (AG News, Emotion, Banking77, SST-5, BoolQ, prompt-injections,
                                  MASSIVE ×11 languages, XNLI ×10, typed-decisions) — same rows through Tez and the Laya checkpoints
 experiments/make_h2h_plots.py    the comparison figures (docs/figures/)
-experiments/make_dashboard.py    the all-in-one dashboard (docs/figures/tez_dashboard.png)
+experiments/make_dashboard.py    one chart per finding (docs/figures/panels/) and the same panels on one page
+                                 (docs/figures/tez_dashboard.png); experiments/figpanels.py is their shared frame
+experiments/make_vs_figures.py   Laya's comparison charts, redrawn with Tez (docs/figures/vs/)
 experiments/run_h2h_all.ps1      detached runner for the whole head-to-head chain
 experiments/bench_jevbench.py    JevBench public tiers (data/jevbench/) with the leaderboard's intelligence/speed formulas
 experiments/conformal_td.py      Mondrian split-conformal act/escalate sets on typed-decisions
@@ -273,7 +386,7 @@ experiments/gguf_truncate.py     keep the first N blocks of a GGUF (depth prunin
 experiments/pruned_server_bench.py  letters and served-embedding probes on the pruned GGUFs
 experiments/latency_breakdown.py where a decision's latency goes: /completion (n_probs 0/20/200) vs /embedding
 experiments/voice_ddm.py         collapsing commit bound for streaming voice (negative)
-experiments/make_lab_figure.py   the probe-lab figure (docs/figures/tez_lab.png)
+experiments/make_lab_figure.py   one chart per probe-lab experiment (docs/figures/panels/lab_*.png) and tez_lab.png
 experiments/lab_tables.py        the probe-lab tables in BENCHMARKS.md, generated from results/
 docs/research/abstract-methods-survey.md  cross-disciplinary methods for the readout (verified ids)
 docs/research/novelty-check.md   closest prior work for every probe-lab experiment
