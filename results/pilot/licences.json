@@ -1,0 +1,281 @@
+{
+ "title": "Small-model pilot: licence ledger",
+ "fetched": "2026-09-25",
+ "rule": "training entries only feed training; evaluation-only entries are hashed by the leakage guard and never enter training",
+ "entries": [
+  {
+   "id": "HuggingFaceFW/fineweb",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "odc-by",
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+   "notes": "sample-10BT, English web passages as states"
+  },
+  {
+   "id": "HuggingFaceFW/fineweb-2",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "odc-by",
+   "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2",
+   "notes": "de, es, fr, ja, zh, ar, hi, th, ko passages as states (km and the other 7 held-out languages excluded)"
+  },
+  {
+   "id": "CohereLabs/aya_dataset",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/datasets/CohereLabs/aya_dataset",
+   "notes": "human-written prompt/answer pairs as states (8 held-out languages excluded)"
+  },
+  {
+   "id": "clinc/clinc_oos",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "cc-by-3.0",
+   "url": "https://huggingface.co/datasets/clinc/clinc_oos",
+   "notes": "gold intents; 20 sampled options per row (same family as Banking77/MASSIVE, not their data)"
+  },
+  {
+   "id": "tau/commonsense_qa",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "mit",
+   "url": "https://huggingface.co/datasets/tau/commonsense_qa",
+   "notes": "gold 5-way choices"
+  },
+  {
+   "id": "CohereLabs/Global-MMLU",
+   "kind": "dataset",
+   "use": "training",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/datasets/CohereLabs/Global-MMLU",
+   "notes": "gold 4-way choices in the pilot's 10 languages"
+  },
+  {
+   "id": "google/gemma-4-12B-it",
+   "kind": "model",
+   "use": "teacher",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/google/gemma-4-12B-it",
+   "notes": "Gemma 4 12B Q8_0 GGUF (Ollama blob sha256-047dae1d...); writes the schemas and the gold sets' question wording, and reads every decision"
+  },
+  {
+   "id": "jhu-clsp/mmBERT-base",
+   "kind": "model",
+   "use": "backbone",
+   "licence": "mit",
+   "url": "https://huggingface.co/jhu-clsp/mmBERT-base",
+   "notes": "arm A-base"
+  },
+  {
+   "id": "jhu-clsp/mmBERT-small",
+   "kind": "model",
+   "use": "backbone",
+   "licence": "mit",
+   "url": "https://huggingface.co/jhu-clsp/mmBERT-small",
+   "notes": "arm A-small"
+  },
+  {
+   "id": "Qwen/Qwen3.5-0.8B",
+   "kind": "model",
+   "use": "backbone",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
+   "notes": "arm C (LoRA r=16)"
+  },
+  {
+   "id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+   "kind": "model",
+   "use": "tooling",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+   "notes": "state embeddings for the leakage guard (cosine) and the domain filter"
+  },
+  {
+   "id": "LocalLLaMA/typed-decisions",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/datasets/LocalLLaMA/typed-decisions",
+   "notes": "all splits held out; gold from a ~4B-class teacher endpoint (dataset card)"
+  },
+  {
+   "id": "lmsys/toxic-chat",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "cc-by-nc-4.0",
+   "url": "https://huggingface.co/datasets/lmsys/toxic-chat",
+   "notes": "Laya workflows: jailbreak, toxicity (CC-BY-NC-4.0)"
+  },
+  {
+   "id": "Tobi-Bueck/customer-support-tickets",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "cc-by-nc-4.0",
+   "url": "https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets",
+   "notes": "Laya workflow: support triage (CC-BY-NC-4.0)"
+  },
+  {
+   "id": "mteb/amazon_massive_intent",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/datasets/mteb/amazon_massive_intent",
+   "notes": "MASSIVE intent, 51 locales; the intent schema and its sources (SLURP, HWU64) held out"
+  },
+  {
+   "id": "xnli",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": null,
+   "url": "https://huggingface.co/datasets/xnli",
+   "notes": "hashed for the guard; NLI family held out"
+  },
+  {
+   "id": "SetFit/enron_spam",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": null,
+   "url": "https://huggingface.co/datasets/SetFit/enron_spam",
+   "notes": "Laya workflow: email spam"
+  },
+  {
+   "id": "zefang-liu/phishing-email-dataset",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "lgpl-3.0",
+   "url": "https://huggingface.co/datasets/zefang-liu/phishing-email-dataset",
+   "notes": "Laya workflow: phishing"
+  },
+  {
+   "id": "microsoft/ms_marco",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": null,
+   "url": "https://huggingface.co/datasets/microsoft/ms_marco",
+   "notes": "Laya workflow: RAG relevance"
+  },
+  {
+   "id": "openai/gsm8k",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "mit",
+   "url": "https://huggingface.co/datasets/openai/gsm8k",
+   "notes": "Laya workflow: model routing (one of its sources)"
+  },
+  {
+   "id": "google-research-datasets/mbpp",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "cc-by-4.0",
+   "url": "https://huggingface.co/datasets/google-research-datasets/mbpp",
+   "notes": "Laya workflow: model routing (one of its sources)"
+  },
+  {
+   "id": "ag_news",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "unknown",
+   "url": "https://huggingface.co/datasets/ag_news",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "dair-ai/emotion",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "other",
+   "url": "https://huggingface.co/datasets/dair-ai/emotion",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "banking77",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "cc-by-4.0",
+   "url": "https://huggingface.co/datasets/banking77",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "SetFit/sst5",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": null,
+   "url": "https://huggingface.co/datasets/SetFit/sst5",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "boolq",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "cc-by-sa-3.0",
+   "url": "https://huggingface.co/datasets/boolq",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "deepset/prompt-injections",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "apache-2.0",
+   "url": "https://huggingface.co/datasets/deepset/prompt-injections",
+   "notes": "h2h suite"
+  },
+  {
+   "id": "data/semif (authored144, perturbations108)",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "see data/semif/LICENSE",
+   "url": "data/semif/",
+   "notes": "SemIf's public fixtures"
+  },
+  {
+   "id": "data/voice/commands.jsonl",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "project-authored",
+   "url": "data/voice/",
+   "notes": "hashed for the guard"
+  },
+  {
+   "id": "data/jevbench (original, easy, hard)",
+   "kind": "dataset",
+   "use": "evaluation-only",
+   "licence": "see the rows' provenance",
+   "url": "data/jevbench/",
+   "notes": "hashed for the guard; never a training source"
+  }
+ ],
+ "excluded": [
+  {
+   "id": "Jev / TypeSafe outputs of any kind",
+   "reason": "their terms; the pilot's hard rule (not labels, not teacher, not fitting)"
+  },
+  {
+   "id": "anything labelled or generated by Gemini, GPT or Claude",
+   "reason": "the closed models' terms (plan §5); the pilot's schemas and gold-question wording are written by Gemma 4 12B, not by the agent that ran the pilot"
+  },
+  {
+   "id": "urchade/gliner_*",
+   "reason": "CC-BY-NC-4.0"
+  },
+  {
+   "id": "every evaluation dataset above, all splits",
+   "reason": "the zero-shot claim"
+  },
+  {
+   "id": "SLURP, HWU64, MNLI, SNLI, ANLI",
+   "reason": "leakage by source (MASSIVE's and XNLI's families)"
+  },
+  {
+   "id": "jailbreak and toxicity sets (e.g. allenai/wildjailbreak)",
+   "reason": "those families stay held out"
+  },
+  {
+   "id": "Rowan/hellaswag, allenai/winogrande, ybisk/piqa, allenai/openbookqa",
+   "reason": "no or unknown licence tag"
+  },
+  {
+   "id": "Salesforce/xlam-function-calling-60k, bitext customer support, wikipedia, synthetic 12B states",
+   "reason": "in the plan's v1 pool but not in the week-1 pilot's day-1 sample (not used)"
+  }
+ ]
+}

@@ -36,3 +36,7 @@ results/probe_cache_*
 
 # Kokoro renders of the Theioma voice set (experiments/voice_tts.py regenerates them)
 data/voice/theioma/wav/
+
+# small-model pilot: its venv, weights, caches and datasets (docs/plans/tez-small-model-pilot.md)
+.venv-pilot/
+runs/
