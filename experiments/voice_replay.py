@@ -104,6 +104,7 @@ class Load:
 
     def __init__(self):
         self.samples: list[float] = []
+        self.gpu: list[dict] = []
         self._stop = threading.Event()
 
     def __enter__(self):
@@ -117,16 +118,56 @@ class Load:
         return self
 
     def _run(self, psutil):
+        n = 0
         while not self._stop.wait(1.0):
             self.samples.append(psutil.cpu_percent(None))
+            n += 1
+            if n % 10 == 0:
+                th = gpu_thermal()
+                if th is not None:
+                    self.gpu.append(th)
 
     def __exit__(self, *exc):
         self._stop.set()
 
     def summary(self) -> dict:
         s = self.samples
+        g = self.gpu
+        temps = [x["c"] for x in g if x.get("c") is not None]
         return {"cpu_pct_mean": round(statistics.mean(s), 1) if s else None, "cpu_pct_max": max(s) if s else None,
-                "cpu_pct_p50": round(statistics.median(s), 1) if s else None, "samples": len(s)}
+                "cpu_pct_p50": round(statistics.median(s), 1) if s else None, "samples": len(s),
+                "gpu_c_max": max(temps) if temps else None, "gpu_c_mean": round(statistics.mean(temps), 1) if temps else None,
+                "gpu_samples": len(g), "sw_slowdown_samples": sum(1 for x in g if x.get("sw_slowdown")),
+                "hw_slowdown_samples": sum(1 for x in g if x.get("hw_slowdown"))}
+
+
+def gpu_thermal() -> dict | None:
+    """The GPU's temperature, power, SM clock and whether the driver is slowing it for heat (software thermal slowdown:
+    it holds its temperature target by cutting clocks; hardware: the emergency brake). A heat-soaked laptop GPU runs
+    the same code slower, so timed arms start only when it is cool and record this before, during and after."""
+    q = ("temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,clocks_throttle_reasons.hw_thermal_slowdown,"
+         "power.draw,clocks.sm,utilization.gpu")
+    try:
+        out = subprocess.run(["nvidia-smi", f"--query-gpu={q}", "--format=csv,noheader,nounits"], capture_output=True,
+                             text=True, timeout=10).stdout.strip().splitlines()[0]
+        c, sw, hw, w, sm, util = (x.strip() for x in out.split(","))
+        num = lambda s: float(s) if s.replace(".", "", 1).isdigit() else None  # noqa: E731
+        return {"c": num(c), "sw_slowdown": sw.lower() == "active", "hw_slowdown": hw.lower() == "active", "w": num(w),
+                "sm_mhz": num(sm), "util_pct": num(util)}
+    except Exception:  # noqa: BLE001 - diagnostics only
+        return None
+
+
+def wait_cool(max_c: float, minutes: float) -> tuple[bool, dict | None, float]:
+    """Wait (up to `minutes`) for the GPU to be below max_c with no thermal slowdown. (cool, last reading, s waited)."""
+    t0 = time.time()
+    while True:
+        th = gpu_thermal()
+        ok = th is None or (th["c"] is not None and th["c"] < max_c and not th["sw_slowdown"] and not th["hw_slowdown"])
+        if ok or time.time() - t0 > minutes * 60:
+            return ok, th, round(time.time() - t0, 1)
+        print(f"  waiting for a cool GPU: {th}", flush=True)
+        time.sleep(15)
 
 
 def gpu_snapshot() -> dict:
@@ -469,7 +510,7 @@ def report(paths: list[str]) -> None:
         return d
     cols = ["tag", "set", "asr", "decision", "n", "dec p50", "dec p95", "act p50", "act p95", "proj p50", "decide p50",
             "acc", "acc t/a", "harm", "oos", "1st word", "asr step p50", "busy/chunk", "emit delay", "lag>chunk", "WER",
-            "cpu%"]
+            "cpu%", "gpu C before/max", "throttled"]
     print(" | ".join(cols))
     for path in paths:
         d = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -481,7 +522,8 @@ def report(paths: list[str]) -> None:
                s.get("intent_accuracy"), s.get("intent_accuracy_then_alt"), s.get("harmful"), s.get("oos_false_actions"),
                s.get("first_action_word_mean"), g(s, "asr", "step_compute_ms", "p50"), g(s, "asr", "busy_ms_per_chunk", "p50"),
                g(s, "asr", "emission_delay_ms", "mean"), g(s, "asr", "emission_lag_beyond_chunk_ms", "mean"),
-               g(s, "asr", "wer"), g(m, "load", "cpu_pct_mean")]
+               g(s, "asr", "wer"), g(m, "load", "cpu_pct_mean"),
+               f"{g(m, 'thermal_before', 'c')}/{g(m, 'load', 'gpu_c_max')}", m.get("throttled")]
         print(" | ".join("-" if v is None else str(v) for v in row))
 
 
@@ -516,6 +558,9 @@ def main() -> None:
                     help="CPU threads for llama.cpp (default 6, or run_heavy's cap)")
     ap.add_argument("--high-priority", action="store_true", help="raise this process to the high priority class")
     ap.add_argument("--server-cmd", default=None, help="(set by voice_server_arm.py) the llama-server command line")
+    ap.add_argument("--gpu-max-c", type=float, default=70.0, help="a timed run starts only below this GPU temperature")
+    ap.add_argument("--cool-wait", type=float, default=20.0, help="minutes to wait for a cool GPU before giving up")
+    ap.add_argument("--allow-hot", action="store_true", help="run anyway when the GPU stays hot (labelled throttled)")
     ap.add_argument("--parity", type=int, default=0, help="after the run, compare N utterances' updates with whole-prompt "
                                                           "decide_question reads (total variation)")
     ap.add_argument("--tag", default=None)
@@ -601,6 +646,15 @@ def main() -> None:
                                                                        "size_mb", "hybrid", "desc")}
             manifest["decision"]["head_ms"] = round(session._reader.head_ms, 1) if session._reader else None
     manifest["policy"] = {"tau": policy.tau, "classes": {k: v.cls for k, v in policy.actions.items()}}
+    if args.realtime:
+        cool, th, waited = wait_cool(args.gpu_max_c, args.cool_wait)
+        manifest["thermal_before"] = {**(th or {}), "cool": cool, "waited_s": waited, "limit_c": args.gpu_max_c}
+        if not cool and not args.allow_hot:
+            print(f"the GPU did not cool below {args.gpu_max_c} C without slowdown in {args.cool_wait} min: {th}; "
+                  "leaving this timed arm for later (--allow-hot runs it labelled throttled)", flush=True)
+            if worker is not None:
+                worker.send(("quit",))
+            sys.exit(75)
     manifest["gpu_loaded"] = gpu_snapshot()               # every model of the run resident: the stack's VRAM
     # ---- warm-up (not recorded), then the run
     for r in rows[: args.warmup]:
@@ -616,6 +670,11 @@ def main() -> None:
                 print(f"  {n}/{len(rows)} {time.perf_counter() - t_run:.0f}s", flush=True)
     manifest["run_s"] = round(time.perf_counter() - t_run, 1)
     manifest["load"] = load.summary()
+    manifest["thermal_after"] = gpu_thermal()
+    ld = manifest["load"]
+    manifest["throttled"] = bool(ld.get("sw_slowdown_samples") or ld.get("hw_slowdown_samples")
+                                 or not manifest.get("thermal_before", {}).get("cool", True)
+                                 or (manifest["thermal_after"] or {}).get("sw_slowdown"))
     manifest["gpu_after"] = gpu_snapshot()
     if worker is not None:
         worker.send(("quit",))
