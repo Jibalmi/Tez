@@ -498,6 +498,8 @@ def main() -> None:
                     help="keep the WAVs' own silence (default: 0.3 s before the first word, 0.5 s after the last)")
     ap.add_argument("--gap", type=float, default=0.3, help="seconds between utterances")
     ap.add_argument("--warmup", type=int, default=3)
+    ap.add_argument("--parity", type=int, default=0, help="after the run, compare N utterances' updates with whole-prompt "
+                                                          "decide_question reads (total variation)")
     ap.add_argument("--tag", default=None)
     ap.add_argument("--rescore", default=None)
     ap.add_argument("--report", nargs="+", default=None, help="print one line per finished run (result JSON files)")
@@ -585,6 +587,20 @@ def main() -> None:
     if worker is not None:
         worker.send(("quit",))
         proc.join(timeout=30)
+    if session is not None and args.parity:
+        # untimed: the session's distributions against decide_question reading each whole prompt from scratch
+        tvs, flips = [], 0
+        for r in out_rows[: args.parity]:
+            for u in r["updates"]:
+                ref = tez.decide_question(session.question, u["text"], schema, args.readout, session.abstain, None,
+                                          "question_first", 1)
+                q = np.array([u["probs"][k] for k in ref.keys])
+                tvs.append(0.5 * float(np.abs(q - ref.probabilities).sum()))
+                flips += ref.keys[int(np.argmax(ref.probabilities))] != u["decision"]
+        manifest["parity"] = {"updates": len(tvs), "tv_mean": round(float(np.mean(tvs)), 5) if tvs else None,
+                              "tv_p95": round(float(np.percentile(tvs, 95)), 5) if tvs else None,
+                              "tv_max": round(float(max(tvs)), 5) if tvs else None, "argmax_differs": flips,
+                              "note": "stream reads vs whole-prompt reads on sequence 0, same model and process"}
     res = score(out_rows, policy, manifest["asr_chunk_s"])
     manifest["timing"] = "realtime" if args.realtime else "offline: the latencies are not meaningful, only per-step compute"
     if not args.realtime:
