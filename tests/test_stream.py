@@ -296,6 +296,37 @@ def test_residual_mode_reads_what_follows_with_a_prior_line(gguf: Path):
             name = u.action.name
 
 
+# ---------------------------------------------------------------------------------------------- recogniser text
+def test_partial_words_are_read_but_only_complete_words_are_committed(gguf: Path):
+    api = StubApi()
+    tez, ref = engines(gguf, api=api)
+    s = tez.stream(schema="voice-desktop").load()
+    steps = [("op", False), ("open", False), ("open no", False), ("open notes", False), ("open notes", True),
+             ("open notes and", False)]
+    for text, final in steps:
+        u = s.update(text, final=final)
+        assert u.partial == (not final) and u.transcript == text
+        assert np.allclose(list(u.probabilities.values()), reference(ref, s, text).probabilities, atol=1e-6)
+        done = text.split() if final else text.split()[:-1]
+        assert s._reader.committed_tokens[0] == (len(" ".join(done)) + 1 if done else 0)   # +1: the head's seam token
+    assert s.update("open notes and", final=False) is None                              # nothing changed
+    assert s._reader.restored == 0                                                       # growing words never rebuild
+
+
+def test_stability_counts_words_not_readings():
+    """Two readings of one word ("pau", "pause") are one word: an R0 action that needs two stable words waits."""
+    schema = load_schema(VOICE)
+    keys = list(schema.questions["action"].criteria)
+    table = {"pau": ("pause_media", 0.95), "pause": ("pause_media", 0.95), "pause it": ("pause_media", 0.95)}
+    tez = Tez(backend=FakeBackend(letters_fn=scripted(table, keys)), schemas=[schema])
+    s = tez.stream(schema="voice-desktop")
+    assert s.update("pau").stable == 1 and not s.updates[-1].committed
+    u = s.update("pause")
+    assert u.stable == 1 and not u.committed                        # the same word, read again
+    u = s.update("pause it")
+    assert u.stable == 2 and u.committed and u.action.name == "pause_media"
+
+
 # ---------------------------------------------------------------------------------------------- set-up errors
 def test_actions_block_is_validated():
     base = {"name": "x", "questions": {"a": {"type": "choice", "instructions": "Which?", "criteria": {"p": None, "q": None}},

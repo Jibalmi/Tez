@@ -2,8 +2,9 @@
 
     tez = Tez(backend="inproc:gemma-4-12b-it-Q8_0.gguf", schemas="data/voice/schema.yaml")
     session = tez.stream(schema="voice-desktop", on_action=run)
-    for word in words:                 # as the recogniser emits them
+    for word in words:                 # complete words
         u = session.feed(word)         # u.decision, u.confidence, u.committed, u.action
+    u = session.update("open no")      # or the recogniser's text as it grows: the last word may still change
     u = session.end()                  # end of utterance: deferred actions, approval requests, `none` hand-off
     session.reset()                    # next utterance (the constant prefix stays evaluated)
 
@@ -182,7 +183,8 @@ class Update:
     decision     the most probable option after this word (its key, `none` / `__none__` included)
     confidence   its probability, as Tez reports it (temperature, probe, blend: see the module docstring)
     committed    True when an action fired at this step (action is the last of them, actions all of them)
-    stable       consecutive steps that ended with this decision
+    stable       consecutive words whose latest reading gave this decision
+    partial      the last word may still grow (update() without final): it was read, not committed
     handoff      at the end: the final decision is none (or below the policy's end_tau), so nothing acts at the end
                  and the caller's conversational path should take the transcript
     timings      decide_ms (word in -> decision), policy_ms, dispatch_ms (on_action callbacks), commit_ms (the word
@@ -202,6 +204,7 @@ class Update:
     stable: int
     final: bool = False
     handoff: bool = False
+    partial: bool = False
     readout: str = "letters"
     meta: dict = field(default_factory=dict)
     timings: dict = field(default_factory=dict)
@@ -289,7 +292,8 @@ class StreamSession:
         self.updates: list[Update] = []
         self._cursor = 0              # the first word of the current segment (residual mode)
         self._prior: str | None = None
-        self._run: tuple[str, int] = ("", 0)
+        self._by_k: dict[int, tuple[str, int]] = {}   # word count -> (latest decision, stability in words)
+        self._final = False
         self._ended = False
         if self._reader is not None and self._reader._seqs:
             self._reader.reset()
@@ -310,34 +314,52 @@ class StreamSession:
 
     # ------------------------------------------------------------------ steps
     def feed(self, word: str) -> Update:
-        """One more word: decide, apply the policy (on_action fires here), then commit the word."""
+        """One more complete word: decide, apply the policy (on_action fires here), then commit the word."""
+        word = str(word).strip()
+        if not word or len(word.split()) != 1:
+            raise InvalidRequest("feed() takes one non-empty word")
+        u = self.update(" ".join(self.words + [word]), final=True)
+        assert u is not None
+        return u
+
+    def update(self, text: str, final: bool = False) -> Update | None:
+        """The transcript so far, as a streaming recogniser emits it: every word but the last is complete, the last may
+        still grow ("note" -> "notes") unless final. Decides at once on the text as it stands (a decisive word is acted
+        on as soon as it is heard, not when the next word shows it complete), then commits the complete words only, so
+        a growing last word is re-read on the scratch copy instead of forcing a rebuild. Stability counts words: a
+        decision is stable over the words whose latest reading gave it. None when the text did not change."""
         if self._ended:
             raise InvalidRequest("this utterance has ended: call reset() first")
-        word = str(word).strip()
-        if not word:
-            raise InvalidRequest("feed() takes a non-empty word")
+        words = str(text).split()
+        if not words:
+            raise InvalidRequest("update() needs at least one word")
+        if words == self.words and final == self._final:
+            return None
         t0 = self.clock()
-        self.words.append(word)
-        k = len(self.words)
+        self.words, self._final = words, bool(final)
+        k = len(words)
         state = self.state()
         r, reads_meta = self._decide(state)
         t1 = self.clock()
         decision, p, probs = self._answer(r)
-        stable = self._run[1] + 1 if self._run[0] == decision else 1
-        self._run = (decision, stable)
+        for j in [j for j in self._by_k if j >= k]:
+            del self._by_k[j]
+        prev = self._by_k.get(k - 1)
+        stable = prev[1] + 1 if prev is not None and prev[0] == decision and k - 1 > self._cursor else 1
+        self._by_k[k] = (decision, stable)
         fired = self._policy_step(k, decision, p, stable)
         t2 = self.clock()
         for a in fired:
             self._dispatch(a)
         t3 = self.clock()
         if fired and self.policy.residual and fired[-1].kind in ("early", "ancestor"):
-            self._cursor, self._prior, self._run = k, fired[-1].name, ("", 0)
+            self._cursor, self._prior = k, fired[-1].name
         commit_n = self._commit()
         t4 = self.clock()
-        u = Update(k=k, word=word, transcript=self.transcript, state=state, decision=decision, confidence=p,
+        u = Update(k=k, word=words[-1], transcript=self.transcript, state=state, decision=decision, confidence=p,
                    probabilities=probs, none=decision in self.none_keys, committed=bool(fired),
                    action=fired[-1] if fired else None, actions=list(self.actions), stable=stable, readout=r.readout,
-                   meta=dict(r.meta),
+                   meta=dict(r.meta), partial=not final,
                    timings={"decide_ms": (t1 - t0) * 1000.0, "policy_ms": (t2 - t1) * 1000.0,
                             "dispatch_ms": (t3 - t2) * 1000.0, "commit_ms": (t4 - t3) * 1000.0,
                             "commit_tokens": commit_n, **reads_meta})
@@ -436,9 +458,17 @@ class StreamSession:
         return r.keys[j], float(p[j]), {k: float(v) for k, v in zip(r.keys, p)}
 
     def _commit(self) -> int:
+        """Commit the complete words of the current state (all of them after a final word)."""
         if self._reader is None:
             return 0
-        return self._reader.commit(render_state(self.state()))
+        if self._final:
+            return self._reader.commit(render_state(self.state()))
+        keep = self.words[:-1]
+        seg = " ".join(keep[self._cursor:])
+        state = seg if self._prior is None else PRIOR_LINE.format(prior=self._prior) + seg
+        if not state:
+            return 0
+        return self._reader.commit(render_state(state))
 
     def _policy_step(self, k: int, decision: str, p: float, stable: int) -> list[Action]:
         """experiments/stream_policy.executed_sequence, one step at a time, with the classes as data."""
