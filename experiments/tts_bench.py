@@ -240,7 +240,9 @@ class SineEngine(Engine):
 
 class KokoroOnnx(Engine):
     """Kokoro-82M v1.0 through kokoro-onnx 0.6.1 on onnxruntime (the runtime Theioma's sidecar uses).
-    --variant fp32|fp16|int8 picks the export from the kokoro-onnx model-files-v1.0 release (Theioma runs fp16)."""
+    --variant fp32|fp16|int8 picks the export from the kokoro-onnx model-files-v1.0 release (Theioma runs fp16).
+    --g2p misaki feeds English through misaki (lexicon first, espeak-ng for unknown words), as hexgrad's PyTorch
+    package does, instead of kokoro-onnx's plain espeak-ng phonemisation."""
 
     name = "kokoro-onnx"
     languages = frozenset({"en", "es", "fr", "it", "pt-br", "hi", "ja", "zh"})
@@ -248,14 +250,15 @@ class KokoroOnnx(Engine):
     FILES = {"fp32": "kokoro-v1.0.onnx", "fp16": "kokoro-v1.0.fp16.onnx", "int8": "kokoro-v1.0.int8.onnx"}
 
     def engine_id(self):
-        return f"kokoro-onnx-{self.a.variant or 'fp32'}-{self.a.device}"
+        g2p = "-misaki" if self.a.g2p == "misaki" else ""
+        return f"kokoro-onnx-{self.a.variant or 'fp32'}{g2p}-{self.a.device}"
 
     def model_files(self):
         d = MODELS / "kokoro-onnx"
         return [d / self.FILES[self.a.variant or "fp32"], d / "voices-v1.0.bin"]
 
     def packages(self):
-        return ["kokoro-onnx", "onnxruntime-gpu", "onnxruntime", "phonemizer", "espeakng-loader"]
+        return ["kokoro-onnx", "onnxruntime-gpu", "onnxruntime", "phonemizer", "espeakng-loader", "misaki", "spacy"]
 
     def load(self):
         kokoro_onnx = need("kokoro_onnx", "pip install --no-deps kokoro-onnx==0.6.1")
@@ -263,12 +266,20 @@ class KokoroOnnx(Engine):
         sess, info = ort_session(model, self.a.device, self.a.ort_conv_search, self.a.threads)
         self.k = kokoro_onnx.Kokoro.from_session(sess, str(voices))
         self.voice = self.a.voice or "af_heart"
-        info["voice"] = self.voice
+        self.misaki = None
+        if self.a.g2p == "misaki":
+            need("misaki", "pip install --no-deps misaki==0.9.4 (see tts_requirements.txt)")
+            from misaki import en, espeak
+            self.misaki = en.G2P(trf=False, british=False, fallback=espeak.EspeakFallback(british=False))
+        info.update(voice=self.voice, g2p=self.a.g2p)
         return info
 
     def synth(self, text, lang, cancel):
         t0 = now_ns()
-        ph = self.k.tokenizer.phonemize(text, self.LANG.get(lang, "en-us"))
+        if self.misaki is not None and lang == "en":
+            ph, _ = self.misaki(text)
+        else:
+            ph = self.k.tokenizer.phonemize(text, self.LANG.get(lang, "en-us"))
         self.extras["g2p_ms"] = self.extras.get("g2p_ms", 0.0) + ms(now_ns() - t0)
         audio, _ = self.k.create(ph, voice=self.voice, speed=self.a.speed, is_phonemes=True)
         yield np.asarray(audio, dtype=np.float32)
@@ -1059,7 +1070,7 @@ def child_args(a: argparse.Namespace) -> list[str]:
     out = ["--engine", a.engine, "--device", a.device, "--chunking", a.chunking, "--speed", str(a.speed),
            "--ort-conv-search", a.ort_conv_search, "--threads", str(a.threads), "--sherpa-stop-value",
            str(a.sherpa_stop_value)]
-    for k in ("variant", "voice", "model", "sid"):
+    for k in ("variant", "voice", "model", "sid", "g2p"):
         v = getattr(a, k)
         if v is not None:
             out += [f"--{k}", str(v)]
@@ -1255,6 +1266,8 @@ def torchaudio_shim() -> bool:
         return False
 
     def resample(wave, orig_freq, new_freq):
+        if int(orig_freq) == int(new_freq):  # SpeechMOS calls resample even when the rate already matches
+            return wave
         raise RuntimeError("tts_bench passes 16 kHz audio to UTMOS; the torchaudio stub does not resample")
 
     ta, fn = types.ModuleType("torchaudio"), types.ModuleType("torchaudio.functional")
@@ -1410,6 +1423,7 @@ SUITES: dict[str, list[list[str]]] = {
     "control": [["--engine", "sine", "--device", "cpu"]],
     "gpu": [
         ["--engine", "kokoro-onnx", "--variant", "fp32", "--device", "cuda"],
+        ["--engine", "kokoro-onnx", "--variant", "fp32", "--device", "cuda", "--g2p", "misaki"],
         ["--engine", "kokoro-onnx", "--variant", "fp16", "--device", "cuda"],
         # Theioma's sidecar as configured today: the fp16 export, onnxruntime's default cuDNN search
         ["--engine", "kokoro-onnx", "--variant", "fp16", "--device", "cuda", "--ort-conv-search", "EXHAUSTIVE"],
@@ -1417,6 +1431,7 @@ SUITES: dict[str, list[list[str]]] = {
     ],
     "cpu": [
         ["--engine", "kokoro-onnx", "--variant", "int8", "--device", "cpu", "--threads", "4"],
+        ["--engine", "kokoro-onnx", "--variant", "int8", "--device", "cpu", "--threads", "4", "--g2p", "misaki"],
         ["--engine", "kokoro-torch", "--device", "cpu"],
         ["--engine", "sherpa", "--model", "kokoro-int8-multi-lang-v1_0", "--device", "cpu", "--threads", "4"],
         ["--engine", "sherpa", "--model", "sherpa-onnx-supertonic-3-tts-int8-2026-05-11", "--device", "cpu",
@@ -1481,6 +1496,8 @@ def main() -> int:
         p.add_argument("--ort-conv-search", default="HEURISTIC", choices=["EXHAUSTIVE", "HEURISTIC", "DEFAULT"],
                        help="onnxruntime CUDA EP cuDNN algorithm search (onnxruntime's default is EXHAUSTIVE)")
         p.add_argument("--threads", type=int, default=0, help="CPU threads for onnxruntime / sherpa (0 = default)")
+        p.add_argument("--g2p", default="espeak", choices=["espeak", "misaki"],
+                       help="kokoro-onnx: phonemiser for English (misaki = what hexgrad's kokoro package uses)")
         p.add_argument("--sherpa-stop-value", type=int, default=0, choices=[0, 1],
                        help="the value sherpa's callback returns to stop generation")
         p.add_argument("--sine-rtf", type=float, default=0.05)

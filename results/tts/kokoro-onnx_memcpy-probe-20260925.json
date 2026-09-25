@@ -1,0 +1,73 @@
+{
+ "what": "onnxruntime Memcpy nodes inserted for the CUDA provider, per Kokoro v1.0 ONNX export (a property of the graph partition, not a timing)",
+ "time": "2026-09-25T11:38:23+0200",
+ "onnxruntime": "1.30.0",
+ "rows": [
+  {
+   "variant": "fp32",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.onnx",
+   "sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+   "cudnn_conv_algo_search": "HEURISTIC",
+   "memcpy_nodes": 17,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  },
+  {
+   "variant": "fp32",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.onnx",
+   "sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+   "cudnn_conv_algo_search": "EXHAUSTIVE",
+   "memcpy_nodes": 17,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  },
+  {
+   "variant": "fp16",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.fp16.onnx",
+   "sha256": "c1610a859f3bdea01107e73e50100685af38fff88f5cd8e5c56df109ec880204",
+   "cudnn_conv_algo_search": "HEURISTIC",
+   "memcpy_nodes": 241,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  },
+  {
+   "variant": "fp16",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.fp16.onnx",
+   "sha256": "c1610a859f3bdea01107e73e50100685af38fff88f5cd8e5c56df109ec880204",
+   "cudnn_conv_algo_search": "EXHAUSTIVE",
+   "memcpy_nodes": 241,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  },
+  {
+   "variant": "int8",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.int8.onnx",
+   "sha256": "6e742170d309016e5891a994e1ce1559c702a2ccd0075e67ef7157974f6406cb",
+   "cudnn_conv_algo_search": "HEURISTIC",
+   "memcpy_nodes": 547,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  },
+  {
+   "variant": "int8",
+   "file": "tools/tts/kokoro-onnx/kokoro-v1.0.int8.onnx",
+   "sha256": "6e742170d309016e5891a994e1ce1559c702a2ccd0075e67ef7157974f6406cb",
+   "cudnn_conv_algo_search": "EXHAUSTIVE",
+   "memcpy_nodes": 547,
+   "memcpy_probe_rc": 0,
+   "memcpy_probe_log": [
+    "emcpy nodes are added to the graph main_graph for CUDAExecutionProvider. It might have negative impact on performance (including unable to run CUDA graph). Set session_options.log_severity_level=1 to see the detail logs before this message."
+   ]
+  }
+ ]
+}

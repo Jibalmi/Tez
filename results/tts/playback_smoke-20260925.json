@@ -1,0 +1,45 @@
+{
+ "harness": {
+  "script": "experiments/tts_bench.py",
+  "argv": [
+   "playback",
+   "--tag",
+   "smoke-20260925",
+   "--trials",
+   "10"
+  ]
+ },
+ "kind": "smoke",
+ "mute": true,
+ "sample_rate": 48000,
+ "block_ms": 10,
+ "device": "Speakers (Realtek(R) Audio)",
+ "hostapi": "WASAPI shared",
+ "reported_output_latency_ms": 22.0,
+ "trigger_to_callback_ms": {
+  "n": 40,
+  "p50": 4.68,
+  "p95": 9.05,
+  "mean": 4.82,
+  "min": 0.19,
+  "max": 10.77
+ },
+ "callback_to_dac_ms": {
+  "n": 40,
+  "p50": 10.0,
+  "p95": 10.0,
+  "mean": 10.0,
+  "min": 10.0,
+  "max": 10.0
+ },
+ "trigger_to_dac_estimate_ms": {
+  "n": 40,
+  "p50": 14.68,
+  "p95": 19.05,
+  "mean": 14.82,
+  "min": 10.19,
+  "max": 20.77
+ },
+ "n": 40,
+ "note": "software-side estimate: trigger -> callback + the callback's reported DAC time; Bluetooth adds more"
+}

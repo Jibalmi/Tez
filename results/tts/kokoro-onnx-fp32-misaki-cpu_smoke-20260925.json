@@ -1,0 +1,1941 @@
+{
+ "harness": {
+  "script": "experiments/tts_bench.py",
+  "version": 1,
+  "sha256": "4c2648d3064d98cee277aac9a49b0d8d7d05ddb6a10ae6e52b9463772c9c731a",
+  "argv": [
+   "run",
+   "--engine",
+   "kokoro-onnx",
+   "--variant",
+   "fp32",
+   "--g2p",
+   "misaki",
+   "--device",
+   "cpu",
+   "--threads",
+   "4",
+   "--tag",
+   "smoke-20260925",
+   "--smoke",
+   "--reps",
+   "1",
+   "--tiers",
+   "clip,short,medium,long,stress",
+   "--idle-gaps",
+   "",
+   "--barge-trials",
+   "1",
+   "--lock",
+   "none"
+  ]
+ },
+ "run": {
+  "name": "kokoro-onnx-fp32-misaki-cpu_smoke-20260925",
+  "engine": "kokoro-onnx",
+  "engine_id": "kokoro-onnx-fp32-misaki-cpu",
+  "tag": "smoke-20260925",
+  "kind": "smoke",
+  "timing_valid": false,
+  "invalid_reasons": [
+   "smoke test: a functional check, not a timing"
+  ],
+  "started": "2026-09-25T12:35:53+0200",
+  "chunking": "clause",
+  "reps": 1,
+  "tiers": [
+   "clip",
+   "long",
+   "medium",
+   "short",
+   "stress"
+  ],
+  "contended_by": null
+ },
+ "data": {
+  "utterances": "data/voice/tts_utterances.json",
+  "sha256": "2a0df769a199aeb90191c22934d124d38437d6fbd35d265d9065b4fe8dd1afdf",
+  "n": 37
+ },
+ "engine": {
+  "load_ms": 18079.635,
+  "info": {
+   "onnxruntime": "1.30.0",
+   "available_providers": [
+    "TensorrtExecutionProvider",
+    "CUDAExecutionProvider",
+    "CPUExecutionProvider"
+   ],
+   "providers_requested": [
+    "CPUExecutionProvider"
+   ],
+   "providers_active": [
+    "CPUExecutionProvider"
+   ],
+   "cudnn_conv_algo_search": null,
+   "intra_op_threads": 4,
+   "voice": "af_heart",
+   "g2p": "misaki"
+  },
+  "model_files": [
+   {
+    "path": "tools/tts/kokoro-onnx/kokoro-v1.0.onnx",
+    "bytes": 325532387,
+    "sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5"
+   },
+   {
+    "path": "tools/tts/kokoro-onnx/voices-v1.0.bin",
+    "bytes": 28214398,
+    "sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d"
+   }
+  ],
+  "sample_rate": 24000,
+  "native_streaming": false
+ },
+ "environment": {
+  "python": "3.11.15",
+  "executable": ".venv-tts/Scripts/python.exe",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+  "power_scheme": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "logical_cpus": 24,
+  "ram_gb": 63.4,
+  "on_ac_power": true,
+  "packages": {
+   "ctranslate2": "4.8.2",
+   "espeakng-loader": "0.2.4",
+   "faster-whisper": "1.2.1",
+   "kokoro": "0.9.4",
+   "kokoro-onnx": "0.6.1",
+   "misaki": "0.9.4",
+   "numpy": "2.3.5",
+   "nvidia-cublas": "13.8.0.4",
+   "nvidia-cuda-runtime": "13.4.92",
+   "nvidia-cudnn-cu13": "9.26.0.51",
+   "nvidia-ml-py": "13.610.43",
+   "onnxruntime-gpu": "1.30.0",
+   "phonemizer": "3.4.0",
+   "piper-tts": "1.8.0",
+   "pocket-tts": "3.3.0",
+   "scipy": "1.17.1",
+   "sherpa-onnx": "1.13.8",
+   "sherpa-onnx-core": "1.13.8",
+   "sounddevice": "0.5.6",
+   "soundfile": "0.14.0",
+   "spacy": "3.8.16",
+   "torch": "2.14.0+cu130",
+   "transformers": "5.17.0"
+  },
+  "git_commit": "6eef65f",
+  "git_dirty": true,
+  "gpu": {
+   "nvml": true,
+   "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+   "driver": "592.01",
+   "cuda_driver": 13010,
+   "mem_total_mb": 16303.0,
+   "sm_max_mhz": 3090,
+   "mem_max_mhz": 14001,
+   "power_limit_w": 95.0
+  }
+ },
+ "gpu": {
+  "before": {
+   "nvidia_smi": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "driver_version": "592.01",
+    "pstate": "P8",
+    "memory.used": "14289",
+    "memory.total": "16303",
+    "utilization.gpu": "4",
+    "clocks.sm": "292",
+    "clocks.mem": "405",
+    "clocks.max.sm": "3090",
+    "power.draw": "12.61",
+    "power.limit": "[N/A]",
+    "temperature.gpu": "63"
+   },
+   "gpu_lock_snapshot": {
+    "time": "2026-09-25T12:33:09+02:00",
+    "used_mb": 14289,
+    "total_mb": 16303,
+    "util_pct": 0,
+    "processes": [
+     {
+      "pid": 18520,
+      "name": "Code",
+      "kind": "dedicated",
+      "mb": 187
+     },
+     {
+      "pid": 3320,
+      "name": "dwm",
+      "kind": "dedicated",
+      "mb": 885
+     },
+     {
+      "pid": 48364,
+      "name": "llama-server",
+      "kind": "dedicated",
+      "mb": 13209
+     },
+     {
+      "pid": 58024,
+      "name": "explorer",
+      "kind": "dedicated",
+      "mb": 128
+     }
+    ]
+   },
+   "own_vram": {
+    "dedicated_mb": 0.0,
+    "shared_mb": 0.0
+   }
+  },
+  "after": {
+   "nvidia_smi": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "driver_version": "592.01",
+    "pstate": "P8",
+    "memory.used": "14304",
+    "memory.total": "16303",
+    "utilization.gpu": "0",
+    "clocks.sm": "225",
+    "clocks.mem": "405",
+    "clocks.max.sm": "3090",
+    "power.draw": "12.16",
+    "power.limit": "[N/A]",
+    "temperature.gpu": "62"
+   },
+   "gpu_lock_snapshot": {
+    "time": "2026-09-25T12:35:53+02:00",
+    "used_mb": 14308,
+    "total_mb": 16303,
+    "util_pct": 1,
+    "processes": [
+     {
+      "pid": 16580,
+      "name": "msedgewebview2",
+      "kind": "dedicated",
+      "mb": 115
+     },
+     {
+      "pid": 18520,
+      "name": "Code",
+      "kind": "dedicated",
+      "mb": 186
+     },
+     {
+      "pid": 3320,
+      "name": "dwm",
+      "kind": "dedicated",
+      "mb": 885
+     },
+     {
+      "pid": 48364,
+      "name": "llama-server",
+      "kind": "dedicated",
+      "mb": 13209
+     },
+     {
+      "pid": 58024,
+      "name": "explorer",
+      "kind": "dedicated",
+      "mb": 128
+     }
+    ]
+   }
+  },
+  "lock": null,
+  "vram": {
+   "device_used_before_mb": 14590.0,
+   "device_used_after_load_mb": 14592.4,
+   "device_used_peak_mb": 14673.8,
+   "delta_after_load_mb": 2.4,
+   "delta_peak_mb": 83.8,
+   "own_process_after_load": {
+    "dedicated_mb": 0.3,
+    "shared_mb": 0.0
+   },
+   "own_process_end": {
+    "dedicated_mb": 0.3,
+    "shared_mb": 0.0
+   },
+   "evicted_others_mb": -83.5,
+   "note": "device deltas include this process's CUDA context and anything else that allocated meanwhile; own_process values come from the Windows GPU performance counters"
+  },
+  "phases": {
+   "baseline": {
+    "n": 8,
+    "mem_mb": {
+     "min": 14590.0,
+     "median": 14590.0,
+     "max": 14590.4
+    },
+    "sm_mhz": {
+     "min": 210,
+     "median": 217.5,
+     "max": 225
+    },
+    "memclk_mhz": {
+     "min": 405,
+     "median": 405.0,
+     "max": 405
+    },
+    "util": {
+     "min": 0,
+     "median": 0.0,
+     "max": 0
+    },
+    "power_w": {
+     "min": 12.1,
+     "median": 12.2,
+     "max": 12.2
+    },
+    "temp_c": {
+     "min": 63,
+     "median": 63.0,
+     "max": 63
+    },
+    "cpu_sys_pct": {
+     "min": 93.9,
+     "median": 100.0,
+     "max": 100.0
+    },
+    "pstates": [
+     8
+    ]
+   },
+   "load": {
+    "n": 179,
+    "mem_mb": {
+     "min": 14582.2,
+     "median": 14588.0,
+     "max": 14593.6
+    },
+    "sm_mhz": {
+     "min": 180,
+     "median": 225,
+     "max": 367
+    },
+    "memclk_mhz": {
+     "min": 405,
+     "median": 405,
+     "max": 405
+    },
+    "util": {
+     "min": 0,
+     "median": 0,
+     "max": 3
+    },
+    "power_w": {
+     "min": 12.1,
+     "median": 12.4,
+     "max": 14.1
+    },
+    "temp_c": {
+     "min": 62,
+     "median": 63,
+     "max": 63
+    },
+    "cpu_sys_pct": {
+     "min": 44.4,
+     "median": 100.0,
+     "max": 100.0
+    },
+    "pstates": [
+     8
+    ]
+   },
+   "cold+warmup": {
+    "n": 23,
+    "mem_mb": {
+     "min": 14589.1,
+     "median": 14591.4,
+     "max": 14595.2
+    },
+    "sm_mhz": {
+     "min": 180,
+     "median": 180,
+     "max": 292
+    },
+    "memclk_mhz": {
+     "min": 405,
+     "median": 405,
+     "max": 405
+    },
+    "util": {
+     "min": 0,
+     "median": 0,
+     "max": 3
+    },
+    "power_w": {
+     "min": 12.0,
+     "median": 12.2,
+     "max": 13.1
+    },
+    "temp_c": {
+     "min": 62,
+     "median": 63,
+     "max": 63
+    },
+    "cpu_sys_pct": {
+     "min": 87.1,
+     "median": 100.0,
+     "max": 100.0
+    },
+    "pstates": [
+     8
+    ]
+   },
+   "first": {
+    "n": 813,
+    "mem_mb": {
+     "min": 14580.5,
+     "median": 14603.7,
+     "max": 14673.8
+    },
+    "sm_mhz": {
+     "min": 180,
+     "median": 210,
+     "max": 1035
+    },
+    "memclk_mhz": {
+     "min": 405,
+     "median": 405,
+     "max": 405
+    },
+    "util": {
+     "min": 0,
+     "median": 0,
+     "max": 9
+    },
+    "power_w": {
+     "min": 11.7,
+     "median": 12.2,
+     "max": 18.4
+    },
+    "temp_c": {
+     "min": 62,
+     "median": 62,
+     "max": 63
+    },
+    "cpu_sys_pct": {
+     "min": 54.0,
+     "median": 98.0,
+     "max": 100.0
+    },
+    "pstates": [
+     8
+    ]
+   },
+   "repeat": {
+    "n": 0
+   },
+   "idle": {
+    "n": 0
+   },
+   "barge": {
+    "n": 24,
+    "mem_mb": {
+     "min": 14604.3,
+     "median": 14605.9,
+     "max": 14607.9
+    },
+    "sm_mhz": {
+     "min": 180,
+     "median": 206.0,
+     "max": 262
+    },
+    "memclk_mhz": {
+     "min": 405,
+     "median": 405.0,
+     "max": 405
+    },
+    "util": {
+     "min": 0,
+     "median": 0.0,
+     "max": 1
+    },
+    "power_w": {
+     "min": 12.0,
+     "median": 12.0,
+     "max": 12.2
+    },
+    "temp_c": {
+     "min": 62,
+     "median": 62.0,
+     "max": 63
+    },
+    "cpu_sys_pct": {
+     "min": 76.5,
+     "median": 100.0,
+     "max": 100.0
+    },
+    "pstates": [
+     8
+    ]
+   }
+  }
+ },
+ "contention": null,
+ "cold_runs": [],
+ "summary": {
+  "cold": {
+   "clip": {
+    "ttfa_ms": {
+     "n": 1,
+     "p50": 1882.83,
+     "p95": 1882.83,
+     "mean": 1882.83,
+     "min": 1882.83,
+     "max": 1882.83
+    },
+    "rtf": {
+     "n": 1,
+     "p50": 1.52,
+     "p95": 1.52,
+     "mean": 1.52,
+     "min": 1.52,
+     "max": 1.52
+    },
+    "stall_ms": {
+     "n": 1,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "gap_max_ms": {
+     "n": 1,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "cpu_cores": {
+     "n": 1,
+     "p50": 2.97,
+     "p95": 2.97,
+     "mean": 2.97,
+     "min": 2.97,
+     "max": 2.97
+    },
+    "g2p_ms": {
+     "n": 1,
+     "p50": 5.01,
+     "p95": 5.01,
+     "mean": 5.01,
+     "min": 5.01,
+     "max": 5.01
+    }
+   }
+  },
+  "first": {
+   "clip": {
+    "ttfa_ms": {
+     "n": 10,
+     "p50": 1078.01,
+     "p95": 1545.83,
+     "mean": 1125.09,
+     "min": 726.04,
+     "max": 1615.64
+    },
+    "rtf": {
+     "n": 10,
+     "p50": 1.07,
+     "p95": 1.57,
+     "mean": 1.16,
+     "min": 0.96,
+     "max": 1.57
+    },
+    "stall_ms": {
+     "n": 10,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "gap_max_ms": {
+     "n": 10,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "cpu_cores": {
+     "n": 10,
+     "p50": 3.39,
+     "p95": 3.9,
+     "mean": 3.41,
+     "min": 2.89,
+     "max": 3.96
+    },
+    "g2p_ms": {
+     "n": 10,
+     "p50": 3.13,
+     "p95": 4.26,
+     "mean": 3.33,
+     "min": 2.72,
+     "max": 4.4
+    }
+   },
+   "long": {
+    "ttfa_ms": {
+     "n": 5,
+     "p50": 1423.91,
+     "p95": 1870.43,
+     "mean": 1523.69,
+     "min": 1341.38,
+     "max": 1947.0
+    },
+    "rtf": {
+     "n": 5,
+     "p50": 0.89,
+     "p95": 1.02,
+     "mean": 0.91,
+     "min": 0.83,
+     "max": 1.04
+    },
+    "stall_ms": {
+     "n": 5,
+     "p50": 961.61,
+     "p95": 2562.86,
+     "mean": 1235.57,
+     "min": 464.96,
+     "max": 2952.67
+    },
+    "gap_max_ms": {
+     "n": 5,
+     "p50": 3234.93,
+     "p95": 4243.49,
+     "mean": 3043.89,
+     "min": 1886.95,
+     "max": 4382.01
+    },
+    "cpu_cores": {
+     "n": 5,
+     "p50": 3.38,
+     "p95": 3.4,
+     "mean": 3.32,
+     "min": 3.12,
+     "max": 3.4
+    },
+    "g2p_ms": {
+     "n": 5,
+     "p50": 21.11,
+     "p95": 21.71,
+     "mean": 20.11,
+     "min": 16.39,
+     "max": 21.72
+    }
+   },
+   "medium": {
+    "ttfa_ms": {
+     "n": 8,
+     "p50": 1711.22,
+     "p95": 2795.09,
+     "mean": 1863.8,
+     "min": 1128.72,
+     "max": 2865.83
+    },
+    "rtf": {
+     "n": 8,
+     "p50": 0.92,
+     "p95": 1.0,
+     "mean": 0.91,
+     "min": 0.81,
+     "max": 1.0
+    },
+    "stall_ms": {
+     "n": 8,
+     "p50": 0.0,
+     "p95": 355.81,
+     "mean": 86.17,
+     "min": 0.0,
+     "max": 381.82
+    },
+    "gap_max_ms": {
+     "n": 8,
+     "p50": 1279.46,
+     "p95": 1797.95,
+     "mean": 964.1,
+     "min": 0.0,
+     "max": 1853.82
+    },
+    "cpu_cores": {
+     "n": 8,
+     "p50": 3.33,
+     "p95": 3.56,
+     "mean": 3.35,
+     "min": 3.2,
+     "max": 3.66
+    },
+    "g2p_ms": {
+     "n": 8,
+     "p50": 6.42,
+     "p95": 8.27,
+     "mean": 5.99,
+     "min": 3.56,
+     "max": 8.34
+    }
+   },
+   "short": {
+    "ttfa_ms": {
+     "n": 8,
+     "p50": 1383.92,
+     "p95": 2048.43,
+     "mean": 1437.45,
+     "min": 892.01,
+     "max": 2260.26
+    },
+    "rtf": {
+     "n": 8,
+     "p50": 1.02,
+     "p95": 1.41,
+     "mean": 1.05,
+     "min": 0.7,
+     "max": 1.51
+    },
+    "stall_ms": {
+     "n": 8,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "gap_max_ms": {
+     "n": 8,
+     "p50": 0.0,
+     "p95": 0.0,
+     "mean": 0.0,
+     "min": 0.0,
+     "max": 0.0
+    },
+    "cpu_cores": {
+     "n": 8,
+     "p50": 3.37,
+     "p95": 3.89,
+     "mean": 3.34,
+     "min": 2.72,
+     "max": 3.95
+    },
+    "g2p_ms": {
+     "n": 8,
+     "p50": 3.98,
+     "p95": 4.81,
+     "mean": 4.02,
+     "min": 3.11,
+     "max": 5.1
+    }
+   },
+   "stress": {
+    "ttfa_ms": {
+     "n": 6,
+     "p50": 2499.72,
+     "p95": 3850.67,
+     "mean": 2572.74,
+     "min": 1359.66,
+     "max": 3908.78
+    },
+    "rtf": {
+     "n": 6,
+     "p50": 0.91,
+     "p95": 1.05,
+     "mean": 0.9,
+     "min": 0.75,
+     "max": 1.08
+    },
+    "stall_ms": {
+     "n": 6,
+     "p50": 0.0,
+     "p95": 1748.7,
+     "mean": 493.78,
+     "min": 0.0,
+     "max": 2016.06
+    },
+    "gap_max_ms": {
+     "n": 6,
+     "p50": 1829.31,
+     "p95": 3023.37,
+     "mean": 1526.66,
+     "min": 0.0,
+     "max": 3296.06
+    },
+    "cpu_cores": {
+     "n": 6,
+     "p50": 3.15,
+     "p95": 3.46,
+     "mean": 3.23,
+     "min": 3.05,
+     "max": 3.47
+    },
+    "g2p_ms": {
+     "n": 6,
+     "p50": 7.99,
+     "p95": 11.09,
+     "mean": 7.95,
+     "min": 4.78,
+     "max": 11.83
+    }
+   }
+  },
+  "barge": {
+   "stop_ms": {
+    "n": 1,
+    "p50": 10.91,
+    "p95": 10.91,
+    "mean": 10.91,
+    "min": 10.91,
+    "max": 10.91
+   },
+   "next_ttfa_ms": {
+    "n": 1,
+    "p50": 1931.99,
+    "p95": 1931.99,
+    "mean": 1931.99,
+    "min": 1931.99,
+    "max": 1931.99
+   },
+   "n": 1
+  },
+  "headline": {
+   "cold_first_call_ttfa_ms": 1882.825,
+   "clip_first_ttfa_ms": {
+    "n": 10,
+    "p50": 1078.01,
+    "p95": 1545.83,
+    "mean": 1125.09,
+    "min": 726.04,
+    "max": 1615.64
+   },
+   "dynamic_first_ttfa_ms": {
+    "n": 27,
+    "p50": 1492.25,
+    "p95": 3477.86,
+    "mean": 1832.03,
+    "min": 892.01,
+    "max": 3908.78
+   },
+   "dynamic_repeat_ttfa_ms": {
+    "n": 0
+   },
+   "rtf_long_first": {
+    "n": 5,
+    "p50": 0.89,
+    "p95": 1.02,
+    "mean": 0.91,
+    "min": 0.83,
+    "max": 1.04
+   },
+   "stall_ms_long_first": {
+    "n": 5,
+    "p50": 961.61,
+    "p95": 2562.86,
+    "mean": 1235.57,
+    "min": 464.96,
+    "max": 2952.67
+   },
+   "idle_ttfa_ms": {
+    "n": 0
+   },
+   "barge_stop_ms": {
+    "n": 1,
+    "p50": 10.91,
+    "p95": 10.91,
+    "mean": 10.91,
+    "min": 10.91,
+    "max": 10.91
+   }
+  }
+ },
+ "audio": {
+  "scoring_dir": ".cache/tts/kokoro-onnx-fp32-misaki-cpu_smoke-20260925",
+  "kept_samples": [
+   "results/tts/samples/kokoro-onnx-fp32-misaki-cpu_smoke-20260925/clip_open_spotify.wav",
+   "results/tts/samples/kokoro-onnx-fp32-misaki-cpu_smoke-20260925/med_agents.wav",
+   "results/tts/samples/kokoro-onnx-fp32-misaki-cpu_smoke-20260925/stress_time.wav"
+  ]
+ },
+ "rows": [
+  {
+   "phase": "cold",
+   "utt": "clip_open_spotify",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 16,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1882.834,
+   "audio_ms": 1237.3,
+   "cpu_s": 5.5938,
+   "cpu_cores": 2.97,
+   "ttfa_ms": 1882.825,
+   "rtf": 1.5217,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 5.013
+  },
+  {
+   "phase": "first",
+   "utt": "clip_open_spotify",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 16,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1460.515,
+   "audio_ms": 1237.3,
+   "cpu_s": 4.3438,
+   "cpu_cores": 2.97,
+   "ttfa_ms": 1460.507,
+   "rtf": 1.1804,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.432
+  },
+  {
+   "phase": "first",
+   "utt": "clip_open_notepad",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 16,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1085.645,
+   "audio_ms": 1130.7,
+   "cpu_s": 4.0469,
+   "cpu_cores": 3.73,
+   "ttfa_ms": 1085.638,
+   "rtf": 0.9602,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.038
+  },
+  {
+   "phase": "first",
+   "utt": "clip_done",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 5,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 726.053,
+   "audio_ms": 661.3,
+   "cpu_s": 2.7812,
+   "cpu_cores": 3.83,
+   "ttfa_ms": 726.045,
+   "rtf": 1.0979,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.067
+  },
+  {
+   "phase": "first",
+   "utt": "clip_paused",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 7,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 769.553,
+   "audio_ms": 789.3,
+   "cpu_s": 3.0469,
+   "cpu_cores": 3.96,
+   "ttfa_ms": 769.545,
+   "rtf": 0.975,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.194
+  },
+  {
+   "phase": "first",
+   "utt": "clip_next_track",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 11,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 977.696,
+   "audio_ms": 938.7,
+   "cpu_s": 3.5781,
+   "cpu_cores": 3.66,
+   "ttfa_ms": 977.691,
+   "rtf": 1.0415,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.62
+  },
+  {
+   "phase": "first",
+   "utt": "clip_volume_up",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 10,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1005.736,
+   "audio_ms": 917.3,
+   "cpu_s": 3.4375,
+   "cpu_cores": 3.42,
+   "ttfa_ms": 1005.728,
+   "rtf": 1.0964,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 2.97
+  },
+  {
+   "phase": "first",
+   "utt": "clip_on_it",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 6,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1070.394,
+   "audio_ms": 682.7,
+   "cpu_s": 3.0938,
+   "cpu_cores": 2.89,
+   "ttfa_ms": 1070.387,
+   "rtf": 1.5679,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 2.759
+  },
+  {
+   "phase": "first",
+   "utt": "clip_undone",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 7,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1208.36,
+   "audio_ms": 768.0,
+   "cpu_s": 4.0625,
+   "cpu_cores": 3.36,
+   "ttfa_ms": 1208.351,
+   "rtf": 1.5734,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.097
+  },
+  {
+   "phase": "first",
+   "utt": "clip_approval",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 25,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1331.35,
+   "audio_ms": 1280.0,
+   "cpu_s": 4.375,
+   "cpu_cores": 3.29,
+   "ttfa_ms": 1331.341,
+   "rtf": 1.0401,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 2.72
+  },
+  {
+   "phase": "first",
+   "utt": "clip_didnt_catch",
+   "tier": "clip",
+   "rep": 0,
+   "chars": 27,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1615.646,
+   "audio_ms": 1536.0,
+   "cpu_s": 4.8125,
+   "cpu_cores": 2.98,
+   "ttfa_ms": 1615.639,
+   "rtf": 1.0519,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.397
+  },
+  {
+   "phase": "first",
+   "utt": "short_open_blender",
+   "tier": "short",
+   "rep": 0,
+   "chars": 16,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1324.736,
+   "audio_ms": 1088.0,
+   "cpu_s": 4.1406,
+   "cpu_cores": 3.13,
+   "ttfa_ms": 1324.729,
+   "rtf": 1.2176,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.284
+  },
+  {
+   "phase": "first",
+   "utt": "short_play_youtube",
+   "tier": "short",
+   "rep": 0,
+   "chars": 30,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1443.12,
+   "audio_ms": 1685.3,
+   "cpu_s": 5.0312,
+   "cpu_cores": 3.49,
+   "ttfa_ms": 1443.106,
+   "rtf": 0.8563,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.238
+  },
+  {
+   "phase": "first",
+   "utt": "short_search_flights",
+   "tier": "short",
+   "rep": 0,
+   "chars": 32,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1154.0,
+   "audio_ms": 1642.7,
+   "cpu_s": 4.5625,
+   "cpu_cores": 3.95,
+   "ttfa_ms": 1153.992,
+   "rtf": 0.7025,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.11
+  },
+  {
+   "phase": "first",
+   "utt": "short_open_project",
+   "tier": "short",
+   "rep": 0,
+   "chars": 26,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 2260.269,
+   "audio_ms": 1493.3,
+   "cpu_s": 6.1406,
+   "cpu_cores": 2.72,
+   "ttfa_ms": 2260.263,
+   "rtf": 1.5136,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.913
+  },
+  {
+   "phase": "first",
+   "utt": "short_agent_sent",
+   "tier": "short",
+   "rep": 0,
+   "chars": 24,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1304.148,
+   "audio_ms": 1386.7,
+   "cpu_s": 4.4688,
+   "cpu_cores": 3.43,
+   "ttfa_ms": 1304.138,
+   "rtf": 0.9405,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 5.1
+  },
+  {
+   "phase": "first",
+   "utt": "short_timer",
+   "tier": "short",
+   "rep": 0,
+   "chars": 26,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1655.043,
+   "audio_ms": 1514.7,
+   "cpu_s": 4.8438,
+   "cpu_cores": 2.93,
+   "ttfa_ms": 1655.034,
+   "rtf": 1.0927,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.97
+  },
+  {
+   "phase": "first",
+   "utt": "short_which_one",
+   "tier": "short",
+   "rep": 0,
+   "chars": 18,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 1466.309,
+   "audio_ms": 1258.7,
+   "cpu_s": 4.8594,
+   "cpu_cores": 3.31,
+   "ttfa_ms": 1466.299,
+   "rtf": 1.1649,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.541
+  },
+  {
+   "phase": "first",
+   "utt": "short_typing",
+   "tier": "short",
+   "rep": 0,
+   "chars": 14,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 892.018,
+   "audio_ms": 981.3,
+   "cpu_s": 3.375,
+   "cpu_cores": 3.78,
+   "ttfa_ms": 892.011,
+   "rtf": 0.909,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.99
+  },
+  {
+   "phase": "first",
+   "utt": "med_agents",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 62,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 3080.461,
+   "audio_ms": 3178.7,
+   "cpu_s": 10.3281,
+   "cpu_cores": 3.35,
+   "ttfa_ms": 1386.265,
+   "rtf": 0.9691,
+   "gap_max_ms": 1694.19,
+   "gaps_ms": [
+    1694.19
+   ],
+   "stall_ms": 307.52,
+   "stalls": 1,
+   "g2p_ms": 6.539
+  },
+  {
+   "phase": "first",
+   "utt": "med_build",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 67,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 2865.837,
+   "audio_ms": 3498.7,
+   "cpu_s": 9.6875,
+   "cpu_cores": 3.38,
+   "ttfa_ms": 2865.827,
+   "rtf": 0.8191,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.558
+  },
+  {
+   "phase": "first",
+   "utt": "med_calendar",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 62,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 2663.74,
+   "audio_ms": 3178.7,
+   "cpu_s": 8.9688,
+   "cpu_cores": 3.37,
+   "ttfa_ms": 2663.733,
+   "rtf": 0.838,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.145
+  },
+  {
+   "phase": "first",
+   "utt": "med_email",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 63,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 2982.553,
+   "audio_ms": 3264.0,
+   "cpu_s": 9.9062,
+   "cpu_cores": 3.32,
+   "ttfa_ms": 1128.721,
+   "rtf": 0.9138,
+   "gap_max_ms": 1853.82,
+   "gaps_ms": [
+    1853.82
+   ],
+   "stall_ms": 381.82,
+   "stalls": 1,
+   "g2p_ms": 8.15
+  },
+  {
+   "phase": "first",
+   "utt": "med_confirm_delete",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 60,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 2976.791,
+   "audio_ms": 2965.3,
+   "cpu_s": 9.5312,
+   "cpu_cores": 3.2,
+   "ttfa_ms": 1832.488,
+   "rtf": 1.0039,
+   "gap_max_ms": 1144.296,
+   "gaps_ms": [
+    1144.296
+   ],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 8.341
+  },
+  {
+   "phase": "first",
+   "utt": "med_weather",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 66,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 3195.879,
+   "audio_ms": 3200.0,
+   "cpu_s": 10.2812,
+   "cpu_cores": 3.22,
+   "ttfa_ms": 1589.96,
+   "rtf": 0.9987,
+   "gap_max_ms": 1605.911,
+   "gaps_ms": [
+    1605.911
+   ],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 6.993
+  },
+  {
+   "phase": "first",
+   "utt": "med_music",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 46,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 2265.91,
+   "audio_ms": 2432.0,
+   "cpu_s": 7.4688,
+   "cpu_cores": 3.3,
+   "ttfa_ms": 2265.902,
+   "rtf": 0.9317,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 3.881
+  },
+  {
+   "phase": "first",
+   "utt": "med_escalate",
+   "tier": "medium",
+   "rep": 0,
+   "chars": 64,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 2592.151,
+   "audio_ms": 3200.0,
+   "cpu_s": 9.4844,
+   "cpu_cores": 3.66,
+   "ttfa_ms": 1177.524,
+   "rtf": 0.81,
+   "gap_max_ms": 1414.619,
+   "gaps_ms": [
+    1414.619
+   ],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 6.311
+  },
+  {
+   "phase": "first",
+   "utt": "long_summary",
+   "tier": "long",
+   "rep": 0,
+   "chars": 266,
+   "pieces": 5,
+   "n_chunks": 5,
+   "total_ms": 11396.352,
+   "audio_ms": 13674.7,
+   "cpu_s": 38.7656,
+   "cpu_cores": 3.4,
+   "ttfa_ms": 1341.988,
+   "rtf": 0.8334,
+   "gap_max_ms": 4382.005,
+   "gaps_ms": [
+    4382.005,
+    1698.159,
+    2340.698,
+    1633.494
+   ],
+   "stall_ms": 2952.67,
+   "stalls": 3,
+   "g2p_ms": 21.679
+  },
+  {
+   "phase": "first",
+   "utt": "long_explain",
+   "tier": "long",
+   "rep": 0,
+   "chars": 255,
+   "pieces": 6,
+   "n_chunks": 6,
+   "total_ms": 11515.548,
+   "audio_ms": 13781.3,
+   "cpu_s": 38.9219,
+   "cpu_cores": 3.38,
+   "ttfa_ms": 1423.914,
+   "rtf": 0.8356,
+   "gap_max_ms": 3689.415,
+   "gaps_ms": [
+    1674.218,
+    1560.623,
+    1624.468,
+    1542.904,
+    3689.415
+   ],
+   "stall_ms": 1003.63,
+   "stalls": 1,
+   "g2p_ms": 21.109
+  },
+  {
+   "phase": "first",
+   "utt": "long_plan",
+   "tier": "long",
+   "rep": 0,
+   "chars": 204,
+   "pieces": 5,
+   "n_chunks": 5,
+   "total_ms": 9751.056,
+   "audio_ms": 10986.7,
+   "cpu_s": 32.9844,
+   "cpu_cores": 3.38,
+   "ttfa_ms": 1946.998,
+   "rtf": 0.8875,
+   "gap_max_ms": 3234.927,
+   "gaps_ms": [
+    1663.571,
+    948.45,
+    3234.927,
+    1957.102
+   ],
+   "stall_ms": 961.61,
+   "stalls": 1,
+   "g2p_ms": 19.667
+  },
+  {
+   "phase": "first",
+   "utt": "long_apology",
+   "tier": "long",
+   "rep": 0,
+   "chars": 153,
+   "pieces": 5,
+   "n_chunks": 5,
+   "total_ms": 7865.464,
+   "audio_ms": 8256.0,
+   "cpu_s": 26.1094,
+   "cpu_cores": 3.32,
+   "ttfa_ms": 1341.383,
+   "rtf": 0.9527,
+   "gap_max_ms": 1886.946,
+   "gaps_ms": [
+    1808.959,
+    1070.611,
+    1757.557,
+    1886.946
+   ],
+   "stall_ms": 464.96,
+   "stalls": 2,
+   "g2p_ms": 16.389
+  },
+  {
+   "phase": "first",
+   "utt": "long_recipe",
+   "tier": "long",
+   "rep": 0,
+   "chars": 163,
+   "pieces": 5,
+   "n_chunks": 5,
+   "total_ms": 8710.622,
+   "audio_ms": 8384.0,
+   "cpu_s": 27.1562,
+   "cpu_cores": 3.12,
+   "ttfa_ms": 1564.182,
+   "rtf": 1.039,
+   "gap_max_ms": 2026.14,
+   "gaps_ms": [
+    1882.959,
+    1472.218,
+    1765.114,
+    2026.14
+   ],
+   "stall_ms": 794.96,
+   "stalls": 3,
+   "g2p_ms": 21.716
+  },
+  {
+   "phase": "first",
+   "utt": "stress_time",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 59,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 4655.725,
+   "audio_ms": 4928.0,
+   "cpu_s": 14.5312,
+   "cpu_cores": 3.12,
+   "ttfa_ms": 1359.657,
+   "rtf": 0.9447,
+   "gap_max_ms": 3296.057,
+   "gaps_ms": [
+    3296.057
+   ],
+   "stall_ms": 2016.06,
+   "stalls": 1,
+   "g2p_ms": 11.832
+  },
+  {
+   "phase": "first",
+   "utt": "stress_gpu",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 41,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 3908.79,
+   "audio_ms": 4480.0,
+   "cpu_s": 11.9062,
+   "cpu_cores": 3.05,
+   "ttfa_ms": 3908.777,
+   "rtf": 0.8725,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 8.86
+  },
+  {
+   "phase": "first",
+   "utt": "stress_git",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 46,
+   "pieces": 1,
+   "n_chunks": 1,
+   "total_ms": 3014.747,
+   "audio_ms": 4010.7,
+   "cpu_s": 10.4531,
+   "cpu_cores": 3.47,
+   "ttfa_ms": 3014.735,
+   "rtf": 0.7517,
+   "gap_max_ms": 0.0,
+   "gaps_ms": [],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 4.776
+  },
+  {
+   "phase": "first",
+   "utt": "stress_names",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 55,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 3697.547,
+   "audio_ms": 3434.7,
+   "cpu_s": 11.5781,
+   "cpu_cores": 3.13,
+   "ttfa_ms": 1492.249,
+   "rtf": 1.0765,
+   "gap_max_ms": 2205.29,
+   "gaps_ms": [
+    2205.29
+   ],
+   "stall_ms": 946.62,
+   "stalls": 1,
+   "g2p_ms": 7.934
+  },
+  {
+   "phase": "first",
+   "utt": "stress_money",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 48,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 5288.971,
+   "audio_ms": 5525.3,
+   "cpu_s": 16.7344,
+   "cpu_cores": 3.16,
+   "ttfa_ms": 3676.341,
+   "rtf": 0.9572,
+   "gap_max_ms": 1612.621,
+   "gaps_ms": [
+    1612.621
+   ],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 6.254
+  },
+  {
+   "phase": "first",
+   "utt": "stress_acronyms",
+   "tier": "stress",
+   "rep": 0,
+   "chars": 58,
+   "pieces": 2,
+   "n_chunks": 2,
+   "total_ms": 4030.707,
+   "audio_ms": 4928.0,
+   "cpu_s": 13.875,
+   "cpu_cores": 3.44,
+   "ttfa_ms": 1984.698,
+   "rtf": 0.8179,
+   "gap_max_ms": 2046.002,
+   "gaps_ms": [
+    2046.002
+   ],
+   "stall_ms": 0.0,
+   "stalls": 0,
+   "g2p_ms": 8.051
+  },
+  {
+   "phase": "barge",
+   "utt": "barge_passage",
+   "tier": "barge",
+   "rep": 0,
+   "ttfa_ms": 1704.516,
+   "audio_ms": 1877.3,
+   "n_chunks": 1,
+   "pieces": 10,
+   "cancelled_at_piece": 0,
+   "stop_ms": 10.915,
+   "next_ttfa_ms": 1931.99,
+   "next_call_ttfa_ms": 1921.067
+  }
+ ],
+ "scores": {
+  "scored": "2026-09-25T12:35:56+0200",
+  "per_utt": {
+   "clip_approval": {
+    "tier": "clip",
+    "asr": "That needs your approval.",
+    "wer": 0.0,
+    "utmos": 4.409
+   },
+   "clip_didnt_catch": {
+    "tier": "clip",
+    "asr": "Sorry, I didn't catch that.",
+    "wer": 0.0,
+    "utmos": 4.392
+   },
+   "clip_done": {
+    "tier": "clip",
+    "asr": "Done.",
+    "wer": 0.0,
+    "utmos": 4.075
+   },
+   "clip_next_track": {
+    "tier": "clip",
+    "asr": "next track.",
+    "wer": 0.0,
+    "utmos": 4.445
+   },
+   "clip_on_it": {
+    "tier": "clip",
+    "asr": "On it.",
+    "wer": 0.0,
+    "utmos": 4.246
+   },
+   "clip_open_notepad": {
+    "tier": "clip",
+    "asr": "Opening Notepad",
+    "wer": 0.0,
+    "utmos": 4.334
+   },
+   "clip_open_spotify": {
+    "tier": "clip",
+    "asr": "Opening Spotify",
+    "wer": 0.0,
+    "utmos": 4.367
+   },
+   "clip_paused": {
+    "tier": "clip",
+    "asr": "Paused",
+    "wer": 0.0,
+    "utmos": 4.126
+   },
+   "clip_undone": {
+    "tier": "clip",
+    "asr": "Undone.",
+    "wer": 0.0,
+    "utmos": 4.251
+   },
+   "clip_volume_up": {
+    "tier": "clip",
+    "asr": "Volume up.",
+    "wer": 0.0,
+    "utmos": 3.495
+   },
+   "long_apology": {
+    "tier": "long",
+    "asr": "I could not finish that. The file was open in another program, so the write failed. Close it and say try again, or tell me to save a copy somewhere else.",
+    "wer": 0.0,
+    "utmos": 4.488
+   },
+   "long_explain": {
+    "tier": "long",
+    "asr": "The voice loop listens in short steps, decides as soon as the command is clear, and only then speaks. Short confirmations come from a cache, so they play almost instantly. Longer answers like this one are synthesized sentence by sentence while you listen.",
+    "wer": 0.0,
+    "utmos": 4.526
+   },
+   "long_plan": {
+    "tier": "long",
+    "asr": "First, I will pull the latest changes, then run the tests on the new branch. If they pass, I will open a pull request and ask the reviewer agent to look at it. You will get a notification when it is ready.",
+    "wer": 0.0,
+    "utmos": 4.5
+   },
+   "long_recipe": {
+    "tier": "long",
+    "asr": "Preheat the oven, then whisk the eggs with the sugar until pale. Fold in the flour gently, pour the batter into the tin, and bake it for about 25 minutes.",
+    "wer": 0.0,
+    "utmos": 4.513
+   },
+   "long_summary": {
+    "tier": "long",
+    "asr": "Here is where things stand, the simulation finished overnight, and the results look consistent with last week. Two of the agents are still waiting on reviews, and the deploy is blocked until you approve the database change. Would you like me to open the approval now?",
+    "wer": 0.0,
+    "utmos": 4.515
+   },
+   "med_agents": {
+    "tier": "medium",
+    "asr": "Three agents are running, and one approval is waiting for you.",
+    "wer": 0.0,
+    "utmos": 4.497
+   },
+   "med_build": {
+    "tier": "medium",
+    "asr": "The build finished in four minutes with two warnings and no errors.",
+    "wer": 0.0,
+    "utmos": 4.492
+   },
+   "med_calendar": {
+    "tier": "medium",
+    "asr": "You have nothing else on your calendar until tomorrow morning.",
+    "wer": 0.0,
+    "utmos": 4.471
+   },
+   "med_confirm_delete": {
+    "tier": "medium",
+    "asr": "Do you want me to delete the old branch, or keep it for now?",
+    "wer": 0.0,
+    "utmos": 4.456
+   },
+   "med_email": {
+    "tier": "medium",
+    "asr": "There are five new emails, and the one from Sarah looks urgent.",
+    "wer": 0.0,
+    "utmos": 4.46
+   },
+   "med_escalate": {
+    "tier": "medium",
+    "asr": "I am not sure which tool you meant, so I asked the larger model.",
+    "wer": 0.0,
+    "utmos": 4.482
+   },
+   "med_music": {
+    "tier": "medium",
+    "asr": "I paused the music because you started a call.",
+    "wer": 0.0,
+    "utmos": 4.495
+   },
+   "med_weather": {
+    "tier": "medium",
+    "asr": "It will be sunny this afternoon, with a light wind from the north.",
+    "wer": 0.0,
+    "utmos": 4.446
+   },
+   "short_agent_sent": {
+    "tier": "short",
+    "asr": "Sent to the build agent.",
+    "wer": 0.0,
+    "utmos": 4.434
+   },
+   "short_open_blender": {
+    "tier": "short",
+    "asr": "Opening Blender",
+    "wer": 0.0,
+    "utmos": 4.346
+   },
+   "short_open_project": {
+    "tier": "short",
+    "asr": "Opening the drone project.",
+    "wer": 0.0,
+    "utmos": 4.448
+   },
+   "short_play_youtube": {
+    "tier": "short",
+    "asr": "playing lo-fi beats on YouTube.",
+    "wer": 0.0,
+    "utmos": 4.461
+   },
+   "short_search_flights": {
+    "tier": "short",
+    "asr": "Searching for flights to Lisbon.",
+    "wer": 0.0,
+    "utmos": 4.429
+   },
+   "short_timer": {
+    "tier": "short",
+    "asr": "Timer set for 10 minutes.",
+    "wer": 0.0,
+    "utmos": 4.452
+   },
+   "short_typing": {
+    "tier": "short",
+    "asr": "Typing it now.",
+    "wer": 0.0,
+    "utmos": 4.377
+   },
+   "short_which_one": {
+    "tier": "short",
+    "asr": "Notepad or Notion.",
+    "wer": 0.0,
+    "utmos": 4.437
+   },
+   "stress_acronyms": {
+    "tier": "stress",
+    "asr": "The API returned to 404, so the MCP tool fell back to HTTP.",
+    "wer": 0.5455,
+    "utmos": 4.498
+   },
+   "stress_git": {
+    "tier": "stress",
+    "asr": "Push to origin main, failed with exit code, 128.",
+    "wer": 0.0769,
+    "utmos": 4.476
+   },
+   "stress_gpu": {
+    "tier": "stress",
+    "asr": "The GPU is at 87% and 14.2 GB are in use.",
+    "wer": 0.125,
+    "utmos": 4.488
+   },
+   "stress_money": {
+    "tier": "stress",
+    "asr": "The invoice is $1,250.40, due on Sept. 30.",
+    "wer": 0.125,
+    "utmos": 4.503
+   },
+   "stress_names": {
+    "tier": "stress",
+    "asr": "Theoma asked Tez, and Tez picked Nemetron over Kokoro.",
+    "wer": 0.2222,
+    "utmos": 4.483
+   },
+   "stress_time": {
+    "tier": "stress",
+    "asr": "Your meeting with Dr. Akhafar starts at 3, 45 p.m. in room 12B.",
+    "wer": 0.0625,
+    "utmos": 4.509
+   }
+  },
+  "asr": {
+   "engine": "faster-whisper",
+   "version": "1.2.1",
+   "model": "small.en",
+   "device": "cpu",
+   "compute": "int8",
+   "beam_size": 5
+  },
+  "mos": {
+   "predictor": "UTMOS22-strong",
+   "source": "torch.hub tarepan/SpeechMOS:v1.2.0",
+   "input": "16 kHz mono",
+   "torchaudio_shim": true
+  },
+  "aggregate": {
+   "plain": {
+    "n": 31,
+    "wer": 0.0,
+    "exact": 31,
+    "utmos_mean": 4.383
+   },
+   "stress": {
+    "n": 6,
+    "wer": 0.2174,
+    "exact": 0,
+    "utmos_mean": 4.493
+   }
+  }
+ }
+}
