@@ -95,6 +95,11 @@ def main() -> None:
     ap.add_argument("--check", default=None, help="a data directory with a Kokoro align.jsonl to score against")
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
+    if args.device == "cuda":
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from voice_asr import add_nvidia_dlls
+        add_nvidia_dlls()
     from faster_whisper import WhisperModel
     t0 = time.perf_counter()
     model = WhisperModel(args.model, device=args.device, compute_type=args.compute_type)

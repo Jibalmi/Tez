@@ -44,6 +44,19 @@ class Emission:
     final: bool = False
 
 
+def add_nvidia_dlls() -> None:
+    """CTranslate2 (faster-whisper) on CUDA wants the cuBLAS/cuDNN DLLs of the nvidia-* pip wheels, which Windows does
+    not find unless their directories are registered (experiments/asr_bench.py does the same)."""
+    import os
+    import site
+    for sp in set(site.getsitepackages() + [site.getusersitepackages()]):
+        nv = Path(sp) / "nvidia"
+        if nv.is_dir():
+            for d in nv.glob("*/bin"):
+                os.add_dll_directory(str(d))
+                os.environ["PATH"] = str(d) + os.pathsep + os.environ["PATH"]
+
+
 def normalise(text: str) -> str:
     """Lower case, words only (the Tez command sets are written that way)."""
     text = text.lower().replace("-", " ")
@@ -297,6 +310,8 @@ class WhisperRedecode(Asr):
     """faster-whisper re-decoding the whole buffer every `step` seconds (greedy, no VAD): experiments/asr_bench.py."""
 
     def __init__(self, model: str = "base.en", device: str = "cuda", compute_type: str = "float16", step: float = 0.2):
+        if device == "cuda":
+            add_nvidia_dlls()
         from faster_whisper import WhisperModel
         t0 = time.perf_counter()
         self.m = WhisperModel(model, device=device, compute_type=compute_type)
