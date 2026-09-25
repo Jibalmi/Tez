@@ -190,6 +190,27 @@ def test_probe_readouts_stream_too(gguf: Path, tmp_path: Path):
     assert np.allclose(list(u.probabilities.values()), reference(ref, t, u.state).probabilities, atol=1e-6)
 
 
+def test_a_probe_on_the_letters_prompt_reads_one_sequence(gguf: Path, tmp_path: Path):
+    """An explicit none option: the probe's prompt is the letters prompt, so one sequence gives both readouts
+    (blend), or the probe alone (fitted without the blend)."""
+    from tez.fit import fit
+    (tmp_path / "voice.yaml").write_text(VOICE.read_text(encoding="utf-8"), encoding="utf-8")
+    rng = random.Random(5)
+    labels = list(load_schema(tmp_path / "voice.yaml").questions["action"].criteria)
+    rows = [{"state": " ".join(rng.sample(WORDS, 3)), "labels": {"action": labels[i % len(labels)]}} for i in range(48)]
+    lab = write_jsonl(tmp_path / "labels.jsonl", rows)
+    for blend, parts in ((True, ["both"]), (False, ["embed"])):
+        tez = Tez(backend=inproc(gguf, n_ctx=16384, n_outputs=128), schemas=tmp_path)
+        fit(tez, tez.schemas["voice-desktop"], [lab], say=lambda m: None, use_blend=blend)
+        ref = Tez(backend=inproc(gguf, n_ctx=16384), schemas=tmp_path)
+        s = tez.stream(schema="voice-desktop")
+        assert not s.abstain and [p[0] for p in s._parts] == parts
+        for w in WORDS[:4]:
+            u = s.feed(w)
+            assert u.readout == "probe"
+            assert np.allclose(list(u.probabilities.values()), reference(ref, s, u.state).probabilities, atol=1e-6)
+
+
 def test_http_style_backends_read_whole_prompts():
     fb = FakeBackend()
     tez = Tez(backend=fb, schemas=VOICE)
@@ -241,6 +262,18 @@ def test_the_policy_reproduces_stream_policy_py():
         s, fired = run_policy(traj)
         assert [(a.word, a.name) for a in fired] == expected, traj
         assert [(a.word, a.name) for a in s.actions] == expected
+
+
+def test_policy_replay_on_logged_steps_matches_the_session_and_stream_policy_py():
+    sp = _stream_policy()
+    keys = list(load_schema(VOICE).questions["action"].criteria)
+    pol = Policy.from_schema(load_schema(VOICE), None)
+    rng = random.Random(11)
+    for _ in range(200):
+        traj = [(rng.choice(keys), rng.choice([0.5, 0.95, 0.99])) for _ in range(rng.randint(1, 6))]
+        expected = sp.executed_sequence([{"k": k, "pred": a, "pmax": p} for k, (a, p) in enumerate(traj, 1)], 0.9, 2, 2, 2)
+        got = pol.replay([(a, p, k) for k, (a, p) in enumerate(traj, 1)])
+        assert [(k, name) for k, _, name in got] == expected
 
 
 def test_none_on_a_prefix_waits_and_none_at_the_end_hands_off():

@@ -153,6 +153,57 @@ class Policy:
         """An action that fired is consistent with a final decision when it is that decision or one of its ancestors."""
         return done == final or done in self.ancestors(final)
 
+    def early(self, decision: str, p: float, stable: int, live: list[str], none_keys=NONE_KEYS) -> tuple[str, str] | None:
+        """What fires while the user is still speaking, given the decision after a word, its probability, its stability
+        in words and the actions already live (in order): (kind, option) or None. experiments/stream_policy.py's
+        executed_sequence, one step at a time."""
+        if decision in none_keys or p < self.threshold(decision):
+            return None
+        spec = self.spec(decision)
+        if spec.cls in ("R2", "R3"):
+            return None
+        if spec.cls == "R1":
+            anc = spec.refines
+            if anc is None or stable < spec.stable or anc in live:
+                return None
+            return ("ancestor", anc)
+        if stable < spec.stable or (live and live[-1] == decision):
+            return None
+        return ("early", decision)
+
+    def at_end(self, decision: str, p: float, live: list[str], none_keys=NONE_KEYS) -> tuple[str, str] | None:
+        """What the final decision does at the end of the utterance: ("end" | "approval", option), ("handoff", None)
+        for none (or below end_tau), or None when it is already the last live action."""
+        if decision in none_keys or p < self.end_tau:
+            return ("handoff", None)
+        if live and live[-1] == decision:
+            return None
+        return ("approval" if self.spec(decision).cls == "R3" else "end", decision)
+
+    def replay(self, steps: list[tuple[str, float, int]], none_keys=NONE_KEYS) -> list[tuple[int, str, str]]:
+        """The actions a sequence of steps (decision, p, word count) fires, as (word, kind, option): the policy alone,
+        on logged decisions (the replay harness re-scores thresholds with it). Stability counts words, the latest
+        reading of each word standing for it. No retraction or residual segments (those change what is read)."""
+        by_k: dict[int, tuple[str, int]] = {}
+        live: list[str] = []
+        out: list[tuple[int, str, str]] = []
+        for decision, p, k in steps:
+            for j in [j for j in by_k if j >= k]:
+                del by_k[j]
+            prev = by_k.get(k - 1)
+            stable = prev[1] + 1 if prev is not None and prev[0] == decision else 1
+            by_k[k] = (decision, stable)
+            got = self.early(decision, p, stable, live, none_keys)
+            if got is not None:
+                live.append(got[1])
+                out.append((k, got[0], got[1]))
+        if steps:
+            decision, p, k = steps[-1]
+            got = self.at_end(decision, p, live, none_keys)
+            if got is not None and got[0] != "handoff":
+                out.append((k, got[0], got[1]))
+        return out
+
 
 @dataclass
 class Action:
@@ -253,7 +304,12 @@ class StreamSession:
             self._parts.append(("embed", head, tail, 0, True))
         if s.needs_letters and not needs_tournament(len(s.options)):
             head, tail = _split(build_prompt(q, _SENTINEL, engine.template, s.options, s.shots_letters, QUESTION_FIRST))
-            self._parts.append(("letters", head, tail, len(s.options), False))
+            same = [i for i, (_, h, t, _, _) in enumerate(self._parts) if (h, t) == (head, tail)]
+            if same:                          # the probe reads the letters prompt itself: one sequence serves both
+                i = same[0]
+                self._parts[i] = ("both", head, tail, len(s.options), True)
+            else:
+                self._parts.append(("letters", head, tail, len(s.options), False))
         self._reader = None
         if incremental and self._parts and hasattr(engine.backend, "stream_reader"):
             self._reader = engine.backend.stream_reader([(h, t, k, e) for _, h, t, k, e in self._parts])
@@ -382,13 +438,13 @@ class StreamSession:
                 if a.kind in ("early", "ancestor") and not a.undone and not self.policy.consistent(a.name, decision):
                     fired.append(self._undo_action(a))
         live = [a for a in self.actions if a.kind != "undo" and not a.undone]
-        if decision in self.none_keys or p < self.policy.end_tau:
+        got = self.policy.at_end(decision, p, [a.name for a in live], self.none_keys)
+        if got is not None and got[0] == "handoff":
             handoff = True
-        elif not live or live[-1].name != decision:
+        elif got is not None:
             spec = self.policy.spec(decision)
-            gated = spec.cls == "R3"
-            a = Action(name=decision, kind="approval" if gated else "end", cls=spec.cls, word=len(self.words), p=p,
-                       transcript=self.transcript, gated=gated, refines=spec.refines)
+            a = Action(name=decision, kind=got[0], cls=spec.cls, word=len(self.words), p=p, transcript=self.transcript,
+                       gated=got[0] == "approval", refines=spec.refines)
             self.actions.append(a)
             fired.append(a)
         t1 = self.clock()
@@ -471,25 +527,15 @@ class StreamSession:
         return self._reader.commit(render_state(state))
 
     def _policy_step(self, k: int, decision: str, p: float, stable: int) -> list[Action]:
-        """experiments/stream_policy.executed_sequence, one step at a time, with the classes as data."""
-        if decision in self.none_keys or p < self.policy.threshold(decision):
+        """Policy.early on this step; the action it names, if any."""
+        live = [a.name for a in self.actions if a.kind != "undo" and not a.undone]
+        got = self.policy.early(decision, p, stable, live, self.none_keys)
+        if got is None:
             return []
-        spec = self.policy.spec(decision)
-        live = [a for a in self.actions if a.kind != "undo" and not a.undone]
-        if spec.cls in ("R2", "R3"):
-            return []
-        if spec.cls == "R1":
-            anc = spec.refines
-            if anc is None or stable < spec.stable or anc in [a.name for a in live]:
-                return []
-            a = Action(name=anc, kind="ancestor", cls=self.policy.spec(anc).cls, word=k, p=p,
-                       transcript=self.transcript, refines=None)
-            self.actions.append(a)
-            return [a]
-        if stable < spec.stable or (live and live[-1].name == decision):
-            return []
-        a = Action(name=decision, kind="early", cls=spec.cls, word=k, p=p, transcript=self.transcript,
-                   refines=spec.refines)
+        kind, name = got
+        spec = self.policy.spec(name)
+        a = Action(name=name, kind=kind, cls=spec.cls, word=k, p=p, transcript=self.transcript,
+                   refines=spec.refines if kind == "early" else None)
         self.actions.append(a)
         return [a]
 
