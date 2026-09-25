@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Phase 1 of the Theioma voice design (docs/plans/theioma-voice-design.md, section 4e), in the order it was run.
-# Take the GPU first:  python C:/temp/gpu_lock.py acquire --owner <you> --purpose "voice phase 1" --minutes 90 --wait
-# Every step writes results/voice/*.json with CPU load and VRAM snapshots; release the lock between long blocks.
+# Run every step as one heavy job through the shared machine's wrapper (it takes the GPU lock, waits for free RAM and
+# a quiet CPU, caps threads at 6 and runs below normal priority), one at a time with a pause between them:
+#   python C:/temp/run_heavy.py --owner <you> --purpose "voice phase 1: data" --minutes 30 -- bash experiments/run_voice_phase1.sh data
+# Every step writes results/voice/*.json with CPU load and VRAM snapshots.
 #   bash experiments/run_voice_phase1.sh data      # Kokoro synthesis + word timings (GPU), whisper alignment of tez220
 #   bash experiments/run_voice_phase1.sh asr       # streaming ASR spikes, ASR only, no pacing
 #   bash experiments/run_voice_phase1.sh decide    # in-process decisions on a lag-free recogniser, real time
