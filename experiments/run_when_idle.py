@@ -7,6 +7,7 @@ Other sessions share this laptop's CPU and GPU; timings taken while they run are
   - the cooperative GPU lock (C:/temp/gpu_lock.py) is free,
   - Ollama has no model loaded,
   - no process other than the production llama-server holds more than 300 MB of GPU memory,
+  - the GPU is below --gpu-max-c and not thermally throttled (a heat-soaked laptop GPU times slow),
 
 then takes the lock and runs a plan of steps, recording the CPU load and a GPU snapshot around each step. Whatever
 happens, it stops the servers it started, restores the production llama-server and releases the lock.
@@ -112,7 +113,19 @@ def prod_pid() -> int | None:
     return None
 
 
-def idle_reasons(cpu_max: float, window: float) -> list[str]:
+def gpu_thermal() -> tuple[int, bool, bool] | None:
+    """(temperature C, software thermal slowdown active, hardware thermal slowdown active), or None if unknown."""
+    q = "temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,clocks_throttle_reasons.hw_thermal_slowdown"
+    try:
+        out = subprocess.run(["nvidia-smi", f"--query-gpu={q}", "--format=csv,noheader"], capture_output=True,
+                             text=True, timeout=15).stdout.strip().splitlines()[0]
+        temp, sw, hw = (x.strip() for x in out.split(","))
+        return int(temp), sw == "Active", hw == "Active"
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def idle_reasons(cpu_max: float, window: float, gpu_max_c: float = 70.0) -> list[str]:
     """Why the machine is not idle right now (empty list = idle). Samples the CPU over `window` seconds."""
     reasons = []
     status = json.loads(subprocess.run([*LOCK, "status"], capture_output=True, text=True).stdout or "{}")
@@ -144,6 +157,9 @@ def idle_reasons(cpu_max: float, window: float) -> list[str]:
                 pass
         top = ", ".join(f"{n} {c:.0f} %" for c, n in sorted(busy, reverse=True)[:3])
         reasons.append(f"CPU averaged {avg:.0f} % over {window:.0f} s (limit {cpu_max:.0f} %; busiest: {top})")
+    th = gpu_thermal()
+    if th is not None and (th[0] >= gpu_max_c or th[1] or th[2]):
+        reasons.append(f"GPU at {th[0]} C (limit {gpu_max_c:.0f} C)" + (", thermally throttled" if th[1] or th[2] else ""))
     return reasons
 
 
@@ -220,6 +236,7 @@ def main() -> int:
     ap.add_argument("--plan", choices=sorted(PLANS), default="runtime")
     ap.add_argument("--cpu-max", type=float, default=25.0, help="idle means CPU below this (percent), averaged")
     ap.add_argument("--window", type=float, default=180.0, help="seconds of CPU sampling per idle check")
+    ap.add_argument("--gpu-max-c", type=float, default=70.0, help="idle means the GPU is cooler than this (C)")
     ap.add_argument("--poll", type=float, default=300.0, help="seconds between idle checks")
     ap.add_argument("--max-wait-hours", type=float, default=36.0)
     ap.add_argument("--dry-run", action="store_true")
@@ -233,7 +250,7 @@ def main() -> int:
 
     deadline = time.time() + args.max_wait_hours * 3600
     while True:
-        reasons = idle_reasons(args.cpu_max, args.window)
+        reasons = idle_reasons(args.cpu_max, args.window, args.gpu_max_c)
         if not reasons:
             break
         log("not idle: " + "; ".join(reasons))
