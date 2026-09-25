@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Phase 1 of the Theioma voice design (docs/plans/theioma-voice-design.md, section 4e), in the order it was run.
+# Take the GPU first:  python C:/temp/gpu_lock.py acquire --owner <you> --purpose "voice phase 1" --minutes 90 --wait
+# Every step writes results/voice/*.json with CPU load and VRAM snapshots; release the lock between long blocks.
+#   bash experiments/run_voice_phase1.sh data      # Kokoro synthesis + word timings (GPU), whisper alignment of tez220
+#   bash experiments/run_voice_phase1.sh asr       # streaming ASR spikes, ASR only, no pacing
+#   bash experiments/run_voice_phase1.sh decide    # in-process decisions on a lag-free recogniser, real time
+#   bash experiments/run_voice_phase1.sh probe     # the cut 4B: two-fold prefix probes (tez fit) and their replays
+#   bash experiments/run_voice_phase1.sh e2e       # the recogniser and the session together, real time
+set -euo pipefail
+cd "$(dirname "$0")/.."
+PY=${PY:-C:/temp/voice-venv/Scripts/python}           # system Python 3.14 + sherpa-onnx (venv with site packages)
+TTS_PY=${TTS_PY:-../Tez/.venv-tts/Scripts/python}      # Kokoro's PyTorch package (the TTS harness's environment)
+LIB=C:/temp/llamacpp
+BLOBS=C:/Users/migue/.ollama/models/blobs
+Q8=$BLOBS/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795   # Gemma 4 12B Q8_0 (gemma4:12b-it-q8_0)
+Q4=$BLOBS/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606   # Gemma 4 12B Q4_K_M (gemma4:12b)
+Q4B=../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf
+NEMO_EN=C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf
+NEMO_35=C:/temp/asr-models/nemotron-3.5-asr-streaming-0.6b.q8_0.gguf
+FC80=C:/temp/asr-models/sherpa-onnx-nemo-streaming-fast-conformer-transducer-en-80ms-int8
+R="$PY experiments/voice_replay.py"
+
+case "${1:-}" in
+data)
+  PYTHONIOENCODING=utf-8 $TTS_PY experiments/voice_tts.py --device cuda
+  $PY experiments/voice_align.py --model large-v3 --device cuda --compute-type float16
+  $PY experiments/voice_align.py --model large-v3 --device cuda --compute-type float16 --check data/voice/theioma
+  ;;
+asr)
+  for s in theioma tez220; do
+    $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_80
+    $R --set $s --asr nemocpp:$NEMO_EN --rc 1 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_160
+  done
+  $R --set theioma --asr nemocpp:$NEMO_35 --rc 0 --no-realtime --gap 0 --tag theioma_asr_nemotron35_80
+  $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4
+  $R --set theioma --asr whisper:base.en --no-realtime --gap 0 --tag theioma_asr_whisper_base_200
+  ;;
+decide)
+  for s in theioma tez220; do
+    $R --set $s --asr oracle --backend inproc:$Q4 --lib $LIB --tag ${s}_oracle_12b_q4km
+    $R --set $s --asr oracle --backend inproc:$Q8 --lib $LIB --tag ${s}_oracle_12b_q8
+  done
+  ;;
+probe)
+  for s in theioma tez220; do
+    $PY experiments/voice_probe_labels.py --set $s --out C:/temp/voice-fit
+    for f in 0 1; do
+      d=C:/temp/voice-fit/$s/fold$f
+      $PY -m tez fit --backend inproc:$Q4B --template qwen3 --llama-lib $LIB --schema $d/schema.yaml \
+          --labels $d/labels.jsonl --no-blend --no-letters --no-feedback
+      $R --set $s --asr oracle --backend inproc:$Q4B --template qwen3 --lib $LIB --schema $d/schema.yaml \
+          --ids $d/ids.txt --tag ${s}_oracle_4b_probe_fold$f
+    done
+  done
+  ;;
+e2e)
+  for s in theioma tez220; do
+    $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag ${s}_e2e_nemotron80_12b_q4km
+  done
+  ;;
+*)
+  echo "usage: $0 data|asr|decide|probe|e2e" >&2
+  exit 2
+  ;;
+esac
