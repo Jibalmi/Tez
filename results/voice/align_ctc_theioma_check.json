@@ -1,0 +1,31 @@
+{
+ "set": "theioma",
+ "rows": 269,
+ "model": "facebook/wav2vec2-base-960h",
+ "against": "kokoro phoneme durations (12.5 ms units), each end cut to the end of the speech energy inside the word (-35 dB); end_kokoro = untrimmed",
+ "ctc_end_minus_reference_ms": {
+  "n": 1621,
+  "median": -10.0,
+  "mean": -17.6,
+  "mae": 31.7,
+  "p10": -80.0,
+  "p90": 25.0
+ },
+ "ctc_last_word_end_minus_reference_ms": {
+  "n": 269,
+  "median": -60.0,
+  "mean": -58.1,
+  "mae": 64.3,
+  "p10": -130.0,
+  "p90": 10.0
+ },
+ "ctc_start_minus_reference_ms": {
+  "n": 1621,
+  "median": 65.0,
+  "mean": 68.8,
+  "mae": 68.8,
+  "p10": 45.0,
+  "p90": 97.5
+ },
+ "seconds": 98.3
+}

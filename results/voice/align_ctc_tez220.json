@@ -1,0 +1,31 @@
+{
+ "set": "tez220",
+ "rows": 220,
+ "model": "facebook/wav2vec2-base-960h",
+ "against": "faster-whisper large-v3 word timestamps (cuda float16), matched to the reference, the rest interpolated",
+ "ctc_end_minus_reference_ms": {
+  "n": 1158,
+  "median": 100.0,
+  "mean": 123.9,
+  "mae": 124.0,
+  "p10": 54.0,
+  "p90": 240.0
+ },
+ "ctc_last_word_end_minus_reference_ms": {
+  "n": 220,
+  "median": 200.0,
+  "mean": 210.5,
+  "mae": 210.5,
+  "p10": 100.0,
+  "p90": 360.0
+ },
+ "ctc_start_minus_reference_ms": {
+  "n": 1158,
+  "median": 160.0,
+  "mean": 182.1,
+  "mae": 182.1,
+  "p10": 120.0,
+  "p90": 260.0
+ },
+ "seconds": 66.9
+}
