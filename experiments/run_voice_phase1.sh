@@ -21,6 +21,7 @@ Q4B=../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf
 NEMO_EN=C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf
 NEMO_35=C:/temp/asr-models/nemotron-3.5-asr-streaming-0.6b.q8_0.gguf
 FC80=C:/temp/asr-models/sherpa-onnx-nemo-streaming-fast-conformer-transducer-en-80ms-int8
+EOU=C:/temp/asr-models/parakeet_realtime_eou_120m-v1/parakeet_realtime_eou_120m-v1.nemo
 R="$PY experiments/voice_replay.py"
 
 case "${1:-}" in
@@ -29,14 +30,18 @@ data)
   $PY experiments/voice_align.py --model large-v3 --device cuda --compute-type float16
   $PY experiments/voice_align.py --model large-v3 --device cuda --compute-type float16 --check data/voice/theioma
   ;;
-asr)
+asr)               # ASR only, audio pushed as fast as each recogniser takes it (no pacing): step compute, emission, WER
   for s in theioma tez220; do
-    $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_80
-    $R --set $s --asr nemocpp:$NEMO_EN --rc 1 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_160
+    $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_80; sleep 60
+    $R --set $s --asr nemocpp:$NEMO_EN --rc 1 --no-realtime --gap 0 --tag ${s}_asr_nemotron_en_160; sleep 60
   done
-  $R --set theioma --asr nemocpp:$NEMO_35 --rc 0 --no-realtime --gap 0 --tag theioma_asr_nemotron35_80
-  $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4
-  $R --set theioma --asr whisper:base.en --no-realtime --gap 0 --tag theioma_asr_whisper_base_200
+  $R --set theioma --asr nemocpp:$NEMO_35 --rc 0 --no-realtime --gap 0 --tag theioma_asr_nemotron35_80; sleep 60
+  $R --set theioma --asr whisper:base.en --no-realtime --gap 0 --tag theioma_asr_whisper_base_200; sleep 60
+  $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true
+  ;;
+asr-cpu)           # the CPU recognisers, alone (never beside a GPU run)
+  $R --set theioma --asr sherpa:$FC80 --asr-threads 4 --no-realtime --gap 0 --tag theioma_asr_sherpa_fc80_cpu4; sleep 60
+  $R --set theioma --asr nemocpp:$NEMO_EN --asr-gpu -1 --rc 0 --no-realtime --gap 0 --limit 60 --tag theioma_asr_nemotron_en_80_cpu
   ;;
 decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's shared 12B); $2 = one set
   for s in ${2:-theioma tez220}; do
@@ -76,7 +81,7 @@ e2e)
   done
   ;;
 *)
-  echo "usage: $0 data|asr|decide|decide-q8|decide-http|probe|e2e" >&2
+  echo "usage: $0 data|asr|asr-cpu|decide|decide-q8|decide-http|probe|e2e" >&2
   exit 2
   ;;
 esac

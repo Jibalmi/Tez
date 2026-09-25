@@ -603,8 +603,10 @@ def main() -> None:
         kw = {"right_context": args.rc, "gpu": args.asr_gpu}
     elif args.asr.startswith("sherpa:"):
         kw = {"threads": min(args.asr_threads, 4)}
+    elif args.asr.startswith("nemo:"):
+        kw = {"right_context": args.rc, "device": "cuda" if args.asr_gpu >= 0 else "cpu"}
     if args.asr != "oracle":
-        if args.asr_proc or args.asr.startswith("nemocpp:"):
+        if args.asr_proc or args.asr.startswith(("nemocpp:", "nemo:")):
             from voice_asr import asr_worker
             ctx = mp.get_context("spawn")
             worker, child = ctx.Pipe()
