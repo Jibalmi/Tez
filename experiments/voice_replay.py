@@ -565,6 +565,7 @@ def main() -> None:
                                                                        "size_mb", "hybrid", "desc")}
             manifest["decision"]["head_ms"] = round(session._reader.head_ms, 1) if session._reader else None
     manifest["policy"] = {"tau": policy.tau, "classes": {k: v.cls for k, v in policy.actions.items()}}
+    manifest["gpu_loaded"] = gpu_snapshot()               # every model of the run resident: the stack's VRAM
     # ---- warm-up (not recorded), then the run
     for r in rows[: args.warmup]:
         run_utterance(r, argparse.Namespace(**{**vars(args), "realtime": False}), session, asr, worker, executor, undos)
