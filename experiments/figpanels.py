@@ -382,7 +382,7 @@ def write_index():
                 out.append(f"\n### {section}\n\n| Chart | Finding (its title) | Source |\n|---|---|---|")
             src = p.text("source", D)
             src = src[len("Source: "):] if src.startswith("Source: ") else src
-            out.append(f"| [`{p.key}.png`]({p.key}.png) | {p.finding(D)} | {src.rstrip('.')} |")
+            out.append(f"| [{p.short}]({p.key}.png) | {p.finding(D)} | {src.rstrip('.')} |")
         out.append("")
     (PANEL_DIR / "README.md").write_text("\n".join(out) + "\n", encoding="utf-8")
     print(f"  wrote    {(PANEL_DIR / 'README.md').relative_to(ROOT).as_posix()}")
