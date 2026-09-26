@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import unittest
+import threading
+import time
 
-from teacher_speed import prompt_for, teacher_answer, validate_answers
+from teacher_speed import prompt_for, run_batches, teacher_answer, validate_answers
 
 
 class TeacherSpeedTests(unittest.TestCase):
@@ -37,6 +39,31 @@ class TeacherSpeedTests(unittest.TestCase):
     def test_teacher_reverses_second_distribution(self):
         row = {"type": "noul", "keys": ["false", "true"], "z_orig": [0, 1], "z_rev": [10, 0]}
         self.assertEqual(teacher_answer(row), "true")
+
+    def test_stops_new_requests_after_a_failure(self):
+        called = []
+        def call(index, batch):
+            called.append(index)
+            return {"error": "usage limit"}
+        results = run_batches([[]] * 20, 1, call)
+        self.assertEqual(called, [0])
+        self.assertEqual(len(results), 1)
+
+    def test_parallelism_is_bounded_and_every_batch_runs_once(self):
+        lock = threading.Lock()
+        active = peak = 0
+        def call(index, batch):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+            time.sleep(0.005)
+            with lock:
+                active -= 1
+            return {"index": index}
+        rows = run_batches([[]] * 20, 3, call)
+        self.assertEqual(sorted(r["index"] for r in rows), list(range(20)))
+        self.assertLessEqual(peak, 3)
 
 
 if __name__ == "__main__":

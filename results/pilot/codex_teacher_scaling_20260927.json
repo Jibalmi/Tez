@@ -1,0 +1,1862 @@
+{
+  "created_utc": "2026-09-26T22:11:56.734523+00:00",
+  "model_requested": "gpt-6-astra",
+  "model_fallback_allowed": false,
+  "reasoning_effort": "low",
+  "cli_version": "codex-cli 0.156.1",
+  "transport": "codex exec, existing ChatGPT login",
+  "batch_size": 8,
+  "worker_schedule": [
+    4,
+    8,
+    20
+  ],
+  "local_cpu_affinity": [
+    23
+  ],
+  "free_ram_gb_before": 25.89492416381836,
+  "states": 160,
+  "decisions": 800,
+  "sample_sha256": "8a39b442c23d1f6b31aeb7c3915072e5f18d3264e98e47aa8d7eafad0ad2b68e",
+  "ids": [
+    "aya-78620",
+    "clinc-4035",
+    "csqa-7902",
+    "fw-01071",
+    "fw2-ar-0125",
+    "gmmlu-ar-9350",
+    "aya-22093",
+    "clinc-14575",
+    "csqa-595",
+    "fw-03099",
+    "fw2-de-0072",
+    "gmmlu-de-13129",
+    "aya-158829",
+    "clinc-7321",
+    "csqa-7098",
+    "fw-00817",
+    "fw2-ar-0238",
+    "gmmlu-en-4652",
+    "aya-183023",
+    "clinc-8714",
+    "csqa-9123",
+    "fw-00635",
+    "fw2-de-0037",
+    "gmmlu-ar-8383",
+    "aya-23504",
+    "clinc-5084",
+    "csqa-9524",
+    "fw-01346",
+    "fw2-ar-0108",
+    "gmmlu-de-820",
+    "aya-62952",
+    "clinc-5051",
+    "csqa-2117",
+    "fw-01942",
+    "fw2-de-0051",
+    "gmmlu-en-4824",
+    "aya-139646",
+    "clinc-1554",
+    "csqa-6883",
+    "fw-02008",
+    "fw2-ar-0105",
+    "gmmlu-ar-1562",
+    "aya-168473",
+    "clinc-7746",
+    "csqa-7733",
+    "fw-02762",
+    "fw2-de-0195",
+    "gmmlu-de-5661",
+    "aya-36350",
+    "clinc-4913",
+    "csqa-4117",
+    "fw-00397",
+    "fw2-ar-0188",
+    "gmmlu-en-869",
+    "aya-30377",
+    "clinc-12552",
+    "csqa-5922",
+    "fw-01417",
+    "fw2-de-0062",
+    "gmmlu-ar-840",
+    "aya-78929",
+    "clinc-6976",
+    "csqa-3332",
+    "fw-03188",
+    "fw2-ar-0007",
+    "gmmlu-de-8236",
+    "aya-119024",
+    "clinc-14547",
+    "csqa-6258",
+    "fw-02593",
+    "fw2-de-0224",
+    "gmmlu-en-5851",
+    "aya-99319",
+    "clinc-8785",
+    "csqa-6739",
+    "fw-01954",
+    "fw2-ar-0005",
+    "gmmlu-ar-12510",
+    "aya-55796",
+    "clinc-14506",
+    "csqa-6273",
+    "fw-03036",
+    "fw2-de-0177",
+    "gmmlu-de-8265",
+    "aya-59511",
+    "clinc-8457",
+    "csqa-2538",
+    "fw-02645",
+    "fw2-ar-0173",
+    "gmmlu-en-12792",
+    "aya-150596",
+    "clinc-10431",
+    "csqa-495",
+    "fw-02311",
+    "fw2-de-0250",
+    "gmmlu-ar-6553",
+    "aya-14591",
+    "clinc-7789",
+    "csqa-2102",
+    "fw-02027",
+    "fw2-ar-0083",
+    "gmmlu-de-12720",
+    "aya-88976",
+    "clinc-14682",
+    "csqa-7342",
+    "fw-02902",
+    "fw2-de-0141",
+    "gmmlu-en-12242",
+    "aya-145516",
+    "clinc-1292",
+    "csqa-7450",
+    "fw-00342",
+    "fw2-ar-0045",
+    "gmmlu-ar-901",
+    "aya-770",
+    "clinc-14558",
+    "csqa-4080",
+    "fw-02083",
+    "fw2-de-0237",
+    "gmmlu-de-559",
+    "aya-165734",
+    "clinc-3423",
+    "csqa-4308",
+    "fw-02952",
+    "fw2-ar-0018",
+    "gmmlu-en-9446",
+    "aya-22791",
+    "clinc-3812",
+    "csqa-1247",
+    "fw-00497",
+    "fw2-de-0096",
+    "gmmlu-ar-1403",
+    "aya-116811",
+    "clinc-11869",
+    "csqa-6228",
+    "fw-00728",
+    "fw2-ar-0210",
+    "gmmlu-de-12570",
+    "aya-89886",
+    "clinc-4351",
+    "csqa-7647",
+    "fw-00625",
+    "fw2-de-0016",
+    "gmmlu-en-519",
+    "aya-110314",
+    "clinc-3455",
+    "csqa-3296",
+    "fw-02535",
+    "fw2-ar-0229",
+    "gmmlu-ar-1909",
+    "aya-134984",
+    "clinc-5859",
+    "csqa-1071",
+    "fw-02379",
+    "fw2-de-0089",
+    "gmmlu-de-10070",
+    "aya-129608",
+    "clinc-2146",
+    "csqa-7553",
+    "fw-01833"
+  ],
+  "harness_at_run_sha256": "88781a5354ac08c9ff28d5a6acc1c8bc9741dcbf5a623ffc832b4f259f542b1a",
+  "sources": {
+    "aya": 27,
+    "clinc": 27,
+    "csqa": 27,
+    "fineweb": 27,
+    "fineweb2": 26,
+    "gmmlu": 26
+  },
+  "languages": {
+    "acq": 1,
+    "en": 89,
+    "ar": 22,
+    "arb": 1,
+    "de": 22,
+    "ary": 1,
+    "arz": 1,
+    "ben": 1,
+    "ceb": 1,
+    "dan": 1,
+    "deu": 1,
+    "eng": 1,
+    "eus": 1,
+    "fil": 1,
+    "fin": 1,
+    "fra": 1,
+    "gle": 1,
+    "guj": 1,
+    "hat": 1,
+    "hau": 1,
+    "hin": 1,
+    "hun": 1,
+    "ibo": 1,
+    "ind": 1,
+    "ita": 1,
+    "jpn": 1,
+    "kir": 1,
+    "mal": 1,
+    "mar": 1,
+    "nld": 1
+  },
+  "local_teacher": {
+    "model": "Gemma 4 12B Q8_0",
+    "llama_cpp_build": "b11100",
+    "n_ctx": 2048,
+    "population_sha256": "ac8c3a5a6d10f01a051a2fda1092b84fb10fffc68711371c86ec80f794b932fb",
+    "matched_states": 160,
+    "matched_inference_seconds": 78.1904,
+    "matched_inference_median_ms": 467.65,
+    "sustained_states": 600,
+    "sustained_decisions": 3000,
+    "sustained_wall_seconds": 670,
+    "sustained_states_per_second": 0.8955223880597015,
+    "sustained_decisions_per_second": 4.477611940298507,
+    "sustained_rows_sha256": "a8a0705483dd125e0fe27809c1666d32e7a11d29a5dd6788954bf9f92b767eaa",
+    "sustained_inference_seconds": 246.1043,
+    "sustained_cooling_seconds": 365.1252953000512,
+    "sustained_sources": {
+      "fineweb": 526,
+      "clinc": 31,
+      "csqa": 33,
+      "gmmlu": 9,
+      "aya": 1
+    },
+    "sustained_languages": {
+      "en": 599,
+      "eng": 1
+    },
+    "timing_scope": "600 recovered states, includes cooling/checkpoints; excludes model loading and GPU queue",
+    "output": "5 decisions/state; 2 option orders with complete logits per decision"
+  },
+  "trials": [
+    {
+      "name": "trial-1-workers-4",
+      "workers": 4,
+      "wall_seconds": 50.02633030001016,
+      "valid_decisions": 800,
+      "valid_states": 160,
+      "decisions_per_second": 15.991578738683488,
+      "teacher_agreement": 0.82125,
+      "gold_count": 80,
+      "gold_correct": 75,
+      "free_ram_gb_after": 24.762542724609375,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:11:56.744880+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.89345932006836,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17253,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 136,
+              "reasoning_output_tokens": 39
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 9.434184300000197
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:11:56.748527+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.891864776611328,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16763,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 160,
+              "reasoning_output_tokens": 63
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 10.77377109999361
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:11:56.751832+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.889850616455078,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17215,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 151,
+              "reasoning_output_tokens": 54
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 10.236852300004102
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:11:56.754950+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.886516571044922,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17410,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 157,
+              "reasoning_output_tokens": 60
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 10.215284399993834
+        },
+        {
+          "batch_id": 4,
+          "requested_states": 8,
+          "prompt_sha256": "b21b5f0e80a9e1adaf618a9507dfc43233f6c73ca946df89a4754d45fe73977e",
+          "started_utc": "2026-09-26T22:12:06.181843+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.698348999023438,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16720,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 144,
+              "reasoning_output_tokens": 47
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 11.315386100002797
+        },
+        {
+          "batch_id": 5,
+          "requested_states": 8,
+          "prompt_sha256": "51bf611db7674de278d1975edfb47845ec3e216bde21ad1a75186ce76177f4ad",
+          "started_utc": "2026-09-26T22:12:06.972500+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.88573455810547,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17292,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 194,
+              "reasoning_output_tokens": 97
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 11.21903179999208
+        },
+        {
+          "batch_id": 6,
+          "requested_states": 8,
+          "prompt_sha256": "081bfba3080ef29d352ea3b07a113f735682eb28b51d28c90d2a4d00e513772f",
+          "started_utc": "2026-09-26T22:12:06.990595+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.909164428710938,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16579,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 138,
+              "reasoning_output_tokens": 41
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 8.402850900005433
+        },
+        {
+          "batch_id": 7,
+          "requested_states": 8,
+          "prompt_sha256": "ab51caedd3624393326a9c90cdaa642fcf6298802f164af855701ea805b00258",
+          "started_utc": "2026-09-26T22:12:07.526673+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.796680450439453,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16641,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 116,
+              "reasoning_output_tokens": 19
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 7.134492500001215
+        },
+        {
+          "batch_id": 8,
+          "requested_states": 8,
+          "prompt_sha256": "64d1cfccd8dc03bd90f07683f9474f9a0064e968e6116842b54aa38bd03f1c48",
+          "started_utc": "2026-09-26T22:12:14.663605+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.639869689941406,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17326,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 124,
+              "reasoning_output_tokens": 27
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 8.336211999994703
+        },
+        {
+          "batch_id": 9,
+          "requested_states": 8,
+          "prompt_sha256": "43eb1516c44ac247bbbba79012167a741dfe2340b2dfcbb842fc8dfa0924e034",
+          "started_utc": "2026-09-26T22:12:15.395485+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.673542022705078,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16707,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 147,
+              "reasoning_output_tokens": 50
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 35,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 8.285583799995948
+        },
+        {
+          "batch_id": 10,
+          "requested_states": 8,
+          "prompt_sha256": "3561877709386a42f5cb8dd62e2145f1ce6a7beae6c785b2f6ce871e29458d33",
+          "started_utc": "2026-09-26T22:12:17.505416+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.584823608398438,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16558,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 95,
+              "reasoning_output_tokens": 0
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 7.579777799997828
+        },
+        {
+          "batch_id": 11,
+          "requested_states": 8,
+          "prompt_sha256": "55271738c903f97daf4706529c76b99996a2120d00620caa8cbc92574c574e37",
+          "started_utc": "2026-09-26T22:12:18.193526+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.63006591796875,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16967,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 145,
+              "reasoning_output_tokens": 48
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 8.480525100007071
+        },
+        {
+          "batch_id": 12,
+          "requested_states": 8,
+          "prompt_sha256": "6f172642773533fd5c639da24535796a3899e533009d6bc146c0ec4df3bb0e95",
+          "started_utc": "2026-09-26T22:12:23.001972+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.39133071899414,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16794,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 123,
+              "reasoning_output_tokens": 26
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 8.378591000000597
+        },
+        {
+          "batch_id": 13,
+          "requested_states": 8,
+          "prompt_sha256": "1c56368034259f65a21a38d9d2f4f0044cda22cf77a485e4ce65f23dc6dd0f46",
+          "started_utc": "2026-09-26T22:12:23.683633+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.414623260498047,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16479,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 95,
+              "reasoning_output_tokens": 0
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 7.563735000003362
+        },
+        {
+          "batch_id": 14,
+          "requested_states": 8,
+          "prompt_sha256": "a3ed88a533fb8c9303e64a0b48180845262186958a8ddeccb00c46a5d6524deb",
+          "started_utc": "2026-09-26T22:12:25.087199+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.31517791748047,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16673,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 177,
+              "reasoning_output_tokens": 80
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 10.155943299992941
+        },
+        {
+          "batch_id": 15,
+          "requested_states": 8,
+          "prompt_sha256": "df5d6a07297533bee0ef5dacee46d1d67fd86146021901fdae6381d39e5ea3fe",
+          "started_utc": "2026-09-26T22:12:26.676387+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.353382110595703,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17064,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 120,
+              "reasoning_output_tokens": 23
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 9.023285200004466
+        },
+        {
+          "batch_id": 16,
+          "requested_states": 8,
+          "prompt_sha256": "36cbbf34133216aea7dbf3466f0ac085e8392bc6560426bc28effc37e5c94417",
+          "started_utc": "2026-09-26T22:12:31.250265+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.051311492919922,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16367,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 106,
+              "reasoning_output_tokens": 9
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 35,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 7.75644569999713
+        },
+        {
+          "batch_id": 17,
+          "requested_states": 8,
+          "prompt_sha256": "6f525742f49aa1c3aa48b06a01ceceab27c2ec8991e24a02bffcf04098056300",
+          "started_utc": "2026-09-26T22:12:31.383189+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.138904571533203,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17086,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 172,
+              "reasoning_output_tokens": 75
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 9.641442399995867
+        },
+        {
+          "batch_id": 18,
+          "requested_states": 8,
+          "prompt_sha256": "8e2d643d58d63a577715bc029268b77fc9c3fbbff17e03d831169afe62d5ed57",
+          "started_utc": "2026-09-26T22:12:35.246103+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.008228302001953,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17103,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 152,
+              "reasoning_output_tokens": 55
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 35,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 9.951780600007623
+        },
+        {
+          "batch_id": 19,
+          "requested_states": 8,
+          "prompt_sha256": "48ae5800129a18a7e798da34232e92200ae0d33928155b57f7d4af1fb41ddcdc",
+          "started_utc": "2026-09-26T22:12:35.701846+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.00384521484375,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16943,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 217,
+              "reasoning_output_tokens": 120
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 11.066290399990976
+        }
+      ]
+    },
+    {
+      "name": "trial-2-workers-8",
+      "workers": 8,
+      "wall_seconds": 35.85485440000775,
+      "valid_decisions": 800,
+      "valid_states": 160,
+      "decisions_per_second": 22.312180969275587,
+      "teacher_agreement": 0.82125,
+      "gold_count": 80,
+      "gold_correct": 74,
+      "free_ram_gb_after": 25.214004516601562,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:12:46.774992+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.760906219482422,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17253,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 157,
+              "reasoning_output_tokens": 60
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 13.772680900001433
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:12:46.779954+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.764820098876953,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16763,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 147,
+              "reasoning_output_tokens": 50
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 13.21302859998832
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:12:46.783729+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.762340545654297,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17319,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 184,
+              "reasoning_output_tokens": 87
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 15.263867799993022
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:12:46.787843+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.755455017089844,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17410,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 135,
+              "reasoning_output_tokens": 38
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 12.076388400004362
+        },
+        {
+          "batch_id": 4,
+          "requested_states": 8,
+          "prompt_sha256": "b21b5f0e80a9e1adaf618a9507dfc43233f6c73ca946df89a4754d45fe73977e",
+          "started_utc": "2026-09-26T22:12:46.795212+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.747650146484375,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16824,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 133,
+              "reasoning_output_tokens": 36
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 12.873021500010509
+        },
+        {
+          "batch_id": 5,
+          "requested_states": 8,
+          "prompt_sha256": "51bf611db7674de278d1975edfb47845ec3e216bde21ad1a75186ce76177f4ad",
+          "started_utc": "2026-09-26T22:12:46.802649+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.737682342529297,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17188,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 166,
+              "reasoning_output_tokens": 69
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 9.717411000005086
+        },
+        {
+          "batch_id": 6,
+          "requested_states": 8,
+          "prompt_sha256": "081bfba3080ef29d352ea3b07a113f735682eb28b51d28c90d2a4d00e513772f",
+          "started_utc": "2026-09-26T22:12:46.806642+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.74359130859375,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16579,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 123,
+              "reasoning_output_tokens": 26
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 13.715001799995662
+        },
+        {
+          "batch_id": 7,
+          "requested_states": 8,
+          "prompt_sha256": "ab51caedd3624393326a9c90cdaa642fcf6298802f164af855701ea805b00258",
+          "started_utc": "2026-09-26T22:12:46.812318+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.742061614990234,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16641,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 155,
+              "reasoning_output_tokens": 58
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 14.615425399999367
+        },
+        {
+          "batch_id": 8,
+          "requested_states": 8,
+          "prompt_sha256": "64d1cfccd8dc03bd90f07683f9474f9a0064e968e6116842b54aa38bd03f1c48",
+          "started_utc": "2026-09-26T22:12:56.523499+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.451629638671875,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17326,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 130,
+              "reasoning_output_tokens": 33
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 13.106259700012743
+        },
+        {
+          "batch_id": 9,
+          "requested_states": 8,
+          "prompt_sha256": "43eb1516c44ac247bbbba79012167a741dfe2340b2dfcbb842fc8dfa0924e034",
+          "started_utc": "2026-09-26T22:12:58.866530+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.609237670898438,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16707,
+              "cached_input_tokens": 11776,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 162,
+              "reasoning_output_tokens": 65
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 35,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 16.950612100001308
+        },
+        {
+          "batch_id": 10,
+          "requested_states": 8,
+          "prompt_sha256": "3561877709386a42f5cb8dd62e2145f1ce6a7beae6c785b2f6ce871e29458d33",
+          "started_utc": "2026-09-26T22:12:59.670447+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.592666625976562,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16662,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 182,
+              "reasoning_output_tokens": 85
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 11.290214199994807
+        },
+        {
+          "batch_id": 11,
+          "requested_states": 8,
+          "prompt_sha256": "55271738c903f97daf4706529c76b99996a2120d00620caa8cbc92574c574e37",
+          "started_utc": "2026-09-26T22:12:59.995638+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.50094985961914,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16967,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 137,
+              "reasoning_output_tokens": 40
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 12.055833200007328
+        },
+        {
+          "batch_id": 12,
+          "requested_states": 8,
+          "prompt_sha256": "6f172642773533fd5c639da24535796a3899e533009d6bc146c0ec4df3bb0e95",
+          "started_utc": "2026-09-26T22:13:00.524493+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.48959732055664,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16794,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 121,
+              "reasoning_output_tokens": 24
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 10.320896899997024
+        },
+        {
+          "batch_id": 13,
+          "requested_states": 8,
+          "prompt_sha256": "1c56368034259f65a21a38d9d2f4f0044cda22cf77a485e4ce65f23dc6dd0f46",
+          "started_utc": "2026-09-26T22:13:00.550171+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.532333374023438,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16583,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 121,
+              "reasoning_output_tokens": 24
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 12.054473700001836
+        },
+        {
+          "batch_id": 14,
+          "requested_states": 8,
+          "prompt_sha256": "a3ed88a533fb8c9303e64a0b48180845262186958a8ddeccb00c46a5d6524deb",
+          "started_utc": "2026-09-26T22:13:01.438033+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.542339324951172,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16777,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 148,
+              "reasoning_output_tokens": 51
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 10.398145900006057
+        },
+        {
+          "batch_id": 15,
+          "requested_states": 8,
+          "prompt_sha256": "df5d6a07297533bee0ef5dacee46d1d67fd86146021901fdae6381d39e5ea3fe",
+          "started_utc": "2026-09-26T22:13:02.050205+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.591907501220703,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17064,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 141,
+              "reasoning_output_tokens": 44
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 11.602530699994531
+        },
+        {
+          "batch_id": 16,
+          "requested_states": 8,
+          "prompt_sha256": "36cbbf34133216aea7dbf3466f0ac085e8392bc6560426bc28effc37e5c94417",
+          "started_utc": "2026-09-26T22:13:09.631950+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.714889526367188,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16263,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 95,
+              "reasoning_output_tokens": 0
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 7.182473599998048
+        },
+        {
+          "batch_id": 17,
+          "requested_states": 8,
+          "prompt_sha256": "6f525742f49aa1c3aa48b06a01ceceab27c2ec8991e24a02bffcf04098056300",
+          "started_utc": "2026-09-26T22:13:10.848565+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.64447021484375,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17086,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 191,
+              "reasoning_output_tokens": 94
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 11.775947400004952
+        },
+        {
+          "batch_id": 18,
+          "requested_states": 8,
+          "prompt_sha256": "8e2d643d58d63a577715bc029268b77fc9c3fbbff17e03d831169afe62d5ed57",
+          "started_utc": "2026-09-26T22:13:10.963635+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.670482635498047,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17103,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 134,
+              "reasoning_output_tokens": 37
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 8.804278899988276
+        },
+        {
+          "batch_id": 19,
+          "requested_states": 8,
+          "prompt_sha256": "48ae5800129a18a7e798da34232e92200ae0d33928155b57f7d4af1fb41ddcdc",
+          "started_utc": "2026-09-26T22:13:11.838325+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 24.589679718017578,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16943,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 153,
+              "reasoning_output_tokens": 56
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 9.40310640000098
+        }
+      ]
+    },
+    {
+      "name": "trial-3-workers-20",
+      "workers": 20,
+      "wall_seconds": 35.00314879999496,
+      "valid_decisions": 800,
+      "valid_states": 160,
+      "decisions_per_second": 22.855086682947654,
+      "teacher_agreement": 0.82,
+      "gold_count": 80,
+      "gold_correct": 75,
+      "free_ram_gb_after": 25.226768493652344,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:13:22.631882+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.2120361328125,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17253,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 151,
+              "reasoning_output_tokens": 54
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 21.755138499996974
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:13:22.635879+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.206382751464844,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16763,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 164,
+              "reasoning_output_tokens": 67
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 23.57621489999292
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:13:22.638061+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.20501708984375,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17319,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 133,
+              "reasoning_output_tokens": 36
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 20.120693100005155
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:13:22.645448+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201358795166016,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17410,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 146,
+              "reasoning_output_tokens": 49
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 34.98372129999916
+        },
+        {
+          "batch_id": 4,
+          "requested_states": 8,
+          "prompt_sha256": "b21b5f0e80a9e1adaf618a9507dfc43233f6c73ca946df89a4754d45fe73977e",
+          "started_utc": "2026-09-26T22:13:22.643749+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201419830322266,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16720,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 134,
+              "reasoning_output_tokens": 37
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 34.36023900000146
+        },
+        {
+          "batch_id": 5,
+          "requested_states": 8,
+          "prompt_sha256": "51bf611db7674de278d1975edfb47845ec3e216bde21ad1a75186ce76177f4ad",
+          "started_utc": "2026-09-26T22:13:22.662902+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201950073242188,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17292,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 235,
+              "reasoning_output_tokens": 138
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 31.446242300007725
+        },
+        {
+          "batch_id": 6,
+          "requested_states": 8,
+          "prompt_sha256": "081bfba3080ef29d352ea3b07a113f735682eb28b51d28c90d2a4d00e513772f",
+          "started_utc": "2026-09-26T22:13:22.673997+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201702117919922,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16579,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 125,
+              "reasoning_output_tokens": 28
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 24.9014104000089
+        },
+        {
+          "batch_id": 7,
+          "requested_states": 8,
+          "prompt_sha256": "ab51caedd3624393326a9c90cdaa642fcf6298802f164af855701ea805b00258",
+          "started_utc": "2026-09-26T22:13:22.669004+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201885223388672,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16745,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 167,
+              "reasoning_output_tokens": 70
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 29,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 24.85620789999666
+        },
+        {
+          "batch_id": 8,
+          "requested_states": 8,
+          "prompt_sha256": "64d1cfccd8dc03bd90f07683f9474f9a0064e968e6116842b54aa38bd03f1c48",
+          "started_utc": "2026-09-26T22:13:22.664741+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.201950073242188,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17430,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 152,
+              "reasoning_output_tokens": 55
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 29.70273660001112
+        },
+        {
+          "batch_id": 9,
+          "requested_states": 8,
+          "prompt_sha256": "43eb1516c44ac247bbbba79012167a741dfe2340b2dfcbb842fc8dfa0924e034",
+          "started_utc": "2026-09-26T22:13:22.671773+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.202312469482422,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16811,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 139,
+              "reasoning_output_tokens": 42
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 25.628092800005106
+        },
+        {
+          "batch_id": 10,
+          "requested_states": 8,
+          "prompt_sha256": "3561877709386a42f5cb8dd62e2145f1ce6a7beae6c785b2f6ce871e29458d33",
+          "started_utc": "2026-09-26T22:13:22.682315+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.199172973632812,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16662,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 180,
+              "reasoning_output_tokens": 83
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 33.566037599986885
+        },
+        {
+          "batch_id": 11,
+          "requested_states": 8,
+          "prompt_sha256": "55271738c903f97daf4706529c76b99996a2120d00620caa8cbc92574c574e37",
+          "started_utc": "2026-09-26T22:13:22.688804+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.19464111328125,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17071,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 158,
+              "reasoning_output_tokens": 61
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 21.321031600004062
+        },
+        {
+          "batch_id": 12,
+          "requested_states": 8,
+          "prompt_sha256": "6f172642773533fd5c639da24535796a3899e533009d6bc146c0ec4df3bb0e95",
+          "started_utc": "2026-09-26T22:13:22.695926+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.188644409179688,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16794,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 120,
+              "reasoning_output_tokens": 23
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 36,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 25.42631650000112
+        },
+        {
+          "batch_id": 13,
+          "requested_states": 8,
+          "prompt_sha256": "1c56368034259f65a21a38d9d2f4f0044cda22cf77a485e4ce65f23dc6dd0f46",
+          "started_utc": "2026-09-26T22:13:22.705074+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.18545150756836,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16583,
+              "cached_input_tokens": 11904,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 127,
+              "reasoning_output_tokens": 30
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 24.91117039999517
+        },
+        {
+          "batch_id": 14,
+          "requested_states": 8,
+          "prompt_sha256": "a3ed88a533fb8c9303e64a0b48180845262186958a8ddeccb00c46a5d6524deb",
+          "started_utc": "2026-09-26T22:13:22.714454+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.170059204101562,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16777,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 157,
+              "reasoning_output_tokens": 60
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 34.317717000012635
+        },
+        {
+          "batch_id": 15,
+          "requested_states": 8,
+          "prompt_sha256": "df5d6a07297533bee0ef5dacee46d1d67fd86146021901fdae6381d39e5ea3fe",
+          "started_utc": "2026-09-26T22:13:22.717056+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.168216705322266,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17168,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 144,
+              "reasoning_output_tokens": 47
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 28.787107299998752
+        },
+        {
+          "batch_id": 16,
+          "requested_states": 8,
+          "prompt_sha256": "36cbbf34133216aea7dbf3466f0ac085e8392bc6560426bc28effc37e5c94417",
+          "started_utc": "2026-09-26T22:13:22.727965+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.166152954101562,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16367,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 95,
+              "reasoning_output_tokens": 0
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 35,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 23.91807539999718
+        },
+        {
+          "batch_id": 17,
+          "requested_states": 8,
+          "prompt_sha256": "6f525742f49aa1c3aa48b06a01ceceab27c2ec8991e24a02bffcf04098056300",
+          "started_utc": "2026-09-26T22:13:22.732155+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.164592742919922,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17086,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 155,
+              "reasoning_output_tokens": 58
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 29.547904899998684
+        },
+        {
+          "batch_id": 18,
+          "requested_states": 8,
+          "prompt_sha256": "8e2d643d58d63a577715bc029268b77fc9c3fbbff17e03d831169afe62d5ed57",
+          "started_utc": "2026-09-26T22:13:22.743621+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.145458221435547,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17207,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 132,
+              "reasoning_output_tokens": 35
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "wall_seconds": 23.155731699996977
+        },
+        {
+          "batch_id": 19,
+          "requested_states": 8,
+          "prompt_sha256": "48ae5800129a18a7e798da34232e92200ae0d33928155b57f7d4af1fb41ddcdc",
+          "started_utc": "2026-09-26T22:13:22.781588+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "free_ram_gb_at_start": 25.160320281982422,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17047,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 150,
+              "reasoning_output_tokens": 53
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "wall_seconds": 30.604043200000888
+        }
+      ]
+    }
+  ],
+  "raw_dir": "runs\\pilot\\codex_teacher_scaling_20260927",
+  "notes": [
+    "Codex returns 5 hard labels/state, one option order; Gemma returns logits for two orders.",
+    "Codex trial wall includes process startup, request, output parsing and validation.",
+    "Gemma matched inference excludes cooling; its separate 600-state wall baseline includes cooling.",
+    "Worker schedule: [4, 8, 20]. Cache usage is recorded; this is a small test.",
+    "Independent fresh Codex processes act as workers, not persistent conversation subagents.",
+    "Benchmark labels are never added to the training data.",
+    "All local Codex clients inherited CPU affinity [23]; remote model computation was not restricted by that local affinity.",
+    "Twenty versus eight workers is not a measured account throughput ceiling; local startup/processing and service conditions may contribute."
+  ],
+  "status": "complete",
+  "unique_gold_decisions": 80,
+  "teacher_gold_correct": 68,
+  "worker_summaries": [
+    {
+      "workers": 4,
+      "trials": 1,
+      "valid_decisions": 800,
+      "wall_seconds_sum": 50.02633030001016,
+      "decisions_per_second": 15.991578738683488,
+      "usage": {
+        "input_tokens": 337940,
+        "cached_input_tokens": 51712,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2869,
+        "reasoning_output_tokens": 933
+      }
+    },
+    {
+      "workers": 8,
+      "trials": 1,
+      "valid_decisions": 800,
+      "wall_seconds_sum": 35.85485440000775,
+      "decisions_per_second": 22.312180969275587,
+      "usage": {
+        "input_tokens": 338252,
+        "cached_input_tokens": 84480,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2915,
+        "reasoning_output_tokens": 977
+      }
+    },
+    {
+      "workers": 20,
+      "trials": 1,
+      "valid_decisions": 800,
+      "wall_seconds_sum": 35.00314879999496,
+      "decisions_per_second": 22.855086682947654,
+      "usage": {
+        "input_tokens": 339084,
+        "cached_input_tokens": 96000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2964,
+        "reasoning_output_tokens": 1026
+      }
+    }
+  ],
+  "parallel_speedup_over_serial": 1.4291951442956286,
+  "gpu_observed_during_benchmark": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "driver_version": "592.01",
+    "memory_total_mib": 16303
+  }
+}

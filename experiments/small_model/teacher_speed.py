@@ -1,4 +1,4 @@
-"""Matched hard-label throughput: one versus four Codex workers and the saved GPU teacher.
+"""Matched hard-label throughput across Codex worker counts and the saved GPU teacher.
 
 Network workers never load a GPU model or alter the pilot's teacher shards. Raw prompts and
 responses stay under runs/pilot; small manifests and measured results go under results/pilot.
@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict, deque
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -166,7 +166,8 @@ def write_report(results: dict, samples: list[dict], output: Path) -> None:
              "Independent Codex processes used the existing ChatGPT login. No GPU work was launched for Codex.", "",
              f"| Workers | Trial times for {results['decisions']} decisions | Pooled decisions/s | Valid outputs |",
              "|---|---|---:|---:|"]
-    for workers in (1, 4):
+    worker_counts = sorted({t["workers"] for t in results["trials"]})
+    for workers in worker_counts:
         trials = [t for t in results["trials"] if t["workers"] == workers]
         elapsed = sum(t["wall_seconds"] for t in trials)
         valid = sum(t["valid_decisions"] for t in trials)
@@ -181,15 +182,18 @@ def write_report(results: dict, samples: list[dict], output: Path) -> None:
                           "usage": dict(usage)})
         times = ", ".join(f"{t['wall_seconds']:.2f} s" for t in trials)
         lines.append(f"| {workers} | {times} | {valid / elapsed:.2f} | {valid}/{len(trials) * results['decisions']} |")
-    speedup = summaries[1]["decisions_per_second"] / summaries[0]["decisions_per_second"]
+    speedup = summaries[-1]["decisions_per_second"] / summaries[0]["decisions_per_second"]
     baseline = results["local_teacher"]
     gpu = results.get("gpu_observed_during_benchmark", {}).get("name", "not recorded")
     exact_seconds = baseline["matched_inference_seconds"]
-    lines += ["", f"Four workers delivered **{speedup:.2f}x** the throughput of one worker in this test.",
+    lines += ["", f"{worker_counts[-1]} workers delivered **{speedup:.2f}x** the throughput of {worker_counts[0]} workers in this test.",
               "Timing includes process startup, model requests, parsing, and answer validation. No request failed or used tools.",
-              "Worker order was 1, 4, 4, 1; raw cache and token usage is recorded in the JSON manifest.",
-              f"Each worker-count arm used {summaries[0]['usage'].get('cached_input_tokens', 0):,} / "
-              f"{summaries[1]['usage'].get('cached_input_tokens', 0):,} cached input tokens (one / four workers respectively).", "",
+              "Worker order was " + ", ".join(str(t["workers"]) for t in results["trials"]) + "; raw token usage is in the manifest.",
+              "Cached input tokens by worker count: " + ", ".join(
+                  f"{s['workers']}: {s['usage'].get('cached_input_tokens', 0):,}" for s in summaries) + ".",
+              "Cache and service conditions can change between trials; this is a short scaling test.",
+              f"Local client CPU affinity: {results.get('local_cpu_affinity', 'not recorded')}. "
+              "Local startup/processing can limit scaling; these results do not establish a provider concurrency ceiling.", "",
               "## GPU comparison", "",
               f"Gemma 4 12B Q8_0 took **{exact_seconds:.4f} seconds of saved inference** for these same {results['states']} states "
               f"({results['decisions'] / exact_seconds:.2f} decisions/s). That timing excludes cooling, loading, and queueing.",
@@ -230,7 +234,7 @@ def write_report(results: dict, samples: list[dict], output: Path) -> None:
 
 
 def run_batch(executable: str, run_dir: Path, trial: str, batch_id: int, batch: list[dict],
-              model: str, effort: str, timeout: float) -> dict:
+              model: str, effort: str, timeout: float, min_free_gb: float = 8.0) -> dict:
     prefix = run_dir / f"{trial}-batch-{batch_id}"
     prompt = prompt_for(batch)
     prefix.with_suffix(".prompt.txt").write_text(prompt, encoding="utf-8")
@@ -242,12 +246,16 @@ def run_batch(executable: str, run_dir: Path, trial: str, batch_id: int, batch: 
             "-c", "features.multi_agent=false", "-c", "features.apps=false",
             "-c", 'web_search="disabled"', "-"]
     env = os.environ.copy()
-    env.update({"OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"})
+    env.update({"OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "RAYON_NUM_THREADS": "1"})
     flags = (subprocess.CREATE_NO_WINDOW | subprocess.BELOW_NORMAL_PRIORITY_CLASS) if os.name == "nt" else 0
     started = time.perf_counter()
     result = {"batch_id": batch_id, "requested_states": len(batch), "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
               "started_utc": datetime.now(timezone.utc).isoformat(), "valid_states": 0, "valid_decisions": 0}
     try:
+        import psutil
+        result["free_ram_gb_at_start"] = psutil.virtual_memory().available / 2**30
+        if result["free_ram_gb_at_start"] < min_free_gb:
+            raise ValueError("Insufficient free RAM to start another network worker")
         proc = subprocess.run(args, input=prompt, text=True, encoding="utf-8", capture_output=True,
                               cwd=run_dir / "empty", env=env, timeout=timeout, creationflags=flags)
         prefix.with_suffix(".events.jsonl").write_text(proc.stdout, encoding="utf-8")
@@ -283,6 +291,28 @@ def run_batch(executable: str, run_dir: Path, trial: str, batch_id: int, batch: 
     return result
 
 
+def run_batches(batches: list[list[dict]], workers: int, call) -> list[dict]:
+    """Bound active requests, and stop submitting new ones after any failure."""
+    results = []
+    todo = iter(enumerate(batches))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        initial = [next(todo) for _ in range(min(workers, len(batches)))]
+        pending = {executor.submit(call, index, batch) for index, batch in initial}
+        failed = False
+        while pending:
+            done, pending = wait(pending, return_when=FIRST_COMPLETED)
+            for future in done:
+                row = future.result()
+                results.append(row)
+                failed = failed or bool(row.get("error"))
+            if not failed:
+                for _ in done:
+                    item = next(todo, None)
+                    if item is not None:
+                        pending.add(executor.submit(call, *item))
+    return results
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--codex", default=shutil.which("codex"))
@@ -291,6 +321,9 @@ def main() -> int:
     parser.add_argument("--states", type=int, default=32)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--timeout", type=float, default=180)
+    parser.add_argument("--workers", nargs="+", type=int, default=[1, 4, 4, 1])
+    parser.add_argument("--cpu-cores", type=int, default=0, help="Bound local runner and inherited client CPU affinity")
+    parser.add_argument("--min-free-gb", type=float, default=8.0)
     parser.add_argument("--name", default="codex_teacher_speed")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--report-only", action="store_true")
@@ -304,6 +337,12 @@ def main() -> int:
         return 0
     if not args.codex:
         parser.error("Specify the Codex executable with --codex")
+    if not 1 <= args.states <= 1625 or args.batch_size < 1 or not all(1 <= n <= 20 for n in args.workers):
+        parser.error("Use 1..1625 states, a positive batch size, and 1..20 workers per trial")
+    import psutil
+    if args.cpu_cores:
+        proc = psutil.Process()
+        proc.cpu_affinity(proc.cpu_affinity()[-args.cpu_cores:])
     run_dir = RUNS / args.name
     if run_dir.exists():
         parser.error("Run name already exists; use a new --name to preserve raw results")
@@ -319,6 +358,8 @@ def main() -> int:
     results = {"created_utc": datetime.now(timezone.utc).isoformat(), "model_requested": args.model,
                "model_fallback_allowed": False, "reasoning_effort": args.effort, "cli_version": version,
                "transport": "codex exec, existing ChatGPT login", "batch_size": args.batch_size,
+               "worker_schedule": args.workers, "local_cpu_affinity": psutil.Process().cpu_affinity(),
+               "free_ram_gb_before": psutil.virtual_memory().available / 2**30,
                "states": len(samples), "decisions": sum(len(s["references"]) for s in samples),
                "sample_sha256": digest(samples), "ids": [s["id"] for s in samples],
                "harness_at_run_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -327,7 +368,7 @@ def main() -> int:
                "notes": ["Codex returns 5 hard labels/state, one option order; Gemma returns logits for two orders.",
                          "Codex trial wall includes process startup, request, output parsing and validation.",
                          "Gemma matched inference excludes cooling; its separate 600-state wall baseline includes cooling.",
-                         "Serial/parallel order is counterbalanced: 1,4,4,1. Cache usage is recorded; this is a small test.",
+                         f"Worker schedule: {args.workers}. Cache usage is recorded; this is a small test.",
                          "Independent fresh Codex processes act as workers, not persistent conversation subagents.",
                          "Benchmark labels are never added to the training data."]}
     output = RESULTS / f"{args.name}.json"
@@ -335,22 +376,11 @@ def main() -> int:
     if args.prepare_only:
         print(json.dumps({"sample": str(run_dir / "sample.json"), "states": len(samples)}))
         return 0
-    for trial_index, workers in enumerate((1, 4, 4, 1)):
+    for trial_index, workers in enumerate(args.workers):
         trial_name = f"trial-{trial_index + 1}-workers-{workers}"
         started = time.perf_counter()
-        rows = []
-        with ThreadPoolExecutor(max_workers=workers) as executor:
-            # Single worker submits one request at a time and stops immediately on a failure.
-            if workers == 1:
-                for index, batch in enumerate(batches):
-                    row = run_batch(args.codex, run_dir, trial_name, index, batch, args.model, args.effort, args.timeout)
-                    rows.append(row)
-                    if row.get("error"):
-                        break
-            else:
-                jobs = [executor.submit(run_batch, args.codex, run_dir, trial_name, index, batch,
-                                        args.model, args.effort, args.timeout) for index, batch in enumerate(batches)]
-                rows = [job.result() for job in as_completed(jobs)]
+        rows = run_batches(batches, workers, lambda index, batch: run_batch(
+            args.codex, run_dir, trial_name, index, batch, args.model, args.effort, args.timeout, args.min_free_gb))
         elapsed = time.perf_counter() - started
         valid = sum(r["valid_decisions"] for r in rows)
         gold = sum(r.get("gold_count", 0) for r in rows)
@@ -358,7 +388,9 @@ def main() -> int:
                  "valid_states": sum(r["valid_states"] for r in rows), "decisions_per_second": valid / elapsed,
                  "teacher_agreement": sum(r.get("teacher_agreed", 0) for r in rows) / valid if valid else None,
                  "gold_count": gold, "gold_correct": sum(r.get("gold_correct", 0) for r in rows),
-                 "batches": sorted(rows, key=lambda r: r["batch_id"])}
+                 "free_ram_gb_after": psutil.virtual_memory().available / 2**30,
+                 "batches": [{k: v for k, v in row.items() if k != "labels"}
+                             for row in sorted(rows, key=lambda r: r["batch_id"])]}
         results["trials"].append(trial)
         results["status"] = "failed" if any(r.get("error") for r in rows) else "running"
         write_json(output, results)
