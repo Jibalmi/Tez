@@ -230,6 +230,20 @@ decisive word. An instant (R0) action's first dispatch lands 34 ms p50 after it,
 
 The recogniser's emission lag, not the decision, sets the latency.
 
+**Recognisers that emit earlier.**
+
+- **faster-whisper base.en**, re-decoding the buffer every 200 ms:
+  - completes the decisive word 40 ms before it ends (mean, paced), at a WER of 9.2–10.4 %;
+  - composed with the live 12B, the R0 first action lands at 45.5 ms p50 with back-to-back step times, and 54 ms with
+    its paced step times (80 ms per step);
+  - 47 % of those actions fire before the word ends, but the p95 is about 1.2 s.
+- **parakeet_realtime_eou_120m-v1**, through NeMo's cache-aware step:
+  - completes the word 52 ms after it ends (mean), at a WER of 8.8 %;
+  - it has not been run end to end yet.
+
+**Co-loaded, measured directly.** The Nemotron worker and the 12B Q4_K_M in process together use 10.6 GB of VRAM,
+desktop included. The recogniser's step rises to 8.9 ms p50 when it shares the GPU with the 12B.
+
 **Clean-up.** The earlier 0.905–0.909 on Tez's set used the voice-specific prompt of `run_voice_fast.py`. The
 runtime's generic question-first prompt reads 0.874–0.879 on the same rows.
 

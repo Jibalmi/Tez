@@ -11,9 +11,18 @@ only with the GPU below 70 °C and no thermal slowdown; a run that saw a slowdow
 in-process backend with Tez's own answers and temperatures. On the replay sets, the decision itself is fast (12B
 Q4_K_M in process: 29 ms p50 per word; the cut 4B probe: 21 ms). The ASR step is cheap (Nemotron Speech Streaming
 at 80 ms: 4.7 ms per chunk), and the dispatch is free (a few microseconds). The 50 ms word-to-action target is **not**
-met. The recogniser emits the decisive word about 210 ms after the word ends (mean 216 ms, against a 20 ms go/no-go),
-and that lag, not compute, sets the latency. Composed end to end, an instant (R0) command's first action lands 173 ms
-p50 after its decisive word, 30 % of them before it ends and 36 % within 50 ms. Accuracy holds at Q4 (0.921 on the
+met with the streaming recogniser the design picked. Nemotron emits the decisive word about 210 ms after the word
+ends (mean 216 ms, against a 20 ms go/no-go), and that lag, not compute, sets the latency. Composed end to end, an
+instant (R0) command's first action lands 173 ms p50 after its decisive word, 30 % of them before it ends and 36 %
+within 50 ms. The last job changed the picture:
+- **Re-decoding recognisers emit early.** faster-whisper base.en re-decoding the buffer every 200 ms completes the
+  decisive word 40 ms *before* it ends (mean, paced). End to end, that puts the R0 first action at 45.5–54 ms p50, 47 %
+  of them before the word ends, at the price of a higher WER (9–10 %), flicker, and a long tail (p95 about 1.2 s).
+- **Parakeet realtime EOU 120M emits early too.** Run through NeMo, this small cache-aware model completes the word
+  52 ms after it ends, and 59 % of its prefixes arrive before the end, at a WER of 8.8 %. It has not been run end to
+  end yet.
+- **The stack fits the VRAM gate, measured directly.** The recogniser and the 12B Q4_K_M loaded together take
+  10.6 GB of the 14.5 GB budget. Accuracy holds at Q4 (0.921 on the
 Theioma set, within half a point of Q8). Harmful early actions on the Theioma set are too many (6.7 % with a perfect
 recogniser), mostly from overlapping tools in its schema. Section 5 gives the gate table; section 6 lists what would
 fix each failure and what Phase 2 needs.
@@ -198,6 +207,11 @@ The columns:
 | same, 160 ms (tez220) | 160 ms | 0.042 | 5.23 (6.71) | 247 / 250 / 470 | 188 / 170, 11 % | 69->76 |
 | faster-whisper base.en fp16, re-decoding the buffer every 200 ms, back to back (theioma) [throttled] | 200 ms | 0.104 | 42.6 (65.7) | −11 / −30 / 314 | −71 / −80, 64 % | 65->89 |
 | same, paced in real time, first 120 utterances (theioma) [loaded: CPU 50 %] | 200 ms | 0.092 | 80.2 (133.6) | **−40 / −45 / 183** | −132 / −130, 74 % | 64->69 |
+| NVIDIA parakeet_realtime_eou_120m-v1, NeMo 2.7.3 PyTorch cache-aware step, right context 1 (theioma) [throttled] | 160 ms | 0.088 | 49.3 (69.0)* | **52 / 60 / 318** | −42 / −33, 59 % | 66->87 |
+
+\* Parakeet's compute comes from this harness's adapter, which recomputes the features of the whole buffer at
+every step, on a GPU that throttled. It is not what an efficient runner would spend. NeMo-Speech.cpp does not run this
+model.
 
 **Measured in this spike.**
 
@@ -226,8 +240,15 @@ The columns:
   Windows, but only on the CPU wheel. Light CPU checks, not recorded runs (so no numbers are quoted), were far
   slower per step than the GPU path and no earlier in emission, so no arm was run. The rules keep CPU recognisers out
   of the GPU phase, and no GPU sherpa-onnx wheel for Windows was available to try.
-- **Parakeet realtime EOU 120M.** It runs through NeMo's PyTorch step, and on the CPU check it emits `<EOU>`
-  (`experiments/voice_asr.py` `nemo:`). Its GPU arm is in the not-yet-run last job.
+- **Parakeet realtime EOU 120M emits much earlier than the 0.6B Nemotron models.** It runs through NeMo's own
+  PyTorch cache-aware step (`experiments/voice_asr.py` `nemo:`) and emits `<EOU>`. It completes the decisive word
+  52 ms after it ends (mean) against Nemotron's 216 ms, and 59 % of its prefixes arrive before the word ends, with WER
+  0.088. It is the obvious candidate for the next end-to-end run: the recorded emissions exist, so it needs only
+  `--asr replay:results/voice/replay_theioma_asr_parakeet_eou_160_rows.jsonl`. An efficient runner also still has to
+  be chosen: an ONNX export through onnxruntime, or NeMo's own streaming with cached features.
+- **Sharing the GPU slows the recogniser's steps.** With the recogniser and the 12B loaded together (40 utterances,
+  live, a quiet machine at 14 % CPU), Nemotron's step rises from 4.7 ms to 8.9 ms p50 (13.5 p95). Its steps queue
+  behind the 12B's decodes on the one GPU.
 
 ### (b) The decision in process
 
@@ -304,8 +325,10 @@ Each component was measured on its own, with `gpu_lock.py snapshot` after loadin
 | Nemotron recogniser | 1.12 GB |
 | Windows desktop apps (dwm, Code, Chrome, TradingView, explorer) | 1.26 GB |
 
-- **Stack ASR + 12B Q4_K_M in process + desktop:** 10.4 GB, within the 14.5 GB gate (the sum of the measured
-  parts; the co-loaded check is in the not-yet-run last job).
+- **Stack ASR + 12B Q4_K_M in process + desktop, measured co-loaded:** 10.6 GB used in all, within the 14.5 GB
+  gate. This is the recogniser worker 1.12 GB plus the 12B process 8.06 GB plus the desktop apps, at 1.47 GB during
+  this run (`replay_theioma_e2elive_nemotron80_12b_q4km_40.json`, `gpu_warm`). It agrees with the 10.4 GB summed from
+  separate runs. RAM stayed at about 30 GB available.
 - **A second 12B copy does not fit.** An in-process Q4 next to Theioma's shared :8797 server would be
   8.05 + 8.72 + 1.12 + 1.26 = 19.2 GB.
 - **Q8 in process** (13.09 + 1.12 + 1.26 = 15.5 GB) exceeds the gate on its own.
@@ -355,9 +378,32 @@ live 12B Q4_K_M session. The GPU stayed at 65–67 °C; the machine was [loaded]
   committed transcript: 16 tokens per decision at p95 instead of 12. So decide rises to 44.7 ms p50 and 88 ms p95.
 - **Accuracy and safety barely move.** Intent 0.904 against 0.916; harmful actions 34 against 32; out-of-scope false
   actions 7 against 6.
-- **The step compute used here is from job 1's back-to-back run** (43 ms p50). The paced arm measured 80 ms p50 on a
-  cooler, idling GPU under load; that one is being fed through the same composed replay in the follow-up job, so the
-  figure above is the optimistic one until it lands.
+- **Paced step times cost a few milliseconds.** The figures above use job 1's back-to-back step times (43 ms p50).
+  The paced arm's own emissions and step times (80 ms p50: the GPU idles and clocks down between 3–5 decodes a second)
+  were fed through the same composed replay for its 120 utterances (68->74 °C, CPU 28 %):
+  - decisive word end -> decision: 57 ms p50 (319 p95);
+  - R0 first action: 54 ms p50 (1215 p95), 49 % within 50 ms, 47 % before the word ends;
+  - decide 32.9 ms p50 (42 p95);
+  - on the same 120 utterances, back-to-back step times gave 45.5 ms, and Nemotron 173 ms.
+- **Harmful actions depend on the utterances.** On those first 120, which are mostly opens, media keys and pages,
+  harmful actions are:
+
+  | recogniser | harmful |
+  |---|---:|
+  | paced whisper | 24 |
+  | back-to-back whisper | 23 |
+  | Nemotron | 19 |
+  | a perfect recogniser | 10 |
+
+  All come from the same schema overlaps as above.
+
+**Live, co-loaded (the recogniser worker and the 12B in process together, real time, the first 40 utterances, a quiet
+machine: CPU 14 %, GPU 68->74 °C, no slowdown).** This validates the composed replay.
+
+- Decisive word end -> decision: 273 ms p50 (538 p95), against 269 ms composed.
+- Decide: 31.6 ms p50 (35.4 p95).
+- R0 first action: 158 ms p50, against 137 ms composed on the same 40 utterances. The 21 ms difference is GPU
+  contention: the recogniser step takes 8.9 ms instead of 4.7 ms when the 12B shares the GPU.
 
 ## 5. Gates
 
@@ -365,13 +411,13 @@ Phase 1 gates of `theioma-voice-design.md` §4e, and the Phase 2 replay gates fo
 
 | gate | target | measured | verdict |
 |---|---|---|---|
-| ASR step | ≤ 8 ms p50 | Nemotron 80 ms: 4.68 ms p50 (5.79 p95) per chunk | **pass** |
-| emission lag known (go/no-go) | mean ≤ 20 ms for a 50 ms p50 | Nemotron 80 ms: decisive word complete +216 ms mean (p50 208), prefix +128 ms; 186 ms beyond the chunk | **known: no-go** |
+| ASR step | ≤ 8 ms p50 | Nemotron 80 ms: 4.68 ms p50 alone; **8.89 ms p50 co-loaded with the 12B**; whisper re-decode 43–80 ms | **pass alone, fail co-loaded** (by 0.9 ms) |
+| emission lag known (go/no-go) | mean ≤ 20 ms for a 50 ms p50 | Nemotron 80 ms: complete +216 ms mean. **Whisper re-decode: −40 ms paced (−11 back to back).** Parakeet EOU 120M: +52 ms | **known: no-go for Nemotron; go for re-decode** (with its costs: WER, flicker, tail); Parakeet close |
 | decision, fast model | ≤ 10 ms p50 | cut 4B probe 20.4–21.4 ms p50 | **fail** |
 | decision, 12B Q4 | ≤ 20 ms p50 | 28.7–29.4 ms p50 in process; 36.9–37.3 over HTTP | **fail** |
 | intent at Q4 | ≥ 0.90 on Tez's set | tez220 0.874 strict (0.980 then/alt); theioma 0.921 | **fail** on Tez's set (strict), pass on Theioma's |
-| VRAM of the stack | ≤ 14.5 GB | 10.4 GB (ASR + 12B Q4 in process + desktop, summed from separate runs; the co-loaded run is in the last job) | **pass** (as the only 12B; a second copy next to :8797 does not fit) |
-| Phase 2: replay L, R0/R1 | p50 ≤ 50, p95 ≤ 100 ms | R0 first action 173 ms p50, 775 p95 (composed, [loaded]); 33.7 ms p50 with a perfect recogniser | **fail** (the recogniser's lag) |
+| VRAM of the stack | ≤ 14.5 GB | **10.6 GB measured co-loaded** (ASR worker 1.12 + 12B Q4 8.06 + desktop 1.47) | **pass** (as the only 12B; a second copy next to :8797 does not fit) |
+| Phase 2: replay L, R0/R1 | p50 ≤ 50, p95 ≤ 100 ms | R0 first action: Nemotron 173 ms p50 (775 p95) composed, 158 ms live; **whisper re-decode 45.5 ms p50 (back-to-back step times) / 54 ms (paced)**, p95 about 1.2 s; 33.7 ms with a perfect recogniser | **p50 met with re-decode at back-to-back step times, missed by 4 ms paced; p95 fails** |
 | Phase 2: harmful | ≤ 1/198 on Tez's set, ≤ 1 % on Theioma's | tez220 1/198 (oracle), 2/198 (e2e); theioma 6.7 % (oracle), 13 % (e2e) | pass on Tez's (oracle), **fail** on Theioma's |
 | Phase 2: out-of-scope false actions | ≤ 2/22 | tez220 5/22 (Q4), 4/22 (Q8); theioma 6/30 | **fail** |
 | Phase 2: in-process vs server parity | TV < 0.01 | 0.011–0.018 mean, 1 argmax in ~100 | **fail** (narrowly) |
@@ -382,12 +428,16 @@ Phase 1 gates of `theioma-voice-design.md` §4e, and the Phase 2 replay gates fo
 
 1. **Act on prefixes, which already works.** `session.update` reads partial words, and 30 % of instant actions fire
    before their word ends. More aggressive prefix decisions trade against harmful actions.
-2. **Re-decode (whisper) as the partial source.** In job 1 it completed words at the word's end (−11 ms mean), but
-   with higher WER, 43 ms steps that grow with the utterance, and flicker. The composed end-to-end test is the
-   not-yet-run last job.
-3. **FastEmit fine-tuning of Nemotron on command audio.** NeMo's `fastemit_lambda` is published to cut the
+2. **Re-decode (whisper) as the partial source, measured.** End to end it takes the R0 p50 from 173 ms to
+   45.5–54 ms. Its costs: WER 9–10 %, 43–80 ms steps that grow with the utterance, and rewrites of earlier words (12 %
+   of emissions), which the session absorbs by rebuilding. A two-recogniser layout would give the session whisper's
+   early partials and keep Nemotron's append-only transcript for the final: two GPU users, about 1.5 GB of VRAM.
+3. **Parakeet realtime EOU 120M.** Its emission (+52 ms mean, 59 % of prefixes before the end) is close to the target
+   at a lower WER (8.8 %) than whisper, and it also gives an end-of-utterance token for deferred actions. The next run
+   is its composed end-to-end replay, plus an efficient runner for it.
+4. **FastEmit fine-tuning of Nemotron on command audio.** NeMo's `fastemit_lambda` is published to cut the
    transducer's emission delay by ~200 ms. This needs NeMo training (Linux or WSL) and a few hours of command audio.
-4. **CTC keyword spotting** on the streaming encoder, for a fixed vocabulary (app names, page names).
+5. **CTC keyword spotting** on the streaming encoder, for a fixed vocabulary (app names, page names).
 
 **The decision at 29 ms instead of ≤ 20 ms.** Each word decodes the new word plus the answer tail (about ten
 tokens) through 48 layers. The levers:
@@ -397,7 +447,9 @@ tokens) through 48 layers. The levers:
 - the 4B, if its accuracy can be brought up: 12B teacher labels on many more prefixes, or the state-only layout with
   several probes.
 
-The decision is not the binding constraint while the recogniser lags by 210 ms.
+The decision is not the binding constraint while the recogniser lags by 210 ms. With re-decode, it becomes a
+third of the budget. Folding and a shorter tail then matter, and so do the rebuilds that whisper's rewrites force
+(decide p95 88 ms back to back).
 
 **Harmful actions on the Theioma set:**
 
