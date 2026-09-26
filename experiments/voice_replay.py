@@ -474,7 +474,8 @@ def score(rows: list[dict], policy, chunk_s: float | None) -> dict:
     return out
 
 
-def rescore(rows_path: Path, tau: float | None, schema_path: Path | None, temperature: float | None = None) -> dict:
+def rescore(rows_path: Path, tau: float | None, schema_path: Path | None, temperature: float | None = None,
+            stable_min: int = 0) -> dict:
     """Re-run the policy (Policy.replay) on a finished run's logged decisions with another threshold, and score it.
     temperature: first move every logged distribution from the temperature it was read at (the update's
     `temperature`, 1 when none was applied) to this one, p ** (T_read / T) renormalised: no decision changes, only
@@ -485,6 +486,10 @@ def rescore(rows_path: Path, tau: float | None, schema_path: Path | None, temper
     meta = json.loads((rows_path.parent / rows_path.name.replace("_rows.jsonl", ".json")).read_text(encoding="utf-8"))
     schema = load_schema(schema_path or meta["manifest"]["schema"])
     pol = Policy.from_schema(schema, None, tau=tau if tau is not None else meta["manifest"]["policy"]["tau"])
+    if stable_min:                                      # a stricter policy: every early action waits for N stable words
+        from dataclasses import replace
+        pol.actions = {k: replace(v, stable=max(v.stable, stable_min)) if v.cls in ("R0", "R1") else v
+                       for k, v in pol.actions.items()}
     for r in rows:
         ups = r["updates"]
         if temperature is not None:
@@ -495,7 +500,8 @@ def rescore(rows_path: Path, tau: float | None, schema_path: Path | None, temper
         ex = []
         for i, _, kind, name in pol.replay([(u["decision"], u["p"], u["k"]) for u in ups]):
             t = r["t_last"] if kind in ("end", "approval") else ups[i]["t_decided"]
-            ex.append({"name": name, "kind": kind, "gated": kind == "approval", "t_issued": t, "dispatch_ms": 0.0})
+            ex.append({"name": name, "kind": kind, "word": ups[i]["k"], "gated": kind == "approval", "t_issued": t,
+                       "dispatch_ms": 0.0})
         r["executed"] = ex
         if r.get("end") and ups:
             r["end"]["p"] = ups[-1]["p"]
@@ -568,6 +574,7 @@ def main() -> None:
     ap.add_argument("--tag", default=None)
     ap.add_argument("--rescore", default=None)
     ap.add_argument("--tau-sweep", default=None, help="with --rescore: thresholds to try, comma-separated")
+    ap.add_argument("--stable-min", type=int, default=0, help="with --rescore: every R0/R1 action waits for this many stable words")
     ap.add_argument("--to-temperature", type=float, default=None,
                     help="with --rescore: move the logged distributions to this temperature first (1: as measured at T=1)")
     ap.add_argument("--report", nargs="+", default=None, help="print one line per finished run (result JSON files)")
@@ -581,7 +588,8 @@ def main() -> None:
         keep = ("harmful", "oos_false_actions", "first_action_word_mean", "first_action_at_or_before_decisive",
                 "word_end_to_first_action_ms", "intent_accuracy", "harmful_detail", "oos_false_detail")
         for tau in taus:
-            res = rescore(Path(args.rescore), tau, Path(args.schema) if args.schema else None, args.to_temperature)
+            res = rescore(Path(args.rescore), tau, Path(args.schema) if args.schema else None, args.to_temperature,
+                          args.stable_min)
             out[tau] = {k: res.get(k) for k in keep}
         print(json.dumps({t: {k: v for k, v in o.items() if not k.endswith("detail")} for t, o in out.items()}, indent=1))
         if args.tag:
