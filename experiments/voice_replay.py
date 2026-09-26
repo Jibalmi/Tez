@@ -671,6 +671,7 @@ def main() -> None:
     # ---- warm-up (not recorded), then the run
     for r in rows[: args.warmup]:
         run_utterance(r, argparse.Namespace(**{**vars(args), "realtime": False}), session, asr, worker, executor, undos)
+    manifest["gpu_warm"] = gpu_snapshot()                 # after the warm-up: models that load on first use included
     out_rows = []
     t_run = time.perf_counter()
     with Load() as load:
