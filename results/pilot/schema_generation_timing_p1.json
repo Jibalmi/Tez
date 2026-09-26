@@ -1,0 +1,7 @@
+{
+ "tokens": 1650,
+ "seconds": 50.8,
+ "tok_per_s_aggregate": 32.5,
+ "parallel_slots": 1,
+ "clusters": 2
+}
