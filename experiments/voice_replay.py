@@ -67,6 +67,7 @@ from voice_asr import SR, Emission, make_asr, normalise  # noqa: E402
 OUT = ROOT / "results" / "voice"
 SETS = {"tez220": ROOT / "data" / "voice", "theioma": ROOT / "data" / "voice" / "theioma"}
 FRAME = 160                                    # 10 ms at 16 kHz
+RECORDED: dict[str, dict] = {}                 # --asr replay:ROWS: the recorded recogniser run, by utterance id
 GPU_LOCK = "C:/temp/gpu_lock.py"
 
 
@@ -297,6 +298,17 @@ def run_utterance(row: dict, args, session, asr, worker, executor: NoopExecutor,
             if args.realtime:
                 sleep_until(due)
             on_emit(Emission(text, audio_s, 0.0, time.perf_counter(), final=True),
+                    time.perf_counter() if args.realtime else due)
+        t_last = time.perf_counter()
+    elif args.asr.startswith("replay:"):
+        # a recorded recogniser run: each emission arrives when its step would have finished, at the audio time of the
+        # step's input plus the compute the step took (serial, as in one process sharing one GPU)
+        rec = RECORDED[row["id"]]
+        for e in rec["emissions"]:
+            due = t0 + e["audio_s"] + (e.get("asr_ms") or 0.0) / 1000.0
+            if args.realtime:
+                sleep_until(due)
+            on_emit(Emission(e["text"], e["audio_s"], e.get("asr_ms") or 0.0, time.perf_counter(), bool(e.get("final"))),
                     time.perf_counter() if args.realtime else due)
         t_last = time.perf_counter()
     elif worker is not None:
@@ -615,7 +627,20 @@ def main() -> None:
         kw = {"threads": min(args.asr_threads, 4)}
     elif args.asr.startswith("nemo:"):
         kw = {"right_context": args.rc, "device": "cuda" if args.asr_gpu >= 0 else "cpu"}
-    if args.asr != "oracle":
+    if args.asr.startswith("replay:"):
+        rec_path = Path(args.asr.split(":", 1)[1])
+        for x in rec_path.read_text(encoding="utf-8").splitlines():
+            if x.strip():
+                r = json.loads(x)
+                RECORDED[r["id"]] = r
+        rec_meta = json.loads((rec_path.parent / rec_path.name.replace("_rows.jsonl", ".json")).read_text(encoding="utf-8"))
+        manifest["asr"] = {**rec_meta["manifest"]["asr"], "replayed_from": str(rec_path),
+                           "note": "recorded emissions fed at audio time + the step's recorded compute (composed e2e)"}
+        manifest["asr_chunk_s"] = manifest["asr"].get("chunk_s")
+        rows = [r for r in rows if r["id"] in RECORDED]
+        if rec_meta["manifest"]["args"].get("trim", True) != args.trim:
+            raise SystemExit("the recorded run and this one must trim the audio the same way")
+    elif args.asr != "oracle":
         if args.asr_proc or args.asr.startswith(("nemocpp:", "nemo:")):
             from voice_asr import asr_worker
             ctx = mp.get_context("spawn")
