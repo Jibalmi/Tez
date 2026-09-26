@@ -196,7 +196,8 @@ The columns:
 | Nemotron 3.5 ASR Streaming 0.6B Q8_0, right context 0 (theioma) | 80 ms | 0.099 | 4.49 (5.14) | 316 / 330 / 528 | 150 / 158, 19 % | 68->81 |
 | Nemotron Speech Streaming En, 80 ms (tez220, SAPI) | 80 ms | 0.045 | 4.46 (5.36) | 243 / 230 / 450 | 186 / 170, 13 % | 69->79 |
 | same, 160 ms (tez220) | 160 ms | 0.042 | 5.23 (6.71) | 247 / 250 / 470 | 188 / 170, 11 % | 69->76 |
-| faster-whisper base.en fp16, re-decoding the buffer every 200 ms (theioma) [throttled] | 200 ms | 0.104 | 42.6 (65.7) | **−11 / −30 / 314** | −71 / −80, 64 % | 65->89 |
+| faster-whisper base.en fp16, re-decoding the buffer every 200 ms, back to back (theioma) [throttled] | 200 ms | 0.104 | 42.6 (65.7) | −11 / −30 / 314 | −71 / −80, 64 % | 65->89 |
+| same, paced in real time, first 120 utterances (theioma) [loaded: CPU 50 %] | 200 ms | 0.092 | 80.2 (133.6) | **−40 / −45 / 183** | −132 / −130, 74 % | 64->69 |
 
 **Measured in this spike.**
 
@@ -211,11 +212,15 @@ The columns:
   - On SAPI speech, the lag is about 245 ms. The CTC word ends it is measured against run 10–60 ms early, so this
     figure is somewhat high.
 - **faster-whisper completes words earlier.** Re-decoding the whole buffer from the start, its decoder completes a
-  word from partial audio: complete at −11 ms (mean), and 64 % of prefixes before the word ends. Its costs:
-  - WER 0.104 against Nemotron's 0.080;
-  - 43 ms of compute per 200 ms step, and it grows with the utterance;
-  - partials that flicker ("oh", "loon", "stunned" before "open", "launch", "start");
-  - this arm ran hot ([throttled]). Its paced re-run is the not-yet-run last job (section 4).
+  word from partial audio: complete at −11 ms (mean) back to back, −40 ms paced, with 64–74 % of prefixes before the
+  word ends. Its costs:
+  - WER 0.092–0.104 against Nemotron's 0.080;
+  - 43 ms of compute per 200 ms step back to back, and 80 ms p50 (134 p95) paced. The paced figure is higher: at 3–5
+    decodes a second the GPU idles and clocks down between steps, and the machine was [loaded]. It grows with the
+    utterance.
+  - partials that flicker ("oh", "loon", "stunned" before "open", "launch", "start"): 12 % of its emissions rewrite an
+    earlier word that had been complete, against none for the cache-aware Nemotron. Each rewrite makes the session
+    rebuild the committed transcript.
 - **sherpa-onnx.** sherpa-onnx 1.13.8 runs the cache-aware Nemotron export
   (`sherpa-onnx-nemotron-speech-streaming-en-0.6b-2026-01-14`) and the 80 ms NeMo FastConformer transducer on
   Windows, but only on the CPU wheel. Light CPU checks, not recorded runs (so no numbers are quoted), were far
@@ -330,15 +335,29 @@ double the Theioma set's harmful actions (16 -> 32 utterances). Of the 34 wrong 
 actions (reversible opens and media keys: `system.open_app` 19, `system.open_url` 6, `media.key` 3) and 5 were wrong
 final decisions.
 
-**Not run yet (the last job).** The job queued behind Theioma's day jobs (seventh in the queue at 11:47), so it
-was withdrawn before it started, as the shared-machine rules ask. It holds four arms, runnable in one ~45-minute slot
-on a quiet machine with `bash experiments/run_voice_phase1.sh e2e-live`:
-- faster-whisper re-decode as the partial source, composed end to end with the live 12B;
-- the whisper ASR arm again, paced in real time on a cool GPU (the job 1 arm was [throttled]);
-- the Parakeet realtime EOU 120M arm;
-- the recogniser and the 12B co-loaded for 40 utterances, which measures the stack's VRAM and RAM directly.
+**Re-decoding instead (the last job, 2026-09-26 afternoon).** The same composed replay, fed with faster-whisper
+base.en's recorded emissions (the job 1 run, each emission at its audio time plus its recorded step compute), into the
+live 12B Q4_K_M session. The GPU stayed at 65–67 °C; the machine was [loaded] (CPU mean 48 %).
 
-The first of these decides whether re-decoding beats Nemotron's emission lag end to end.
+| recogniser (theioma) | WER | decide p50 (p95) | decisive word end -> decision p50 (p95) | R0 first action p50 (p95), ≤ 50 ms, before end | intent strict / then-alt | harmful | out-of-scope false |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Nemotron 80 ms (above) | 0.080 | 33.5 (58.2) | 269 (585) | 173 (775), 36 %, 30 % | 0.916 / 0.958 | 32 / 239 | 6 / 30 |
+| **faster-whisper base.en re-decode, 200 ms** | 0.104 | 44.7 (88.3) | **43.6 (422)** | **45.5 (1204)**, 51 %, 47 % | 0.904 / 0.954 | 34 / 239 | 7 / 30 |
+
+- **Re-decoding meets the latency target at the median.** The decisive word is decided 44 ms p50 after it ends, and an
+  instant action fires at 45.5 ms p50. That is under the 50 ms target: half of all R0 commands within 50 ms, 47 % of
+  them before the word ends. With Nemotron, the same figures are 269 ms and 173 ms.
+- **The gain is largest on long words.** On long decisive words (more than five letters), the R0 first action is 4 ms
+  p50 with whisper, against 167 ms with Nemotron. On short ones ("up", "pause", "mute") it is 57 ms against 186 ms.
+- **The tail is not met.** The p95 of 1.2 s comes from deferred and stability-2 actions and from words whisper
+  recognises late or wrong. The Phase 2 target is p95 ≤ 100 ms.
+- **Decisions cost more.** Whisper's rewrites of earlier words (12 % of emissions) make the session rebuild the
+  committed transcript: 16 tokens per decision at p95 instead of 12. So decide rises to 44.7 ms p50 and 88 ms p95.
+- **Accuracy and safety barely move.** Intent 0.904 against 0.916; harmful actions 34 against 32; out-of-scope false
+  actions 7 against 6.
+- **The step compute used here is from job 1's back-to-back run** (43 ms p50). The paced arm measured 80 ms p50 on a
+  cooler, idling GPU under load; that one is being fed through the same composed replay in the follow-up job, so the
+  figure above is the optimistic one until it lands.
 
 ## 5. Gates
 
