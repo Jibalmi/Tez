@@ -56,15 +56,13 @@ decide-http)       # the Q4_K_M over HTTP from a llama-server of our own with :8
   $PY experiments/voice_server_arm.py --gguf $Q4 -- --set theioma --asr oracle --tag theioma_oracle_12b_q4km_http; sleep 60
   $PY experiments/voice_server_arm.py --gguf $Q4 -- --set tez220 --asr oracle --tag tez220_oracle_12b_q4km_http
   ;;
-probe)
-  for s in ${2:-theioma tez220}; do
+probe)             # the cut 4B: two-fold prefix-labelled probes (tez fit) and their held-out oracle replays, ~40 min
+  for s in theioma tez220; do
     $PY experiments/voice_probe_labels.py --set $s --out C:/temp/voice-fit
     for f in 0 1; do
       d=C:/temp/voice-fit/$s/fold$f
-      $PY -m tez fit --backend inproc:$Q4B --template qwen3 --llama-lib $LIB --schema $d/schema.yaml \
-          --labels $d/labels.jsonl --no-blend --no-letters --no-feedback
-      $R --set $s --asr oracle --backend inproc:$Q4B --template qwen3 --lib $LIB --schema $d/schema.yaml \
-          --ids $d/ids.txt --tag ${s}_oracle_4b_probe_fold$f
+      $PY experiments/voice_probe_fit.py --fold $d --model $Q4B --lib $LIB
+      $R --set $s --asr oracle --backend inproc:$Q4B --template qwen3 --lib $LIB --schema $d/schema.yaml           --ids $d/ids.txt --tag ${s}_oracle_4b_probe_fold$f; sleep 30
     done
   done
   ;;
