@@ -1,0 +1,452 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T09:38:12",
+  "args": {
+   "set": "tez220",
+   "asr": "oracle",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "http://127.0.0.1:8873",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": "C:/temp/llamacpp/llama-server.exe -m C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606 -ngl 99 -c 4096 -np 2 --swa-full -b 512 -t 6 --port 8873 --host 127.0.0.1 --no-webui",
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "tez220_oracle_12b_q4km_http",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\schema.yaml",
+  "rows": 220,
+  "gpu_before": {
+   "time": "2026-09-26T09:38:14+02:00",
+   "used_mb": 9669,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 143
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 121
+    },
+    {
+     "pid": 7452,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 8718
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "asr": {
+   "name": "oracle",
+   "note": "reference words at their forced end times, rounded up to 10 ms"
+  },
+  "asr_chunk_s": null,
+  "decision": {
+   "backend": "http://127.0.0.1:8873",
+   "server_cmd": "C:/temp/llamacpp/llama-server.exe -m C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606 -ngl 99 -c 4096 -np 2 --swa-full -b 512 -t 6 --port 8873 --host 127.0.0.1 --no-webui",
+   "template": "gemma4",
+   "load_s": 0.0,
+   "model": "gemma-4-12b-q4_k - medium",
+   "readout": "letters",
+   "parts": [
+    "letters"
+   ],
+   "incremental": false,
+   "default_temperature": "auto"
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 56.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 16.22,
+   "sm_mhz": 202.0,
+   "util_pct": 0.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T09:38:17+02:00",
+   "used_mb": 9669,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 143
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 121
+    },
+    {
+     "pid": 7452,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 8718
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "run_s": 433.1,
+  "load": {
+   "cpu_pct_mean": 8.4,
+   "cpu_pct_max": 26.4,
+   "cpu_pct_p50": 7.7,
+   "samples": 429,
+   "gpu_c_max": 65.0,
+   "gpu_c_mean": 60.3,
+   "gpu_samples": 42,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 61.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 22.71,
+   "sm_mhz": 277.0,
+   "util_pct": 0.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T09:45:33+02:00",
+   "used_mb": 9679,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 143
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 634
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 118
+    },
+    {
+     "pid": 7452,
+     "name": "llama-server",
+     "kind": "dedicated",
+     "mb": 8726
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 220,
+  "actionable": 198,
+  "oos": 22,
+  "asr": {
+   "wer": 0.0,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 198,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "pipe_ms": {
+    "n": 1158,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 0.33
+   },
+   "decisive_word_missed": 0
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 1158,
+   "p50": 0.01,
+   "p95": 0.02,
+   "mean": 0.02,
+   "min": 0.01,
+   "max": 1.57
+  },
+  "word_end_to_decision_ms": {
+   "n": 198,
+   "p50": 38.16,
+   "p95": 45.55,
+   "mean": 38.38,
+   "min": 28.1,
+   "max": 50.75
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 117,
+    "p50": 38.55,
+    "p95": 45.56,
+    "mean": 38.65,
+    "min": 28.59,
+    "max": 47.93
+   },
+   "R1": {
+    "n": 51,
+    "p50": 37.29,
+    "p95": 43.43,
+    "mean": 37.74,
+    "min": 28.1,
+    "max": 50.75
+   },
+   "R2": {
+    "n": 30,
+    "p50": 39.16,
+    "p95": 45.71,
+    "mean": 38.4,
+    "min": 28.1,
+    "max": 46.39
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 1158,
+   "p50": 37.3,
+   "p95": 45.2,
+   "mean": 37.7,
+   "min": 27.2,
+   "max": 67.86
+  },
+  "word_end_to_first_action_ms": {
+   "n": 195,
+   "p50": 43.31,
+   "p95": 1436.47,
+   "mean": 176.04,
+   "min": -1475.15,
+   "max": 2456.76
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 198,
+   "p50": 38.17,
+   "p95": 45.56,
+   "mean": 38.39,
+   "min": 28.11,
+   "max": 50.75
+  },
+  "dispatch_ms": {
+   "n": 271,
+   "p50": 0.01,
+   "p95": 0.01,
+   "mean": 0.01,
+   "min": 0.0,
+   "max": 0.03
+  },
+  "decide_ms_per_update": {
+   "n": 1158,
+   "p50": 37.28,
+   "p95": 45.17,
+   "mean": 37.66,
+   "min": 27.17,
+   "max": 67.83
+  },
+  "commit_ms_per_update": {
+   "n": 1158,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  "intent_accuracy": 0.8737,
+  "intent_accuracy_then_alt": 0.9798,
+  "none_recall": 0.9091,
+  "harmful": 2,
+  "harmful_rate": 0.0101,
+  "oos_false_actions": 5,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 3.436,
+  "first_action_words_fully_heard_mean": 3.436,
+  "first_action_at_or_before_decisive": 0.5556,
+  "harmful_detail": [
+   {
+    "id": "v052",
+    "text": "find a video of cats falling asleep",
+    "executed": [
+     "open_browser",
+     "open_youtube",
+     "play_youtube"
+    ],
+    "accepted": [
+     "play_youtube"
+    ]
+   },
+   {
+    "id": "v197",
+    "text": "clothes the notepad",
+    "executed": [
+     "open_notes"
+    ],
+    "accepted": [
+     "close_app"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "v207",
+    "text": "youtube is so full of ads these days",
+    "executed": [
+     "open_youtube"
+    ]
+   },
+   {
+    "id": "v208",
+    "text": "text sarah that i'm on my way",
+    "executed": [
+     "type_text"
+    ]
+   },
+   {
+    "id": "v215",
+    "text": "my notes are such a mess lately",
+    "executed": [
+     "open_notes"
+    ]
+   },
+   {
+    "id": "v217",
+    "text": "order more coffee pods from amazon",
+    "executed": [
+     "open_browser",
+     "search_web"
+    ]
+   },
+   {
+    "id": "v218",
+    "text": "the volume on this laptop has always been bad",
+    "executed": [
+     "volume_up"
+    ]
+   }
+  ]
+ }
+}
