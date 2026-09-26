@@ -136,11 +136,11 @@ def cluster() -> None:
     print(f"{len(clusters)} clusters:", collections.Counter(c["group"] for c in clusters))
 
 
-def write(server: str, parallel: int, limit: int = 0) -> None:
+def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> None:
     pool = {r["id"]: r for r in read_jsonl(RUNS / "pool.jsonl")}
     clusters = read_jsonl(RUNS / "clusters.jsonl")
     out_path = RUNS / "schemas_raw.jsonl"
-    done = {r["cid"] for r in read_jsonl(out_path)} if out_path.exists() else set()
+    done = {r["cid"] for r in read_jsonl(out_path) if r["items"]} if out_path.exists() else set()   # failures retried
     rng = random.Random(SEED)
     jobs = []
     for c in clusters:
@@ -167,8 +167,12 @@ def write(server: str, parallel: int, limit: int = 0) -> None:
     t0 = time.time()
     tok = [0]
 
+    deadline = t0 + minutes * 60 if minutes else None
+
     def run_cluster(job):
         c, texts = job
+        if deadline and time.time() > deadline:
+            return None                                  # left for the next segment (resumable)
         seed = int(c["cid"].encode().hex()[-6:], 16)
         for attempt in range(3):
             try:
@@ -185,6 +189,8 @@ def write(server: str, parallel: int, limit: int = 0) -> None:
 
     with ThreadPoolExecutor(parallel) as ex, open(out_path, "a", encoding="utf-8") as f:
         for res in ex.map(run_cluster, jobs):
+            if res is None:
+                continue
             tok[0] += res.get("timings", {}).get("predicted_n", 0)
             f.write(json.dumps(res, ensure_ascii=False) + "\n")
             f.flush()
@@ -340,11 +346,12 @@ def main() -> None:
     ap.add_argument("--parallel", type=int, default=6)
     ap.add_argument("--device", default="cuda", help="embedding device for assign (cosine dedupe)")
     ap.add_argument("--limit", type=int, default=0, help="only the first N clusters (the single-stream rate check)")
+    ap.add_argument("--minutes", type=float, default=0, help="stop starting clusters after this long (resumable)")
     args = ap.parse_args()
     if args.step == "cluster":
         cluster()
     elif args.step == "write":
-        write(args.server, args.parallel, args.limit)
+        write(args.server, args.parallel, args.limit, args.minutes)
     else:
         assign(args.device)
 
