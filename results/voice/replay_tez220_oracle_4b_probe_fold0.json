@@ -1,0 +1,513 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T10:03:33",
+  "args": {
+   "set": "tez220",
+   "asr": "oracle",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "lib": "C:/temp/llamacpp",
+   "schema": "C:/temp/voice-fit/tez220/fold0/schema.yaml",
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": "C:/temp/voice-fit/tez220/fold0/ids.txt",
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "tez220_oracle_4b_probe_fold0",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\temp\\voice-fit\\tez220\\fold0\\schema.yaml",
+  "rows": 115,
+  "gpu_before": {
+   "time": "2026-09-26T10:03:36+02:00",
+   "used_mb": 983,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 109
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 175
+    }
+   ]
+  },
+  "asr": {
+   "name": "oracle",
+   "note": "reference words at their forced end times, rounded up to 10 ms"
+  },
+  "asr_chunk_s": null,
+  "decision": {
+   "backend": "inproc:../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "server_cmd": null,
+   "template": "qwen3",
+   "load_s": 3.7,
+   "model": "qwen3.5-4b-q8_0-l24",
+   "readout": "probe",
+   "parts": [
+    "embed"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 24,
+    "n_params": 3313238912,
+    "size_mb": 3359,
+    "hybrid": true,
+    "desc": "qwen35 2B Q8_0"
+   },
+   "head_ms": 84.4
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 65.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 20.37,
+   "sm_mhz": 1575.0,
+   "util_pct": 7.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T10:03:43+02:00",
+   "used_mb": 4999,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 106
+    },
+    {
+     "pid": 51980,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4020
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 175
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T10:03:46+02:00",
+   "used_mb": 5001,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 106
+    },
+    {
+     "pid": 51980,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4022
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 175
+    },
+    {
+     "pid": 51980,
+     "name": "python",
+     "kind": "shared",
+     "mb": 102
+    }
+   ]
+  },
+  "run_s": 230.7,
+  "load": {
+   "cpu_pct_mean": 7.8,
+   "cpu_pct_max": 19.7,
+   "cpu_pct_p50": 7.8,
+   "samples": 228,
+   "gpu_c_max": 65.0,
+   "gpu_c_mean": 61.0,
+   "gpu_samples": 22,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 60.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 23.09,
+   "sm_mhz": 652.0,
+   "util_pct": 1.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T10:07:40+02:00",
+   "used_mb": 5005,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 146
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 630
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 110
+    },
+    {
+     "pid": 51980,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4022
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 175
+    },
+    {
+     "pid": 51980,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 115,
+  "actionable": 104,
+  "oos": 11,
+  "asr": {
+   "wer": 0.0,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 104,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "pipe_ms": {
+    "n": 623,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 0.45
+   },
+   "decisive_word_missed": 0
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 623,
+   "p50": 0.01,
+   "p95": 0.03,
+   "mean": 0.02,
+   "min": 0.01,
+   "max": 1.64
+  },
+  "word_end_to_decision_ms": {
+   "n": 104,
+   "p50": 20.75,
+   "p95": 24.91,
+   "mean": 20.81,
+   "min": 16.26,
+   "max": 31.43
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 62,
+    "p50": 20.74,
+    "p95": 24.92,
+    "mean": 20.68,
+    "min": 16.26,
+    "max": 27.8
+   },
+   "R1": {
+    "n": 27,
+    "p50": 20.52,
+    "p95": 24.33,
+    "mean": 20.93,
+    "min": 17.29,
+    "max": 31.43
+   },
+   "R2": {
+    "n": 15,
+    "p50": 21.06,
+    "p95": 24.5,
+    "mean": 21.14,
+    "min": 18.81,
+    "max": 25.78
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 623,
+   "p50": 20.72,
+   "p95": 24.77,
+   "mean": 20.79,
+   "min": 15.98,
+   "max": 31.43
+  },
+  "word_end_to_first_action_ms": {
+   "n": 98,
+   "p50": 182.21,
+   "p95": 1578.7,
+   "mean": 392.11,
+   "min": -217.72,
+   "max": 2451.16
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 104,
+   "p50": 20.76,
+   "p95": 24.91,
+   "mean": 20.81,
+   "min": 16.26,
+   "max": 31.43
+  },
+  "dispatch_ms": {
+   "n": 118,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.01
+  },
+  "decide_ms_per_update": {
+   "n": 623,
+   "p50": 20.69,
+   "p95": 24.73,
+   "mean": 20.75,
+   "min": 15.96,
+   "max": 31.4
+  },
+  "commit_ms_per_update": {
+   "n": 623,
+   "p50": 10.79,
+   "p95": 14.18,
+   "mean": 10.82,
+   "min": 4.18,
+   "max": 23.34
+  },
+  "intent_accuracy": 0.9038,
+  "intent_accuracy_then_alt": 0.9135,
+  "none_recall": 0.8182,
+  "harmful": 4,
+  "harmful_rate": 0.0385,
+  "oos_false_actions": 3,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 4.214,
+  "first_action_words_fully_heard_mean": 4.214,
+  "first_action_at_or_before_decisive": 0.4038,
+  "harmful_detail": [
+   {
+    "id": "v112",
+    "text": "pause the music and close spotify",
+    "executed": [
+     "pause_media",
+     "open_notes"
+    ],
+    "accepted": [
+     "close_app",
+     "pause_media"
+    ]
+   },
+   {
+    "id": "v141",
+    "text": "i can't hear it",
+    "executed": [
+     "volume_down"
+    ],
+    "accepted": [
+     "volume_up"
+    ]
+   },
+   {
+    "id": "v150",
+    "text": "crank it down a bit",
+    "executed": [
+     "volume_up",
+     "volume_down"
+    ],
+    "accepted": [
+     "volume_down"
+    ]
+   },
+   {
+    "id": "v160",
+    "text": "get me online",
+    "executed": [
+     "search_web"
+    ],
+    "accepted": [
+     "open_browser"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "v215",
+    "text": "my notes are such a mess lately",
+    "executed": [
+     "open_notes"
+    ]
+   },
+   {
+    "id": "v217",
+    "text": "order more coffee pods from amazon",
+    "executed": [
+     "search_web"
+    ]
+   },
+   {
+    "id": "v218",
+    "text": "the volume on this laptop has always been bad",
+    "executed": [
+     "volume_down"
+    ]
+   }
+  ]
+ }
+}
