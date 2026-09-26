@@ -48,9 +48,11 @@ decide)            # the primary arm: Gemma 4 12B Q4_K_M in process (Theioma's s
   $R --set theioma --asr oracle --backend inproc:$Q4 --lib $LIB --commit fold --tag theioma_oracle_12b_q4km_fold; sleep 60
   $R --set tez220 --asr oracle --backend inproc:$Q4 --lib $LIB --parity 20 --tag tez220_oracle_12b_q4km
   ;;
-decide2)           # Q8_0 in process, and the Q4_K_M over HTTP from a llama-server with :8797's flags, ~50 min
+decide-q8)         # Q8_0 in process, ~30 min
   $R --set theioma --asr oracle --backend inproc:$Q8 --lib $LIB --tag theioma_oracle_12b_q8; sleep 60
-  $R --set tez220 --asr oracle --backend inproc:$Q8 --lib $LIB --tag tez220_oracle_12b_q8; sleep 60
+  $R --set tez220 --asr oracle --backend inproc:$Q8 --lib $LIB --tag tez220_oracle_12b_q8
+  ;;
+decide-http)       # the Q4_K_M over HTTP from a llama-server of our own with :8797's flags, ~30 min
   $PY experiments/voice_server_arm.py --gguf $Q4 -- --set theioma --asr oracle --tag theioma_oracle_12b_q4km_http; sleep 60
   $PY experiments/voice_server_arm.py --gguf $Q4 -- --set tez220 --asr oracle --tag tez220_oracle_12b_q4km_http
   ;;
@@ -66,13 +68,14 @@ probe)
     done
   done
   ;;
-e2e)
-  for s in ${2:-theioma tez220}; do
-    $R --set $s --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag ${s}_e2e_nemotron80_12b_q4km
-  done
+e2e)               # the recogniser and the session together, real time, ~50 min
+  $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag theioma_e2e_nemotron80_12b_q4km; sleep 60
+  $R --set theioma --asr whisper:base.en --asr-proc --backend inproc:$Q4 --lib $LIB --tag theioma_e2e_whisper200_12b_q4km; sleep 60
+  $R --set tez220 --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag tez220_e2e_nemotron80_12b_q4km; sleep 60
+  $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true
   ;;
 *)
-  echo "usage: $0 data|asr|asr-cpu|decide|decide2|probe|e2e" >&2
+  echo "usage: $0 data|asr|asr-cpu|decide|decide-q8|decide-http|probe|e2e" >&2
   exit 2
   ;;
 esac
