@@ -25,7 +25,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from common import RESULTS, RUNS, dump
+from common import RESULTS, RUNS, THERMAL, dump, thermal_guard
 from dataset import load_examples, summary
 from student import Encoder, Q, Student, collate, lr_lambda, n_params, ordinal_loss
 
@@ -118,6 +118,8 @@ def evaluate_val(model, val, enc, device, budget):
     rows = make_rows(val, enc, rng, pack_all=1.0)
     agree, kls, recs = [], [], []
     for b in batches(rows, budget, rng):
+        if device.type == "cuda":
+            thermal_guard()
         _, logp, tgt, mask = step_loss(model, b, device)
         lp = logp.float().cpu().numpy()
         t = tgt.cpu().numpy()
@@ -207,6 +209,8 @@ def main() -> int:
     while st["ep"] < args.epochs:
         bs = epoch_batches(st["ep"])
         for bi in range(st["b"], len(bs)):
+            if dev.type == "cuda":
+                thermal_guard()
             loss, *_ = step_loss(model, bs[bi], dev)
             opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -232,6 +236,8 @@ def main() -> int:
         st["ep"] += 1
         st["b"] = 0
     st["train_s"] += time.time() - t0
+    st["paused_s"] = st.get("paused_s", 0.0) + THERMAL["paused_s"]
+    st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
     if stopped:
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "state": st,
                     "torch_rng": torch.get_rng_state()}, ckpt_path)
@@ -245,7 +251,9 @@ def main() -> int:
     info = {"arm": args.arm, "backbone": args.backbone, "data": args.data, "params": n_params(model),
             "epochs_run": len(st["log"]), "steps": st["step"], "segments": st["segments"],
             "train_seconds": round(st["train_s"], 1), "train_tokens": st["tokens"],
-            "train_tok_per_s": round(st["tokens"] / st["train_s"], 1), "lr": args.lr,
+            "train_tok_per_s": round(st["tokens"] / st["train_s"], 1),
+            "train_tok_per_s_excluding_thermal_pauses": round(st["tokens"] / max(1e-9, st["train_s"] - st["paused_s"]), 1),
+            "thermal_paused_s": round(st["paused_s"], 1), "max_gpu_c": st["max_gpu_c"], "lr": args.lr,
             "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": st["log"],
             "val_agreement_with_teacher": round(agree, 4), "val_kl": round(kl, 4), "temperatures": temps,
             "train_summary": summary(train), "val_summary": summary(val),

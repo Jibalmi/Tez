@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import requests
 
-from common import RESULTS, RUNS, dump, read_jsonl, write_jsonl
+from common import RESULTS, RUNS, THERMAL, dump, read_jsonl, thermal_guard, write_jsonl
 
 SEED = 13
 PER_CLUSTER = 46
@@ -173,6 +173,7 @@ def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> Non
         c, texts = job
         if deadline and time.time() > deadline:
             return None                                  # left for the next segment (resumable)
+        thermal_guard(hot=80, cool=72, force=True)
         seed = int(c["cid"].encode().hex()[-6:], 16)
         for attempt in range(3):
             try:
@@ -211,7 +212,8 @@ def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> Non
             print(f"  gold {ds}: {instr}", flush=True)
     dump(RESULTS / f"schema_generation_timing_p{parallel}.json", {"tokens": tok[0], "seconds": round(time.time() - t0, 1),
                                                      "tok_per_s_aggregate": round(tok[0] / max(time.time() - t0, 1e-9), 1),
-                                                     "parallel_slots": parallel, "clusters": len(jobs)})
+                                                     "parallel_slots": parallel, "clusters": len(jobs),
+                                                     "thermal": dict(THERMAL)})
 
 
 def eval_option_sets() -> list[set[str]]:

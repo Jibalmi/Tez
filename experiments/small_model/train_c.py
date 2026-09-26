@@ -21,7 +21,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from common import RESULTS, RUNS, dump
+from common import RESULTS, RUNS, THERMAL, dump, thermal_guard
 from dataset import load_examples, summary
 from train_a import fit_type_temps
 
@@ -137,6 +137,7 @@ def main() -> int:
         bs = epoch_batches(st["ep"])
         for bi in range(st["b"], len(bs)):
             b = bs[bi]
+            thermal_guard()
             logp, mask = letter_logp(model, tok, letter_ids, [x["prompt"] for x in b], [x["k"] for x in b], dev)
             K = logp.shape[1]
             tgt = torch.tensor(np.array([np.pad(x["target"], (0, K - x["k"])) for x in b]), dtype=torch.float32, device=dev)
@@ -164,6 +165,8 @@ def main() -> int:
         st["ep"] += 1
         st["b"] = 0
     st["train_s"] += time.time() - t0
+    st["paused_s"] = st.get("paused_s", 0.0) + THERMAL["paused_s"]
+    st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
     if stopped and st["segments"] < args.max_segments:
         torch.save({"lora": {n: p.detach().clone() for n, p in trainable}, "opt": opt.state_dict(),
                     "sched": sched.state_dict(), "state": st, "torch_rng": torch.get_rng_state()}, ckpt_path)
@@ -176,6 +179,7 @@ def main() -> int:
         vi = items(val, random.Random(0))
         for i in range(0, len(vi), 32):
             b = vi[i:i + 32]
+            thermal_guard()
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 logp, _ = letter_logp(model, tok, letter_ids, [x["prompt"] for x in b], [x["k"] for x in b], dev)
             lp = logp.float().cpu().numpy()
@@ -190,7 +194,9 @@ def main() -> int:
             "fraction_of_planned_steps": round(st["step"] / total, 4), "segments": st["segments"],
             "stopped_early": bool(stopped), "train_seconds": round(st["train_s"], 1),
             "decisions_per_s": round(st["step"] * args.batch / st["train_s"], 2),
-            "train_tok_per_s": round(st["tokens"] / st["train_s"], 1), "lr": args.lr, "batch": args.batch,
+            "train_tok_per_s": round(st["tokens"] / st["train_s"], 1),
+            "train_tok_per_s_excluding_thermal_pauses": round(st["tokens"] / max(1e-9, st["train_s"] - st["paused_s"]), 1),
+            "thermal_paused_s": round(st["paused_s"], 1), "max_gpu_c": st["max_gpu_c"], "lr": args.lr, "batch": args.batch,
             "val_agreement_with_teacher": round(float(np.mean(agree)), 4), "temperatures": temps,
             "kernels": "transformers' reference PyTorch paths for gated delta rule and causal conv1d (fla and "
                        "causal_conv1d not installed on Windows)",

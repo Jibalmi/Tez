@@ -24,7 +24,7 @@ from collections import defaultdict
 import numpy as np
 import torch
 
-from common import MASSIVE11, RESULTS, ROOT, RUNS, dump, file_sha256, read_jsonl, write_jsonl
+from common import MASSIVE11, RESULTS, ROOT, RUNS, THERMAL, dump, file_sha256, read_jsonl, thermal_guard, write_jsonl
 
 APPS = ["model_routing_domain", "guardrails_jailbreak", "moderation_toxicity", "email_spam", "phishing",
         "rag_relevance", "support_triage"]
@@ -92,6 +92,8 @@ class PredictA:
                 j += 1
             j = max(j, i + 1)
             idx = order[i:j]
+            if self.device == "cuda":
+                thermal_guard()
             batch = collate([rows[k] for k in idx], self.device)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 lp = self.model(batch).float().cpu().numpy()
@@ -128,6 +130,7 @@ class PredictC:
         res: list = [None] * len(flat)
         for s in range(0, len(order), batch):
             idx = order[s:s + batch]
+            thermal_guard()
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 lp, _ = letter_logp(self.model, self.tok, self.letter_ids, [prompts[i] for i in idx],
                                     [len(flat[i][1]["options"]) for i in idx], self.device, max_len=4096)
@@ -164,6 +167,7 @@ class PredictGLiClass:
         res: list = [None] * len(flat)
         for s in range(0, len(flat), batch):
             chunk = flat[s:s + batch]
+            thermal_guard()
             texts = [render_state(c["state"]) for _, c in chunk]
             labels = [[option_text(k, d) for k, d in c["options"]] for _, c in chunk]
             # duplicate option texts would collapse in the pipeline's label handling: make them unique
@@ -345,6 +349,7 @@ def main() -> None:
         print(f"{task:28s} acc {res['t1']['accuracy']:.4f} ece(t1) {res['t1']['ece']:.3f} ece(cal) {res['cal']['ece']:.3f}"
               f" retention {res.get('retention_vs_12b')} ({res['seconds']} s)", flush=True)
     out["seconds"] = round(time.time() - t0, 1)
+    out["thermal"] = dict(THERMAL)
     dump(RESULTS / f"eval_{args.arm}.json", out)
 
 

@@ -20,7 +20,7 @@ import time
 
 import numpy as np
 
-from common import GGUF_12B, LLAMA_LIB, RESULTS, RUNS, dump, read_jsonl
+from common import GGUF_12B, LLAMA_LIB, RESULTS, RUNS, THERMAL, dump, read_jsonl, thermal_guard
 
 OUT = RUNS / "teacher"
 NONE_SHARE = 0.2
@@ -68,6 +68,7 @@ def main() -> None:
             if time.time() > deadline:
                 print("deadline reached", flush=True)
                 break
+            thermal_guard()
             state = pool[a["id"]]["state"]
             prompts, ks, meta = [], [], []
             for qd in a["questions"]:
@@ -110,7 +111,8 @@ def main() -> None:
                          "ms_per_state_p50": round(float(np.median(ms)), 1) if ms else None,
                          "ms_per_state_p95": round(float(np.percentile(ms, 95)), 1) if ms else None,
                          "readings_per_state": 10, "n_ctx": args.n_ctx,
-                         "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many"})
+                         "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+                         "thermal": dict(THERMAL)})
     dump(stats_path, prev)
     print(f"read {n_read} states in {el:.0f} s", flush=True)
 

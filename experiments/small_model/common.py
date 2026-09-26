@@ -166,3 +166,48 @@ def eval_states() -> Iterator[tuple[str, Any]]:
     for tier in ("original", "easy", "hard"):
         for r in read_jsonl(ROOT / "data" / "jevbench" / f"{tier}.jsonl"):
             yield f"jevbench:{tier}", r.get("state", r.get("input", r))
+
+
+# ------------------------------------------------------------------------------------------ thermal governor
+# This laptop's GPU climbs from 70 C to 89 C in about 5 minutes of sustained decode (2026-09-26 13:10-13:15), and
+# C:/temp/run_heavy.py kills any job whose GPU stays above 88 C for 15 s. Every GPU loop of the pilot calls
+# thermal_guard(): every `every` seconds it reads the temperature, and at `hot` or above it pauses until `cool`.
+THERMAL = {"checks": 0, "pauses": 0, "paused_s": 0.0, "max_c": 0}
+_THERMAL_LAST = [0.0]
+
+
+def gpu_temp() -> int | None:
+    import subprocess
+    try:
+        out = subprocess.run(["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"],
+                             capture_output=True, text=True, timeout=10).stdout.strip().splitlines()[0]
+        return int(out.strip())
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def thermal_guard(hot: int = 82, cool: int = 74, every: float = 5.0, force: bool = False) -> float:
+    """Pause (seconds returned) while the GPU is at `hot` C or above, until it is back to `cool` (at most 10 min)."""
+    import time as _t
+    now = _t.time()
+    if not force and now - _THERMAL_LAST[0] < every:
+        return 0.0
+    _THERMAL_LAST[0] = now
+    t = gpu_temp()
+    THERMAL["checks"] += 1
+    if t is None:
+        return 0.0
+    THERMAL["max_c"] = max(THERMAL["max_c"], t)
+    if t < hot:
+        return 0.0
+    t0 = _t.time()
+    while True:
+        _t.sleep(3)
+        t = gpu_temp()
+        if t is None or t <= cool or _t.time() - t0 > 600:
+            break
+    dt = _t.time() - t0
+    THERMAL["pauses"] += 1
+    THERMAL["paused_s"] += dt
+    _THERMAL_LAST[0] = _t.time()
+    return dt

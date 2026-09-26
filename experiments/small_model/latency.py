@@ -128,6 +128,8 @@ def main() -> None:
     if dev == "cuda":
         thermals.append({"at": "start", **cool_down()})
     for n in NS:
+        if dev == "cuda" and n != NS[0]:
+            thermals.append({"at": f"before n={n}", **cool_down()})
         reps = args.reps50 if n == 50 else args.reps
         for _ in range(args.warmup):
             counter += 1
