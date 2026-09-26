@@ -33,3 +33,6 @@ results/probe_cache_*
 .impeccable/config.local.json
 .impeccable/questions/
 .impeccable/review/
+
+# Kokoro renders of the Theioma voice set (experiments/voice_tts.py regenerates them)
+data/voice/theioma/wav/
