@@ -16,6 +16,7 @@ Decision: A passes -> M2 with A; C beats A by >= 5 points of retention and meets
 from __future__ import annotations
 
 import json
+import math
 
 import numpy as np
 
@@ -32,6 +33,46 @@ G1_TASKS = ["typed_decisions", "app_model_routing_domain", "app_guardrails_jailb
 def load(name):
     p = RESULTS / name
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def finite_number(value) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def evaluation_gaps(ev: dict) -> list[str]:
+    """A mean over only the available languages or suites cannot satisfy the full G1 gate."""
+    missing = []
+    tasks = ev.get("tasks", {})
+    for task in G1_TASKS:
+        row = tasks.get(task, {})
+        for mode, field in (("t1", "accuracy"), ("t1", "ece"), ("cal", "ece")):
+            value = row.get(mode, {}).get(field)
+            if not finite_number(value) or not 0 <= value <= 1:
+                missing.append(f"{task}.{mode}.{field}")
+        retention = row.get("retention_vs_12b")
+        if not finite_number(retention) or retention < 0:
+            missing.append(f"{task}.retention_vs_12b")
+    soft = tasks.get("typed_decisions", {}).get("t1", {}).get("soft_accuracy")
+    if not finite_number(soft) or not 0 <= soft <= 1:
+        missing.append("typed_decisions.t1.soft_accuracy")
+    return missing
+
+
+def latency_issues(run: dict | None) -> list[str]:
+    """Unknown or contaminated timing conditions leave the speed gate pending."""
+    if not run:
+        return ["GPU latency not measured"]
+    issues = []
+    if run.get("device") != "cuda":
+        issues.append("GPU timing required")
+    for flag in ("throttled", "contaminated"):
+        if run.get(flag) is not False:
+            issues.append(flag if run.get(flag) is True else f"{flag} status unknown")
+    for n, key in (("1", "p50_ms"), ("50", "ms_per_question")):
+        value = run.get("sizes", {}).get(n, {}).get(key)
+        if not finite_number(value) or value <= 0:
+            issues.append(f"{n}-question {key} missing or invalid")
+    return issues
 
 
 def arm_view(ev: dict, key: str = "t1") -> dict:
@@ -62,9 +103,10 @@ def main() -> None:
     for name in ("a-base-30k", "a-base-10k", "a-small-30k", "c-qwen08-30k", "gliclass-x-base"):
         ev = load(f"eval_{name}.json")
         if ev:
-            arms[name] = {"eval": arm_view(ev), "train": load(f"train_{name}.json")}
+            gaps = evaluation_gaps(ev)
+            arms[name] = {"eval": None if gaps else arm_view(ev), "train": load(f"train_{name}.json"),
+                          "missing_measurements": gaps}
     lat = load("latency.json") or {}
-    teacher_ref = load("eval_a-base-30k.json")
     rows = []
     a = arms.get("a-base-30k", {}).get("eval")
     a10 = arms.get("a-base-10k", {}).get("eval")
@@ -89,42 +131,63 @@ def main() -> None:
                          "value": {"30k": round(a["mean_retention_g1_suites"], 4), "10k": round(a10["mean_retention_g1_suites"], 4),
                                    "gain_points": round(g, 2), "typed_decisions_gain_points": round(gtd, 2)},
                          "pass": g >= G1["retention_gain_pts"]})
+        else:
+            rows.append({"criterion": "retention at 30k >= retention at 10k + 3 points (mean over G1 suites)",
+                         "value": None, "pass": None, "reason": "complete 10k evaluation required"})
         lg = lat.get("a-base-30k_cuda")
-        if lg:
+        timing_issues = latency_issues(lg)
+        if not timing_issues:
             ms1 = lg["sizes"]["1"]["p50_ms"]
             m50 = lg["sizes"]["50"]["ms_per_question"]
             rows.append({"criterion": "<= 30 ms for one question (GPU, PyTorch)", "value": ms1, "pass": ms1 <= G1["ms_1q"]})
             rows.append({"criterion": "<= 2.8 ms per question at 50 (GPU, PyTorch)", "value": m50, "pass": m50 <= G1["ms_per_q_50"]})
+        else:
+            for criterion in ("<= 30 ms for one question (GPU, PyTorch)", "<= 2.8 ms per question at 50 (GPU, PyTorch)"):
+                rows.append({"criterion": criterion, "value": None, "pass": None, "reason": "; ".join(timing_issues)})
         rows.append({"criterion": "ECE-15 <= 0.15 as read (T = 1, mean over the G1 suites)",
                      "value": {"as_read_t1": round(a["ece_t1_mean"], 4), "val_fitted_temps": round(a["ece_cal_mean"], 4),
                                "typed_decisions_t1": a["ece_td_t1"]},
                      "pass": a["ece_t1_mean"] <= G1["ece"]})
-    all_pass = bool(rows) and all(r["pass"] for r in rows)
-    decision, why = None, []
-    if a:
+    g1_complete = len(rows) == 9 and all(r["pass"] is not None for r in rows)
+    all_pass = all(r["pass"] for r in rows) if g1_complete else None
+    missing = {}
+    for name in ("a-base-30k", "a-base-10k", "c-qwen08-30k"):
+        if not arms.get(name, {}).get("eval"):
+            missing[f"eval_{name}"] = arms.get(name, {}).get("missing_measurements") or ["evaluation not measured"]
+    for name in ("a-base-30k_cuda", "c-qwen08-30k_cuda"):
+        issues = latency_issues(lat.get(name))
+        if issues:
+            missing[name] = issues
+    decision, why = None, {"missing_or_unusable": missing}
+    if a and not missing:
         c_better = bool(c) and (100 * (c["mean_retention_g1_suites"] - a["mean_retention_g1_suites"]) >= 5)
         lc = lat.get("c-qwen08-30k_cuda")
         c_fast = bool(lc) and lc["sizes"]["50"]["ms_per_question"] <= 10 and lc["sizes"]["1"]["p50_ms"] <= G1["ms_1q"]
         best_td = max(a["td_acc"], c["td_acc"] if c else 0)
-        if all_pass:
-            decision = "continue with A (go to M2)"
-        elif c_better and c_fast:
+        if c_better and c_fast:
             decision = "switch to C"
+        elif all_pass:
+            decision = "continue with A (go to M2)"
         elif best_td < G1["stop_td"]:
             decision = "stop the zero-shot student; build per-schema students (D3)"
         else:
             decision = "A fails G1 without meeting a stop rule: see the recommendation"
-        why = {"all_g1_pass": all_pass, "c_retention_minus_a_points": round(100 * (c["mean_retention_g1_suites"] - a["mean_retention_g1_suites"]), 2) if c else None,
-               "c_meets_latency": c_fast, "best_typed_decisions_acc": round(best_td, 4)}
+        why.update({"all_g1_pass": all_pass, "c_retention_minus_a_points": round(100 * (c["mean_retention_g1_suites"] - a["mean_retention_g1_suites"]), 2) if c else None,
+                    "c_meets_latency": c_fast, "best_typed_decisions_acc": round(best_td, 4)})
     dump(RESULTS / "pilot.json", {"title": "Small-model pilot (week 1): every arm, same rows as the 12B and Laya",
                                    "g1_thresholds": G1, "teacher_reference": TEACHER, "g1_arm": "a-base-30k",
-                                   "g1": rows, "g1_all_pass": all_pass, "decision": decision, "decision_inputs": why,
+                                   "g1": rows, "g1_complete": g1_complete, "g1_all_pass": all_pass,
+                                   "decision": decision, "decision_status": "complete" if decision else "pending",
+                                   "decision_inputs": why,
                                    "arms": arms, "latency": {k: {kk: v.get(kk) for kk in ("device", "threads", "sizes", "load_s", "peak_vram_gb", "contaminated", "throttled", "thermal")}
                                                              for k, v in lat.items()}})
     tables(arms, lat)
     for r in rows:
-        print(f"{'PASS' if r['pass'] else 'FAIL'}  {r['criterion']}: {r['value']}")
-    print("decision:", decision)
+        label = "PENDING" if r["pass"] is None else ("PASS" if r["pass"] else "FAIL")
+        print(f"{label}  {r['criterion']}: {r['value']}")
+    print("decision:", decision or "pending required measurements")
+    if missing:
+        print("missing or unusable inputs:", json.dumps(missing))
 
 
 def tables(arms: dict, lat: dict) -> None:
@@ -139,7 +202,7 @@ def tables(arms: dict, lat: dict) -> None:
             v = base.get(task, {}).get(key)
             return None if v is None else v.get(field)
         ev = evs.get(key)
-        return None if not ev or task not in ev["tasks"] else ev["tasks"][task]["t1"].get(field)
+        return None if not ev else ev.get("tasks", {}).get(task, {}).get("t1", {}).get(field)
 
     def fmt(x):
         return "-" if x is None else f"{x:.3f}"
@@ -180,14 +243,17 @@ def tables(arms: dict, lat: dict) -> None:
            "Accuracy as read (T = 1). 12B and Laya: existing rows (results/pilot/baselines.json). "
            "Students and GLiClass: results/pilot/eval_<arm>.json.", ""] + lines
     lat_lines = ["", "## Latency (the 1b protocol: a new state per call; p50 ms per call, and per question at 50)", "",
-                 "| arm | device | 1 q | 5 q | 10 q | 50 q | ms/q at 50 | thermal |",
+                 "| arm | device | 1 q | 5 q | 10 q | 50 q | ms/q at 50 | timing validity |",
                  "|---|---|---:|---:|---:|---:|---:|---|"]
     for k, v in sorted(lat.items()):
-        sz = v["sizes"]
-        th = "throttled" if v.get("throttled") else ("ok" if v.get("throttled") is False else "n/a (CPU)")
-        dev = v["device"] + (f" {v['threads']} threads" if v.get("threads") else "")
-        lat_lines.append(f"| {v['arm']} | {dev} | " + " | ".join(f"{sz[n]['p50_ms']:.1f}" for n in ("1", "5", "10", "50"))
-                         + f" | {sz['50']['ms_per_question']:.2f} | {th} |")
+        sz = v.get("sizes", {})
+        th = "n/a (CPU)" if v.get("device") == "cpu" else ("; ".join(latency_issues(v)) or "ok")
+        dev = v.get("device", "unknown") + (f" {v['threads']} threads" if v.get("threads") else "")
+        times = [sz.get(n, {}).get("p50_ms") for n in ("1", "5", "10", "50")]
+        per_q = sz.get("50", {}).get("ms_per_question")
+        lat_lines.append(f"| {v.get('arm', k)} | {dev} | " +
+                         " | ".join(f"{t:.1f}" if finite_number(t) else "-" for t in times) +
+                         f" | {f'{per_q:.2f}' if finite_number(per_q) else '-'} | {th} |")
     (RESULTS / "tables.md").write_text("\n".join(out + lat_lines) + "\n", encoding="utf-8")
 
 
