@@ -1,0 +1,284 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T01:55:12",
+  "args": {
+   "set": "tez220",
+   "asr": "nemocpp:C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "none",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": false,
+   "trim": true,
+   "gap": 0.0,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "tez220_asr_nemotron_en_80",
+   "rescore": null,
+   "tau_sweep": null,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\schema.yaml",
+  "rows": 220,
+  "gpu_before": {
+   "time": "2026-09-26T01:55:14+02:00",
+   "used_mb": 1021,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 130
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 553
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 278
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "asr": {
+   "name": "nemocpp-nemotron-speech-streaming-en-0.6b.q8_0-rc0",
+   "engine": "NeMo-Speech.cpp",
+   "version": "nemo-speech-asr 0.1.0",
+   "model": "C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "right_context": 0,
+   "chunk_s": 0.08,
+   "load_s": 0.14,
+   "lib": "C:\\temp\\nemo-speech\\x\\bin",
+   "process": "worker"
+  },
+  "asr_chunk_s": 0.08,
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 69.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 13.26,
+   "sm_mhz": 180.0,
+   "util_pct": 0.0,
+   "cool": true,
+   "waited_s": 15.2,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T01:55:33+02:00",
+   "used_mb": 1227,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 132
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 553
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 277
+    },
+    {
+     "pid": 50576,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 206
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "run_s": 32.2,
+  "load": {
+   "cpu_pct_mean": 35.8,
+   "cpu_pct_max": 75.0,
+   "cpu_pct_p50": 28.4,
+   "samples": 31,
+   "gpu_c_max": 79.0,
+   "gpu_c_mean": 78.0,
+   "gpu_samples": 3,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 80.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 98.35,
+   "sm_mhz": 2430.0,
+   "util_pct": 72.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T01:56:10+02:00",
+   "used_mb": 2153,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 132
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 553
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 286
+    },
+    {
+     "pid": 50576,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 1124
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "timing": "offline: the latencies are not meaningful, only per-step compute"
+ },
+ "summary": {
+  "rows": 220,
+  "actionable": 198,
+  "oos": 22,
+  "asr": {
+   "wer": 0.0449,
+   "step_compute_ms": {
+    "n": 32729,
+    "p50": 0.12,
+    "p95": 3.5,
+    "mean": 0.58,
+    "min": 0.0,
+    "max": 178.96
+   },
+   "busy_ms_per_chunk": {
+    "n": 220,
+    "p50": 4.46,
+    "p95": 5.36,
+    "mean": 4.65,
+    "min": 4.01,
+    "max": 12.2
+   },
+   "emission_delay_ms": {
+    "n": 196,
+    "p50": 230.0,
+    "p95": 475.0,
+    "mean": 250.36,
+    "min": -110.0,
+    "max": 770.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 196,
+    "p50": 170.0,
+    "p95": 430.0,
+    "mean": 218.42,
+    "min": -150.0,
+    "max": 730.0
+   },
+   "pipe_ms": {
+    "n": 1498,
+    "p50": 0.11,
+    "p95": 0.17,
+    "mean": 0.11,
+    "min": 0.03,
+    "max": 1.45
+   },
+   "decisive_word_missed": 13
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 1498,
+   "p50": -1171.72,
+   "p95": -563.63,
+   "mean": -1305.22,
+   "min": -3183.65,
+   "max": -338.74
+  }
+ }
+}
