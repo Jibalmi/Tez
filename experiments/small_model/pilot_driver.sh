@@ -8,6 +8,10 @@ PY=$ROOT/.venv-pilot/Scripts/python.exe
 BASH_EXE="C:/Program Files/Git/bin/bash.exe"      # not a bare `bash`: CreateProcess would find WSL's first
 SM=$ROOT/experiments/small_model
 LOG=$ROOT/runs/pilot/logs/driver.log
+BIN=$ROOT/runs/pilot/bin
+snap() {   # run a snapshot of a segment script: bash reads a script as it runs, so editing the original mid-run breaks it
+  cp "$SM/$1" "$BIN/$1.run" && echo "$BIN/$1.run"
+}
 RH() {   # purpose minutes cmd...
   local purpose=$1 minutes=$2; shift 2
   echo "$(date -Iseconds) queue: $purpose" >> "$LOG"
@@ -34,7 +38,7 @@ total=sum(1 for _ in open(r'$ROOT/runs/pilot/assign.jsonl',encoding='utf-8'))
 print(total-done)"
 }
 
-[ -f "$ROOT/runs/pilot/assign.jsonl" ] || segments schemas 3 "schemas: pool filter, clusters, 12B writes schemas (llama-server :8851)" 60 "$BASH_EXE" "$SM/seg_schemas.sh" 55
+[ -f "$ROOT/runs/pilot/assign.jsonl" ] || segments schemas 3 "schemas: pool filter, clusters, 12B writes schemas (llama-server :8851)" 60 "$BASH_EXE" "$(snap seg_schemas.sh)" 55
 
 for i in 1 2 3; do
   [ "$(teacher_left)" -le 0 ] && break
@@ -43,10 +47,10 @@ for i in 1 2 3; do
 done
 [ "$(teacher_left)" -le 0 ] || { echo "$(date -Iseconds) STOP: teacher unfinished after 3 segments" >> "$LOG"; exit 4; }
 
-segments train_a 4 "train option A arms (mmBERT base 30k, 10k; small 30k)" 60 "$BASH_EXE" "$SM/seg_train_a.sh" 55
+segments train_a 4 "train option A arms (mmBERT base 30k, 10k; small 30k)" 60 "$BASH_EXE" "$(snap seg_train_a.sh)" 55
 [ -f "$ROOT/results/pilot/train_c-qwen08-30k.json" ] || \
   segments train_c 2 "train option C (Qwen3.5-0.8B LoRA r=16)" 60 "$PY" "$SM/train_c.py" --arm c-qwen08-30k --minutes 50 --max-segments 2
-segments eval 3 "evaluate arms and GLiClass on the held-out suites" 60 "$BASH_EXE" "$SM/seg_eval.sh" 55
-RH "latency on the GPU (thermal state recorded)" 45 "$BASH_EXE" "$SM/seg_latency.sh" gpu
-RH "latency on the CPU (6 and 4 threads)" 45 "$BASH_EXE" "$SM/seg_latency.sh" cpu
+segments eval 3 "evaluate arms and GLiClass on the held-out suites" 60 "$BASH_EXE" "$(snap seg_eval.sh)" 55
+RH "latency on the GPU (thermal state recorded)" 45 "$BASH_EXE" "$(snap seg_latency.sh)" gpu
+RH "latency on the CPU (6 and 4 threads)" 45 "$BASH_EXE" "$(snap seg_latency.sh)" cpu
 echo "$(date -Iseconds) DONE" >> "$LOG"

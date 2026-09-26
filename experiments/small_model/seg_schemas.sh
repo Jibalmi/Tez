@@ -27,7 +27,9 @@ if [ ! -f "$ROOT/runs/pilot/clusters.jsonl" ]; then
 fi
 python C:/temp/gpu_lock.py snapshot > "$LOG/vram_schemas_$(date +%H%M).json"
 
-/c/temp/llamacpp/llama-server.exe -m "$GGUF" -ngl 99 -c 24576 -np 6 -fa on --port $PORT --host 127.0.0.1 \
+# One slot, 4,096 tokens: the production server's shape. 6 slots x 4,096 (2026-09-26 12:33) did not fit beside the
+# 12.7 GB of weights and 1.4 GB of desktop VRAM: it spilled into shared memory (prompt 140 tok/s, decode 3-10 tok/s).
+/c/temp/llamacpp/llama-server.exe -m "$GGUF" -ngl 99 -c 4096 -np 1 -fa on --port $PORT --host 127.0.0.1 \
   --no-webui -t "${RUN_HEAVY_THREADS:-6}" > "$LOG/llama_server_8851.log" 2>&1 &
 SERVER_PID=$!
 up=0
@@ -38,12 +40,15 @@ for i in $(seq 1 90); do
 done
 [ "$up" = 1 ] || { echo "llama-server did not start (see llama_server_8851.log)"; exit 1; }
 echo "server up $(date -Iseconds)" >> "$LOG/schemas_write.log"
+USED=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' ')
+echo "VRAM used after load: $USED MiB" >> "$LOG/schemas_write.log"
+if [ "$USED" -gt 15600 ]; then echo "VRAM nearly full ($USED MiB): would spill, stopping" >> "$LOG/schemas_write.log"; exit 1; fi
 nvidia-smi --query-gpu=temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,memory.used --format=csv,noheader >> "$LOG/schemas_write.log"
 
 # the day-1 decoding-rate check: single stream on 2 clusters, once
 [ -f "$ROOT/results/pilot/schema_generation_timing_p1.json" ] || \
   $PY schemas.py write --server http://127.0.0.1:$PORT --parallel 1 --limit 2 >> "$LOG/schemas_write.log" 2>&1
-$PY schemas.py write --server http://127.0.0.1:$PORT --parallel 6 --minutes $(( $(left) - 6 )) >> "$LOG/schemas_write.log" 2>&1
+$PY schemas.py write --server http://127.0.0.1:$PORT --parallel 1 --minutes $(( $(left) - 6 )) >> "$LOG/schemas_write.log" 2>&1
 stop_server
 nvidia-smi --query-gpu=temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,memory.used --format=csv,noheader >> "$LOG/schemas_write.log"
 
