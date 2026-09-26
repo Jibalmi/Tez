@@ -1,56 +1,24 @@
 #!/usr/bin/env bash
-# The pilot's heavy steps, one at a time, each through C:/temp/run_heavy.py (compute lock, thread cap 6, resource
-# watchdog), each at most 60 minutes. A step that ends with exit 3 (resumable work left) is queued again; any other
-# failure stops the driver (reported, never retried in a loop). Progress: runs/pilot/logs/driver.log.
+# The pilot's heavy work, one run_heavy hold at a time (compute lock, thread cap 6, resource watchdog), each hold at
+# most 60 minutes. Each hold runs seg_next.sh, which does as much pending work as fits. Exit 3 (work left) queues
+# another hold; any other failure stops the driver (reported, never retried in a loop). Log: runs/pilot/logs/driver.log.
 set -u
 ROOT=/c/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez-pilot
-PY=$ROOT/.venv-pilot/Scripts/python.exe
 BASH_EXE="C:/Program Files/Git/bin/bash.exe"      # not a bare `bash`: CreateProcess would find WSL's first
 SM=$ROOT/experiments/small_model
-LOG=$ROOT/runs/pilot/logs/driver.log
 BIN=$ROOT/runs/pilot/bin
-snap() {   # run a snapshot of a segment script: bash reads a script as it runs, so editing the original mid-run breaks it
-  cp "$SM/$1" "$BIN/$1.run" && echo "$BIN/$1.run"
-}
-RH() {   # purpose minutes cmd...
-  local purpose=$1 minutes=$2; shift 2
-  echo "$(date -Iseconds) queue: $purpose" >> "$LOG"
-  python C:/temp/run_heavy.py --owner projects-0c-pilot --purpose "Tez small-model pilot: $purpose" --minutes "$minutes" -- "$@" >> "$LOG" 2>&1
-  local rc=$?
-  echo "$(date -Iseconds) exit $rc: $purpose" >> "$LOG"
-  return $rc
-}
-segments() {   # name max_segments purpose minutes cmd...   (repeat while exit 3)
-  local name=$1 max=$2; shift 2
-  for i in $(seq 1 "$max"); do
-    RH "$@"; local rc=$?
-    [ $rc -eq 0 ] && return 0
-    [ $rc -eq 3 ] && continue
-    echo "$(date -Iseconds) STOP: $name failed with exit $rc" >> "$LOG"; exit $rc
-  done
-  echo "$(date -Iseconds) STOP: $name not finished after $max segments" >> "$LOG"; exit 4
-}
-teacher_left() {
-  $PY -c "
-import glob,json,sys
-done=sum(1 for p in glob.glob(r'$ROOT/runs/pilot/teacher/part-*.jsonl') for _ in open(p,encoding='utf-8'))
-total=sum(1 for _ in open(r'$ROOT/runs/pilot/assign.jsonl',encoding='utf-8'))
-print(total-done)"
-}
-
-[ -f "$ROOT/runs/pilot/assign.jsonl" ] || segments schemas 3 "schemas: pool filter, clusters, 12B writes schemas (llama-server :8851)" 60 "$BASH_EXE" "$(snap seg_schemas.sh)" 55
-
-for i in 1 2 3; do
-  [ "$(teacher_left)" -le 0 ] && break
-  RH "teacher: 12B labels decisions in process (resumable)" 60 "$PY" "$SM/teacher.py" --minutes 52 --n-ctx 4096 \
-    || { echo "$(date -Iseconds) STOP: teacher failed" >> "$LOG"; exit 1; }
+LOG=$ROOT/runs/pilot/logs/driver.log
+for i in $(seq 1 14); do
+  cp "$SM/seg_next.sh" "$BIN/seg_next.sh.run"      # a snapshot: bash reads a script as it runs
+  echo "$(date -Iseconds) queue: hold $i" >> "$LOG"
+  python C:/temp/run_heavy.py --owner projects-0c-pilot --purpose "Tez small-model pilot: hold $i (schemas, teacher, training, evaluation, latency; resumable)" \
+    --minutes 60 -- "$BASH_EXE" "$BIN/seg_next.sh.run" 55 >> "$LOG" 2>&1
+  rc=$?
+  echo "$(date -Iseconds) exit $rc: hold $i" >> "$LOG"
+  [ $rc -eq 0 ] && { echo "$(date -Iseconds) DONE" >> "$LOG"; exit 0; }
+  [ $rc -eq 3 ] && continue
+  echo "$(date -Iseconds) STOP: hold $i failed with exit $rc" >> "$LOG"
+  exit $rc
 done
-[ "$(teacher_left)" -le 0 ] || { echo "$(date -Iseconds) STOP: teacher unfinished after 3 segments" >> "$LOG"; exit 4; }
-
-segments train_a 4 "train option A arms (mmBERT base 30k, 10k; small 30k)" 60 "$BASH_EXE" "$(snap seg_train_a.sh)" 55
-[ -f "$ROOT/results/pilot/train_c-qwen08-30k.json" ] || \
-  segments train_c 2 "train option C (Qwen3.5-0.8B LoRA r=16)" 60 "$PY" "$SM/train_c.py" --arm c-qwen08-30k --minutes 50 --max-segments 2
-segments eval 3 "evaluate arms and GLiClass on the held-out suites" 60 "$BASH_EXE" "$(snap seg_eval.sh)" 55
-RH "latency on the GPU (thermal state recorded)" 45 "$BASH_EXE" "$(snap seg_latency.sh)" gpu
-RH "latency on the CPU (6 and 4 threads)" 45 "$BASH_EXE" "$(snap seg_latency.sh)" cpu
-echo "$(date -Iseconds) DONE" >> "$LOG"
+echo "$(date -Iseconds) STOP: work left after 14 holds" >> "$LOG"
+exit 4

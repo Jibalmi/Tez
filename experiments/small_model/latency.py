@@ -56,7 +56,7 @@ def thermal() -> dict:
         return {"error": str(exc)[:120]}
 
 
-def cool_down(limit_c: int = 65, max_wait_s: int = 600) -> dict:
+def cool_down(limit_c: int = 65, max_wait_s: int = 900) -> dict:
     t0 = time.time()
     th = thermal()
     while th.get("temp_c", 0) > limit_c and time.time() - t0 < max_wait_s:
