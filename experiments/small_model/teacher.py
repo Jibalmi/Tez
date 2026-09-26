@@ -124,10 +124,12 @@ def main() -> None:
                         "prompt_tokens": sum(r[0].tokens for r in res), "batch_prompt_n": res[0][0].timings["batch_prompt_n"]})
             n_read += 1
             if n_read == 3:
+                # llama.cpp keeps the token-embedding table (262,144 x 3,840 at Q8_0, about 1.07 GB) in pinned host
+                # memory, which Windows counts as shared GPU memory: ~1,130 MB is the design, not a spill.
                 spill = shared_gpu_mb()
-                if spill > 300:
-                    raise SystemExit(f"spilled into shared GPU memory ({spill} MB): lower --n-ctx; stopping")
-                print(f"  no spill (shared GPU memory {spill} MB)", flush=True)
+                if spill > 1700:
+                    raise SystemExit(f"spilled into shared GPU memory ({spill} MB, 1,130 expected): lower --n-ctx")
+                print(f"  shared GPU memory {spill} MB (1,130 expected: the host-side token embeddings)", flush=True)
             if n_read % 50 == 0:
                 el = time.time() - t0
                 print(f"  {n_read} states in {el:.0f} s: p50 {np.median(ms):.0f} ms/state, thermal {THERMAL}", flush=True)
