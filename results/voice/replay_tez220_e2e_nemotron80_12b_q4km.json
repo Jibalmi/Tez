@@ -1,0 +1,546 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T11:28:25",
+  "args": {
+   "set": "tez220",
+   "asr": "replay:results/voice/replay_tez220_asr_nemotron_en_80_rows.jsonl",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "tez220_e2e_nemotron80_12b_q4km",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\schema.yaml",
+  "rows": 220,
+  "gpu_before": {
+   "time": "2026-09-26T11:28:28+02:00",
+   "used_mb": 1237,
+   "total_mb": 16303,
+   "util_pct": 2,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 267
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 198
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 163
+    }
+   ]
+  },
+  "asr": {
+   "name": "nemocpp-nemotron-speech-streaming-en-0.6b.q8_0-rc0",
+   "engine": "NeMo-Speech.cpp",
+   "version": "nemo-speech-asr 0.1.0",
+   "model": "C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "right_context": 0,
+   "chunk_s": 0.08,
+   "load_s": 0.14,
+   "lib": "C:\\temp\\nemo-speech\\x\\bin",
+   "process": "worker",
+   "replayed_from": "results\\voice\\replay_tez220_asr_nemotron_en_80_rows.jsonl",
+   "note": "recorded emissions fed at audio time + the step's recorded compute (composed e2e)"
+  },
+  "asr_chunk_s": 0.08,
+  "decision": {
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "server_cmd": null,
+   "template": "gemma4",
+   "load_s": 9.8,
+   "model": "gemma-4-12b-q4_k - medium",
+   "readout": "letters",
+   "parts": [
+    "letters"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 48,
+    "n_params": 11907350576,
+    "size_mb": 7024,
+    "hybrid": false,
+    "desc": "gemma4 ?B Q4_K - Medium"
+   },
+   "head_ms": 144.6
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 69.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 13.75,
+   "sm_mhz": 315.0,
+   "util_pct": 1.0,
+   "cool": true,
+   "waited_s": 135.6,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T11:30:56+02:00",
+   "used_mb": 9286,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 262
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 212
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8048
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 163
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T11:31:00+02:00",
+   "used_mb": 9294,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 273
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 212
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8058
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 162
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "run_s": 489.1,
+  "load": {
+   "cpu_pct_mean": 36.3,
+   "cpu_pct_max": 92.3,
+   "cpu_pct_p50": 32.3,
+   "samples": 483,
+   "gpu_c_max": 82.0,
+   "gpu_c_mean": 76.7,
+   "gpu_samples": 48,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 78.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 52.47,
+   "sm_mhz": 1695.0,
+   "util_pct": 8.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T11:39:12+02:00",
+   "used_mb": 9312,
+   "total_mb": 16303,
+   "util_pct": 7,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 191
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 726
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 206
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8058
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 162
+    },
+    {
+     "pid": 46208,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 220,
+  "actionable": 198,
+  "oos": 22,
+  "asr": {
+   "wer": 0.0449,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 196,
+    "p50": 230.0,
+    "p95": 475.0,
+    "mean": 250.36,
+    "min": -110.0,
+    "max": 770.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 196,
+    "p50": 170.0,
+    "p95": 430.0,
+    "mean": 218.42,
+    "min": -150.0,
+    "max": 730.0
+   },
+   "pipe_ms": {
+    "n": 1498,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.0,
+    "max": 0.42
+   },
+   "decisive_word_missed": 13
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 1498,
+   "p50": 3.69,
+   "p95": 4.62,
+   "mean": 9.41,
+   "min": 0.02,
+   "max": 1597.74
+  },
+  "word_end_to_decision_ms": {
+   "n": 196,
+   "p50": 275.76,
+   "p95": 525.94,
+   "mean": 293.4,
+   "min": -78.66,
+   "max": 1109.79
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 115,
+    "p50": 284.33,
+    "p95": 526.37,
+    "mean": 300.66,
+    "min": -78.66,
+    "max": 1109.79
+   },
+   "R1": {
+    "n": 51,
+    "p50": 208.54,
+    "p95": 471.71,
+    "mean": 222.59,
+    "min": -63.5,
+    "max": 618.47
+   },
+   "R2": {
+    "n": 30,
+    "p50": 417.12,
+    "p95": 570.7,
+    "mean": 385.89,
+    "min": 128.1,
+    "max": 812.99
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 1110,
+   "p50": 296.56,
+   "p95": 535.33,
+   "mean": 307.71,
+   "min": -97.34,
+   "max": 2019.6
+  },
+  "word_end_to_first_action_ms": {
+   "n": 195,
+   "p50": 325.25,
+   "p95": 1829.6,
+   "mean": 422.72,
+   "min": -1654.77,
+   "max": 2651.34
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 196,
+   "p50": 275.77,
+   "p95": 525.95,
+   "mean": 293.4,
+   "min": -78.66,
+   "max": 1109.8
+  },
+  "dispatch_ms": {
+   "n": 270,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.01,
+   "min": 0.0,
+   "max": 0.09
+  },
+  "decide_ms_per_update": {
+   "n": 1706,
+   "p50": 32.95,
+   "p95": 46.16,
+   "mean": 35.22,
+   "min": 22.6,
+   "max": 645.52
+  },
+  "commit_ms_per_update": {
+   "n": 1706,
+   "p50": 4.97,
+   "p95": 24.4,
+   "mean": 9.55,
+   "min": 0.0,
+   "max": 515.03
+  },
+  "intent_accuracy": 0.8737,
+  "intent_accuracy_then_alt": 0.9798,
+  "none_recall": 0.9091,
+  "harmful": 2,
+  "harmful_rate": 0.0101,
+  "oos_false_actions": 5,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 3.462,
+  "first_action_words_fully_heard_mean": 3.769,
+  "first_action_at_or_before_decisive": 0.5404,
+  "harmful_detail": [
+   {
+    "id": "v053",
+    "text": "play veritasium's latest video",
+    "executed": [
+     "open_spotify",
+     "open_youtube",
+     "play_youtube"
+    ],
+    "accepted": [
+     "play_youtube"
+    ]
+   },
+   {
+    "id": "v197",
+    "text": "clothes the notepad",
+    "executed": [
+     "open_notes"
+    ],
+    "accepted": [
+     "close_app"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "v207",
+    "text": "youtube is so full of ads these days",
+    "executed": [
+     "open_youtube"
+    ]
+   },
+   {
+    "id": "v208",
+    "text": "text sarah that i'm on my way",
+    "executed": [
+     "type_text"
+    ]
+   },
+   {
+    "id": "v215",
+    "text": "my notes are such a mess lately",
+    "executed": [
+     "open_notes"
+    ]
+   },
+   {
+    "id": "v217",
+    "text": "order more coffee pods from amazon",
+    "executed": [
+     "open_browser",
+     "search_web"
+    ]
+   },
+   {
+    "id": "v218",
+    "text": "the volume on this laptop has always been bad",
+    "executed": [
+     "volume_up"
+    ]
+   }
+  ]
+ }
+}
