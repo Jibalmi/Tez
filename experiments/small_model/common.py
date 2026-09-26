@@ -172,6 +172,8 @@ def eval_states() -> Iterator[tuple[str, Any]]:
 # This laptop's GPU climbs from 70 C to 89 C in about 5 minutes of sustained decode (2026-09-26 13:10-13:15), and
 # C:/temp/run_heavy.py kills any job whose GPU stays above 88 C for 15 s. Every GPU loop of the pilot calls
 # thermal_guard(): every `every` seconds it reads the temperature, and at `hot` or above it pauses until `cool`.
+# 84 / 79 C: the first setting (80 / 72) left the writer paused for its full 10 minutes at 16:10, because the idle
+# GPU in a chassis heated by other sessions' CPU jobs cools only about 1 C per 20 s from 80 C.
 THERMAL = {"checks": 0, "pauses": 0, "paused_s": 0.0, "max_c": 0}
 _THERMAL_LAST = [0.0]
 
@@ -186,7 +188,7 @@ def gpu_temp() -> int | None:
         return None
 
 
-def thermal_guard(hot: int = 82, cool: int = 74, every: float = 5.0, force: bool = False) -> float:
+def thermal_guard(hot: int = 84, cool: int = 79, every: float = 5.0, force: bool = False) -> float:
     """Pause (seconds returned) while the GPU is at `hot` C or above, until it is back to `cool` (at most 10 min)."""
     import time as _t
     now = _t.time()

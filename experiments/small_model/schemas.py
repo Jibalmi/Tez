@@ -173,7 +173,7 @@ def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> Non
         c, texts = job
         if deadline and time.time() > deadline:
             return None                                  # left for the next segment (resumable)
-        thermal_guard(hot=80, cool=72, force=True)
+        thermal_guard(hot=84, cool=79, force=True)
         seed = int(c["cid"].encode().hex()[-6:], 16)
         for attempt in range(3):
             try:
