@@ -1,0 +1,378 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T15:05:02",
+  "args": {
+   "set": "theioma",
+   "asr": "whisper:base.en",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "none",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 120,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "theioma_asr_whisper_base_200_rt",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "theioma",
+  "data_sha256": {
+   "commands.jsonl": "d3948d374fca7126932eab8a16780536bc847430ec1961383eee9bb2ddb922e5",
+   "align.jsonl": "83c5af021ba6e798f0ecbb70bcbe500b609ff59370116af6f065fa9cb4a052be",
+   "schema.yaml": "19d68500afa9773fb0f3ab22d7ffb16b3ffb4fc6a87d3c5db9acaaf00a322b1a"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\theioma\\schema.yaml",
+  "rows": 120,
+  "gpu_before": {
+   "time": "2026-09-26T15:05:05+02:00",
+   "used_mb": 1528,
+   "total_mb": 16303,
+   "util_pct": 25,
+   "processes": [
+    {
+     "pid": 10248,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 376
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 162
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 788
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 177
+    },
+    {
+     "pid": 30300,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 161
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 187
+    }
+   ]
+  },
+  "asr": {
+   "name": "whisper-base.en-cuda-200ms",
+   "engine": "faster-whisper",
+   "model": "base.en",
+   "device": "cuda",
+   "chunk_s": 0.2,
+   "load_s": 2.0,
+   "process": "same"
+  },
+  "asr_chunk_s": 0.2,
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "system.open_app": "R0",
+    "system.open_url": "R0",
+    "media.key": "R0",
+    "navigate.app": "R0",
+    "window.minimize": "R0",
+    "window.maximize": "R0",
+    "media.now_playing": "R0",
+    "theioma.list_sessions": "R0",
+    "screen.describe": "R0",
+    "youtube.play": "R1",
+    "spotify.play": "R1",
+    "system.web_search": "R1",
+    "theioma.open_project_section": "R1",
+    "keyboard.type": "R2",
+    "web.search_and_summarize": "R2",
+    "memory.note_event": "R2",
+    "theioma.send_message": "R2",
+    "delegate.orchestrator": "R2",
+    "system.volume_set": "R2",
+    "resolve_approval": "R3",
+    "window.close": "R3",
+    "process.kill": "R3",
+    "shell.run": "R3"
+   }
+  },
+  "thermal_before": {
+   "c": 64.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 25.59,
+   "sm_mhz": 1702.0,
+   "util_pct": 3.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T15:06:27+02:00",
+   "used_mb": 1880,
+   "total_mb": 16303,
+   "util_pct": 3,
+   "processes": [
+    {
+     "pid": 10248,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 378
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 162
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 788
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 177
+    },
+    {
+     "pid": 30300,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 161
+    },
+    {
+     "pid": 62940,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 354
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 187
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T15:06:37+02:00",
+   "used_mb": 1979,
+   "total_mb": 16303,
+   "util_pct": 4,
+   "processes": [
+    {
+     "pid": 10248,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 378
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 162
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 788
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 177
+    },
+    {
+     "pid": 30300,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 161
+    },
+    {
+     "pid": 62940,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 454
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 173
+    }
+   ]
+  },
+  "run_s": 349.0,
+  "load": {
+   "cpu_pct_mean": 50.4,
+   "cpu_pct_max": 98.6,
+   "cpu_pct_p50": 48.6,
+   "samples": 340,
+   "gpu_c_max": 69.0,
+   "gpu_c_mean": 66.5,
+   "gpu_samples": 34,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 67.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 25.41,
+   "sm_mhz": 630.0,
+   "util_pct": 4.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T15:12:31+02:00",
+   "used_mb": 1985,
+   "total_mb": 16303,
+   "util_pct": 3,
+   "processes": [
+    {
+     "pid": 10248,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 384
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 165
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 788
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 175
+    },
+    {
+     "pid": 30300,
+     "name": "msedgewebview2",
+     "kind": "dedicated",
+     "mb": 161
+    },
+    {
+     "pid": 62940,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 454
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 186
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 120,
+  "actionable": 120,
+  "oos": 0,
+  "asr": {
+   "wer": 0.0924,
+   "step_compute_ms": {
+    "n": 1536,
+    "p50": 64.31,
+    "p95": 207.78,
+    "mean": 82.86,
+    "min": 35.79,
+    "max": 1307.83
+   },
+   "busy_ms_per_chunk": {
+    "n": 120,
+    "p50": 80.21,
+    "p95": 133.59,
+    "mean": 86.32,
+    "min": 47.86,
+    "max": 273.51
+   },
+   "emission_delay_ms": {
+    "n": 120,
+    "p50": -63.75,
+    "p95": 107.5,
+    "mean": -66.62,
+    "min": -1210.0,
+    "max": 1620.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 120,
+    "p50": -200.0,
+    "p95": 10.0,
+    "mean": -157.67,
+    "min": -1400.0,
+    "max": 1600.0
+   },
+   "pipe_ms": {
+    "n": 961,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 0.11
+   },
+   "decisive_word_missed": 5
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 961,
+   "p50": 69.64,
+   "p95": 392.17,
+   "mean": 114.37,
+   "min": 37.96,
+   "max": 1308.15
+  }
+ }
+}

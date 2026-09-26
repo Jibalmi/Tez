@@ -79,7 +79,9 @@ e2e-live)          # whisper re-decode composed e2e; whisper ASR paced in real t
   $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true; sleep 60
   $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --limit 40      --tag theioma_e2elive_nemotron80_12b_q4km_40
   ;;
-e2e-live-rest)     # the last two arms of e2e-live, ~15 min
+e2e-live-rest)     # the rest of e2e-live, ~25 min: whisper composed again from the paced run's own step times (its
+                   # compute, 80 ms p50, not job 1's hot back-to-back 43 ms), Parakeet EOU, the co-loaded stack
+  $R --set theioma --asr replay:results/voice/replay_theioma_asr_whisper_base_200_rt_rows.jsonl --backend inproc:$Q4 --lib $LIB --tag theioma_e2e_whisper200rt_12b_q4km; sleep 60
   $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true; sleep 60
   $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --limit 40 --tag theioma_e2elive_nemotron80_12b_q4km_40
   ;;
