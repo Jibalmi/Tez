@@ -1,0 +1,3803 @@
+{
+  "created_utc": "2026-09-26T22:01:35.864221+00:00",
+  "model_requested": "gpt-6-astra",
+  "model_fallback_allowed": false,
+  "reasoning_effort": "low",
+  "cli_version": "codex-cli 0.156.1",
+  "transport": "codex exec, existing ChatGPT login",
+  "batch_size": 8,
+  "states": 32,
+  "decisions": 160,
+  "sample_sha256": "a9d94375ab5c28d3f9022a8f6025e45883d65c914b980174a809bbf89b02f790",
+  "ids": [
+    "aya-78620",
+    "clinc-4035",
+    "csqa-7902",
+    "fw-01071",
+    "fw2-ar-0125",
+    "gmmlu-ar-9350",
+    "aya-22093",
+    "clinc-14575",
+    "csqa-595",
+    "fw-03099",
+    "fw2-de-0072",
+    "gmmlu-de-13129",
+    "aya-158829",
+    "clinc-7321",
+    "csqa-7098",
+    "fw-00817",
+    "fw2-ar-0238",
+    "gmmlu-en-4652",
+    "aya-183023",
+    "clinc-8714",
+    "csqa-9123",
+    "fw-00635",
+    "fw2-de-0037",
+    "gmmlu-ar-8383",
+    "aya-23504",
+    "clinc-5084",
+    "csqa-9524",
+    "fw-01346",
+    "fw2-ar-0108",
+    "gmmlu-de-820",
+    "aya-62952",
+    "clinc-5051"
+  ],
+  "sources": {
+    "aya": 6,
+    "clinc": 6,
+    "csqa": 5,
+    "fineweb": 5,
+    "fineweb2": 5,
+    "gmmlu": 5
+  },
+  "languages": {
+    "acq": 1,
+    "en": 17,
+    "ar": 5,
+    "arb": 1,
+    "de": 4,
+    "ary": 1,
+    "arz": 1,
+    "ben": 1,
+    "ceb": 1
+  },
+  "local_teacher": {
+    "model": "Gemma 4 12B Q8_0",
+    "llama_cpp_build": "b11100",
+    "n_ctx": 2048,
+    "population_sha256": "ac8c3a5a6d10f01a051a2fda1092b84fb10fffc68711371c86ec80f794b932fb",
+    "matched_states": 32,
+    "matched_inference_seconds": 15.581100000000001,
+    "matched_inference_median_ms": 494.1,
+    "sustained_states": 600,
+    "sustained_decisions": 3000,
+    "sustained_wall_seconds": 670,
+    "sustained_states_per_second": 0.8955223880597015,
+    "sustained_decisions_per_second": 4.477611940298507,
+    "sustained_rows_sha256": "a8a0705483dd125e0fe27809c1666d32e7a11d29a5dd6788954bf9f92b767eaa",
+    "sustained_inference_seconds": 246.1043,
+    "sustained_cooling_seconds": 365.1252953000512,
+    "timing_scope": "600 recovered states, includes cooling/checkpoints; excludes model loading and GPU queue",
+    "output": "5 decisions/state; 2 option orders with complete logits per decision"
+  },
+  "trials": [
+    {
+      "name": "trial-1-workers-1",
+      "workers": 1,
+      "wall_seconds": 37.48382840001432,
+      "valid_decisions": 160,
+      "valid_states": 32,
+      "decisions_per_second": 4.268507429191488,
+      "teacher_agreement": 0.79375,
+      "gold_count": 16,
+      "gold_correct": 15,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:01:35.870081+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17251,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 151,
+              "reasoning_output_tokens": 54
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-10-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-05-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-08-9",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-00-7",
+              "key": "2"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "gold-clinc",
+              "key": "credit_score"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "gold-csqa",
+              "key": "burrow"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-9",
+              "key": "2"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-0",
+              "key": "marketing_copy"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-4",
+              "key": "false"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-0",
+              "key": "__none__"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-3",
+              "key": "general_public"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-9",
+              "key": "4"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-2",
+              "key": "narrative"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-6",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "gold-gmmlu",
+              "key": "خطأ، خطأ"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-0",
+              "key": "general_knowledge"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-2",
+              "key": "query_response"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-6",
+              "key": "false"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-2",
+              "key": "sports"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-3",
+              "key": "continuation"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-8",
+              "key": "2"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "gold-clinc",
+              "key": "income"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            }
+          ],
+          "wall_seconds": 9.293539300007978
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:01:45.166192+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16657,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 142,
+              "reasoning_output_tokens": 45
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "csqa-595",
+              "qid": "gold-csqa",
+              "key": "complete sentences"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-3",
+              "key": "general_public"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-7",
+              "key": "0"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-2",
+              "key": "b2c_consumer"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-3",
+              "key": "web_store"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-8",
+              "key": "1"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-2",
+              "key": "german"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-3",
+              "key": "sonstiges"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "gold-gmmlu",
+              "key": "Securities Act von 1933"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-3",
+              "key": "formell"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-1",
+              "key": "interactive"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-9",
+              "key": "3"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-8",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-7",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-1",
+              "key": "fact_retrieval"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-5",
+              "key": "true"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "gold-clinc",
+              "key": "alarm"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-1",
+              "key": "general_technical"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-2",
+              "key": "beginner"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "gold-csqa",
+              "key": "drunkenness"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-7",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-9",
+              "key": "3"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-4",
+              "key": "false"
+            }
+          ],
+          "wall_seconds": 10.292034599988256
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:01:55.460164+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17317,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 175,
+              "reasoning_output_tokens": 78
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-8",
+              "key": "2"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-0",
+              "key": "politics"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-5",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-3",
+              "key": "non_governmental"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "gold-gmmlu",
+              "key": "Factors of production"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-1",
+              "key": "education"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-3",
+              "key": "academic"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-0",
+              "key": "informational"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-2",
+              "key": "general_public"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-6",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-5",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-2",
+              "key": "politics"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-4",
+              "key": "false"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "gold-clinc",
+              "key": "exchange_rate"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "gold-csqa",
+              "key": "artificial"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-3",
+              "key": "published_work"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-0",
+              "key": "regulatory"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-8",
+              "key": "3"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-5",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-6",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-2",
+              "key": "expert"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-7",
+              "key": "2"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-2",
+              "key": "news_agency"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "gold-gmmlu",
+              "key": "فرص المريض في تقرير مصيره بنفسه"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-0",
+              "key": "medical_health"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-8",
+              "key": "4"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-7",
+              "key": "4"
+            }
+          ],
+          "wall_seconds": 9.81746170000406
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:02:05.282324+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17304,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 143,
+              "reasoning_output_tokens": 46
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "labels": [
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-4",
+              "key": "true"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-2",
+              "key": "science_nature"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-3",
+              "key": "long_form"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "gold-clinc",
+              "key": "reminder"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-4",
+              "key": "true"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "gold-csqa",
+              "key": "drawer"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-3",
+              "key": "blog_post"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-9",
+              "key": "4"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-6",
+              "key": "true"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-2",
+              "key": "__none__"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-0",
+              "key": "news_report"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-4",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "gold-gmmlu",
+              "key": "Samen in Eierstöcken eingeschlossen"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-1",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-8",
+              "key": "0"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-4",
+              "key": "false"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-2",
+              "key": "simple_answer"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-1",
+              "key": "factual_query"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-8",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-7",
+              "key": "3"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "gold-clinc",
+              "key": "todo_list"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-0",
+              "key": "user_query"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-3",
+              "key": "private_message"
+            }
+          ],
+          "wall_seconds": 8.0690753999952
+        }
+      ]
+    },
+    {
+      "name": "trial-2-workers-4",
+      "workers": 4,
+      "wall_seconds": 11.067741799997748,
+      "valid_decisions": 160,
+      "valid_states": 32,
+      "decisions_per_second": 14.456426874724576,
+      "teacher_agreement": 0.8,
+      "gold_count": 16,
+      "gold_correct": 15,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:02:13.357612+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17147,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 137,
+              "reasoning_output_tokens": 40
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-10-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-05-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-08-9",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-00-7",
+              "key": "2"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "gold-clinc",
+              "key": "credit_score"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "gold-csqa",
+              "key": "burrow"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-9",
+              "key": "2"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-4",
+              "key": "false"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-0",
+              "key": "general_knowledge"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-3",
+              "key": "general_public"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-9",
+              "key": "4"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-2",
+              "key": "narrative"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-6",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "gold-gmmlu",
+              "key": "خطأ، خطأ"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-0",
+              "key": "general_knowledge"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-2",
+              "key": "query_response"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-6",
+              "key": "false"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-2",
+              "key": "sports"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-3",
+              "key": "continuation"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-8",
+              "key": "2"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "gold-clinc",
+              "key": "income"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            }
+          ],
+          "wall_seconds": 10.999530500004767
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:02:13.358009+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16657,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 164,
+              "reasoning_output_tokens": 67
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "csqa-595",
+              "qid": "gold-csqa",
+              "key": "complete sentences"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-3",
+              "key": "general_public"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-7",
+              "key": "0"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-2",
+              "key": "b2c_consumer"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-3",
+              "key": "web_store"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-8",
+              "key": "1"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-2",
+              "key": "german"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-3",
+              "key": "sonstiges"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "gold-gmmlu",
+              "key": "Securities Act von 1933"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-3",
+              "key": "formell"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-1",
+              "key": "interactive"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-9",
+              "key": "3"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-8",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-7",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-1",
+              "key": "fact_retrieval"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-5",
+              "key": "false"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "gold-clinc",
+              "key": "alarm"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-1",
+              "key": "electronics_hardware"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-2",
+              "key": "beginner"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "gold-csqa",
+              "key": "drunkenness"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-7",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-9",
+              "key": "3"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-4",
+              "key": "false"
+            }
+          ],
+          "wall_seconds": 9.892073199996958
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:02:13.358672+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17213,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 178,
+              "reasoning_output_tokens": 81
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-8",
+              "key": "2"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-0",
+              "key": "politics"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-5",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-3",
+              "key": "non_governmental"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "gold-gmmlu",
+              "key": "Factors of production"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-1",
+              "key": "education"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-3",
+              "key": "academic"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-0",
+              "key": "informational"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-2",
+              "key": "general_public"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-9",
+              "key": "0"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-6",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-5",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-2",
+              "key": "biography"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-4",
+              "key": "false"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "gold-clinc",
+              "key": "exchange_rate"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "gold-csqa",
+              "key": "artificial"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-3",
+              "key": "published_work"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-0",
+              "key": "regulatory"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-8",
+              "key": "3"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-5",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-6",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-2",
+              "key": "expert"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-7",
+              "key": "2"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-2",
+              "key": "news_agency"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "gold-gmmlu",
+              "key": "فرص المريض في تقرير مصيره بنفسه"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-0",
+              "key": "medical_health"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-8",
+              "key": "4"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-7",
+              "key": "4"
+            }
+          ],
+          "wall_seconds": 9.262746699998388
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:02:13.358718+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17304,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 167,
+              "reasoning_output_tokens": 70
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "labels": [
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-4",
+              "key": "true"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-2",
+              "key": "science_nature"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-3",
+              "key": "long_form"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "gold-clinc",
+              "key": "reminder"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-4",
+              "key": "true"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "gold-csqa",
+              "key": "drawer"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-3",
+              "key": "blog_post"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-9",
+              "key": "4"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-6",
+              "key": "true"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-2",
+              "key": "__none__"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-0",
+              "key": "news_report"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-5",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-4",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "gold-gmmlu",
+              "key": "Samen in Eierstöcken eingeschlossen"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-1",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-8",
+              "key": "0"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-4",
+              "key": "false"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-2",
+              "key": "simple_answer"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-1",
+              "key": "factual_query"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-8",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-7",
+              "key": "3"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "gold-clinc",
+              "key": "todo_list"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-0",
+              "key": "user_query"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-3",
+              "key": "private_message"
+            }
+          ],
+          "wall_seconds": 11.061469299995224
+        }
+      ]
+    },
+    {
+      "name": "trial-3-workers-4",
+      "workers": 4,
+      "wall_seconds": 10.977148999998462,
+      "valid_decisions": 160,
+      "valid_states": 32,
+      "decisions_per_second": 14.575733644502995,
+      "teacher_agreement": 0.8,
+      "gold_count": 16,
+      "gold_correct": 15,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:02:24.427070+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17251,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 158,
+              "reasoning_output_tokens": 61
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-10-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-05-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-08-9",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-00-7",
+              "key": "2"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "gold-clinc",
+              "key": "credit_score"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "gold-csqa",
+              "key": "burrow"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-9",
+              "key": "2"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-0",
+              "key": "blog_post"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-4",
+              "key": "false"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-0",
+              "key": "__none__"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-3",
+              "key": "general_public"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-9",
+              "key": "4"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-2",
+              "key": "narrative"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-6",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "gold-gmmlu",
+              "key": "خطأ، خطأ"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-0",
+              "key": "general_knowledge"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-2",
+              "key": "query_response"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-6",
+              "key": "false"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-2",
+              "key": "sports"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-3",
+              "key": "continuation"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-8",
+              "key": "2"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "gold-clinc",
+              "key": "income"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            }
+          ],
+          "wall_seconds": 9.28465299999516
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:02:24.427393+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16761,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 161,
+              "reasoning_output_tokens": 64
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 31,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "csqa-595",
+              "qid": "gold-csqa",
+              "key": "complete sentences"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-3",
+              "key": "general_public"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-7",
+              "key": "0"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-2",
+              "key": "b2c_consumer"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-3",
+              "key": "web_store"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-8",
+              "key": "1"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-2",
+              "key": "german"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-3",
+              "key": "sonstiges"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "gold-gmmlu",
+              "key": "Securities Act von 1933"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-3",
+              "key": "formell"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-1",
+              "key": "interactive"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-9",
+              "key": "3"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-8",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-7",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-1",
+              "key": "fact_retrieval"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-5",
+              "key": "true"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "gold-clinc",
+              "key": "alarm"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-1",
+              "key": "general_technical"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-2",
+              "key": "beginner"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "gold-csqa",
+              "key": "drunkenness"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-7",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-9",
+              "key": "3"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-4",
+              "key": "false"
+            }
+          ],
+          "wall_seconds": 9.23135660000844
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:02:24.427672+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17317,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 160,
+              "reasoning_output_tokens": 63
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 34,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-8",
+              "key": "2"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-0",
+              "key": "politics"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-5",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-3",
+              "key": "non_governmental"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "gold-gmmlu",
+              "key": "Factors of production"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-1",
+              "key": "education"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-3",
+              "key": "academic"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-0",
+              "key": "informational"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-2",
+              "key": "general_public"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-6",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-5",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-2",
+              "key": "politics"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-4",
+              "key": "false"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "gold-clinc",
+              "key": "exchange_rate"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "gold-csqa",
+              "key": "artificial"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-3",
+              "key": "published_work"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-0",
+              "key": "regulatory"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-8",
+              "key": "3"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-5",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-6",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-2",
+              "key": "expert"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-7",
+              "key": "2"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-2",
+              "key": "news_agency"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "gold-gmmlu",
+              "key": "فرص المريض في تقرير مصيره بنفسه"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-0",
+              "key": "medical_health"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-8",
+              "key": "4"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-7",
+              "key": "4"
+            }
+          ],
+          "wall_seconds": 9.395867199986242
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:02:24.427847+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17408,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 124,
+              "reasoning_output_tokens": 27
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "labels": [
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-4",
+              "key": "true"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-2",
+              "key": "science_nature"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-3",
+              "key": "long_form"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "gold-clinc",
+              "key": "reminder"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-4",
+              "key": "true"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "gold-csqa",
+              "key": "drawer"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-3",
+              "key": "blog_post"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-9",
+              "key": "4"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-6",
+              "key": "true"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-2",
+              "key": "__none__"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-0",
+              "key": "news_report"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-4",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "gold-gmmlu",
+              "key": "Samen in Eierstöcken eingeschlossen"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-1",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-8",
+              "key": "0"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-4",
+              "key": "false"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-2",
+              "key": "simple_answer"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-1",
+              "key": "factual_query"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-8",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-7",
+              "key": "3"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "gold-clinc",
+              "key": "todo_list"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-0",
+              "key": "user_query"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-3",
+              "key": "private_message"
+            }
+          ],
+          "wall_seconds": 10.970208100014133
+        }
+      ]
+    },
+    {
+      "name": "trial-4-workers-1",
+      "workers": 1,
+      "wall_seconds": 35.69408630000544,
+      "valid_decisions": 160,
+      "valid_states": 32,
+      "decisions_per_second": 4.482535248422247,
+      "teacher_agreement": 0.8,
+      "gold_count": 16,
+      "gold_correct": 15,
+      "batches": [
+        {
+          "batch_id": 0,
+          "requested_states": 8,
+          "prompt_sha256": "4ddb73257b61367419feaf75b8b4579c1c4f1e0c57499110ba4585238a1871d5",
+          "started_utc": "2026-09-26T22:02:35.404733+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17147,
+              "cached_input_tokens": 8192,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 150,
+              "reasoning_output_tokens": 53
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 32,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-10-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-05-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-08-9",
+              "key": "3"
+            },
+            {
+              "id": "aya-78620",
+              "qid": "aya_multi-00-7",
+              "key": "2"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "gold-clinc",
+              "key": "credit_score"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-4035",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "gold-csqa",
+              "key": "burrow"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-9",
+              "key": "2"
+            },
+            {
+              "id": "csqa-7902",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-4",
+              "key": "false"
+            },
+            {
+              "id": "fw-01071",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-0",
+              "key": "__none__"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-3",
+              "key": "general_public"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-9",
+              "key": "4"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-2",
+              "key": "narrative"
+            },
+            {
+              "id": "fw2-ar-0125",
+              "qid": "ar-03-6",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "gold-gmmlu",
+              "key": "خطأ، خطأ"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-0",
+              "key": "general_knowledge"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-2",
+              "key": "query_response"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-9350",
+              "qid": "ar-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-6",
+              "key": "false"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-2",
+              "key": "sports"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-9",
+              "key": "2"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-3",
+              "key": "continuation"
+            },
+            {
+              "id": "aya-22093",
+              "qid": "aya_multi-06-8",
+              "key": "2"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "gold-clinc",
+              "key": "income"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-14575",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            }
+          ],
+          "wall_seconds": 9.573197499994421
+        },
+        {
+          "batch_id": 1,
+          "requested_states": 8,
+          "prompt_sha256": "8df5974ad30f8df8138200650d181a07f3612ab6a938fa2b3413734c96a3d927",
+          "started_utc": "2026-09-26T22:02:44.979817+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 16657,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 123,
+              "reasoning_output_tokens": 26
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "csqa-595",
+              "qid": "gold-csqa",
+              "key": "complete sentences"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-3",
+              "key": "general_public"
+            },
+            {
+              "id": "csqa-595",
+              "qid": "en-07-7",
+              "key": "0"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-2",
+              "key": "b2c_consumer"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-3",
+              "key": "web_store"
+            },
+            {
+              "id": "fw-03099",
+              "qid": "en-08-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-8",
+              "key": "1"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-2",
+              "key": "german"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-de-0072",
+              "qid": "de-00-3",
+              "key": "sonstiges"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "gold-gmmlu",
+              "key": "Securities Act von 1933"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-3",
+              "key": "formell"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-1",
+              "key": "interactive"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-9",
+              "key": "3"
+            },
+            {
+              "id": "gmmlu-de-13129",
+              "qid": "de-04-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-8",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-7",
+              "key": "0"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-1",
+              "key": "fact_retrieval"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-158829",
+              "qid": "aya_multi-07-5",
+              "key": "false"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "gold-clinc",
+              "key": "alarm"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-0",
+              "key": "transactional"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-1",
+              "key": "general_technical"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-7321",
+              "qid": "en-05-2",
+              "key": "beginner"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "gold-csqa",
+              "key": "drunkenness"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-7",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-7098",
+              "qid": "en-10-9",
+              "key": "3"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-5",
+              "key": "true"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw-00817",
+              "qid": "en-00-4",
+              "key": "false"
+            }
+          ],
+          "wall_seconds": 7.870408200004022
+        },
+        {
+          "batch_id": 2,
+          "requested_states": 8,
+          "prompt_sha256": "fc4ceef9843fca67efdd9f598b222f7a54e558f2535031618313521dd7d0beba",
+          "started_utc": "2026-09-26T22:02:52.855061+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17213,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 147,
+              "reasoning_output_tokens": 50
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 33,
+          "gold_count": 4,
+          "gold_correct": 4,
+          "labels": [
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-8",
+              "key": "2"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-0",
+              "key": "politics"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-5",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0238",
+              "qid": "ar-02-3",
+              "key": "non_governmental"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "gold-gmmlu",
+              "key": "Factors of production"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-1",
+              "key": "education"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-3",
+              "key": "academic"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-0",
+              "key": "informational"
+            },
+            {
+              "id": "gmmlu-en-4652",
+              "qid": "en-09-2",
+              "key": "general_public"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-9",
+              "key": "0"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-6",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-5",
+              "key": "true"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-2",
+              "key": "biography"
+            },
+            {
+              "id": "aya-183023",
+              "qid": "aya_multi-10-4",
+              "key": "false"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "gold-clinc",
+              "key": "exchange_rate"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-8",
+              "key": "0"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-0",
+              "key": "social_media"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-2",
+              "key": "finance_economics"
+            },
+            {
+              "id": "clinc-8714",
+              "qid": "en-00-9",
+              "key": "1"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "gold-csqa",
+              "key": "artificial"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-3",
+              "key": "published_work"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-6",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9123",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-0",
+              "key": "regulatory"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-8",
+              "key": "3"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-5",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-6",
+              "key": "false"
+            },
+            {
+              "id": "fw-00635",
+              "qid": "en-05-2",
+              "key": "expert"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-4",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-7",
+              "key": "2"
+            },
+            {
+              "id": "fw2-de-0037",
+              "qid": "de-01-2",
+              "key": "news_agency"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "gold-gmmlu",
+              "key": "فرص المريض في تقرير مصيره بنفسه"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-5",
+              "key": "true"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-0",
+              "key": "medical_health"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-8",
+              "key": "4"
+            },
+            {
+              "id": "gmmlu-ar-8383",
+              "qid": "ar-03-7",
+              "key": "4"
+            }
+          ],
+          "wall_seconds": 9.771278500003973
+        },
+        {
+          "batch_id": 3,
+          "requested_states": 8,
+          "prompt_sha256": "d41e871cba128c5d1bcd1bc458c236b8b412b7f90ba0385cb0174087b67a7504",
+          "started_utc": "2026-09-26T22:03:02.628241+00:00",
+          "valid_states": 8,
+          "valid_decisions": 40,
+          "returncode": 0,
+          "errors": [],
+          "usage": [
+            {
+              "input_tokens": 17304,
+              "cached_input_tokens": 0,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 147,
+              "reasoning_output_tokens": 50
+            }
+          ],
+          "tool_items": [],
+          "teacher_agreed": 30,
+          "gold_count": 4,
+          "gold_correct": 3,
+          "labels": [
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-4",
+              "key": "true"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-7",
+              "key": "3"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-5",
+              "key": "false"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-2",
+              "key": "science_nature"
+            },
+            {
+              "id": "aya-23504",
+              "qid": "aya_multi-03-3",
+              "key": "long_form"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "gold-clinc",
+              "key": "reminder"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-1",
+              "key": "english"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-4",
+              "key": "true"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-6",
+              "key": "false"
+            },
+            {
+              "id": "clinc-5084",
+              "qid": "en-00-5",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "gold-csqa",
+              "key": "drawer"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-0",
+              "key": "product_description"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-4",
+              "key": "false"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-8",
+              "key": "0"
+            },
+            {
+              "id": "csqa-9524",
+              "qid": "en-08-3",
+              "key": "blog_post"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-9",
+              "key": "4"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-6",
+              "key": "true"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-3",
+              "key": "informational"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-2",
+              "key": "__none__"
+            },
+            {
+              "id": "fw-01346",
+              "qid": "en-00-0",
+              "key": "news_snippet"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-0",
+              "key": "news_report"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-6",
+              "key": "false"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-7",
+              "key": "3"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-5",
+              "key": "true"
+            },
+            {
+              "id": "fw2-ar-0108",
+              "qid": "ar-04-4",
+              "key": "false"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "gold-gmmlu",
+              "key": "Samen in Eierstöcken eingeschlossen"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-1",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-0",
+              "key": "__none__"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-8",
+              "key": "0"
+            },
+            {
+              "id": "gmmlu-de-820",
+              "qid": "de-00-4",
+              "key": "false"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-2",
+              "key": "simple_answer"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-1",
+              "key": "factual_query"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-9",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-8",
+              "key": "1"
+            },
+            {
+              "id": "aya-62952",
+              "qid": "aya_multi-02-7",
+              "key": "3"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "gold-clinc",
+              "key": "todo_list"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-7",
+              "key": "1"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-9",
+              "key": "0"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-0",
+              "key": "user_query"
+            },
+            {
+              "id": "clinc-5051",
+              "qid": "en-04-3",
+              "key": "private_message"
+            }
+          ],
+          "wall_seconds": 8.467697700005374
+        }
+      ]
+    }
+  ],
+  "raw_dir": "runs\\pilot\\codex_teacher_speed_20260927",
+  "notes": [
+    "Codex returns 5 hard labels/state, one option order; Gemma returns logits for two orders.",
+    "Codex trial wall includes process startup, request, output parsing and validation.",
+    "Gemma matched inference excludes cooling; its separate 600-state wall baseline includes cooling.",
+    "Serial/parallel order is counterbalanced: 1,4,4,1. Cache usage is recorded; this is a small test.",
+    "Independent fresh Codex processes act as workers, not persistent conversation subagents.",
+    "Benchmark labels are never added to the training data."
+  ],
+  "status": "complete",
+  "harness_at_run_sha256": "b1cc77828fe3edc3459c1a0b1985585d27e204134b59bd4d78d892fe09337660",
+  "gpu_observed_during_benchmark": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "driver_version": "592.01",
+    "memory_total_mib": 16303
+  },
+  "unique_gold_decisions": 16,
+  "teacher_gold_correct": 13,
+  "worker_summaries": [
+    {
+      "workers": 1,
+      "trials": 2,
+      "valid_decisions": 320,
+      "wall_seconds_sum": 73.17791470001976,
+      "decisions_per_second": 4.37290405598171,
+      "usage": {
+        "input_tokens": 136850,
+        "cached_input_tokens": 8192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1178,
+        "reasoning_output_tokens": 402
+      }
+    },
+    {
+      "workers": 4,
+      "trials": 2,
+      "valid_decisions": 320,
+      "wall_seconds_sum": 22.04489079999621,
+      "decisions_per_second": 14.51583511586526,
+      "usage": {
+        "input_tokens": 137058,
+        "cached_input_tokens": 8192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1249,
+        "reasoning_output_tokens": 473
+      }
+    }
+  ],
+  "parallel_speedup_over_serial": 3.3194954497135605
+}
