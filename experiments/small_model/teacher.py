@@ -55,11 +55,28 @@ def main() -> None:
         return
 
     import os
+    import psutil
+    from tez.inproc import find_library, load_api
+    api = load_api(find_library(LLAMA_LIB))
+    default_params = api.llama_model_default_params
+
+    def no_mmap_params():
+        """LLAMA_LOAD_MODE_NONE (0), lazy mode off (0): the weights go to the GPU and no 12.7 GB mapped copy of the
+        GGUF stays resident in RAM (run_heavy killed a segment at 14:37 when free RAM fell below 4 GB)."""
+        mp = default_params()
+        mp.load_mode = 0
+        mp.lazy_mode = 0
+        return mp
+
+    api.llama_model_default_params = no_mmap_params
     be = InprocBackend(GGUF_12B, template="gemma4", lib=LLAMA_LIB, n_ctx=args.n_ctx, n_seq_max=16,
-                       n_threads=int(os.environ.get("RUN_HEAVY_THREADS", "6")))
+                       n_threads=int(os.environ.get("RUN_HEAVY_THREADS", "6")), api=api)
     t_load = time.time()
     be.load()
     load_s = time.time() - t_load
+    mem = {"rss_gb_after_load": round(psutil.Process().memory_info().rss / 2 ** 30, 2),
+           "free_ram_gb_after_load": round(psutil.virtual_memory().available / 2 ** 30, 1)}
+    print(f"loaded in {load_s:.0f} s; {mem}", flush=True)
     part = len(list(OUT.glob("part-*.jsonl")))
     buf, t0, ms, n_read = [], time.time(), [], 0
     deadline = t0 + args.minutes * 60
@@ -110,7 +127,7 @@ def main() -> None:
     prev["runs"].append({"states": n_read, "seconds": round(el, 1), "load_s": round(load_s, 1),
                          "ms_per_state_p50": round(float(np.median(ms)), 1) if ms else None,
                          "ms_per_state_p95": round(float(np.percentile(ms, 95)), 1) if ms else None,
-                         "readings_per_state": 10, "n_ctx": args.n_ctx,
+                         "readings_per_state": 10, "n_ctx": args.n_ctx, **mem, "load_mode": "none (no mmap)",
                          "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
                          "thermal": dict(THERMAL)})
     dump(stats_path, prev)

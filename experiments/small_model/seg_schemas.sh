@@ -29,7 +29,9 @@ python C:/temp/gpu_lock.py snapshot > "$LOG/vram_schemas_$(date +%H%M).json"
 
 # One slot, 4,096 tokens: the production server's shape. 6 slots x 4,096 (2026-09-26 12:33) did not fit beside the
 # 12.7 GB of weights and 1.4 GB of desktop VRAM: it spilled into shared memory (prompt 140 tok/s, decode 3-10 tok/s).
-/c/temp/llamacpp/llama-server.exe -m "$GGUF" -ngl 99 -c 4096 -np 1 -fa on --port $PORT --host 127.0.0.1 \
+# -lm none: no memory map, so no 12.7 GB mapped copy of the GGUF stays resident in RAM (run_heavy killed the
+# 14:11 segment at 14:37 when free RAM fell below 4 GB).
+/c/temp/llamacpp/llama-server.exe -m "$GGUF" -ngl 99 -c 4096 -np 1 -fa on -lm none --port $PORT --host 127.0.0.1 \
   --no-webui -t "${RUN_HEAVY_THREADS:-6}" > "$LOG/llama_server_8851.log" 2>&1 &
 SERVER_PID=$!
 up=0
@@ -42,6 +44,7 @@ done
 echo "server up $(date -Iseconds)" >> "$LOG/schemas_write.log"
 USED=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' ')
 echo "VRAM used after load: $USED MiB" >> "$LOG/schemas_write.log"
+$PY -c "import psutil; p=[x for x in psutil.process_iter(['name','cmdline']) if x.info['name']=='llama-server.exe' and '$PORT' in ' '.join(x.info['cmdline'] or [])]; print('server working set %.1f GB, free RAM %.1f GB' % (p[0].memory_info().rss/2**30 if p else -1, psutil.virtual_memory().available/2**30))" >> "$LOG/schemas_write.log" 2>&1
 if [ "$USED" -gt 15600 ]; then echo "VRAM nearly full ($USED MiB): would spill, stopping" >> "$LOG/schemas_write.log"; exit 1; fi
 nvidia-smi --query-gpu=temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,memory.used --format=csv,noheader >> "$LOG/schemas_write.log"
 
