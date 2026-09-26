@@ -216,10 +216,11 @@ The columns:
   - 43 ms of compute per 200 ms step, and it grows with the utterance;
   - partials that flicker ("oh", "loon", "stunned" before "open", "launch", "start");
   - this arm ran hot ([throttled]; the paced re-run is in job 6, below).
-- **sherpa-onnx.** The cache-aware Nemotron exports (`sherpa-onnx-nemotron-speech-streaming-en-0.6b-2026-01-14`)
-  run through sherpa-onnx on Windows, but on the CPU wheel. One 4-thread light check gave 1 s per step. The 80 ms
-  FastConformer export took 33 ms per step on one thread, with an emission delay of about 240 ms on 6 utterances.
-  Neither is a candidate on this laptop's CPU; there was no GPU sherpa build to try.
+- **sherpa-onnx.** sherpa-onnx 1.13.8 runs the cache-aware Nemotron export
+  (`sherpa-onnx-nemotron-speech-streaming-en-0.6b-2026-01-14`) and the 80 ms NeMo FastConformer transducer on
+  Windows, but only on the CPU wheel. Light CPU checks, not recorded runs (so no numbers are quoted), were far
+  slower per step than the GPU path and no earlier in emission, so no arm was run. The rules keep CPU recognisers out
+  of the GPU phase, and no GPU sherpa-onnx wheel for Windows was available to try.
 - **Parakeet realtime EOU 120M.** It runs through NeMo's PyTorch step, and on the CPU check it emits `<EOU>`
   (`experiments/voice_asr.py` `nemo:`). Its arm is in job 6.
 
@@ -250,8 +251,8 @@ decisive word:
 | 12B Q8_0 | 45.3 ms | 751 ms | 58 % | 6 % |
 | 12B Q4_K_M over HTTP | 40.4 ms | 509 ms | 66 % | — |
 
-The p95 comes from R0 media keys, which wait for a second stable word by policy. With the 12B Q4_K_M, the
-Theioma set's R0 commands are 100 of its 239 actionable ones.
+The p95 comes from R0 actions that wait for a second stable word by policy (media keys, window size) or that the
+model decides only on a later word. These are the Theioma set's 100 R0 commands that acted, out of 239 actionable.
 
 Notes:
 
@@ -325,7 +326,9 @@ The time from the decisive word to its decision breaks down as the recogniser's 
 (~5 ms), then the decision (~33 ms). The emission is almost all of it. Where the decision can act on a prefix (long
 app names on the Theioma set), 30 % of instant actions fire before the word ends. Where the decisive word is short
 ("up", "pause", "notes": `tez220`), nothing can come before Nemotron emits it. Recognition errors on partial words
-double the Theioma set's harmful actions (16 -> 32), all of them reversible opens and media keys.
+double the Theioma set's harmful actions (16 -> 32 utterances). Of the 34 wrong actions, 29 were early or ancestor
+actions (reversible opens and media keys: `system.open_app` 19, `system.open_url` 6, `media.key` 3) and 5 were wrong
+final decisions.
 
 (job 6: whisper re-decode composed end to end, paced whisper ASR, Parakeet EOU, and the co-loaded stack)
 
@@ -358,8 +361,8 @@ Phase 1 gates of `theioma-voice-design.md` §4e, and the Phase 2 replay gates fo
    transducer's emission delay by ~200 ms. This needs NeMo training (Linux or WSL) and a few hours of command audio.
 4. **CTC keyword spotting** on the streaming encoder, for a fixed vocabulary (app names, page names).
 
-**The decision at 29 ms instead of ≤ 20 ms.** The per-word decode is the new word plus Gemma's 8-token answer tail
-through 48 layers. The levers:
+**The decision at 29 ms instead of ≤ 20 ms.** Each word decodes the new word plus the answer tail (about ten
+tokens) through 48 layers. The levers:
 
 - a shorter answer tail (a template change, which re-fingerprints fits);
 - CUDA graphs in llama.cpp;
