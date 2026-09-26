@@ -1,0 +1,465 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T03:05:56",
+  "args": {
+   "set": "tez220",
+   "asr": "oracle",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 20,
+   "tag": "tez220_oracle_12b_q4km",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\schema.yaml",
+  "rows": 220,
+  "gpu_before": {
+   "time": "2026-09-26T03:05:58+02:00",
+   "used_mb": 1047,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 137
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 226
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 148
+    }
+   ]
+  },
+  "asr": {
+   "name": "oracle",
+   "note": "reference words at their forced end times, rounded up to 10 ms"
+  },
+  "asr_chunk_s": null,
+  "decision": {
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "server_cmd": null,
+   "template": "gemma4",
+   "load_s": 8.1,
+   "model": "gemma-4-12b-q4_k - medium",
+   "readout": "letters",
+   "parts": [
+    "letters"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 48,
+    "n_params": 11907350576,
+    "size_mb": 7024,
+    "hybrid": false,
+    "desc": "gemma4 ?B Q4_K - Medium"
+   },
+   "head_ms": 197.8
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 65.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 38.8,
+   "sm_mhz": 270.0,
+   "util_pct": 55.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T03:06:09+02:00",
+   "used_mb": 9100,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 137
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 226
+    },
+    {
+     "pid": 32796,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8048
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 153
+    },
+    {
+     "pid": 32796,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "run_s": 432.4,
+  "load": {
+   "cpu_pct_mean": 18.6,
+   "cpu_pct_max": 67.0,
+   "cpu_pct_p50": 14.0,
+   "samples": 429,
+   "gpu_c_max": 70.0,
+   "gpu_c_mean": 66.0,
+   "gpu_samples": 42,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 62.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 27.08,
+   "sm_mhz": 180.0,
+   "util_pct": 0.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T03:13:25+02:00",
+   "used_mb": 9125,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 135
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 248
+    },
+    {
+     "pid": 32796,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8058
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 148
+    },
+    {
+     "pid": 32796,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "parity": {
+   "updates": 110,
+   "tv_mean": 0.01098,
+   "tv_p95": 0.05251,
+   "tv_max": 0.21833,
+   "argmax_differs": 1,
+   "note": "stream reads vs whole-prompt reads on sequence 0, same model and process"
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 220,
+  "actionable": 198,
+  "oos": 22,
+  "asr": {
+   "wer": 0.0,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 198,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "pipe_ms": {
+    "n": 1158,
+    "p50": 0.01,
+    "p95": 0.02,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 1.26
+   },
+   "decisive_word_missed": 0
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 1158,
+   "p50": 0.01,
+   "p95": 0.05,
+   "mean": 0.03,
+   "min": 0.01,
+   "max": 6.65
+  },
+  "word_end_to_decision_ms": {
+   "n": 198,
+   "p50": 30.36,
+   "p95": 35.79,
+   "mean": 30.09,
+   "min": 22.87,
+   "max": 56.23
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 117,
+    "p50": 30.43,
+    "p95": 35.36,
+    "mean": 30.09,
+    "min": 23.01,
+    "max": 56.23
+   },
+   "R1": {
+    "n": 51,
+    "p50": 29.28,
+    "p95": 33.28,
+    "mean": 29.04,
+    "min": 22.87,
+    "max": 36.23
+   },
+   "R2": {
+    "n": 30,
+    "p50": 32.23,
+    "p95": 37.09,
+    "mean": 31.83,
+    "min": 24.32,
+    "max": 38.69
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 1158,
+   "p50": 28.77,
+   "p95": 35.56,
+   "mean": 29.02,
+   "min": 22.19,
+   "max": 56.23
+  },
+  "word_end_to_first_action_ms": {
+   "n": 195,
+   "p50": 35.83,
+   "p95": 1514.06,
+   "mean": 185.23,
+   "min": -1487.62,
+   "max": 2446.01
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 198,
+   "p50": 30.36,
+   "p95": 35.79,
+   "mean": 30.09,
+   "min": 22.87,
+   "max": 56.23
+  },
+  "dispatch_ms": {
+   "n": 268,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.01
+  },
+  "decide_ms_per_update": {
+   "n": 1158,
+   "p50": 28.74,
+   "p95": 35.48,
+   "mean": 28.97,
+   "min": 22.17,
+   "max": 56.19
+  },
+  "commit_ms_per_update": {
+   "n": 1158,
+   "p50": 7.09,
+   "p95": 20.76,
+   "mean": 9.09,
+   "min": 1.82,
+   "max": 40.64
+  },
+  "intent_accuracy": 0.8737,
+  "intent_accuracy_then_alt": 0.9798,
+  "none_recall": 0.9091,
+  "harmful": 1,
+  "harmful_rate": 0.0051,
+  "oos_false_actions": 5,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 3.487,
+  "first_action_words_fully_heard_mean": 3.487,
+  "first_action_at_or_before_decisive": 0.5404,
+  "harmful_detail": [
+   {
+    "id": "v197",
+    "text": "clothes the notepad",
+    "executed": [
+     "open_notes"
+    ],
+    "accepted": [
+     "close_app"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "v207",
+    "text": "youtube is so full of ads these days",
+    "executed": [
+     "open_youtube"
+    ]
+   },
+   {
+    "id": "v208",
+    "text": "text sarah that i'm on my way",
+    "executed": [
+     "type_text"
+    ]
+   },
+   {
+    "id": "v215",
+    "text": "my notes are such a mess lately",
+    "executed": [
+     "open_notes"
+    ]
+   },
+   {
+    "id": "v217",
+    "text": "order more coffee pods from amazon",
+    "executed": [
+     "open_browser",
+     "search_web"
+    ]
+   },
+   {
+    "id": "v218",
+    "text": "the volume on this laptop has always been bad",
+    "executed": [
+     "volume_up"
+    ]
+   }
+  ]
+ }
+}
