@@ -215,14 +215,14 @@ The columns:
   - WER 0.104 against Nemotron's 0.080;
   - 43 ms of compute per 200 ms step, and it grows with the utterance;
   - partials that flicker ("oh", "loon", "stunned" before "open", "launch", "start");
-  - this arm ran hot ([throttled]; the paced re-run is in job 6, below).
+  - this arm ran hot ([throttled]). Its paced re-run is the not-yet-run last job (section 4).
 - **sherpa-onnx.** sherpa-onnx 1.13.8 runs the cache-aware Nemotron export
   (`sherpa-onnx-nemotron-speech-streaming-en-0.6b-2026-01-14`) and the 80 ms NeMo FastConformer transducer on
   Windows, but only on the CPU wheel. Light CPU checks, not recorded runs (so no numbers are quoted), were far
   slower per step than the GPU path and no earlier in emission, so no arm was run. The rules keep CPU recognisers out
   of the GPU phase, and no GPU sherpa-onnx wheel for Windows was available to try.
 - **Parakeet realtime EOU 120M.** It runs through NeMo's PyTorch step, and on the CPU check it emits `<EOU>`
-  (`experiments/voice_asr.py` `nemo:`). Its arm is in job 6.
+  (`experiments/voice_asr.py` `nemo:`). Its GPU arm is in the not-yet-run last job.
 
 ### (b) The decision in process
 
@@ -300,7 +300,7 @@ Each component was measured on its own, with `gpu_lock.py snapshot` after loadin
 | Windows desktop apps (dwm, Code, Chrome, TradingView, explorer) | 1.26 GB |
 
 - **Stack ASR + 12B Q4_K_M in process + desktop:** 10.4 GB, within the 14.5 GB gate (the sum of the measured
-  parts; the co-loaded 40-utterance check is in job 6).
+  parts; the co-loaded check is in the not-yet-run last job).
 - **A second 12B copy does not fit.** An in-process Q4 next to Theioma's shared :8797 server would be
   8.05 + 8.72 + 1.12 + 1.26 = 19.2 GB.
 - **Q8 in process** (13.09 + 1.12 + 1.26 = 15.5 GB) exceeds the gate on its own.
@@ -330,7 +330,15 @@ double the Theioma set's harmful actions (16 -> 32 utterances). Of the 34 wrong 
 actions (reversible opens and media keys: `system.open_app` 19, `system.open_url` 6, `media.key` 3) and 5 were wrong
 final decisions.
 
-(job 6: whisper re-decode composed end to end, paced whisper ASR, Parakeet EOU, and the co-loaded stack)
+**Not run yet (the last job).** The job queued behind Theioma's day jobs (seventh in the queue at 11:47), so it
+was withdrawn before it started, as the shared-machine rules ask. It holds four arms, runnable in one ~45-minute slot
+on a quiet machine with `bash experiments/run_voice_phase1.sh e2e-live`:
+- faster-whisper re-decode as the partial source, composed end to end with the live 12B;
+- the whisper ASR arm again, paced in real time on a cool GPU (the job 1 arm was [throttled]);
+- the Parakeet realtime EOU 120M arm;
+- the recogniser and the 12B co-loaded for 40 utterances, which measures the stack's VRAM and RAM directly.
+
+The first of these decides whether re-decoding beats Nemotron's emission lag end to end.
 
 ## 5. Gates
 
@@ -343,7 +351,7 @@ Phase 1 gates of `theioma-voice-design.md` §4e, and the Phase 2 replay gates fo
 | decision, fast model | ≤ 10 ms p50 | cut 4B probe 20.4–21.4 ms p50 | **fail** |
 | decision, 12B Q4 | ≤ 20 ms p50 | 28.7–29.4 ms p50 in process; 36.9–37.3 over HTTP | **fail** |
 | intent at Q4 | ≥ 0.90 on Tez's set | tez220 0.874 strict (0.980 then/alt); theioma 0.921 | **fail** on Tez's set (strict), pass on Theioma's |
-| VRAM of the stack | ≤ 14.5 GB | 10.4 GB (ASR + 12B Q4 in process + desktop, summed) | **pass** (in process as the only 12B; a second copy next to :8797 does not fit) |
+| VRAM of the stack | ≤ 14.5 GB | 10.4 GB (ASR + 12B Q4 in process + desktop, summed from separate runs; the co-loaded run is in the last job) | **pass** (as the only 12B; a second copy next to :8797 does not fit) |
 | Phase 2: replay L, R0/R1 | p50 ≤ 50, p95 ≤ 100 ms | R0 first action 173 ms p50, 775 p95 (composed, [loaded]); 33.7 ms p50 with a perfect recogniser | **fail** (the recogniser's lag) |
 | Phase 2: harmful | ≤ 1/198 on Tez's set, ≤ 1 % on Theioma's | tez220 1/198 (oracle), 2/198 (e2e); theioma 6.7 % (oracle), 13 % (e2e) | pass on Tez's (oracle), **fail** on Theioma's |
 | Phase 2: out-of-scope false actions | ≤ 2/22 | tez220 5/22 (Q4), 4/22 (Q8); theioma 6/30 | **fail** |
@@ -356,7 +364,8 @@ Phase 1 gates of `theioma-voice-design.md` §4e, and the Phase 2 replay gates fo
 1. **Act on prefixes, which already works.** `session.update` reads partial words, and 30 % of instant actions fire
    before their word ends. More aggressive prefix decisions trade against harmful actions.
 2. **Re-decode (whisper) as the partial source.** In job 1 it completed words at the word's end (−11 ms mean), but
-   with higher WER, 43 ms steps that grow with the utterance, and flicker. The composed test is in job 6.
+   with higher WER, 43 ms steps that grow with the utterance, and flicker. The composed end-to-end test is the
+   not-yet-run last job.
 3. **FastEmit fine-tuning of Nemotron on command audio.** NeMo's `fastemit_lambda` is published to cut the
    transducer's emission delay by ~200 ms. This needs NeMo training (Linux or WSL) and a few hours of command audio.
 4. **CTC keyword spotting** on the streaming encoder, for a fixed vocabulary (app names, page names).
