@@ -210,7 +210,7 @@ def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> Non
             instr = json.loads(content[content.index("{"): content.rindex("}") + 1])["instructions"]
             f.write(json.dumps({"dataset": ds, "instructions": instr, "timings": tm}, ensure_ascii=False) + "\n")
             print(f"  gold {ds}: {instr}", flush=True)
-    dump(RESULTS / f"schema_generation_timing_p{parallel}.json", {"tokens": tok[0], "seconds": round(time.time() - t0, 1),
+    dump(RESULTS / ("schema_generation_bulk.json" if not limit else f"schema_generation_timing_p{parallel}.json"), {"tokens": tok[0], "seconds": round(time.time() - t0, 1),
                                                      "tok_per_s_aggregate": round(tok[0] / max(time.time() - t0, 1e-9), 1),
                                                      "parallel_slots": parallel, "clusters": len(jobs),
                                                      "thermal": dict(THERMAL)})
@@ -292,7 +292,15 @@ def assign(device: str = "cuda") -> None:
         seen_sets.add(key)
         keep.append(s)
     schemas = keep
-    texts = [json.dumps(s["q"], ensure_ascii=False) for s in schemas]
+    def plain(q: dict) -> str:
+        """The question as text: type, instructions, option labels. The first version embedded the schema's JSON,
+        whose shared scaffolding (type / instructions / criteria keys, quotes) inflated similarity: 473 of 1,250
+        schemas kept at 0.9, against 843 on plain text."""
+        crit = q.get("criteria")
+        opts = list(crit) if q["type"] == "choice" else ([str(c) for c in crit] if q["type"] == "score" else [])
+        return f"({q['type']}) {q['instructions']} | " + "; ".join(o.replace("_", " ") for o in opts)
+
+    texts = [plain(s["q"]) for s in schemas]
     E = embed_texts(texts, device).astype(np.float32)
     keep_idx = []
     for i in range(len(schemas)):

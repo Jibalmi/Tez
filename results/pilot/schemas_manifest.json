@@ -1,0 +1,32 @@
+{
+ "schemas_written": 1250,
+ "filters": {
+  "written": 1250,
+  "dropped_eval_option_overlap": 8,
+  "dropped_same_option_set": 31,
+  "dropped_cosine_ge_0.9": 379
+ },
+ "schemas_kept": 832,
+ "gold_questions": {
+  "clinc": "Which option from the list best matches the intent of the user's `text`?",
+  "csqa": "What is the correct option for the given `question`?",
+  "gmmlu": "What is the correct option for the given `question`?"
+ },
+ "states": 6276,
+ "decisions": 31380,
+ "types": {
+  "noul": 10919,
+  "score": 8322,
+  "choice": 12139
+ },
+ "choice_options": {
+  "min": 2,
+  "median": 5.0,
+  "max": 20
+ },
+ "schema_reuse": {
+  "median_states_per_schema": 34.0,
+  "max": 175
+ },
+ "questions_in_state_language": 8881
+}

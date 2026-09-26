@@ -93,6 +93,8 @@ def load_hashes() -> dict:
 def embed_texts(texts: list[str], device: str, batch: int = 256) -> np.ndarray:
     import torch
     from sentence_transformers import SentenceTransformer
+    from common import THREADS
+    torch.set_num_threads(THREADS)
     m = SentenceTransformer(EMBEDDER, device=device)
     if device == "cuda":
         m.half()
