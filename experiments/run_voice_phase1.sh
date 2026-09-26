@@ -72,10 +72,12 @@ e2e)               # composed end to end: job 1's recorded Nemotron 80 ms emissi
   $R --set tez220 --asr replay:results/voice/replay_tez220_asr_nemotron_en_80_rows.jsonl --backend inproc:$Q4 --lib $LIB      --tag tez220_e2e_nemotron80_12b_q4km; sleep 30
   $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --no-realtime --gap 0 --limit 20 --tag theioma_asr_nemotron_en_80_vram
   ;;
-e2e-live)          # the recogniser and the session loaded together, real time (needs a quiet machine: RAM), ~40 min
-  $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --tag theioma_e2elive_nemotron80_12b_q4km; sleep 60
-  $R --set theioma --asr replay:results/voice/replay_theioma_asr_whisper_base_200_rows.jsonl --backend inproc:$Q4 --lib $LIB      --tag theioma_e2e_whisper200_12b_q4km; sleep 30
-  $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true
+e2e-live)          # whisper re-decode composed e2e; whisper ASR paced in real time (a cooler GPU); Parakeet EOU;
+                   # and the recogniser + the 12B loaded together for 40 utterances (the stack's VRAM), ~45 min
+  $R --set theioma --asr replay:results/voice/replay_theioma_asr_whisper_base_200_rows.jsonl --backend inproc:$Q4 --lib $LIB      --tag theioma_e2e_whisper200_12b_q4km; sleep 60
+  $R --set theioma --asr whisper:base.en --gap 0.3 --tag theioma_asr_whisper_base_200_rt; sleep 60
+  $R --set theioma --asr nemo:$EOU --rc 1 --no-realtime --gap 0 --tag theioma_asr_parakeet_eou_160 || true; sleep 60
+  $R --set theioma --asr nemocpp:$NEMO_EN --rc 0 --backend inproc:$Q4 --lib $LIB --limit 40      --tag theioma_e2elive_nemotron80_12b_q4km_40
   ;;
 *)
   echo "usage: $0 data|asr|asr-cpu|decide|decide-q8|decide-http|probe|e2e|e2e-live" >&2
