@@ -193,6 +193,46 @@ Before `--swa-full` the server re-evaluated all 394 tokens every word (205 ms) �
 
 ---
 
+### 3b. Streaming sessions (`tez.stream`) on word-aligned audio replays (Theioma voice Phase 1)
+
+`experiments/voice_replay.py`; write-up and gate verdicts in `docs/plans/voice-phase1-results.md`, raw rows in `results/voice/`.
+
+**Setup.**
+
+- **Sets.**
+  - Tez's 220 SAPI commands, with CTC forced alignment.
+  - A synthetic Theioma set: 269 commands over 23 of its voice tools plus none, spoken by Kokoro-82M in six voices,
+    with Kokoro's own word timings.
+- **Replay.** Real time, in 10 ms frames.
+- **Machine.** RTX 5080 Laptop. Every timed arm started below 70 °C with no thermal slowdown. Rows marked [loaded]
+  ran while other sessions held the CPU above 30 %.
+
+| path | per-word decision p50 (p95) | intent strict / then-alt (Theioma; Tez) | harmful (Theioma; Tez) |
+|---|---:|---:|---:|
+| Gemma 4 12B Q4_K_M letters, in process (`tez.stream`) | 29.4 (37.5) ms | 0.921 / 0.971; 0.874 / 0.980 | 16 / 239; 1 / 198 |
+| Gemma 4 12B Q8_0 letters, in process | 37.9 (42.5) ms | 0.925 / 0.979; 0.879 / 0.980 | 7 / 239; 1 / 198 |
+| Gemma 4 12B Q4_K_M letters over HTTP (llama-server `-np 2 --swa-full`) | 36.9 (45.4) ms | 0.912 / 0.971; 0.874 / 0.980 | 20 / 239; 2 / 198 |
+| Qwen3.5-4B cut to 24 blocks, prefix probe (`tez fit`, 2 folds) | 21.4 (25.2) ms | 0.816 / 0.862; 0.879 / 0.889 | 14 / 239; 6 / 198 |
+
+**Word end to decision.** With a perfect recogniser, the 12B Q4_K_M decides 31 ms (p50) after the end of the
+decisive word. An instant (R0) action's first dispatch lands 34 ms p50 after it, 67 % within 50 ms.
+
+**Recogniser.** Nemotron Speech Streaming En 0.6B (NeMo-Speech.cpp, 80 ms):
+
+- WER 8.0 % on the Theioma set;
+- 4.7 ms of compute per step;
+- it completes the decisive word 216 ms (mean) after the word ends, with a prefix of it at 128 ms.
+
+**Composed end to end.** Recorded Nemotron emissions fed into the live 12B Q4_K_M, on the Theioma set [loaded]:
+
+- word end to decision: 269 ms p50;
+- R0 first action: 173 ms p50, 30 % before the word ends.
+
+The recogniser's emission lag, not the decision, sets the latency.
+
+**Clean-up.** The earlier 0.905–0.909 on Tez's set used the voice-specific prompt of `run_voice_fast.py`. The
+runtime's generic question-first prompt reads 0.874–0.879 on the same rows.
+
 ## 4. Abstention, debiasing, cascades
 
 - **Conformal sets, typed-decisions (2,000 decisions, Mondrian by question type, calibrated on half the cases):** at 90 % target coverage Tez covers 90.1 %, acts (set size 1) on **50 %** of decisions at **0.853** accuracy, escalates the rest, zero fallbacks; at 95 %: acts on 37 % at 0.912. Laya fine-tuned: 63 % at 0.876; Laya base: 5 %. (`experiments/conformal_td.py`)
