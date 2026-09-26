@@ -185,11 +185,12 @@ def gpu_temp() -> int | None:
         return None
 
 
-def thermal_guard(hot: int = 87, cool: int = 85, every: float = 3.0, force: bool = False, max_s: float = 60) -> float:
+def thermal_guard(hot: int = 88, cool: int = 86, every: float = 2.0, force: bool = False, max_s: float = 30) -> float:
     """Pause (seconds returned) while the GPU is at `hot` C or above, until it is back to `cool` (at most max_s).
-    87 / 85 C, checked every 3 s, at most 60 s: the NVIDIA driver's own target is 87 C (software slowdown) and
-    run_heavy kills only after 15 s above 88 C. With other sessions holding the CPU near 60 % the idle GPU sits at
-    82-84 C (2026-09-26 20:30); at 86 / 82 / 180 s the teacher spent 388 of its first 506 s paused."""
+    88 / 86 C, checked every 2 s, at most 30 s: the NVIDIA driver holds its own 87 C target by lowering clocks
+    (software slowdown), and run_heavy kills a job only after 15 s above 88 C, so the governor only has to keep the
+    GPU from sitting above 88. With other sessions holding the CPU near 60 % the idle GPU sits at 82-84 C
+    (2026-09-26 20:30); at 86 / 82 C the teacher spent 2,436 of its first 2,898 s paused (0.28 states/s)."""
     import time as _t
     now = _t.time()
     if not force and now - _THERMAL_LAST[0] < every:
