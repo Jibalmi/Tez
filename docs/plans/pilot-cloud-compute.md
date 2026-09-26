@@ -1,5 +1,42 @@
 # Pilot compute options, 2026-09-27
 
+## Current H200 trial
+
+The teacher export is complete, and the Pod was terminated after the downloaded artifacts were
+checksum-verified. Student training and evaluation remain pending. The authorized first-trial
+cap was $10 including storage. One H200 SXM was allocated at a verified $4.59/hour, with a one-hour
+provider-stop watcher that was retired after cleanup. The bootstrap uses its own Python virtual
+environment because the container's system Python is externally managed. Direct SSH requires
+`supportPublicIp: true`; API requests identify the client with a User-Agent.
+
+The first attempt to resume the saved laptop targets failed the preset probability-parity gate.
+Additional cloud tests found that prefix-cache history across states affected the numerical
+scores. With `--fresh-state-cache`, one, two, four, and six workers produced identical scores on
+the 100-state cloud sample, and a separate 20-state subset repeated identically. The original
+laptop/cloud compatibility gate has not passed; its failure remains in the measurement record.
+
+The completed job used `--rebuild-all`: it produces a separate full dataset, compares
+parallel workers with a fresh single-worker cloud reference, and preserves the original laptop
+dataset. It never silently merges these execution protocols. The laptop driver was stopped
+while queued, after its 3,170-state checkpoint, without stopping another owner's compute.
+
+```bash
+bash experiments/small_model/cloud_bootstrap.sh --name h200-fresh-full --workers 1 2 4 6 --minutes 30 --production --rebuild-all
+```
+
+Two workers were fastest in the initial 100-state comparison. Larger counts fit in memory but
+did not improve that sample's total time. See the [measured trial report](../../results/pilot/runpod_h200_speed_20260927.md)
+and its linked raw record for timings, probability comparisons, and the current completion status.
+
+After downloading and verifying the artifacts, `export_cloud_teacher.py --source <run-directory>
+--output <new-dataset-directory>` validates complete ID coverage, question metadata, finite
+logits, and production/reference consistency before exporting the teacher shards and explicit
+temperature-adjusted option probabilities. Point `TEZ_PILOT_RUNS` at that new directory for
+later student training. Keep student results separate with `TEZ_PILOT_RESULTS`.
+
+The earlier proposals below document the preparation history; the linked H200 trial record is
+the authoritative execution result.
+
 ## Measured reason to move GPU work
 
 The local Gemma teacher's recovered segment completed 1,200 states in 1,587 seconds, including

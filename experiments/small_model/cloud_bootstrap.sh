@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT"
 mkdir -p runs/cloud-runtime/models runs/cloud-runtime/llama
+python -m venv "$ROOT/runs/cloud-runtime/venv"
+source "$ROOT/runs/cloud-runtime/venv/bin/activate"
 python -m pip install 'numpy==2.5.3' 'PyYAML==6.0.3' 'psutil==7.2.2' 'requests>=2.33.0'
 python - <<'PY'
 import hashlib, json, pathlib, tarfile, urllib.request
@@ -12,7 +14,8 @@ sha = '047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795'
 model = root / 'models' / (sha + '.gguf')
 def download(url, path):
     temporary = path.with_suffix(path.suffix + '.part')
-    with urllib.request.urlopen(url, timeout=120) as source, temporary.open('wb') as target:
+    request = urllib.request.Request(url, headers={'User-Agent': 'tez-pilot-cloud'})
+    with urllib.request.urlopen(request, timeout=120) as source, temporary.open('wb') as target:
         while block := source.read(8 * 1024 * 1024):
             target.write(block)
     temporary.replace(path)

@@ -32,7 +32,7 @@ def request(key: str, method: str, path: str, body: dict | None = None, graphql:
     url = "https://api.runpod.io/graphql" if graphql else "https://rest.runpod.io/v1/" + path
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method, headers={
-        "Authorization": "Bearer " + key, "Content-Type": "application/json"})
+        "Authorization": "Bearer " + key, "Content-Type": "application/json", "User-Agent": "tez-pilot/0.1"})
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             raw = response.read()
@@ -98,7 +98,7 @@ def launch(args, key: str) -> None:
     body = {"name": "tez-pilot-12b-speed-trial", "cloudType": "SECURE", "computeType": "GPU",
             "gpuCount": 1, "gpuTypeIds": [gpu["id"]], "imageName": IMAGE, "interruptible": False,
             "containerDiskInGb": 20, "volumeInGb": 60, "volumeMountPath": "/workspace",
-            "ports": ["22/tcp"], "env": {"PUBLIC_KEY": public_key}, "minRAMPerGPU": 64,
+            "ports": ["22/tcp"], "supportPublicIp": True, "env": {"PUBLIC_KEY": public_key}, "minRAMPerGPU": 64,
             "minVCPUPerGPU": 8}
     receipt = {"status": "requesting", "created_utc": datetime.now(timezone.utc).isoformat(),
                "gpu_quote": gpu, "max_gpu_hourly_usd": args.max_hourly_usd, "minutes": args.minutes,

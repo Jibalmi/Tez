@@ -67,6 +67,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=float, default=100, help="stop starting new states after this long")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--fresh-state-cache", action="store_true",
+                    help="Reuse prefixes within each state only, so worker partitioning cannot change its cache history")
     ap.add_argument("--ids-file", type=Path, help="Only these state IDs, one per line; enables isolated cloud canaries")
     ap.add_argument("--shard-index", type=int, default=0)
     ap.add_argument("--num-shards", type=int, default=1)
@@ -115,7 +117,8 @@ def main() -> int:
 
     api.llama_model_default_params = no_mmap_params
     be = InprocBackend(GGUF_12B, template="gemma4", lib=LLAMA_LIB, n_ctx=args.n_ctx, n_seq_max=16,
-                       n_threads=int(os.environ.get("RUN_HEAVY_THREADS", "6")), api=api)
+                       n_threads=int(os.environ.get("RUN_HEAVY_THREADS", "6")), api=api,
+                       cache_prompt=not args.fresh_state_cache)
     t_load = time.time()
     be.load()
     load_s = time.time() - t_load
@@ -192,6 +195,7 @@ def main() -> int:
                          "ms_per_state_p95": round(float(np.percentile(ms, 95)), 1) if ms else None,
                          "readings_per_state": 10, "n_ctx": args.n_ctx, **mem, "load_mode": "none (no mmap)",
                          "num_shards": args.num_shards, "shard_index": args.shard_index,
+                         "cache_prompt_between_states": not args.fresh_state_cache,
                          "gguf": GGUF_12B, "llama_lib": LLAMA_LIB,
                          "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
                          "stopped_for": stopped_for, "checkpoint_states": CHECKPOINT_STATES,

@@ -18,7 +18,7 @@ import time
 
 import numpy as np
 
-from common import ROOT, RUNS, RESULTS, read_jsonl, write_jsonl
+from common import ROOT, RUNS, read_jsonl, write_jsonl
 from dataset import softmax, temp_for
 
 MODEL_SHA = "047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795"
@@ -146,7 +146,8 @@ def verify_inputs() -> dict:
     return manifest
 
 
-def run_group(base: Path, ids_file: Path, workers: int, minutes: float, deadline: float) -> dict:
+def run_group(base: Path, ids_file: Path, workers: int, minutes: float, deadline: float,
+              *, fresh_state_cache: bool = False) -> dict:
     if base.exists():
         raise ValueError(f"Output already exists: {base}")
     processes, logs = [], []
@@ -162,6 +163,8 @@ def run_group(base: Path, ids_file: Path, workers: int, minutes: float, deadline
             logs.append(log)
             command = [sys.executable, str(Path(__file__).with_name("teacher.py")), "--ids-file", str(ids_file),
                        "--num-shards", str(workers), "--shard-index", str(index), "--minutes", str(minutes)]
+            if fresh_state_cache:
+                command.append("--fresh-state-cache")
             processes.append(subprocess.Popen(command, env=env, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT))
         while any(p.poll() is None for p in processes):
             if time.monotonic() >= deadline:
@@ -186,7 +189,7 @@ def run_group(base: Path, ids_file: Path, workers: int, minutes: float, deadline
     elapsed = time.monotonic() - started
     rows = collect(base)
     expected = set(ids_file.read_text(encoding="utf-8").splitlines())
-    result = {"workers": workers, "states": len(rows), "expected_states": len(expected),
+    result = {"workers": workers, "fresh_state_cache": fresh_state_cache, "states": len(rows), "expected_states": len(expected),
               "complete": set(rows) == expected, "wall_seconds": elapsed,
               "states_per_second": len(rows) / elapsed, "outputs": str(base.relative_to(ROOT)),
               "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit"}
@@ -211,22 +214,46 @@ def run(args) -> None:
     worker_counts = [n for n in args.workers if n <= max_workers]
     if not worker_counts:
         raise ValueError("Insufficient GPU memory for the requested worker counts")
-    reference = {r["id"]: r for r in read_jsonl(ROOT / "runs/cloud-input/canary-reference.jsonl")}
+    local_reference = {r["id"]: r for r in read_jsonl(ROOT / "runs/cloud-input/canary-reference.jsonl")}
+    reference = local_reference
+    if args.rebuild_all:
+        worker_counts = [1] + [n for n in worker_counts if n != 1]
+        production_ids = output / "production.ids"
+        assigned = read_jsonl(ROOT / "runs/pilot/assign.jsonl")
+        production_ids.write_text("\n".join(a["id"] for a in assigned) + "\n", encoding="utf-8")
+        production_states = len(assigned)
+    else:
+        production_ids = ROOT / "runs/cloud-input/pending.ids"
+        production_states = manifest["pending_states"]
     report = {"created_utc": datetime.now(timezone.utc).isoformat(), "gpu": gpu, "manifest": manifest,
               "trials": [], "status": "benchmarking", "deadline_minutes": args.minutes,
-              "requested_workers": args.workers, "memory_safe_workers": worker_counts}
+              "requested_workers": args.workers, "memory_safe_workers": worker_counts,
+              "rebuild_all": args.rebuild_all, "production_states": production_states,
+              "reference_source": "new single-worker cloud run with fresh state caches" if args.rebuild_all else "saved laptop targets",
+              "protocol_note": "Rebuilt targets stay separate from the laptop dataset; local parity is reported, not assumed"
+                               if args.rebuild_all else "Resume requires parity with the saved laptop targets"}
     save(output / "report.json", report)
     for workers in worker_counts:
-        result = run_group(output / f"canary-{workers}", ROOT / "runs/cloud-input/canary.ids", workers, 10, deadline)
-        result["parity"] = parity(reference, collect(output / f"canary-{workers}"))
+        result = run_group(output / f"canary-{workers}", ROOT / "runs/cloud-input/canary.ids", workers, 10, deadline,
+                           fresh_state_cache=args.rebuild_all)
+        candidate = collect(output / f"canary-{workers}")
+        if args.rebuild_all:
+            result["local_reference_comparison"] = parity(local_reference, candidate)
+            if workers == 1:
+                reference = candidate
+                write_jsonl(output / "canonical-reference.jsonl", list(reference.values()))
+                result["creates_reference"] = True
+        result["parity"] = parity(reference, candidate)
         report["trials"].append(result)
         save(output / "report.json", report)
         print(json.dumps(result), flush=True)
         if not result["parity"]["passed"]:
+            report["status"] = "parity_failed"
+            save(output / "report.json", report)
             raise ValueError("Cloud canary targets changed beyond the fixed parity thresholds")
     best = max(report["trials"], key=lambda r: r["states_per_second"])
     report["selected_workers"] = best["workers"]
-    report["remaining_teacher_eta_seconds_estimate"] = manifest["pending_states"] / best["states_per_second"]
+    report["remaining_teacher_eta_seconds_estimate"] = production_states / best["states_per_second"]
     report["eta_note"] = "Estimate extrapolated from the canary including loading; excludes provisioning/download/setup and student training"
     report["status"] = "benchmark_complete"
     save(output / "report.json", report)
@@ -234,8 +261,8 @@ def run(args) -> None:
         minutes_left = (deadline - time.monotonic()) / 60 - 1
         if minutes_left <= 0:
             raise TimeoutError("No time left in the cloud compute budget")
-        report["production"] = run_group(output / "production", ROOT / "runs/cloud-input/pending.ids",
-                                          best["workers"], minutes_left, deadline)
+        report["production"] = run_group(output / "production", production_ids,
+                                          best["workers"], minutes_left, deadline, fresh_state_cache=args.rebuild_all)
         report["status"] = "complete" if report["production"]["complete"] else "checkpointed"
         save(output / "report.json", report)
     print(json.dumps({k: v for k, v in report.items() if k not in ("manifest", "trials")}), flush=True)
@@ -252,12 +279,16 @@ def main() -> None:
     runner.add_argument("--workers", nargs="+", type=int, default=[1, 2, 4])
     runner.add_argument("--minutes", type=float, default=45)
     runner.add_argument("--production", action="store_true")
+    runner.add_argument("--rebuild-all", action="store_true",
+                        help="Create separate full targets with fresh state caches; compare workers to a new cloud reference")
     args = parser.parse_args()
     if args.command == "prepare":
         prepare(args.output.resolve(), args.canary_states)
     else:
-        if args.minutes <= 0 or not args.workers or any(n not in (1, 2, 4) for n in args.workers):
-            parser.error("Use positive minutes and worker counts from 1,2,4")
+        if args.minutes <= 0 or not args.workers or any(n < 1 for n in args.workers):
+            parser.error("Use positive minutes and positive worker counts; GPU memory bounds the counts at runtime")
+        if len(args.workers) != len(set(args.workers)):
+            parser.error("Worker counts must be unique")
         run(args)
 
 

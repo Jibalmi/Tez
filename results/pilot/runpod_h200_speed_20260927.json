@@ -1,0 +1,531 @@
+{
+  "recorded_utc": "2026-09-26T23:18:06.240008+00:00",
+  "status": "teacher_complete_pod_terminated",
+  "pod_id": "nfabzvw5vqtyjs",
+  "budget_usd": 10,
+  "gpu_hourly_usd": 4.59,
+  "allocated_utc": "2026-09-26T22:34:59.091540+00:00",
+  "stop_deadline_unix": 1790465699.0915635,
+  "gpu": "name, memory.total [MiB], driver_version\nNVIDIA H200, 143771 MiB, 570.211.01\n",
+  "container_image": "runpod/pytorch@sha256:0ad20c96682da30fd04c2f130c13edb68aa5ebe3d370f2d5096eb1fcbbbfddad",
+  "model": "gemma4:12b-it-q8_0",
+  "model_sha256": "047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "llama_cpp_build": "b11100",
+  "cuda_build": "12.8",
+  "context_tokens": 2048,
+  "layout": "state_first",
+  "temperatures": {
+    "noul": 6.01,
+    "choice": 4.71,
+    "choice_many": 2.66,
+    "score": 5.18
+  },
+  "input_snapshot": {
+    "saved_states": 3170,
+    "pending_states": 3106,
+    "canary_states": 100
+  },
+  "production_states": 6276,
+  "initial_laptop_parity_trial": {
+    "workers": 1,
+    "states": 100,
+    "expected_states": 100,
+    "complete": true,
+    "wall_seconds": 73.01041682809591,
+    "states_per_second": 1.3696675672384044,
+    "outputs": "runs/cloud-output/h200-trial/canary-1",
+    "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+    "parity": {
+      "decisions": 500,
+      "max_probability_delta": 0.055704952155460674,
+      "mean_total_variation": 0.005549273833241272,
+      "argmax_agreement": 0.994,
+      "thresholds": {
+        "max_probability_delta": 0.02,
+        "mean_total_variation": 0.005,
+        "min_argmax_agreement": 0.99
+      },
+      "passed": false
+    }
+  },
+  "fresh_cache_diagnostics": {
+    "protocol": "cache_prompt=False, share prefixes only within a state",
+    "trials": [
+      {
+        "workers": 1,
+        "states": 100,
+        "expected_states": 100,
+        "complete": true,
+        "wall_seconds": 24.005079980939627,
+        "states_per_second": 4.16578491216865,
+        "outputs": "runs/cloud-output/h200-fresh-cache/fresh-100-w1",
+        "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+        "name": "fresh-100-w1",
+        "local_parity": {
+          "decisions": 500,
+          "max_probability_delta": 0.07438081014100972,
+          "mean_total_variation": 0.005587902976571223,
+          "argmax_agreement": 0.994,
+          "thresholds": {
+            "max_probability_delta": 0.02,
+            "mean_total_variation": 0.005,
+            "min_argmax_agreement": 0.99
+          },
+          "passed": false
+        }
+      },
+      {
+        "workers": 2,
+        "states": 100,
+        "expected_states": 100,
+        "complete": true,
+        "wall_seconds": 23.00904944166541,
+        "states_per_second": 4.346116090259569,
+        "outputs": "runs/cloud-output/h200-fresh-cache/fresh-100-w2",
+        "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+        "name": "fresh-100-w2",
+        "local_parity": {
+          "decisions": 500,
+          "max_probability_delta": 0.07438081014100972,
+          "mean_total_variation": 0.005587902976571223,
+          "argmax_agreement": 0.994,
+          "thresholds": {
+            "max_probability_delta": 0.02,
+            "mean_total_variation": 0.005,
+            "min_argmax_agreement": 0.99
+          },
+          "passed": false
+        },
+        "fresh_parity": {
+          "decisions": 500,
+          "max_probability_delta": 0.0,
+          "mean_total_variation": 0.0,
+          "argmax_agreement": 1.0,
+          "thresholds": {
+            "max_probability_delta": 0.02,
+            "mean_total_variation": 0.005,
+            "min_argmax_agreement": 0.99
+          },
+          "passed": true
+        }
+      },
+      {
+        "workers": 1,
+        "states": 20,
+        "expected_states": 20,
+        "complete": true,
+        "wall_seconds": 9.004205029457808,
+        "states_per_second": 2.2211844282275646,
+        "outputs": "runs/cloud-output/h200-fresh-cache/fresh-20-w1",
+        "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+        "name": "fresh-20-w1",
+        "local_parity": {
+          "decisions": 100,
+          "max_probability_delta": 0.07438081014100972,
+          "mean_total_variation": 0.00767518720549553,
+          "argmax_agreement": 0.99,
+          "thresholds": {
+            "max_probability_delta": 0.02,
+            "mean_total_variation": 0.005,
+            "min_argmax_agreement": 0.99
+          },
+          "passed": false
+        },
+        "fresh_parity": {
+          "decisions": 100,
+          "max_probability_delta": 0.0,
+          "mean_total_variation": 0.0,
+          "argmax_agreement": 1.0,
+          "thresholds": {
+            "max_probability_delta": 0.02,
+            "mean_total_variation": 0.005,
+            "min_argmax_agreement": 0.99
+          },
+          "passed": true
+        }
+      }
+    ]
+  },
+  "protocol": "No prefix reuse between states. Prefix sharing remains within each state. Full separate regeneration, not a merge with saved laptop targets.",
+  "canary_trials": [
+    {
+      "workers": 1,
+      "fresh_state_cache": true,
+      "states": 100,
+      "expected_states": 100,
+      "complete": true,
+      "wall_seconds": 25.006144396960735,
+      "states_per_second": 3.9990171380500414,
+      "outputs": "runs/cloud-output/h200-fresh-full/canary-1",
+      "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+      "local_reference_comparison": {
+        "decisions": 500,
+        "max_probability_delta": 0.07438081014100972,
+        "mean_total_variation": 0.005587902976571226,
+        "argmax_agreement": 0.994,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": false
+      },
+      "creates_reference": true,
+      "parity": {
+        "decisions": 500,
+        "max_probability_delta": 0.0,
+        "mean_total_variation": 0.0,
+        "argmax_agreement": 1.0,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": true
+      }
+    },
+    {
+      "workers": 2,
+      "fresh_state_cache": true,
+      "states": 100,
+      "expected_states": 100,
+      "complete": true,
+      "wall_seconds": 22.009392600506544,
+      "states_per_second": 4.543514753682866,
+      "outputs": "runs/cloud-output/h200-fresh-full/canary-2",
+      "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+      "local_reference_comparison": {
+        "decisions": 500,
+        "max_probability_delta": 0.07438081014100972,
+        "mean_total_variation": 0.005587902976571226,
+        "argmax_agreement": 0.994,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": false
+      },
+      "parity": {
+        "decisions": 500,
+        "max_probability_delta": 0.0,
+        "mean_total_variation": 0.0,
+        "argmax_agreement": 1.0,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": true
+      }
+    },
+    {
+      "workers": 4,
+      "fresh_state_cache": true,
+      "states": 100,
+      "expected_states": 100,
+      "complete": true,
+      "wall_seconds": 24.015105191618204,
+      "states_per_second": 4.164045887040386,
+      "outputs": "runs/cloud-output/h200-fresh-full/canary-4",
+      "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+      "local_reference_comparison": {
+        "decisions": 500,
+        "max_probability_delta": 0.07438081014100972,
+        "mean_total_variation": 0.005587902976571226,
+        "argmax_agreement": 0.994,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": false
+      },
+      "parity": {
+        "decisions": 500,
+        "max_probability_delta": 0.0,
+        "mean_total_variation": 0.0,
+        "argmax_agreement": 1.0,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": true
+      }
+    },
+    {
+      "workers": 6,
+      "fresh_state_cache": true,
+      "states": 100,
+      "expected_states": 100,
+      "complete": true,
+      "wall_seconds": 24.02168783545494,
+      "states_per_second": 4.162904816888198,
+      "outputs": "runs/cloud-output/h200-fresh-full/canary-6",
+      "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+      "local_reference_comparison": {
+        "decisions": 500,
+        "max_probability_delta": 0.07438081014100972,
+        "mean_total_variation": 0.005587902976571226,
+        "argmax_agreement": 0.994,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": false
+      },
+      "parity": {
+        "decisions": 500,
+        "max_probability_delta": 0.0,
+        "mean_total_variation": 0.0,
+        "argmax_agreement": 1.0,
+        "thresholds": {
+          "max_probability_delta": 0.02,
+          "mean_total_variation": 0.005,
+          "min_argmax_agreement": 0.99
+        },
+        "passed": true
+      }
+    }
+  ],
+  "selected_workers": 2,
+  "initial_production_eta_seconds_estimate": 1381.3094796077908,
+  "estimate_note": "Estimate extrapolated from the canary including loading; excludes provisioning/download/setup and student training",
+  "initial_artifact_archive_sha256": "81cdca9c66891eeffebb7ee240a86f0a314722c1684f3c04d563902b01125b63",
+  "validation": {
+    "offline_tests_passed": 42,
+    "scope": "experiments/small_model/test_*.py",
+    "ruff_version": "0.16.9",
+    "ruff_changed_python_files": "passed",
+    "bootstrap_bash_syntax": "passed",
+    "complete_dataset_and_question_metadata": "passed",
+    "finite_logits_and_probability_vectors": "passed"
+  },
+  "limitations": [
+    "Initial laptop/cloud probability parity failed; the original laptop targets are preserved separately.",
+    "Single 100-state timing trial per worker count; small timing differences are not statistical proof of an optimum.",
+    "The final trial followed earlier warmup/diagnostic runs; first cold startup is reported separately.",
+    "Student training and evaluation are not part of this teacher-labeling run.",
+    "The 100-state worker sample came from the 3170 saved laptop states, not the whole corpus.",
+    "The matched 160-state H200 trial includes a measured 42.0-second model load in each concurrent worker. The cause of that reload delay was not isolated.",
+    "The 80 gold decisions are a small reused sample, not a general model-quality ranking.",
+    "Free-RAM telemetry inside the Pod can reflect host memory rather than the container allocation."
+  ],
+  "production": {
+    "workers": 2,
+    "fresh_state_cache": true,
+    "states": 6276,
+    "expected_states": 6276,
+    "complete": true,
+    "wall_seconds": 1111.107187371701,
+    "states_per_second": 5.648419946635155,
+    "outputs": "runs/cloud-output/h200-fresh-full/production",
+    "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit"
+  },
+  "production_worker_timings": [
+    {
+      "states": 3087,
+      "seconds": 1047.2,
+      "load_s": 3.2,
+      "ms_per_state_p50": 305.7,
+      "ms_per_state_p95": 392.8,
+      "readings_per_state": 10,
+      "n_ctx": 2048,
+      "rss_gb_after_load": 1.47,
+      "free_ram_gb_after_load": 1929.2,
+      "load_mode": "none (no mmap)",
+      "num_shards": 2,
+      "shard_index": 1,
+      "cache_prompt_between_states": false,
+      "gguf": "/workspace/tez-pilot-v6/runs/cloud-runtime/models/047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795.gguf",
+      "llama_lib": "/workspace/tez-pilot-v6/runs/cloud-runtime/llama/llama-b11100/libllama.so",
+      "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+      "stopped_for": null,
+      "checkpoint_states": 25,
+      "thermal": {
+        "checks": 3087,
+        "pauses": 0,
+        "paused_s": 0.0,
+        "max_c": 56
+      }
+    },
+    {
+      "states": 3189,
+      "seconds": 1105.9,
+      "load_s": 3.2,
+      "ms_per_state_p50": 302.8,
+      "ms_per_state_p95": 395.9,
+      "readings_per_state": 10,
+      "n_ctx": 2048,
+      "rss_gb_after_load": 1.47,
+      "free_ram_gb_after_load": 1929.2,
+      "load_mode": "none (no mmap)",
+      "num_shards": 2,
+      "shard_index": 0,
+      "cache_prompt_between_states": false,
+      "gguf": "/workspace/tez-pilot-v6/runs/cloud-runtime/models/047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795.gguf",
+      "llama_lib": "/workspace/tez-pilot-v6/runs/cloud-runtime/llama/llama-b11100/libllama.so",
+      "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+      "stopped_for": null,
+      "checkpoint_states": 25,
+      "thermal": {
+        "checks": 3189,
+        "pauses": 0,
+        "paused_s": 0.0,
+        "max_c": 56
+      }
+    }
+  ],
+  "matched_codex_comparison": {
+    "workers": 2,
+    "fresh_state_cache": true,
+    "states": 160,
+    "expected_states": 160,
+    "complete": true,
+    "wall_seconds": 72.01482292637229,
+    "states_per_second": 2.2217648186621726,
+    "outputs": "runs/cloud-output/h200-codex-matched",
+    "timing_scope": "Process startup, model loading, inference, cooling, checkpoints, and exit",
+    "decisions": 800,
+    "production_parity": {
+      "decisions": 800,
+      "max_probability_delta": 0.0,
+      "mean_total_variation": 0.0,
+      "argmax_agreement": 1.0,
+      "thresholds": {
+        "max_probability_delta": 0.02,
+        "mean_total_variation": 0.005,
+        "min_argmax_agreement": 0.99
+      },
+      "passed": true
+    },
+    "sample_note": "Same 160 unique state IDs and assigned questions as codex_teacher_scaling_20260927.json. GPU returns soft targets; Codex returns selected labels.",
+    "gold_count": 80,
+    "gold_correct": 68,
+    "protocol": "Temperature-adjusted two-order argmax, same scoring function as the Codex report",
+    "worker_timings": [
+      {
+        "states": 73,
+        "seconds": 25.6,
+        "load_s": 42.0,
+        "ms_per_state_p50": 311.2,
+        "ms_per_state_p95": 421.0,
+        "readings_per_state": 10,
+        "n_ctx": 2048,
+        "rss_gb_after_load": 1.45,
+        "free_ram_gb_after_load": 1930.9,
+        "load_mode": "none (no mmap)",
+        "num_shards": 2,
+        "shard_index": 1,
+        "cache_prompt_between_states": false,
+        "gguf": "/workspace/tez-pilot-v6/runs/cloud-runtime/models/047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795.gguf",
+        "llama_lib": "/workspace/tez-pilot-v6/runs/cloud-runtime/llama/llama-b11100/libllama.so",
+        "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+        "stopped_for": null,
+        "checkpoint_states": 25,
+        "thermal": {
+          "checks": 73,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 50
+        }
+      },
+      {
+        "states": 87,
+        "seconds": 28.2,
+        "load_s": 42.0,
+        "ms_per_state_p50": 303.9,
+        "ms_per_state_p95": 412.4,
+        "readings_per_state": 10,
+        "n_ctx": 2048,
+        "rss_gb_after_load": 1.45,
+        "free_ram_gb_after_load": 1930.9,
+        "load_mode": "none (no mmap)",
+        "num_shards": 2,
+        "shard_index": 0,
+        "cache_prompt_between_states": false,
+        "gguf": "/workspace/tez-pilot-v6/runs/cloud-runtime/models/047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795.gguf",
+        "llama_lib": "/workspace/tez-pilot-v6/runs/cloud-runtime/llama/llama-b11100/libllama.so",
+        "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+        "stopped_for": null,
+        "checkpoint_states": 25,
+        "thermal": {
+          "checks": 87,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 51
+        }
+      }
+    ],
+    "codex_trials": [
+      {
+        "workers": 4,
+        "wall_seconds": 50.02633030001016,
+        "valid_decisions": 800,
+        "gold_count": 80,
+        "gold_correct": 75
+      },
+      {
+        "workers": 8,
+        "wall_seconds": 35.85485440000775,
+        "valid_decisions": 800,
+        "gold_count": 80,
+        "gold_correct": 74
+      },
+      {
+        "workers": 20,
+        "wall_seconds": 35.00314879999496,
+        "valid_decisions": 800,
+        "gold_count": 80,
+        "gold_correct": 75
+      }
+    ],
+    "codex_record": "results/pilot/codex_teacher_scaling_20260927.json",
+    "codex_sample_sha256": "8a39b442c23d1f6b31aeb7c3915072e5f18d3264e98e47aa8d7eafad0ad2b68e"
+  },
+  "terminated_utc": "2026-09-26T23:16:16.157194+00:00",
+  "allocated_elapsed_seconds": 2477.065654,
+  "pod_absence_verified": true,
+  "watcher_stopped": true,
+  "estimated_gpu_usd": 3.15825870885,
+  "estimated_storage_usd": 0.007645264364197531,
+  "estimated_total_usd": 3.1659039732141974,
+  "cost_note": "Estimate from allocation-to-termination elapsed time and verified hourly GPU quote plus published storage rates; provider billing may lag.",
+  "provider_billing": {
+    "checked_utc": "2026-09-26T23:16:42.211872+00:00",
+    "records": [],
+    "posted_amount_usd": null,
+    "note": "Posted billing may lag the completed trial; absence of records is not zero cost.",
+    "status": "not_yet_available"
+  },
+  "final_artifact_archive_sha256": "e7a9236993c9b15ef9bb64c6b4fec3d93e7a99f497bb6fb628ecca4315917ace",
+  "verified_artifact_files": 400,
+  "dataset_directory": "runs/pilot-cloud-h200-20260927",
+  "dataset_manifest": "runs/pilot-cloud-h200-20260927/manifest.json",
+  "exported_states": 6276,
+  "exported_decisions": 31380,
+  "production_reference_consistency": {
+    "decisions": 500,
+    "max_probability_delta": 0.0,
+    "mean_total_variation": 0.0,
+    "argmax_agreement": 1.0,
+    "thresholds": {
+      "max_probability_delta": 0.02,
+      "mean_total_variation": 0.005,
+      "min_argmax_agreement": 0.99
+    },
+    "passed": true
+  },
+  "training_reader": {
+    "train_states": 5998,
+    "train_decisions": 29990,
+    "train_10k_states": 2000,
+    "train_10k_decisions": 10000,
+    "validation_states": 278,
+    "validation_decisions": 1390,
+    "training_reader_passed": true
+  },
+  "student_training_status": "not_started"
+}

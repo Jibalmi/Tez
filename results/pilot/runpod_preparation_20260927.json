@@ -1,5 +1,5 @@
 {
-  "status": "prepared_not_deployed",
+  "status": "teacher_trial_complete_pod_terminated",
   "created_from_snapshot_utc": "2026-09-26T22:26:25.435974+00:00",
   "saved_states": 2700,
   "pending_states": 3576,
@@ -42,7 +42,14 @@
   ],
   "launch_requirements": [
     "RunPod credentials configured locally",
-    "User spending cap",
-    "Authenticated GPU quote and availability"
-  ]
+    "Authenticated GPU quote and availability within the authorized $10 total cap"
+  ],
+  "user_authorization": {
+    "recorded_utc": "2026-09-26T22:28:42.105986+00:00",
+    "maximum_total_usd": 10.0,
+    "faster_gpu_allowed": true,
+    "scope": "First RunPod trial; GPU and storage costs count toward the cap"
+  },
+  "execution_record": "results/pilot/runpod_h200_speed_20260927.json",
+  "exported_dataset": "runs/pilot-cloud-h200-20260927"
 }
