@@ -256,17 +256,23 @@ def filt(k_clusters: int = 64, device: str = "cuda") -> None:
     rows = [r for r, k in zip(rows, ~near_eval) if k]
     emb = emb[~near_eval]
 
-    # keep the first N per source (targets), in sample order
+    # keep N per source (targets), round-robin over the source's languages in sample order, so every language keeps
+    # its share (the first version kept the first N in sample order and cut fineweb-2's last language, ko)
+    by_src = collections.defaultdict(lambda: collections.defaultdict(list))
+    for i, r in enumerate(rows):
+        by_src[r["source"]][r["lang"] if r["source"] in ("fineweb2", "gmmlu") else "all"].append(i)
+    chosen = set()
     per = collections.Counter()
-    keep, kemb = [], []
-    for r, e in zip(rows, emb):
-        if per[r["source"]] < TARGET[r["source"]]:
-            per[r["source"]] += 1
-            keep.append(r)
-            kemb.append(e)
-        else:
-            dropped["5_over_target"] += 1
-    rows, emb = keep, np.stack(kemb)
+    for src, langs in by_src.items():
+        queues = [list(v) for v in langs.values()]
+        while per[src] < TARGET[src] and any(queues):
+            for q in queues:
+                if q and per[src] < TARGET[src]:
+                    chosen.add(q.pop(0))
+                    per[src] += 1
+    dropped["5_over_target"] += len(rows) - len(chosen)
+    idx = sorted(chosen)
+    rows, emb = [rows[i] for i in idx], emb[idx]
     np.save(RUNS / "pool_emb.npy", emb)
     write_jsonl(POOL, rows)
     pool_hash = sha("".join(sha(json.dumps(r["state"], ensure_ascii=False, sort_keys=True), 64) for r in rows), 64)

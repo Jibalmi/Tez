@@ -172,9 +172,12 @@ def write(server: str, parallel: int, limit: int = 0) -> None:
         seed = int(c["cid"].encode().hex()[-6:], 16)
         for attempt in range(3):
             try:
-                sch = SCHEMA_JSON if attempt < 2 else None      # last try without the grammar
+                sch = None if attempt < 2 else SCHEMA_JSON      # grammar only on the last try: grammar sampling is
+                                                                # CPU-bound and ran at 7 tok/s on 4 slots on 2026-09-25
                 content, tm = generate(server, schema_prompt(texts, c["lang"]), sch, 2500, 0.7, seed + attempt)
                 items = json.loads(content[content.index("["): content.rindex("]") + 1])
+                if not isinstance(items, list) or len(items) < 5:
+                    raise ValueError(f"{len(items) if isinstance(items, list) else type(items).__name__} items")
                 return {"cid": c["cid"], "lang": c["lang"], "items": items, "timings": tm, "attempt": attempt}
             except Exception as exc:  # noqa: BLE001
                 err = str(exc)[:200]
@@ -193,9 +196,10 @@ def write(server: str, parallel: int, limit: int = 0) -> None:
     with open(RUNS / "gold_questions.jsonl", "a", encoding="utf-8") as f:
         for ds, rows in gold_jobs:
             try:
-                content, tm = generate(server, gold_prompt(ds, rows), gold_schema, 200, 0.0, SEED)
-            except Exception:  # noqa: BLE001
                 content, tm = generate(server, gold_prompt(ds, rows), None, 200, 0.0, SEED)
+                json.loads(content[content.index("{"): content.rindex("}") + 1])["instructions"]
+            except Exception:  # noqa: BLE001
+                content, tm = generate(server, gold_prompt(ds, rows), gold_schema, 200, 0.0, SEED)
             instr = json.loads(content[content.index("{"): content.rindex("}") + 1])["instructions"]
             f.write(json.dumps({"dataset": ds, "instructions": instr, "timings": tm}, ensure_ascii=False) + "\n")
             print(f"  gold {ds}: {instr}", flush=True)
@@ -230,7 +234,8 @@ def eval_option_sets() -> list[set[str]]:
     for tier in ("original", "easy", "hard"):
         for r in read_jsonl(root / "data" / "jevbench" / f"{tier}.jsonl"):
             sets.append({norm(x) for x in r["labels"]})
-    sets.append({norm(x) for x in json.loads((root / "data" / "voice" / "intents.json").read_text(encoding="utf-8"))})
+    voice = json.loads((root / "data" / "voice" / "intents.json").read_text(encoding="utf-8"))["intents"]
+    sets.append({norm(x["id"]) for x in voice})
     return sets
 
 

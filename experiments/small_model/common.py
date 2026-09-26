@@ -22,6 +22,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "experiments"))
 
+THREADS = int(os.environ.get("RUN_HEAVY_THREADS", "6"))   # the machine's cap for heavy jobs (C:/temp/run_heavy.py)
+try:
+    import torch as _torch
+    _torch.set_num_threads(THREADS)
+except Exception:  # noqa: BLE001
+    pass
+
 RUNS = ROOT / "runs" / "pilot"                   # gitignored: weights, caches, datasets
 DATA = ROOT / "data" / "small_model"             # committed: eval hashes (small), licence ledger copy
 RESULTS = ROOT / "results" / "pilot"             # committed: metrics, manifests

@@ -54,7 +54,9 @@ def main() -> None:
     if not todo:
         return
 
-    be = InprocBackend(GGUF_12B, template="gemma4", lib=LLAMA_LIB, n_ctx=args.n_ctx, n_seq_max=16)
+    import os
+    be = InprocBackend(GGUF_12B, template="gemma4", lib=LLAMA_LIB, n_ctx=args.n_ctx, n_seq_max=16,
+                       n_threads=int(os.environ.get("RUN_HEAVY_THREADS", "6")))
     t_load = time.time()
     be.load()
     load_s = time.time() - t_load

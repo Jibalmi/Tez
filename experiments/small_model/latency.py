@@ -41,6 +41,31 @@ def snapshot() -> dict:
         return {"error": str(exc)[:200]}
 
 
+def thermal() -> dict:
+    """GPU temperature and throttle state (the machine rule: timings count only below about 70 C with no
+    sw_thermal_slowdown)."""
+    q = ("temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdown,clocks_throttle_reasons.hw_thermal_slowdown,"
+         "clocks.sm,utilization.gpu,memory.used")
+    try:
+        out = subprocess.run(["nvidia-smi", f"--query-gpu={q}", "--format=csv,noheader,nounits"], capture_output=True,
+                             text=True, timeout=10).stdout.strip().splitlines()[0]
+        t, sw, hw, sm, util, mem = (x.strip() for x in out.split(","))
+        return {"temp_c": int(t), "sw_thermal": sw == "Active", "hw_thermal": hw == "Active", "sm_mhz": int(sm),
+                "util_pct": int(util), "mem_mb": int(mem)}
+    except Exception as exc:  # noqa: BLE001
+        return {"error": str(exc)[:120]}
+
+
+def cool_down(limit_c: int = 65, max_wait_s: int = 600) -> dict:
+    t0 = time.time()
+    th = thermal()
+    while th.get("temp_c", 0) > limit_c and time.time() - t0 < max_wait_s:
+        time.sleep(10)
+        th = thermal()
+    th["waited_s"] = round(time.time() - t0)
+    return th
+
+
 def stats(ts, n):
     ts = np.asarray(ts, float)
     p50 = float(np.percentile(ts, 50))
@@ -52,7 +77,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", required=True)
     ap.add_argument("--device", default="cuda")
-    ap.add_argument("--threads", type=int, default=24)
+    ap.add_argument("--threads", type=int, default=int(__import__("os").environ.get("RUN_HEAVY_THREADS", "6")),
+                    help="CPU threads (the machine's cap is 6; the plan's 24-core run is not allowed)")
     ap.add_argument("--warmup", type=int, default=10)
     ap.add_argument("--reps", type=int, default=100)
     ap.add_argument("--reps50", type=int, default=30)
@@ -98,7 +124,9 @@ def main() -> None:
 
     if dev == "cuda":
         torch.cuda.reset_peak_memory_stats()
-    sizes, counter = {}, 0
+    sizes, counter, thermals = {}, 0, []
+    if dev == "cuda":
+        thermals.append({"at": "start", **cool_down()})
     for n in NS:
         reps = args.reps50 if n == 50 else args.reps
         for _ in range(args.warmup):
@@ -110,6 +138,10 @@ def main() -> None:
             ms, _ = call(counter, n)
             ts.append(ms)
         sizes[str(n)] = stats(ts, n)
+        if dev == "cuda":
+            th = thermal()
+            sizes[str(n)]["thermal_after"] = th
+            thermals.append({"at": f"after n={n}", **th})
         print(f"{args.arm} {dev} n={n}: p50 {sizes[str(n)]['p50_ms']} ms, {sizes[str(n)]['ms_per_question']} ms/q", flush=True)
     after = snapshot() if dev == "cuda" else None
     contaminated = None
@@ -117,7 +149,10 @@ def main() -> None:
         import os
         others = [p for p in after["processes"] if p["pid"] != os.getpid() and p["mb"] > 300 and p["kind"].startswith("Dedicated")]
         contaminated = bool(others)
-    res = {"arm": args.arm, "device": dev, "threads": args.threads if dev == "cpu" else None,
+    throttled = None
+    if dev == "cuda":
+        throttled = any(t.get("temp_c", 0) > 70 or t.get("sw_thermal") or t.get("hw_thermal") for t in thermals)
+    res = {"arm": args.arm, "device": dev, "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,
            "dtype": "bf16 autocast" if dev == "cuda" else "fp32", "load_s": round(load_s, 2),
            "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 3) if dev == "cuda" else None,
            "rss_gb": round(psutil.Process().memory_info().rss / 2 ** 30, 2), "cpu_load_before_pct": cpu0,

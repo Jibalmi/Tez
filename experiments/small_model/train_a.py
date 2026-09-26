@@ -152,7 +152,7 @@ def fit_type_temps(recs) -> dict:
     return out
 
 
-def main() -> None:
+def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", required=True)
     ap.add_argument("--backbone", required=True)
@@ -163,10 +163,9 @@ def main() -> None:
     ap.add_argument("--budget", type=int, default=16384, help="padded tokens per batch")
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--seed", type=int, default=13)
-    ap.add_argument("--minutes", type=float, default=100, help="stop early (checkpointed) past this")
+    ap.add_argument("--minutes", type=float, default=50, help="segment length: checkpoint and exit 3 past this")
     args = ap.parse_args()
     torch.manual_seed(args.seed)
-    rng = random.Random(args.seed)
     dev = torch.device("cuda")
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained(args.backbone)
@@ -174,63 +173,90 @@ def main() -> None:
     train_all, train_10k, val = load_examples()
     train = train_all if args.data == "30k" else train_10k
     print(json.dumps({"train": summary(train), "val": summary(val)}), flush=True)
+    out = RUNS / "models" / args.arm
+    out.mkdir(parents=True, exist_ok=True)
+    ckpt_path = out / "ckpt.pt"
 
     model = Student(args.backbone).to(dev)
     model.train()
     enc_params = [p for n, p in model.named_parameters() if n.startswith("enc.")]
     opt = torch.optim.AdamW([{"params": enc_params, "lr": args.lr},
                              {"params": model.head.parameters(), "lr": args.head_lr}], weight_decay=0.01, fused=True)
-    # estimate steps
-    est = len(batches(make_rows(train, enc, random.Random(1)), args.budget, random.Random(1)))
-    total = est * args.epochs
+
+    def epoch_batches(ep: int):
+        """Deterministic per epoch, so a resumed segment skips exactly the batches already trained."""
+        r = random.Random(args.seed * 1000 + ep)
+        return batches(make_rows(train, enc, r), args.budget, r)
+
+    total = len(epoch_batches(0)) * args.epochs
     sched = torch.optim.lr_scheduler.LambdaLR(opt, lr_lambda(max(1, int(0.06 * total)), total))
+    st = {"ep": 0, "b": 0, "step": 0, "tokens": 0, "log": [], "train_s": 0.0, "segments": 0}
+    if ckpt_path.exists():
+        ck = torch.load(ckpt_path, map_location=dev, weights_only=False)
+        model.load_state_dict(ck["model"])
+        opt.load_state_dict(ck["opt"])
+        sched.load_state_dict(ck["sched"])
+        st = ck["state"]
+        torch.set_rng_state(ck["torch_rng"])
+        print(f"resumed at epoch {st['ep']} batch {st['b']} (step {st['step']})", flush=True)
+    st["segments"] += 1
     t0 = time.time()
-    tokens, step, log = 0, 0, []
     stopped = False
-    for ep in range(args.epochs):
-        rows = make_rows(train, enc, rng)
-        for b in batches(rows, args.budget, rng):
-            loss, *_ = step_loss(model, b, dev)
+    while st["ep"] < args.epochs:
+        bs = epoch_batches(st["ep"])
+        for bi in range(st["b"], len(bs)):
+            loss, *_ = step_loss(model, bs[bi], dev)
             opt.zero_grad(set_to_none=True)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
             sched.step()
-            tokens += sum(len(r.ids) for r in b)
-            step += 1
-            if step % 50 == 0:
-                el = time.time() - t0
-                print(f"ep {ep} step {step}/{total} loss {loss.item():.4f} {tokens / el:.0f} tok/s {el:.0f} s", flush=True)
-            if time.time() - t0 > args.minutes * 60:
+            st["tokens"] += sum(len(r.ids) for r in bs[bi])
+            st["step"] += 1
+            st["b"] = bi + 1
+            if st["step"] % 50 == 0:
+                el = st["train_s"] + time.time() - t0
+                print(f"ep {st['ep']} step {st['step']}/{total} loss {loss.item():.4f} "
+                      f"{st['tokens'] / el:.0f} tok/s {el:.0f} s", flush=True)
+            if time.time() - t0 > args.minutes * 60 and st["b"] < len(bs):
                 stopped = True
                 break
-        agree, kl, _ = evaluate_val(model, val, enc, dev, args.budget)
-        log.append({"epoch": ep, "step": step, "val_agreement": round(agree, 4), "val_kl": round(kl, 4),
-                    "seconds": round(time.time() - t0, 1)})
-        print(f"== epoch {ep}: val agreement {agree:.4f} KL {kl:.4f}", flush=True)
         if stopped:
             break
-    train_s = time.time() - t0
+        agree, kl, _ = evaluate_val(model, val, enc, dev, args.budget)
+        st["log"].append({"epoch": st["ep"], "step": st["step"], "val_agreement": round(agree, 4),
+                          "val_kl": round(kl, 4), "seconds": round(st["train_s"] + time.time() - t0, 1)})
+        print(f"== epoch {st['ep']}: val agreement {agree:.4f} KL {kl:.4f}", flush=True)
+        st["ep"] += 1
+        st["b"] = 0
+    st["train_s"] += time.time() - t0
+    if stopped:
+        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "state": st,
+                    "torch_rng": torch.get_rng_state()}, ckpt_path)
+        print(f"segment ended at epoch {st['ep']} batch {st['b']}: checkpoint saved", flush=True)
+        return 3
     agree, kl, recs = evaluate_val(model, val, enc, dev, args.budget)
     temps = fit_type_temps(recs)
-    out = RUNS / "models" / args.arm
-    out.mkdir(parents=True, exist_ok=True)
     model.enc.save_pretrained(out / "encoder")
     tok.save_pretrained(out / "encoder")
     torch.save(model.head.state_dict(), out / "head.pt")
     info = {"arm": args.arm, "backbone": args.backbone, "data": args.data, "params": n_params(model),
-            "epochs_run": len(log), "steps": step, "stopped_early": stopped, "train_seconds": round(train_s, 1),
-            "train_tokens": tokens, "train_tok_per_s": round(tokens / train_s, 1), "lr": args.lr,
-            "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": log,
+            "epochs_run": len(st["log"]), "steps": st["step"], "segments": st["segments"],
+            "train_seconds": round(st["train_s"], 1), "train_tokens": st["tokens"],
+            "train_tok_per_s": round(st["tokens"] / st["train_s"], 1), "lr": args.lr,
+            "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": st["log"],
             "val_agreement_with_teacher": round(agree, 4), "val_kl": round(kl, 4), "temperatures": temps,
             "train_summary": summary(train), "val_summary": summary(val),
             "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2)}
     (out / "student.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
     dump(RESULTS / f"train_{args.arm}.json", info)
     print(json.dumps({k: v for k, v in info.items() if k not in ("log", "train_summary", "val_summary")}, indent=1))
+    if ckpt_path.exists():
+        ckpt_path.unlink()
     del model, opt
     torch.cuda.empty_cache()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

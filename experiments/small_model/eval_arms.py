@@ -246,8 +246,9 @@ def semif_score(task: str, recs: list[dict]) -> dict:
     preds = [{"id": r["id"], "probabilities": [float(x) for x in np.asarray(r["probabilities"]) / np.sum(r["probabilities"])]}
              for r in recs]
     m = ev.evaluate(gold, preds)
+    rows = ev.align(gold, preds)
     return {"mean_family_balanced_accuracy": round(m["mean_family_balanced_accuracy"], 4),
-            "accuracy": round(m["overall"]["accuracy"], 4)}
+            "accuracy": round(ev.basic(rows)["accuracy"], 4)}
 
 
 def score_task(task: str, cases: list[dict], lps: list[np.ndarray], temps: dict, arm: str) -> tuple[dict, list[dict]]:
