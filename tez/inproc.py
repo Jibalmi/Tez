@@ -20,6 +20,9 @@ What the backend reads
 A single prompt reuses the longest token prefix it shares with the previous one on sequence 0, like llama-server's
 prompt cache: by removing the tail (llama_memory_seq_rm), except on hybrid and recurrent models (Qwen3.5), whose
 recurrent state cannot be rolled back; those reuse a prefix only by extending it, or through sequence copies.
+  stream     prompts built as head + state + tail whose state grows between reads (a transcript, word by word):
+             stream_reader() keeps the head evaluated once and the state read so far on sequences of their own, so
+             each read evaluates only the new words and the tail (InprocStreamReader; tez.stream uses it).
 
 Traps kept from the speed study (experiments/speed_llama.py, experiments/speed_multiq_inproc.py):
   * Windows: ggml loads its backends with a plain LoadLibrary, which does not find ggml-cuda.dll's own dependencies
@@ -61,7 +64,7 @@ DEFAULT_N_CTX = 4096
 DEFAULT_N_UBATCH = 512
 DEFAULT_N_SEQ_MAX = 64
 DEFAULT_N_GPU_LAYERS = -1                        # all layers (llama.h: a negative value means all)
-OPTION_NAMES = ("lib", "n_ctx", "n_batch", "n_ubatch", "n_seq_max", "n_gpu_layers")
+OPTION_NAMES = ("lib", "n_ctx", "n_batch", "n_ubatch", "n_seq_max", "n_gpu_layers", "n_outputs", "n_threads")
 _GPU_LIBS = ("ggml-cuda", "ggml-hip", "ggml-vulkan", "ggml-sycl", "ggml-musa", "ggml-cann", "ggml-opencl")
 _NOT_GPU = {"CPU", "BLAS", "RPC"}                # backend registries that are not a GPU
 _HASHED = re.compile(r"(sha256[-:])?[0-9a-f]{32,}", re.I)
@@ -317,7 +320,7 @@ class LlamaModel:
     the output rows. Not thread-safe (InprocBackend holds the lock)."""
 
     def __init__(self, api: Any, path: str, *, n_ctx: int, n_batch: int, n_ubatch: int, n_seq_max: int,
-                 n_gpu_layers: int, n_threads: int | None = None):
+                 n_gpu_layers: int, n_threads: int | None = None, n_outputs: int | None = None):
         self.api = api
         self.path = path
         mp = api.llama_model_default_params()
@@ -334,8 +337,9 @@ class LlamaModel:
             cp.n_batch = int(n_batch)
             cp.n_ubatch = int(min(n_ubatch, n_batch))
             cp.n_seq_max = int(n_seq_max)
-            cp.n_outputs_max = int(n_seq_max)            # the logits buffer is n_outputs_max x n_vocab floats
-            cp.n_outputs_max_per_seq = int(n_seq_max)    # set explicitly: the default is 1
+            outputs = max(int(n_seq_max), int(n_outputs or 0))
+            cp.n_outputs_max = outputs                   # the logits buffer is n_outputs_max x n_vocab floats
+            cp.n_outputs_max_per_seq = outputs           # set explicitly: the default is 1
             threads = n_threads or max(1, (os.cpu_count() or 2) // 2)
             cp.n_threads = cp.n_threads_batch = int(threads)
             cp.embeddings = False                        # switched on only for the decodes whose states are read
@@ -363,7 +367,7 @@ class LlamaModel:
         self.n_ctx = int(api.llama_n_ctx(self.ctx))
         self.cap = int(api.llama_n_batch(self.ctx))
         self.n_seq = int(api.llama_n_seq_max(self.ctx))
-        self.n_outputs = int(n_seq_max)
+        self.n_outputs = max(int(n_seq_max), int(n_outputs or 0))
         self.mem = api.llama_get_memory(self.ctx)
         self._embd_on = False
         self._tok = np.zeros(self.cap, np.int32)
@@ -506,6 +510,9 @@ class InprocBackend(Backend):
     n_seq_max     sequences in the context: prompts read together in one wave, plus the one that holds the prefix
                   (default 64); also the most outputs per decode
     n_gpu_layers  layers offloaded to the GPU (default -1: all; 0 runs on the CPU and needs no GPU backend)
+    n_outputs     most outputs per decode (default n_seq_max). With embeddings on, llama.cpp makes every token of a
+                  decode an output, so a stream reader that reads states wants more than n_seq_max: a hybrid model
+                  (Qwen3.5) holds a recurrent state per sequence and runs best with a small n_seq_max
     cache_prompt  reuse the prefix a single read shares with the previous one (default True)
     The model is loaded on first use, or by load(); nothing is read from disk before that.
     """
@@ -515,7 +522,8 @@ class InprocBackend(Backend):
     def __init__(self, model_path: str | os.PathLike, template: str = "gemma4", *, lib: str | os.PathLike | None = None,
                  n_ctx: int = DEFAULT_N_CTX, n_batch: int | None = None, n_ubatch: int = DEFAULT_N_UBATCH,
                  n_seq_max: int = DEFAULT_N_SEQ_MAX, n_gpu_layers: int = DEFAULT_N_GPU_LAYERS, cache_prompt: bool = True,
-                 model_name: str | None = None, n_threads: int | None = None, verbose: bool = False, api: Any = None):
+                 model_name: str | None = None, n_threads: int | None = None, verbose: bool = False, api: Any = None,
+                 n_outputs: int | None = None):
         self.model_path = str(model_path)
         if not self.model_path:
             raise ValueError("inproc needs the path of a GGUF file: inproc:/path/to/model.gguf")
@@ -529,6 +537,9 @@ class InprocBackend(Backend):
             raise ValueError(f"n_batch must be a whole number of at least 1, got {n_batch!r}")
         if isinstance(n_gpu_layers, bool) or not isinstance(n_gpu_layers, int):
             raise ValueError(f"n_gpu_layers must be a whole number (-1: all layers), got {n_gpu_layers!r}")
+        if n_outputs is not None and (isinstance(n_outputs, bool) or not isinstance(n_outputs, int) or n_outputs < 1):
+            raise ValueError(f"n_outputs must be a whole number of at least 1, got {n_outputs!r}")
+        self.n_outputs = n_outputs
         self.n_ctx = n_ctx
         self.n_batch = n_batch or n_ctx
         self.n_ubatch = n_ubatch
@@ -544,6 +555,8 @@ class InprocBackend(Backend):
         self._letter_ids: np.ndarray | None = None
         self._cached: list[int] = []            # the tokens sequence 0 holds
         self._no_rollback = False
+        self._reserved: list[int] = []          # sequence ids held by stream readers (the top of the range)
+        self._epoch = 0                         # bumped whenever the KV cache is cleared: stream readers rebuild
         self._lock = threading.RLock()
         self.loads = 0                          # how many times a model was loaded (tests check laziness)
 
@@ -569,6 +582,8 @@ class InprocBackend(Backend):
                 self._m.close()
                 self._m = None
             self._cached = []
+            self._reserved = []
+            self._epoch += 1
 
     def _ensure(self) -> LlamaModel:
         if self._m is not None:
@@ -580,7 +595,8 @@ class InprocBackend(Backend):
             api = self._api = load_api(find_library(self.lib), verbose=self.verbose)
         devices = check_gpu(api, self.n_gpu_layers)
         m = LlamaModel(api, self.model_path, n_ctx=self.n_ctx, n_batch=self.n_batch, n_ubatch=self.n_ubatch,
-                       n_seq_max=self.n_seq_max, n_gpu_layers=self.n_gpu_layers, n_threads=self.n_threads)
+                       n_seq_max=self.n_seq_max, n_gpu_layers=self.n_gpu_layers, n_threads=self.n_threads,
+                       n_outputs=self.n_outputs)
         try:
             ids = []
             for letter in LETTERS:
@@ -731,6 +747,33 @@ class InprocBackend(Backend):
             out.append((ls, em))
         return out
 
+    def stream_reader(self, parts: Sequence[tuple[str, str, int, bool]], fold: bool = False) -> InprocStreamReader:
+        """A reader of prompts head + state + tail whose state grows between reads (InprocStreamReader). parts: one
+        (head, tail, k, embed) per prompt read together at every step: k option letters (0: none) and whether the
+        last-token state is read. fold: commit words inside the next read's decode instead of in a decode of their own
+        (see InprocStreamReader)."""
+        return InprocStreamReader(self, parts, fold=fold)
+
+    def _reserve(self, n: int) -> list[int]:
+        """n sequence ids for a stream reader, from the top of the range; at least one other stays free for the
+        batched reads (sequence 0 is the single-prompt cache)."""
+        m = self._m
+        taken = set(self._reserved)
+        ids = [s for s in range(m.n_seq - 1, 0, -1) if s not in taken][:n]
+        if len(ids) < n or m.n_seq - 1 - len(taken) - n < 1:
+            raise BackendRequestError(f"a stream reader needs {n} sequences and {m.n_seq - 1 - len(taken)} are free "
+                                      f"(n_seq_max {m.n_seq}): start the backend with a larger n_seq_max")
+        self._reserved += ids
+        return ids
+
+    def _release(self, ids: Sequence[int]) -> None:
+        m = self._m
+        for s in ids:
+            if s in self._reserved:
+                self._reserved.remove(s)
+                if m is not None:
+                    m.seq_rm(s)
+
     # ------------------------------------------------------------------ internals (the lock is held)
     def _single(self, prompt: str, k: int, want_embed: bool) -> tuple[np.ndarray | None, np.ndarray | None, dict]:
         with self._lock:
@@ -759,6 +802,7 @@ class InprocBackend(Backend):
             m.clear()
         finally:
             self._cached = []
+            self._epoch += 1                     # stream readers lost their sequences too
 
     def _keep_on_seq0(self, toks: Sequence[int], need_output: bool) -> int:
         """Leave on sequence 0 the longest prefix of `toks` it already holds (at most len - 1 tokens when the last one
@@ -771,7 +815,10 @@ class InprocBackend(Backend):
             n -= 1
         if n < len(held):
             if n == 0 or self._no_rollback or not m.seq_rm(0, n, -1):
-                m.clear()
+                if self._reserved:
+                    m.seq_rm(0)                  # stream readers hold other sequences: drop only this one
+                else:
+                    m.clear()
                 n = 0
             self._cached = list(held[:n])
         return n
@@ -847,9 +894,10 @@ class InprocBackend(Backend):
             self._cached = list(toks[0][:lp])
             evaluated[0] += lp - held
             waves, cur, resident = [], [], lp
-            for j, t in enumerate(toks):         # sequences 1..n_seq-1; the suffixes of a wave must fit the cache too
+            free = m.n_seq - 1 - len(self._reserved)   # sequences 1..free (stream readers hold the top ones)
+            for j, t in enumerate(toks):         # the suffixes of a wave must fit the cache too
                 s = len(t) - lp
-                if cur and (len(cur) >= m.n_seq - 1 or resident + s > m.n_ctx):
+                if cur and (len(cur) >= free or resident + s > m.n_ctx):
                     waves.append(cur)
                     cur, resident = [], lp
                 cur.append(j)
@@ -935,6 +983,253 @@ class InprocBackend(Backend):
                     owners.append(j)
                 start += piece
         flush()
+
+
+class InprocStreamReader:
+    """Reads prompts head_j + state + tail_j (a few prompts, j = 0..n-1) while the state grows between reads: the voice
+    loop's transcript, one word at a time. Per prompt it keeps three sequences of its own:
+      P_j  the head, evaluated once (a checkpoint: nothing ever extends or removes it)
+      A_j  a copy of P_j extended with the committed state (the words read so far)
+      S_j  a scratch copy of A_j, made for each read, that receives the new words and the tail, then is dropped
+    read(state) evaluates only the tokens past the committed state, for every prompt in ONE llama_decode, and returns
+    their letter log-probabilities (and last-token states). commit(state) then extends A_j with the state's own tokens,
+    which the caller does after acting on the read, in the gap before the next word. No sequence is ever rolled back,
+    so hybrid and recurrent models (Qwen3.5) work the same way: their copies copy the recurrent state.
+    When the state's tokens stop extending the committed ones (a word that merges with the next, a revised
+    transcript, a new residual), A_j is rebuilt from P_j. A cleared cache (a failed read elsewhere, close()) is noticed
+    through the backend's epoch and the heads are evaluated again.
+    fold=True defers each commit into the next read's llama_decode: the committed tokens go to A_j and, with the new
+    words and the tail, to S_j (copied from A_j before them) in the same batch. A step then costs one forward pass
+    instead of two, which matters for a large attention model, whose decode costs about the same for 2 tokens as for
+    12 (the weights are read either way). Hybrid and recurrent models split a batch that spans two sequences into
+    several, so for them the default (a commit decode of its own, in the gap) is the faster one."""
+
+    def __init__(self, backend: InprocBackend, parts: Sequence[tuple[str, str, int, bool]], fold: bool = False):
+        if not parts:
+            raise ValueError("a stream reader needs at least one prompt")
+        self.backend = backend
+        self.parts = [(str(h), str(t), int(k or 0), bool(e)) for h, t, k, e in parts]
+        for _, tail, k, e in self.parts:
+            if not 0 <= k <= MAX_LETTERS:
+                raise ValueError(f"a letter readout reads 1 to {MAX_LETTERS} options, got {k}")
+            if not k and not e:
+                raise ValueError("every prompt needs a letters readout (k >= 1) or an embedding")
+            if not tail:
+                raise ValueError("the tail must not be empty: it holds the read position")
+        self.want_embed = any(e for _, _, _, e in self.parts)
+        self._seqs: list[tuple[int, int, int]] = []     # (P, A, S) per prompt
+        self._P: list[list[int]] = []                   # head tokens per prompt
+        self._C: list[list[int]] = []                   # tokens on A_j
+        self._last: tuple[str, list[list[int]]] | None = None   # the state of the last read and its prompts' tokens
+        self._epoch: int | None = None
+        self.restored = 0                               # times A_j was rebuilt from its head
+        self.head_ms = 0.0
+        self.fold = bool(fold)
+        self._pending: list[list[int] | None] = [None] * len(self.parts)   # fold: what A_j should hold next
+
+    # ------------------------------------------------------------------ set-up (the backend lock is held)
+    def _ensure(self) -> LlamaModel:
+        b = self.backend
+        m = b._ensure()
+        if self._seqs and self._epoch == b._epoch:
+            return m
+        if not self._seqs or not all(s in b._reserved for trio in self._seqs for s in trio):
+            ids = b._reserve(3 * len(self.parts))
+            self._seqs = [(ids[3 * j], ids[3 * j + 1], ids[3 * j + 2]) for j in range(len(self.parts))]
+        t0 = time.perf_counter()
+        m.set_embeddings(False)
+        self._P, self._C = [], []
+        for (head, tail, _, _), (sp, sa, ss) in zip(self.parts, self._seqs):
+            for s in (sp, sa, ss):
+                m.seq_rm(s)
+            a = m.tokenize(head + "open notes" + tail)
+            c = m.tokenize(head + "what time is it" + tail)
+            p = a[: max(1, _common_prefix(a, c) - 1)]     # the head's tokens, one token of margin at the seam
+            b._fits(p)
+            b._eval(p, sp, 0, output_last=False)
+            m.seq_cp(sp, sa)
+            self._P.append(p)
+            self._C.append(list(p))
+        self._last = None
+        self._pending = [None] * len(self.parts)
+        self._epoch = b._epoch
+        self.head_ms = (time.perf_counter() - t0) * 1000.0
+        return m
+
+    def load(self) -> InprocStreamReader:
+        """Evaluate the heads now (otherwise the first read does)."""
+        with self.backend._lock:
+            self._ensure()
+        return self
+
+    def _rebuild(self, m: LlamaModel, j: int) -> None:
+        sp, sa, _ = self._seqs[j]
+        m.seq_rm(sa)
+        m.seq_cp(sp, sa)
+        self._C[j] = list(self._P[j])
+        self.restored += 1
+
+    def _decode_on(self, m: LlamaModel, seq: int, toks: Sequence[int], start: int) -> None:
+        """Extend one sequence without outputs (chunks small enough for the output buffer when embeddings are on)."""
+        step = min(m.cap, m.n_outputs) if m._embd_on else m.cap
+        for s in range(0, len(toks), step):
+            chunk = toks[s: s + step]
+            m.decode(chunk, range(start + s, start + s + len(chunk)), [seq] * len(chunk), [False] * len(chunk))
+
+    # ------------------------------------------------------------------ reads
+    def read(self, state: str) -> list[tuple[LetterScores | None, Embedding | None]]:
+        """The prompts head_j + state + tail_j, evaluated past the committed state on scratch copies in one decode.
+        `state` is the text exactly as it sits in the prompt (tez.prompt.render_state of the state)."""
+        b = self.backend
+        with b._lock:
+            m = self._ensure()
+            t0 = time.perf_counter()
+            try:
+                return self._read(m, state, t0)
+            except BaseException:
+                b._reset()
+                raise
+
+    def _read(self, m: LlamaModel, state: str, t0: float) -> list[tuple[LetterScores | None, Embedding | None]]:
+        b = self.backend
+        toks = [m.tokenize(head + state + tail) for head, tail, _, _ in self.parts]
+        starts, rests, exts, targets = [], [], [], []
+        for j, T in enumerate(toks):
+            b._fits(T)
+            target, self._pending[j] = self._pending[j], None
+            if _common_prefix(self._C[j], T) < len(self._C[j]):
+                if _common_prefix(self._P[j], T) < len(self._P[j]):
+                    raise BackendRequestError("the prompt no longer starts with the stream's head")
+                self._rebuild(m, j)
+            c = len(self._C[j])
+            if target is not None and (len(target) <= c or _common_prefix(target, T) < len(target)):
+                target = None                            # a folded commit this prompt no longer extends
+            _, sa, ss = self._seqs[j]
+            m.seq_rm(ss)
+            m.seq_cp(sa, ss)
+            starts.append(c)
+            rests.append(T[c:])
+            exts.append(target[c:] if target is not None else [])
+            targets.append(target)
+        total = sum(len(r) for r in rests) + sum(len(x) for x in exts)
+        m.set_embeddings(self.want_embed)
+        limit = min(m.cap, m.n_outputs) if self.want_embed else m.cap
+        if total <= limit:
+            bt: list[int] = []
+            bp: list[int] = []
+            bs: list[int] = []
+            bo: list[bool] = []
+            for j, rest in enumerate(rests):
+                if exts[j]:                              # the folded commit: A_j's new tokens, no output
+                    bt += exts[j]
+                    bp += range(starts[j], starts[j] + len(exts[j]))
+                    bs += [self._seqs[j][1]] * len(exts[j])
+                    bo += [False] * len(exts[j])
+                bt += rest
+                bp += range(starts[j], starts[j] + len(rest))
+                bs += [self._seqs[j][2]] * len(rest)
+                bo += [False] * (len(rest) - 1) + [True]
+            outs = m.decode(bt, bp, bs, bo)
+        else:                                            # rare (a rebuild): the bodies first, then the last tokens
+            for j, rest in enumerate(rests):
+                if exts[j]:
+                    self._decode_on(m, self._seqs[j][1], exts[j], starts[j])
+                if len(rest) > 1:
+                    self._decode_on(m, self._seqs[j][2], rest[:-1], starts[j])
+            n = len(rests)
+            outs = m.decode([r[-1] for r in rests], [starts[j] + len(rests[j]) - 1 for j in range(n)],
+                            [self._seqs[j][2] for j in range(n)], [True] * n)
+        for j, target in enumerate(targets):
+            if target is not None:
+                self._C[j] = list(target)
+        rows = []
+        for (_, _, k, e), p in zip(self.parts, outs):
+            z = b._letters_of([m.logits_row(p)], k)[0] if k else None
+            v = m.embd_row(p) if e else None
+            rows.append((z, v))
+        ms = (time.perf_counter() - t0) * 1000.0
+        for _, _, ss in self._seqs:
+            m.seq_rm(ss)
+        self._last = (state, toks)
+        out: list[tuple[LetterScores | None, Embedding | None]] = []
+        for j, (_, _, k, e) in enumerate(self.parts):
+            timings = {"prompt_n": len(rests[j]), "cache_n": starts[j], "prompt_ms": round(ms, 3),
+                       "batch_n": len(self.parts), "batch_prompt_n": total, "restored": self.restored}
+            z, v = rows[j]
+            out.append((LetterScores(z, len(toks[j]), timings=dict(timings), ms=ms) if k else None,
+                        Embedding(v, len(toks[j]), timings=dict(timings), ms=ms) if e else None))
+        return out
+
+    def commit(self, state: str) -> int:
+        """Extend A_j with the tokens the state contributes to every prompt (the state's own, up to where the tail
+        starts). Called after the decision on a read, in the gap before the next one. Returns the tokens evaluated."""
+        b = self.backend
+        with b._lock:
+            m = self._ensure()
+            try:
+                return self._commit(m, state)
+            except BaseException:
+                b._reset()
+                raise
+
+    def _commit(self, m: LlamaModel, state: str) -> int:
+        b = self.backend
+        if self._last is not None and self._last[0] == state:
+            toks = self._last[1]
+        else:
+            toks = [m.tokenize(head + state + tail) for head, tail, _, _ in self.parts]
+        if self.fold:                                    # the next read evaluates them, in its own decode
+            for j, ((head, _, _, _), T) in enumerate(zip(self.parts, toks)):
+                s = _common_prefix(m.tokenize(head + state), T)
+                self._pending[j] = list(T[:s]) if s > len(self._P[j]) else None
+            return 0
+        m.set_embeddings(self.want_embed)
+        n_eval = 0
+        for j, ((head, _, _, _), T) in enumerate(zip(self.parts, toks)):
+            b._fits(T)
+            s = _common_prefix(m.tokenize(head + state), T)      # the state's tokens as the full prompt has them
+            if _common_prefix(self._C[j], T) < len(self._C[j]) or s < len(self._C[j]):
+                if _common_prefix(self._P[j], T) < len(self._P[j]):
+                    raise BackendRequestError("the prompt no longer starts with the stream's head")
+                self._rebuild(m, j)
+            c = len(self._C[j])
+            new = T[c:s]
+            if new:
+                self._decode_on(m, self._seqs[j][1], new, c)
+                n_eval += len(new)
+            self._C[j] = list(T[:s])
+        return n_eval
+
+    def reset(self) -> None:
+        """Forget the committed state (a new utterance): A_j holds its head again."""
+        b = self.backend
+        with b._lock:
+            m = self._ensure()
+            for j in range(len(self.parts)):
+                if len(self._C[j]) != len(self._P[j]):
+                    sp, sa, _ = self._seqs[j]
+                    m.seq_rm(sa)
+                    m.seq_cp(sp, sa)
+                    self._C[j] = list(self._P[j])
+            self._last = None
+            self._pending = [None] * len(self.parts)
+
+    def close(self) -> None:
+        """Free this reader's sequences."""
+        b = self.backend
+        with b._lock:
+            ids = [s for trio in self._seqs for s in trio]
+            if ids and self._epoch == b._epoch:
+                b._release(ids)
+            else:
+                b._reserved = [s for s in b._reserved if s not in ids]
+            self._seqs, self._P, self._C, self._last = [], [], [], None
+            self._epoch = None
+
+    @property
+    def committed_tokens(self) -> list[int]:
+        """Tokens A_j holds past its head, per prompt (for tests and traces)."""
+        return [len(c) - len(p) for c, p in zip(self._C, self._P)]
 
 
 def parse_spec(spec: str) -> str:

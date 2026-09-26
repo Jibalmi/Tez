@@ -1,0 +1,70 @@
+{
+ "schema": "voice-desktop",
+ "calibration_id": "voice-desktop@2026-09-26",
+ "created": "2026-09-26T08:08:16+00:00",
+ "tez_version": "0.1.0",
+ "holdout": 0.3,
+ "min_labels": 20,
+ "blend_n0": 10,
+ "alphas": [
+  0.01,
+  0.02,
+  0.05,
+  0.1,
+  0.15,
+  0.2,
+  0.25,
+  0.3
+ ],
+ "layout": "question_first",
+ "questions": {
+  "action": {
+   "type": "choice",
+   "options": [
+    "open_notes",
+    "type_text",
+    "open_youtube",
+    "play_youtube",
+    "open_spotify",
+    "play_liked_songs",
+    "play_spotify",
+    "pause_media",
+    "resume_media",
+    "next_track",
+    "volume_up",
+    "volume_down",
+    "open_browser",
+    "search_web",
+    "close_app",
+    "none"
+   ],
+   "n_labels": 544,
+   "probe": {
+    "model": "qwen3.5-4b-q8_0-l24",
+    "template": "qwen3",
+    "layout": "question_first",
+    "prompt_sha": "0d68d54b4006426d",
+    "dim": 2560,
+    "n_train": 381,
+    "n_held_out": 163,
+    "C": 0.5,
+    "blend": false,
+    "weight": 1.0,
+    "temperature": 1.3872,
+    "accuracy": 0.9386503067484663,
+    "ece": 0.03991192579925554,
+    "nll": 0.2212514745112596,
+    "thresholds": {
+     "0.01": null,
+     "0.02": 0.8963166742333094,
+     "0.05": 0.5405495183718587,
+     "0.1": 0.3452745670225163,
+     "0.15": 0.3452745670225163,
+     "0.2": 0.3452745670225163,
+     "0.25": 0.3452745670225163,
+     "0.3": 0.3452745670225163
+    }
+   }
+  }
+ }
+}

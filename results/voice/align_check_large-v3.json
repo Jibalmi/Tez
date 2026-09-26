@@ -1,0 +1,16 @@
+{
+  "model": "large-v3",
+  "rows": 269,
+  "words": 1621,
+  "matched": 1482,
+  "end_error_ms": {
+    "mean": -187.8,
+    "median": -105.0,
+    "mae": 188.2,
+    "p90_abs": 527.5
+  },
+  "start_error_ms": {
+    "mean": -182.6,
+    "mae": 183.9
+  }
+}

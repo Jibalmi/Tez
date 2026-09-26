@@ -1,0 +1,355 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T11:39:44",
+  "args": {
+   "set": "theioma",
+   "asr": "nemocpp:C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "none",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 20,
+   "ids": null,
+   "realtime": false,
+   "trim": true,
+   "gap": 0.0,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "theioma_asr_nemotron_en_80_vram",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "threads": 6
+  },
+  "set": "theioma",
+  "data_sha256": {
+   "commands.jsonl": "d3948d374fca7126932eab8a16780536bc847430ec1961383eee9bb2ddb922e5",
+   "align.jsonl": "83c5af021ba6e798f0ecbb70bcbe500b609ff59370116af6f065fa9cb4a052be",
+   "schema.yaml": "19d68500afa9773fb0f3ab22d7ffb16b3ffb4fc6a87d3c5db9acaaf00a322b1a"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\theioma\\schema.yaml",
+  "rows": 20,
+  "gpu_before": {
+   "time": "2026-09-26T11:39:47+02:00",
+   "used_mb": 1262,
+   "total_mb": 16303,
+   "util_pct": 9,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 198
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 726
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 211
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 161
+    }
+   ]
+  },
+  "asr": {
+   "name": "nemocpp-nemotron-speech-streaming-en-0.6b.q8_0-rc0",
+   "engine": "NeMo-Speech.cpp",
+   "version": "nemo-speech-asr 0.1.0",
+   "model": "C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "right_context": 0,
+   "chunk_s": 0.08,
+   "load_s": 0.18,
+   "lib": "C:\\temp\\nemo-speech\\x\\bin",
+   "process": "worker"
+  },
+  "asr_chunk_s": 0.08,
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "system.open_app": "R0",
+    "system.open_url": "R0",
+    "media.key": "R0",
+    "navigate.app": "R0",
+    "window.minimize": "R0",
+    "window.maximize": "R0",
+    "media.now_playing": "R0",
+    "theioma.list_sessions": "R0",
+    "screen.describe": "R0",
+    "youtube.play": "R1",
+    "spotify.play": "R1",
+    "system.web_search": "R1",
+    "theioma.open_project_section": "R1",
+    "keyboard.type": "R2",
+    "web.search_and_summarize": "R2",
+    "memory.note_event": "R2",
+    "theioma.send_message": "R2",
+    "delegate.orchestrator": "R2",
+    "system.volume_set": "R2",
+    "resolve_approval": "R3",
+    "window.close": "R3",
+    "process.kill": "R3",
+    "shell.run": "R3"
+   }
+  },
+  "thermal_before": {
+   "c": 69.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 23.61,
+   "sm_mhz": 1222.0,
+   "util_pct": 9.0,
+   "cool": true,
+   "waited_s": 196.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T11:43:08+02:00",
+   "used_mb": 1469,
+   "total_mb": 16303,
+   "util_pct": 9,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 193
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 726
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 207
+    },
+    {
+     "pid": 58308,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 206
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 164
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T11:43:12+02:00",
+   "used_mb": 2380,
+   "total_mb": 16303,
+   "util_pct": 7,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 192
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 726
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 207
+    },
+    {
+     "pid": 58308,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 1124
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 162
+    }
+   ]
+  },
+  "run_s": 3.6,
+  "load": {
+   "cpu_pct_mean": 55.1,
+   "cpu_pct_max": 58.4,
+   "cpu_pct_p50": 58.3,
+   "samples": 3,
+   "gpu_c_max": null,
+   "gpu_c_mean": null,
+   "gpu_samples": 0,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 72.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 62.68,
+   "sm_mhz": 2227.0,
+   "util_pct": 70.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T11:43:19+02:00",
+   "used_mb": 2370,
+   "total_mb": 16303,
+   "util_pct": 7,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 194
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 726
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 207
+    },
+    {
+     "pid": 58308,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 1124
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 163
+    }
+   ]
+  },
+  "timing": "offline: the latencies are not meaningful, only per-step compute"
+ },
+ "summary": {
+  "rows": 20,
+  "actionable": 20,
+  "oos": 0,
+  "asr": {
+   "wer": 0.0833,
+   "step_compute_ms": {
+    "n": 3096,
+    "p50": 0.13,
+    "p95": 3.9,
+    "mean": 0.63,
+    "min": 0.0,
+    "max": 6.18
+   },
+   "busy_ms_per_chunk": {
+    "n": 20,
+    "p50": 5.09,
+    "p95": 5.51,
+    "mean": 5.11,
+    "min": 4.57,
+    "max": 6.04
+   },
+   "emission_delay_ms": {
+    "n": 20,
+    "p50": 175.0,
+    "p95": 500.0,
+    "mean": 228.25,
+    "min": 0.0,
+    "max": 500.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 20,
+    "p50": 170.0,
+    "p95": 430.5,
+    "mean": 188.5,
+    "min": -70.0,
+    "max": 440.0
+   },
+   "pipe_ms": {
+    "n": 138,
+    "p50": 0.14,
+    "p95": 0.18,
+    "mean": 0.14,
+    "min": 0.08,
+    "max": 0.69
+   },
+   "decisive_word_missed": 2
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 138,
+   "p50": -1386.21,
+   "p95": -707.58,
+   "mean": -1502.24,
+   "min": -2881.22,
+   "max": -558.35
+  }
+ }
+}

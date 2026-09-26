@@ -1,0 +1,537 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T09:48:25",
+  "args": {
+   "set": "theioma",
+   "asr": "oracle",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "template": "qwen3",
+   "lib": "C:/temp/llamacpp",
+   "schema": "C:/temp/voice-fit/theioma/fold0/schema.yaml",
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": "C:/temp/voice-fit/theioma/fold0/ids.txt",
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "theioma_oracle_4b_probe_fold0",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "theioma",
+  "data_sha256": {
+   "commands.jsonl": "d3948d374fca7126932eab8a16780536bc847430ec1961383eee9bb2ddb922e5",
+   "align.jsonl": "83c5af021ba6e798f0ecbb70bcbe500b609ff59370116af6f065fa9cb4a052be",
+   "schema.yaml": "19d68500afa9773fb0f3ab22d7ffb16b3ffb4fc6a87d3c5db9acaaf00a322b1a"
+  },
+  "schema": "C:\\temp\\voice-fit\\theioma\\fold0\\schema.yaml",
+  "rows": 140,
+  "gpu_before": {
+   "time": "2026-09-26T09:48:27+02:00",
+   "used_mb": 967,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 172
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 634
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 120
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 134
+    }
+   ]
+  },
+  "asr": {
+   "name": "oracle",
+   "note": "reference words at their forced end times, rounded up to 10 ms"
+  },
+  "asr_chunk_s": null,
+  "decision": {
+   "backend": "inproc:../Tez/tools/models/Qwen3.5-4B-Q8_0-L24.gguf",
+   "server_cmd": null,
+   "template": "qwen3",
+   "load_s": 3.2,
+   "model": "qwen3.5-4b-q8_0-l24",
+   "readout": "probe",
+   "parts": [
+    "embed"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 24,
+    "n_params": 3313238912,
+    "size_mb": 3359,
+    "hybrid": true,
+    "desc": "qwen35 2B Q8_0"
+   },
+   "head_ms": 140.3
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "system.open_app": "R0",
+    "system.open_url": "R0",
+    "media.key": "R0",
+    "navigate.app": "R0",
+    "window.minimize": "R0",
+    "window.maximize": "R0",
+    "media.now_playing": "R0",
+    "theioma.list_sessions": "R0",
+    "screen.describe": "R0",
+    "youtube.play": "R1",
+    "spotify.play": "R1",
+    "system.web_search": "R1",
+    "theioma.open_project_section": "R1",
+    "keyboard.type": "R2",
+    "web.search_and_summarize": "R2",
+    "memory.note_event": "R2",
+    "theioma.send_message": "R2",
+    "delegate.orchestrator": "R2",
+    "system.volume_set": "R2",
+    "resolve_approval": "R3",
+    "window.close": "R3",
+    "process.kill": "R3",
+    "shell.run": "R3"
+   }
+  },
+  "thermal_before": {
+   "c": 69.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 22.61,
+   "sm_mhz": 1537.0,
+   "util_pct": 11.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T09:48:34+02:00",
+   "used_mb": 5004,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 152
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 634
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 121
+    },
+    {
+     "pid": 51556,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4022
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 135
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T09:48:37+02:00",
+   "used_mb": 5002,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 165
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 634
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 121
+    },
+    {
+     "pid": 51556,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4024
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 135
+    },
+    {
+     "pid": 51556,
+     "name": "python",
+     "kind": "shared",
+     "mb": 102
+    }
+   ]
+  },
+  "run_s": 342.4,
+  "load": {
+   "cpu_pct_mean": 7.9,
+   "cpu_pct_max": 20.9,
+   "cpu_pct_p50": 7.2,
+   "samples": 339,
+   "gpu_c_max": 67.0,
+   "gpu_c_mean": 60.9,
+   "gpu_samples": 33,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 58.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 29.71,
+   "sm_mhz": 405.0,
+   "util_pct": 0.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T09:54:22+02:00",
+   "used_mb": 5030,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 160
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 634
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 113
+    },
+    {
+     "pid": 51556,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 4024
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 176
+    },
+    {
+     "pid": 51556,
+     "name": "python",
+     "kind": "shared",
+     "mb": 102
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 140,
+  "actionable": 125,
+  "oos": 15,
+  "asr": {
+   "wer": 0.0,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 125,
+    "p50": 0.0,
+    "p95": 7.5,
+    "mean": 2.18,
+    "min": -0.0,
+    "max": 7.5
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "pipe_ms": {
+    "n": 822,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 0.17
+   },
+   "decisive_word_missed": 0
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 822,
+   "p50": 0.01,
+   "p95": 0.04,
+   "mean": 0.02,
+   "min": 0.01,
+   "max": 0.64
+  },
+  "word_end_to_decision_ms": {
+   "n": 125,
+   "p50": 22.4,
+   "p95": 29.64,
+   "mean": 23.38,
+   "min": 17.71,
+   "max": 31.38
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 53,
+    "p50": 22.15,
+    "p95": 29.12,
+    "mean": 22.9,
+    "min": 18.77,
+    "max": 31.38
+   },
+   "R1": {
+    "n": 22,
+    "p50": 22.58,
+    "p95": 29.01,
+    "mean": 23.22,
+    "min": 17.71,
+    "max": 29.67
+   },
+   "R2": {
+    "n": 31,
+    "p50": 24.85,
+    "p95": 29.88,
+    "mean": 24.32,
+    "min": 18.69,
+    "max": 31.23
+   },
+   "R3": {
+    "n": 19,
+    "p50": 22.44,
+    "p95": 27.51,
+    "mean": 23.34,
+    "min": 19.81,
+    "max": 30.55
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 822,
+   "p50": 23.37,
+   "p95": 29.86,
+   "mean": 23.88,
+   "min": 16.24,
+   "max": 38.72
+  },
+  "word_end_to_first_action_ms": {
+   "n": 95,
+   "p50": 474.01,
+   "p95": 1933.45,
+   "mean": 634.16,
+   "min": -855.91,
+   "max": 3125.76
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 125,
+   "p50": 22.4,
+   "p95": 29.64,
+   "mean": 23.38,
+   "min": 17.71,
+   "max": 31.38
+  },
+  "dispatch_ms": {
+   "n": 129,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.01,
+   "min": 0.0,
+   "max": 0.27
+  },
+  "decide_ms_per_update": {
+   "n": 822,
+   "p50": 21.31,
+   "p95": 24.83,
+   "mean": 21.33,
+   "min": 16.16,
+   "max": 38.69
+  },
+  "commit_ms_per_update": {
+   "n": 822,
+   "p50": 11.28,
+   "p95": 14.77,
+   "mean": 11.3,
+   "min": 4.48,
+   "max": 34.95
+  },
+  "intent_accuracy": 0.808,
+  "intent_accuracy_then_alt": 0.848,
+  "none_recall": 0.8667,
+  "harmful": 5,
+  "harmful_rate": 0.04,
+  "oos_false_actions": 3,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 5.895,
+  "first_action_words_fully_heard_mean": 5.895,
+  "first_action_at_or_before_decisive": 0.256,
+  "harmful_detail": [
+   {
+    "id": "t020",
+    "text": "can you pull up wikipedia",
+    "executed": [
+     "system.web_search"
+    ],
+    "accepted": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t021",
+    "text": "bring up google docs",
+    "executed": [
+     "system.open_url",
+     "system.open_app"
+    ],
+    "accepted": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t078",
+    "text": "who sings this song",
+    "executed": [
+     "youtube.play"
+    ],
+    "accepted": [
+     "media.now_playing"
+    ]
+   },
+   {
+    "id": "t136",
+    "text": "open the orchestrator for j pex",
+    "executed": [
+     "delegate.orchestrator"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t150",
+    "text": "um type uh meeting moved to thursday",
+    "executed": [
+     "memory.note_event"
+    ],
+    "accepted": [
+     "keyboard.type"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "t246",
+    "text": "spotify raised its prices",
+    "executed": [
+     "web.search_and_summarize"
+    ]
+   },
+   {
+    "id": "t248",
+    "text": "my approvals page looks weird today",
+    "executed": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t267",
+    "text": "yeah put it on the table thanks",
+    "executed": [
+     "keyboard.type"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "set": "theioma",
+ "rows": 269,
+ "trimmed_ms_all_words": {
+  "n": 1621,
+  "median": 0.0,
+  "mean": 48.2,
+  "mae": 48.2,
+  "p10": 0.0,
+  "p90": 240.0
+ },
+ "trimmed_ms_last_word": {
+  "n": 269,
+  "median": 260.0,
+  "mean": 260.5,
+  "mae": 260.5,
+  "p10": 165.0,
+  "p90": 371.0
+ }
+}

@@ -1,0 +1,906 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T11:09:21",
+  "args": {
+   "set": "theioma",
+   "asr": "replay:results/voice/replay_theioma_asr_nemotron_en_80_rows.jsonl",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "theioma_e2e_nemotron80_12b_q4km",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "theioma",
+  "data_sha256": {
+   "commands.jsonl": "d3948d374fca7126932eab8a16780536bc847430ec1961383eee9bb2ddb922e5",
+   "align.jsonl": "83c5af021ba6e798f0ecbb70bcbe500b609ff59370116af6f065fa9cb4a052be",
+   "schema.yaml": "19d68500afa9773fb0f3ab22d7ffb16b3ffb4fc6a87d3c5db9acaaf00a322b1a"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\theioma\\schema.yaml",
+  "rows": 269,
+  "gpu_before": {
+   "time": "2026-09-26T11:09:24+02:00",
+   "used_mb": 1317,
+   "total_mb": 16303,
+   "util_pct": 4,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 270
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 260
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 188
+    }
+   ]
+  },
+  "asr": {
+   "name": "nemocpp-nemotron-speech-streaming-en-0.6b.q8_0-rc0",
+   "engine": "NeMo-Speech.cpp",
+   "version": "nemo-speech-asr 0.1.0",
+   "model": "C:/temp/asr-models/nemotron-speech-streaming-en-0.6b.q8_0.gguf",
+   "right_context": 0,
+   "chunk_s": 0.08,
+   "load_s": 0.13,
+   "lib": "C:\\temp\\nemo-speech\\x\\bin",
+   "process": "worker",
+   "replayed_from": "results\\voice\\replay_theioma_asr_nemotron_en_80_rows.jsonl",
+   "note": "recorded emissions fed at audio time + the step's recorded compute (composed e2e)"
+  },
+  "asr_chunk_s": 0.08,
+  "decision": {
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+   "server_cmd": null,
+   "template": "gemma4",
+   "load_s": 13.5,
+   "model": "gemma-4-12b-q4_k - medium",
+   "readout": "letters",
+   "parts": [
+    "letters"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 48,
+    "n_params": 11907350576,
+    "size_mb": 7024,
+    "hybrid": false,
+    "desc": "gemma4 ?B Q4_K - Medium"
+   },
+   "head_ms": 342.0
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "system.open_app": "R0",
+    "system.open_url": "R0",
+    "media.key": "R0",
+    "navigate.app": "R0",
+    "window.minimize": "R0",
+    "window.maximize": "R0",
+    "media.now_playing": "R0",
+    "theioma.list_sessions": "R0",
+    "screen.describe": "R0",
+    "youtube.play": "R1",
+    "spotify.play": "R1",
+    "system.web_search": "R1",
+    "theioma.open_project_section": "R1",
+    "keyboard.type": "R2",
+    "web.search_and_summarize": "R2",
+    "memory.note_event": "R2",
+    "theioma.send_message": "R2",
+    "delegate.orchestrator": "R2",
+    "system.volume_set": "R2",
+    "resolve_approval": "R3",
+    "window.close": "R3",
+    "process.kill": "R3",
+    "shell.run": "R3"
+   }
+  },
+  "thermal_before": {
+   "c": 69.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 13.93,
+   "sm_mhz": 307.0,
+   "util_pct": 1.0,
+   "cool": true,
+   "waited_s": 346.6,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T11:15:28+02:00",
+   "used_mb": 9275,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 264
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 199
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8052
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 155
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "gpu_warm": {
+   "time": "2026-09-26T11:15:31+02:00",
+   "used_mb": 9278,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 259
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 199
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8060
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 154
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "run_s": 708.8,
+  "load": {
+   "cpu_pct_mean": 46.2,
+   "cpu_pct_max": 99.5,
+   "cpu_pct_p50": 43.8,
+   "samples": 702,
+   "gpu_c_max": 84.0,
+   "gpu_c_mean": 78.7,
+   "gpu_samples": 70,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 77.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 33.61,
+   "sm_mhz": 622.0,
+   "util_pct": 1.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T11:27:23+02:00",
+   "used_mb": 9294,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 16276,
+     "name": "explorer",
+     "kind": "dedicated",
+     "mb": 103
+    },
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 262
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 692
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 209
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 8060
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 163
+    },
+    {
+     "pid": 38860,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 269,
+  "actionable": 239,
+  "oos": 30,
+  "asr": {
+   "wer": 0.0802,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 237,
+    "p50": 217.5,
+    "p95": 510.0,
+    "mean": 222.64,
+    "min": -250.0,
+    "max": 672.5
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 237,
+    "p50": 170.0,
+    "p95": 490.0,
+    "mean": 186.03,
+    "min": -310.0,
+    "max": 650.0
+   },
+   "pipe_ms": {
+    "n": 2138,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.0,
+    "max": 2.53
+   },
+   "decisive_word_missed": 15
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 2138,
+   "p50": 3.81,
+   "p95": 12.06,
+   "mean": 9.07,
+   "min": 0.02,
+   "max": 490.4
+  },
+  "word_end_to_decision_ms": {
+   "n": 237,
+   "p50": 269.36,
+   "p95": 584.99,
+   "mean": 274.44,
+   "min": -209.42,
+   "max": 714.33
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 98,
+    "p50": 226.12,
+    "p95": 528.36,
+    "mean": 231.81,
+    "min": -161.81,
+    "max": 611.74
+   },
+   "R1": {
+    "n": 42,
+    "p50": 261.15,
+    "p95": 553.09,
+    "mean": 273.81,
+    "min": -93.72,
+    "max": 641.19
+   },
+   "R2": {
+    "n": 60,
+    "p50": 262.39,
+    "p95": 560.82,
+    "mean": 268.21,
+    "min": -122.37,
+    "max": 697.71
+   },
+   "R3": {
+    "n": 37,
+    "p50": 435.92,
+    "p95": 689.39,
+    "mean": 398.18,
+    "min": -209.42,
+    "max": 714.33
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 1503,
+   "p50": 274.2,
+   "p95": 565.42,
+   "mean": 290.1,
+   "min": -1168.37,
+   "max": 1245.46
+  },
+  "word_end_to_first_action_ms": {
+   "n": 202,
+   "p50": 353.38,
+   "p95": 2018.51,
+   "mean": 511.2,
+   "min": -1313.31,
+   "max": 3243.55
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 237,
+   "p50": 269.37,
+   "p95": 585.0,
+   "mean": 274.44,
+   "min": -209.42,
+   "max": 714.34
+  },
+  "dispatch_ms": {
+   "n": 316,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.06
+  },
+  "decide_ms_per_update": {
+   "n": 2399,
+   "p50": 33.48,
+   "p95": 58.21,
+   "mean": 39.11,
+   "min": 23.19,
+   "max": 690.04
+  },
+  "commit_ms_per_update": {
+   "n": 2399,
+   "p50": 6.29,
+   "p95": 26.17,
+   "mean": 10.37,
+   "min": 0.0,
+   "max": 502.48
+  },
+  "intent_accuracy": 0.9163,
+  "intent_accuracy_then_alt": 0.9582,
+  "none_recall": 0.8667,
+  "harmful": 32,
+  "harmful_rate": 0.1339,
+  "oos_false_actions": 6,
+  "oos_approval_requests": 1,
+  "first_action_word_mean": 4.911,
+  "first_action_words_fully_heard_mean": 5.144,
+  "first_action_at_or_before_decisive": 0.4393,
+  "harmful_detail": [
+   {
+    "id": "t010",
+    "text": "open the uh the file explorer",
+    "executed": [
+     "system.open_url",
+     "system.open_app"
+    ],
+    "accepted": [
+     "system.open_app"
+    ]
+   },
+   {
+    "id": "t012",
+    "text": "open chrome and search for cheap flights to lisbon",
+    "executed": [
+     "system.open_app",
+     "system.open_url"
+    ],
+    "accepted": [
+     "system.open_app",
+     "system.web_search"
+    ]
+   },
+   {
+    "id": "t017",
+    "text": "open gmail",
+    "executed": [
+     "system.open_app",
+     "system.open_url"
+    ],
+    "accepted": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t021",
+    "text": "bring up google docs",
+    "executed": [
+     "system.open_url",
+     "system.open_app"
+    ],
+    "accepted": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t022",
+    "text": "hey theioma open gmail please",
+    "executed": [
+     "system.open_app",
+     "system.open_url"
+    ],
+    "accepted": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t029",
+    "text": "previous song",
+    "executed": [
+     "media.now_playing"
+    ],
+    "accepted": [
+     "media.key"
+    ]
+   },
+   {
+    "id": "t035",
+    "text": "um turn it down a little",
+    "executed": [
+     "system.volume_set"
+    ],
+    "accepted": [
+     "media.key"
+    ]
+   },
+   {
+    "id": "t039",
+    "text": "turn it down and tell the orchestrator to pause",
+    "executed": [
+     "system.volume_set"
+    ],
+    "accepted": [
+     "media.key",
+     "theioma.send_message"
+    ]
+   },
+   {
+    "id": "t044",
+    "text": "open the approvals page",
+    "executed": [
+     "system.open_app",
+     "navigate.app"
+    ],
+    "accepted": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t045",
+    "text": "open theioma settings",
+    "executed": [
+     "system.open_app",
+     "navigate.app"
+    ],
+    "accepted": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t050",
+    "text": "can you switch to the roadmap",
+    "executed": [
+     "system.open_app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t051",
+    "text": "um go to the uh approvals page",
+    "executed": [
+     "system.open_app",
+     "navigate.app"
+    ],
+    "accepted": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t052",
+    "text": "hey theioma open the knowledge page please",
+    "executed": [
+     "system.open_app",
+     "navigate.app"
+    ],
+    "accepted": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t101",
+    "text": "play lofi beats on youtube",
+    "executed": [
+     "system.open_app",
+     "youtube.play"
+    ],
+    "accepted": [
+     "youtube.play"
+    ]
+   },
+   {
+    "id": "t105",
+    "text": "put on rain sounds for sleeping on youtube",
+    "executed": [
+     "system.open_app",
+     "youtube.play"
+    ],
+    "accepted": [
+     "youtube.play"
+    ]
+   },
+   {
+    "id": "t108",
+    "text": "uh play the um ted talk about sleep on youtube",
+    "executed": [
+     "system.open_app",
+     "system.open_url",
+     "youtube.play"
+    ],
+    "accepted": [
+     "youtube.play"
+    ]
+   },
+   {
+    "id": "t110",
+    "text": "play play the new zelda trailer on youtube",
+    "executed": [
+     "media.key",
+     "system.open_app",
+     "system.open_url",
+     "youtube.play"
+    ],
+    "accepted": [
+     "youtube.play"
+    ]
+   },
+   {
+    "id": "t111",
+    "text": "play a jazz piano livestream on youtube and then set the volume to twenty",
+    "executed": [
+     "system.open_app",
+     "system.open_url",
+     "youtube.play"
+    ],
+    "accepted": [
+     "system.volume_set",
+     "youtube.play"
+    ]
+   },
+   {
+    "id": "t118",
+    "text": "shuffle my running playlist",
+    "executed": [
+     "system.open_app",
+     "media.key",
+     "spotify.play"
+    ],
+    "accepted": [
+     "spotify.play"
+    ]
+   },
+   {
+    "id": "t125",
+    "text": "google standing desks under two hundred pounds",
+    "executed": [
+     "system.open_url",
+     "system.open_app",
+     "system.web_search"
+    ],
+    "accepted": [
+     "system.web_search"
+    ]
+   },
+   {
+    "id": "t127",
+    "text": "do a web search for used bikes near me",
+    "executed": [
+     "system.open_url",
+     "system.open_app",
+     "system.web_search"
+    ],
+    "accepted": [
+     "system.web_search"
+    ]
+   },
+   {
+    "id": "t136",
+    "text": "open the orchestrator for j pex",
+    "executed": [
+     "system.open_url",
+     "navigate.app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t137",
+    "text": "take me to the milestones of the arm project",
+    "executed": [
+     "system.open_url",
+     "navigate.app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t139",
+    "text": "pull up the tez plan",
+    "executed": [
+     "system.open_app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t140",
+    "text": "um open the uh plan for j pex",
+    "executed": [
+     "system.open_app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t141",
+    "text": "hey theioma open the arm project uh the sessions tab",
+    "executed": [
+     "system.open_app",
+     "navigate.app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t142",
+    "text": "open the arm project",
+    "executed": [
+     "system.open_app",
+     "theioma.open_project_section"
+    ],
+    "accepted": [
+     "navigate.app",
+     "theioma.open_project_section"
+    ]
+   },
+   {
+    "id": "t144",
+    "text": "type see you at the standup tomorrow",
+    "executed": [
+     "memory.note_event"
+    ],
+    "accepted": [
+     "keyboard.type"
+    ]
+   },
+   {
+    "id": "t177",
+    "text": "ask the frontend session to fix the login bug",
+    "executed": [
+     "navigate.app",
+     "theioma.send_message"
+    ],
+    "accepted": [
+     "theioma.send_message"
+    ]
+   },
+   {
+    "id": "t183",
+    "text": "stop the orchestrator",
+    "executed": [
+     "media.key"
+    ],
+    "accepted": [
+     "process.kill",
+     "theioma.send_message"
+    ]
+   },
+   {
+    "id": "t226",
+    "text": "chrome is frozen kill it",
+    "executed": [
+     "system.open_app"
+    ],
+    "accepted": [
+     "process.kill"
+    ]
+   },
+   {
+    "id": "t228",
+    "text": "terminate the node server",
+    "executed": [
+     "system.open_app"
+    ],
+    "accepted": [
+     "process.kill"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "t245",
+    "text": "youtube is down again",
+    "executed": [
+     "system.open_url"
+    ]
+   },
+   {
+    "id": "t246",
+    "text": "spotify raised its prices",
+    "executed": [
+     "web.search_and_summarize"
+    ]
+   },
+   {
+    "id": "t248",
+    "text": "my approvals page looks weird today",
+    "executed": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t250",
+    "text": "chrome keeps eating all my memory",
+    "executed": [
+     "system.open_app"
+    ]
+   },
+   {
+    "id": "t256",
+    "text": "the sessions page loads so slowly",
+    "executed": [
+     "navigate.app"
+    ]
+   },
+   {
+    "id": "t258",
+    "text": "what do you think of this design",
+    "executed": [
+     "screen.describe"
+    ]
+   }
+  ]
+ }
+}
