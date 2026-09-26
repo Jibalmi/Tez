@@ -119,11 +119,76 @@ def main() -> None:
     dump(RESULTS / "pilot.json", {"title": "Small-model pilot (week 1): every arm, same rows as the 12B and Laya",
                                    "g1_thresholds": G1, "teacher_reference": TEACHER, "g1_arm": "a-base-30k",
                                    "g1": rows, "g1_all_pass": all_pass, "decision": decision, "decision_inputs": why,
-                                   "arms": arms, "latency": {k: {kk: v[kk] for kk in ("device", "threads", "sizes", "load_s", "peak_vram_gb", "contaminated")}
+                                   "arms": arms, "latency": {k: {kk: v.get(kk) for kk in ("device", "threads", "sizes", "load_s", "peak_vram_gb", "contaminated", "throttled", "thermal")}
                                                              for k, v in lat.items()}})
+    tables(arms, lat)
     for r in rows:
         print(f"{'PASS' if r['pass'] else 'FAIL'}  {r['criterion']}: {r['value']}")
     print("decision:", decision)
+
+
+def tables(arms: dict, lat: dict) -> None:
+    """results/pilot/tables.md: every system on the same rows (accuracy as read; the 12B and Laya from baselines.json)."""
+    base = (load("baselines.json") or {}).get("tasks", {})
+    evs = {k: load(f"eval_{k}.json") for k in arms}
+    systems = [("12B (teacher)", "b", "tez-12b"), ("laya", "b", "laya-en"), ("laya-multilingual", "b", "laya-ml"),
+               ("laya-typed-decisions", "b", "laya-td")] + [(k, "a", k) for k in arms]
+
+    def acc(kind, key, task, field="accuracy"):
+        if kind == "b":
+            v = base.get(task, {}).get(key)
+            return None if v is None else v.get(field)
+        ev = evs.get(key)
+        return None if not ev or task not in ev["tasks"] else ev["tasks"][task]["t1"].get(field)
+
+    def fmt(x):
+        return "-" if x is None else f"{x:.3f}"
+
+    suites = [("typed-decisions (2,000)", "typed_decisions", "accuracy"),
+              ("typed-decisions soft accuracy", "typed_decisions", "soft_accuracy"),
+              ("routing (399, held out)", "app_model_routing_domain", "accuracy"),
+              ("jailbreak (400, held out)", "app_guardrails_jailbreak", "accuracy"),
+              ("toxicity (400, held out)", "app_moderation_toxicity", "accuracy"),
+              ("spam (400)", "app_email_spam", "accuracy"), ("phishing (400)", "app_phishing", "accuracy"),
+              ("RAG relevance (400)", "app_rag_relevance", "accuracy"),
+              ("support triage (400)", "app_support_triage", "accuracy")]
+    lines = ["| suite | " + " | ".join(n for n, _, _ in systems) + " |", "|---|" + "---:|" * len(systems)]
+    for label, task, field in suites:
+        lines.append(f"| {label} | " + " | ".join(fmt(acc(k, key, task, field)) for _, k, key in systems) + " |")
+    for lang in MASSIVE11:
+        lines.append(f"| MASSIVE {lang} (100) | " + " | ".join(fmt(acc(k, key, f"massive_{lang}")) for _, k, key in systems) + " |")
+    mac = []
+    for _, k, key in systems:
+        v = [acc(k, key, f"massive_{lang}") for lang in MASSIVE11]
+        mac.append(None if any(x is None for x in v) else float(np.mean(v)))
+    lines.append("| **MASSIVE-11 macro** | " + " | ".join(fmt(x) for x in mac) + " |")
+    for name, task in (("SemIf authored144 (mean family balanced acc.)", "semif_authored144"),
+                       ("SemIf perturbations108", "semif_perturbations108")):
+        vals = []
+        for _, k, key in systems:
+            if k == "b":
+                v = base.get(task, {}).get(key, {}).get("semif", {}).get("mean_family_balanced_accuracy")
+            else:
+                ev = evs.get(key)
+                v = None if not ev or task not in ev["tasks"] else \
+                    ev["tasks"][task].get("semif", {}).get("mean_family_balanced_accuracy")
+            vals.append(v)
+        lines.append(f"| {name} | " + " | ".join(fmt(v) for v in vals) + " |")
+    lines.append("| ECE-15 typed-decisions (as read) | " +
+                 " | ".join(fmt(acc(k, key, "typed_decisions", "ece")) for _, k, key in systems) + " |")
+    out = ["# Small-model pilot: every system on the same rows", "",
+           "Accuracy as read (T = 1). 12B and Laya: existing rows (results/pilot/baselines.json). "
+           "Students and GLiClass: results/pilot/eval_<arm>.json.", ""] + lines
+    lat_lines = ["", "## Latency (the 1b protocol: a new state per call; p50 ms per call, and per question at 50)", "",
+                 "| arm | device | 1 q | 5 q | 10 q | 50 q | ms/q at 50 | thermal |",
+                 "|---|---|---:|---:|---:|---:|---:|---|"]
+    for k, v in sorted(lat.items()):
+        sz = v["sizes"]
+        th = "throttled" if v.get("throttled") else ("ok" if v.get("throttled") is False else "n/a (CPU)")
+        dev = v["device"] + (f" {v['threads']} threads" if v.get("threads") else "")
+        lat_lines.append(f"| {v['arm']} | {dev} | " + " | ".join(f"{sz[n]['p50_ms']:.1f}" for n in ("1", "5", "10", "50"))
+                         + f" | {sz['50']['ms_per_question']:.2f} | {th} |")
+    (RESULTS / "tables.md").write_text("\n".join(out + lat_lines) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
