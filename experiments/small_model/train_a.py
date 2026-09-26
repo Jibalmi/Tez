@@ -164,9 +164,10 @@ def main() -> int:
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--seed", type=int, default=13)
     ap.add_argument("--minutes", type=float, default=50, help="segment length: checkpoint and exit 3 past this")
+    ap.add_argument("--device", default="cuda", help="cuda (the pilot) or cpu (smoke tests)")
     args = ap.parse_args()
     torch.manual_seed(args.seed)
-    dev = torch.device("cuda")
+    dev = torch.device(args.device)
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained(args.backbone)
     enc = Encoder(tok, args.max_len)
@@ -181,7 +182,8 @@ def main() -> int:
     model.train()
     enc_params = [p for n, p in model.named_parameters() if n.startswith("enc.")]
     opt = torch.optim.AdamW([{"params": enc_params, "lr": args.lr},
-                             {"params": model.head.parameters(), "lr": args.head_lr}], weight_decay=0.01, fused=True)
+                             {"params": model.head.parameters(), "lr": args.head_lr}], weight_decay=0.01,
+                            fused=dev.type == "cuda")
 
     def epoch_batches(ep: int):
         """Deterministic per epoch, so a resumed segment skips exactly the batches already trained."""
@@ -247,7 +249,7 @@ def main() -> int:
             "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": st["log"],
             "val_agreement_with_teacher": round(agree, 4), "val_kl": round(kl, 4), "temperatures": temps,
             "train_summary": summary(train), "val_summary": summary(val),
-            "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2)}
+            "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2) if dev.type == "cuda" else None}
     (out / "student.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
     dump(RESULTS / f"train_{args.arm}.json", info)
     print(json.dumps({k: v for k, v in info.items() if k not in ("log", "train_summary", "val_summary")}, indent=1))
