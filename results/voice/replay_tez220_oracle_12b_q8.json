@@ -1,0 +1,449 @@
+{
+ "manifest": {
+  "script": "experiments/voice_replay.py",
+  "date": "2026-09-26T03:49:58",
+  "args": {
+   "set": "tez220",
+   "asr": "oracle",
+   "rc": 0,
+   "asr_gpu": 0,
+   "asr_threads": 4,
+   "asr_proc": false,
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+   "template": "gemma4",
+   "lib": "C:/temp/llamacpp",
+   "schema": null,
+   "readout": "auto",
+   "default_temperature": "auto",
+   "tau": 0.9,
+   "commit": "gap",
+   "n_ctx": 2048,
+   "n_seq_max": 8,
+   "n_outputs": 64,
+   "limit": 0,
+   "ids": null,
+   "realtime": true,
+   "trim": true,
+   "gap": 0.3,
+   "warmup": 3,
+   "threads": 6,
+   "high_priority": false,
+   "server_cmd": null,
+   "gpu_max_c": 70.0,
+   "cool_wait": 20.0,
+   "allow_hot": false,
+   "parity": 0,
+   "tag": "tez220_oracle_12b_q8",
+   "rescore": null,
+   "tau_sweep": null,
+   "stable_min": 0,
+   "to_temperature": null,
+   "report": null
+  },
+  "process": {
+   "timer_period_ms": 1,
+   "threads": 6
+  },
+  "set": "tez220",
+  "data_sha256": {
+   "commands.jsonl": "bfbcdea124edceca9643e4b6144edd8e57179c44f6b8496f2abb6af24456c8ac",
+   "align.jsonl": "4529f560ad9f7c8b353cd4fba0d22d37efe1e8619e3b75bddcb2ec6f3d16e644",
+   "schema.yaml": "91299211cad55153ea8d99cdc4d15184c3307c351c599d31c49b297a6b8d6296"
+  },
+  "schema": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-voice\\data\\voice\\schema.yaml",
+  "rows": 220,
+  "gpu_before": {
+   "time": "2026-09-26T03:50:00+02:00",
+   "used_mb": 1055,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 119
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 239
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 148
+    }
+   ]
+  },
+  "asr": {
+   "name": "oracle",
+   "note": "reference words at their forced end times, rounded up to 10 ms"
+  },
+  "asr_chunk_s": null,
+  "decision": {
+   "backend": "inproc:C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+   "server_cmd": null,
+   "template": "gemma4",
+   "load_s": 17.8,
+   "model": "gemma-4-12b-q8_0",
+   "readout": "letters",
+   "parts": [
+    "letters"
+   ],
+   "incremental": true,
+   "default_temperature": "auto",
+   "details": {
+    "build": "b11100-7ab4ee7ba, libllama 0.4.1-dev",
+    "n_ctx": 2048,
+    "n_seq_max": 8,
+    "n_layer": 48,
+    "n_params": 11907350576,
+    "size_mb": 12067,
+    "hybrid": false,
+    "desc": "gemma4 ?B Q8_0"
+   },
+   "head_ms": 157.8
+  },
+  "policy": {
+   "tau": 0.9,
+   "classes": {
+    "open_notes": "R0",
+    "open_youtube": "R0",
+    "open_spotify": "R0",
+    "open_browser": "R0",
+    "pause_media": "R0",
+    "resume_media": "R0",
+    "next_track": "R0",
+    "volume_up": "R0",
+    "volume_down": "R0",
+    "play_liked_songs": "R0",
+    "play_youtube": "R1",
+    "play_spotify": "R1",
+    "search_web": "R1",
+    "type_text": "R2",
+    "close_app": "R2"
+   }
+  },
+  "thermal_before": {
+   "c": 61.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 23.14,
+   "sm_mhz": 217.0,
+   "util_pct": 54.0,
+   "cool": true,
+   "waited_s": 0.1,
+   "limit_c": 70.0
+  },
+  "gpu_loaded": {
+   "time": "2026-09-26T03:50:21+02:00",
+   "used_mb": 14144,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 119
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 239
+    },
+    {
+     "pid": 49020,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13090
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 148
+    },
+    {
+     "pid": 49020,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "run_s": 434.1,
+  "load": {
+   "cpu_pct_mean": 7.5,
+   "cpu_pct_max": 23.5,
+   "cpu_pct_p50": 6.9,
+   "samples": 430,
+   "gpu_c_max": 65.0,
+   "gpu_c_mean": 62.7,
+   "gpu_samples": 43,
+   "sw_slowdown_samples": 0,
+   "hw_slowdown_samples": 0
+  },
+  "thermal_after": {
+   "c": 63.0,
+   "sw_slowdown": false,
+   "hw_slowdown": false,
+   "w": 36.18,
+   "sm_mhz": 187.0,
+   "util_pct": 5.0
+  },
+  "throttled": false,
+  "gpu_after": {
+   "time": "2026-09-26T03:57:39+02:00",
+   "used_mb": 14164,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 25396,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 119
+    },
+    {
+     "pid": 2552,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 579
+    },
+    {
+     "pid": 26356,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 252
+    },
+    {
+     "pid": 49020,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 13100
+    },
+    {
+     "pid": 8676,
+     "name": "TradingView",
+     "kind": "dedicated",
+     "mb": 148
+    },
+    {
+     "pid": 49020,
+     "name": "python",
+     "kind": "shared",
+     "mb": 104
+    }
+   ]
+  },
+  "timing": "realtime"
+ },
+ "summary": {
+  "rows": 220,
+  "actionable": 198,
+  "oos": 22,
+  "asr": {
+   "wer": 0.0,
+   "step_compute_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "busy_ms_per_chunk": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "emission_delay_ms": {
+    "n": 198,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+   },
+   "emission_lag_beyond_chunk_ms": {
+    "n": 0,
+    "p50": null,
+    "p95": null,
+    "mean": null,
+    "min": null,
+    "max": null
+   },
+   "pipe_ms": {
+    "n": 1158,
+    "p50": 0.01,
+    "p95": 0.01,
+    "mean": 0.01,
+    "min": 0.01,
+    "max": 0.75
+   },
+   "decisive_word_missed": 0
+  },
+  "emission_arrival_after_audio_ms": {
+   "n": 1158,
+   "p50": 0.01,
+   "p95": 0.05,
+   "mean": 0.03,
+   "min": 0.01,
+   "max": 2.59
+  },
+  "word_end_to_decision_ms": {
+   "n": 198,
+   "p50": 38.77,
+   "p95": 41.06,
+   "mean": 38.14,
+   "min": 31.17,
+   "max": 43.74
+  },
+  "word_end_to_decision_by_class_ms": {
+   "R0": {
+    "n": 117,
+    "p50": 38.55,
+    "p95": 41.17,
+    "mean": 38.02,
+    "min": 31.17,
+    "max": 43.74
+   },
+   "R1": {
+    "n": 51,
+    "p50": 38.55,
+    "p95": 40.6,
+    "mean": 37.82,
+    "min": 32.65,
+    "max": 42.93
+   },
+   "R2": {
+    "n": 30,
+    "p50": 39.31,
+    "p95": 41.45,
+    "mean": 39.16,
+    "min": 33.49,
+    "max": 43.42
+   }
+  },
+  "all_words_end_to_decision_ms": {
+   "n": 1158,
+   "p50": 37.98,
+   "p95": 41.28,
+   "mean": 37.15,
+   "min": 30.78,
+   "max": 47.6
+  },
+  "word_end_to_first_action_ms": {
+   "n": 195,
+   "p50": 154.93,
+   "p95": 1524.49,
+   "mean": 332.58,
+   "min": -1482.02,
+   "max": 2456.72
+  },
+  "projected_word_end_to_action_ms": {
+   "n": 198,
+   "p50": 38.77,
+   "p95": 41.06,
+   "mean": 38.14,
+   "min": 31.18,
+   "max": 43.74
+  },
+  "dispatch_ms": {
+   "n": 260,
+   "p50": 0.0,
+   "p95": 0.01,
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.02
+  },
+  "decide_ms_per_update": {
+   "n": 1158,
+   "p50": 37.94,
+   "p95": 41.25,
+   "mean": 37.1,
+   "min": 30.76,
+   "max": 47.57
+  },
+  "commit_ms_per_update": {
+   "n": 1158,
+   "p50": 6.6,
+   "p95": 15.77,
+   "mean": 8.43,
+   "min": 1.97,
+   "max": 40.84
+  },
+  "intent_accuracy": 0.8788,
+  "intent_accuracy_then_alt": 0.9798,
+  "none_recall": 0.9091,
+  "harmful": 1,
+  "harmful_rate": 0.0051,
+  "oos_false_actions": 4,
+  "oos_approval_requests": 0,
+  "first_action_word_mean": 3.928,
+  "first_action_words_fully_heard_mean": 3.928,
+  "first_action_at_or_before_decisive": 0.4848,
+  "harmful_detail": [
+   {
+    "id": "v197",
+    "text": "clothes the notepad",
+    "executed": [
+     "open_notes"
+    ],
+    "accepted": [
+     "close_app"
+    ]
+   }
+  ],
+  "oos_false_detail": [
+   {
+    "id": "v207",
+    "text": "youtube is so full of ads these days",
+    "executed": [
+     "open_youtube"
+    ]
+   },
+   {
+    "id": "v208",
+    "text": "text sarah that i'm on my way",
+    "executed": [
+     "type_text"
+    ]
+   },
+   {
+    "id": "v215",
+    "text": "my notes are such a mess lately",
+    "executed": [
+     "open_notes"
+    ]
+   },
+   {
+    "id": "v217",
+    "text": "order more coffee pods from amazon",
+    "executed": [
+     "search_web"
+    ]
+   }
+  ]
+ }
+}
