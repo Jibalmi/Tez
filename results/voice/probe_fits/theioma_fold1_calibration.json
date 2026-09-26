@@ -1,0 +1,78 @@
+{
+ "schema": "theioma-voice",
+ "calibration_id": "theioma-voice@2026-09-26",
+ "created": "2026-09-26T07:54:59+00:00",
+ "tez_version": "0.1.0",
+ "holdout": 0.3,
+ "min_labels": 20,
+ "blend_n0": 10,
+ "alphas": [
+  0.01,
+  0.02,
+  0.05,
+  0.1,
+  0.15,
+  0.2,
+  0.25,
+  0.3
+ ],
+ "layout": "question_first",
+ "questions": {
+  "action": {
+   "type": "choice",
+   "options": [
+    "system.open_app",
+    "system.open_url",
+    "media.key",
+    "navigate.app",
+    "window.minimize",
+    "window.maximize",
+    "media.now_playing",
+    "theioma.list_sessions",
+    "screen.describe",
+    "youtube.play",
+    "spotify.play",
+    "system.web_search",
+    "theioma.open_project_section",
+    "keyboard.type",
+    "web.search_and_summarize",
+    "memory.note_event",
+    "theioma.send_message",
+    "delegate.orchestrator",
+    "system.volume_set",
+    "resolve_approval",
+    "window.close",
+    "process.kill",
+    "shell.run",
+    "none"
+   ],
+   "n_labels": 704,
+   "probe": {
+    "model": "qwen3.5-4b-q8_0-l24",
+    "template": "qwen3",
+    "layout": "question_first",
+    "prompt_sha": "30cedc46f89ac5ae",
+    "dim": 2560,
+    "n_train": 493,
+    "n_held_out": 211,
+    "C": 0.5,
+    "blend": false,
+    "weight": 1.0,
+    "temperature": 1.5341,
+    "accuracy": 0.909952606635071,
+    "ece": 0.05630129366404294,
+    "nll": 0.23920577474059576,
+    "thresholds": {
+     "0.01": 0.9278058725414068,
+     "0.02": 0.9230213067872616,
+     "0.05": 0.6904353221849413,
+     "0.1": 0.18384157586830235,
+     "0.15": 0.18384157586830235,
+     "0.2": 0.18384157586830235,
+     "0.25": 0.18384157586830235,
+     "0.3": 0.18384157586830235
+    }
+   }
+  }
+ }
+}
