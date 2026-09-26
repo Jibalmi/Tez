@@ -42,7 +42,7 @@ while true; do
   L=$(( $(left) - 4 ))
   [ "$L" -lt 8 ] && exit 3
   say "teacher ($L min)"
-  $PY teacher.py --minutes "$L" --n-ctx 4096 >> "$LOG/teacher.log" 2>&1 || { say "teacher failed"; exit 1; }
+  $PY teacher.py --minutes "$L" --n-ctx 2048 >> "$LOG/teacher.log" 2>&1 || { say "teacher failed"; exit 1; }
 done
 
 # 3. option A arms

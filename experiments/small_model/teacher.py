@@ -26,6 +26,20 @@ OUT = RUNS / "teacher"
 NONE_SHARE = 0.2
 
 
+def shared_gpu_mb() -> int:
+    """This process's shared (spilled) GPU memory in MB, from the Windows GPU counters (C:/temp/gpu_lock.py snapshot)."""
+    import os
+    import subprocess
+    import sys as _sys
+    try:
+        out = subprocess.run([_sys.executable, "C:/temp/gpu_lock.py", "snapshot"], capture_output=True, text=True,
+                             timeout=60).stdout
+        procs = json.loads(out)["processes"]
+        return sum(p["mb"] for p in procs if p["pid"] == os.getpid() and p["kind"] == "shared")
+    except Exception:  # noqa: BLE001
+        return -1
+
+
 def add_none(state_id: str, qid: str) -> bool:
     """Deterministic 20 % draw of the choice questions that get __none__."""
     h = int(hashlib.sha256(f"{state_id}|{qid}".encode()).hexdigest()[:8], 16)
@@ -36,7 +50,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=float, default=100, help="stop starting new states after this long")
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--n-ctx", type=int, default=8192)
+    ap.add_argument("--n-ctx", type=int, default=2048,
+                    help="KV cells (swa_full). 4,096 spilled out of VRAM beside 1.9 GB of desktop VRAM on 2026-09-26")
     args = ap.parse_args()
     from tez.inproc import InprocBackend
     from tez.prompt import STATE_FIRST, build_prompt
@@ -108,6 +123,14 @@ def main() -> None:
             buf.append({"id": a["id"], "questions": qs_out, "ms": round(dt_ms, 1),
                         "prompt_tokens": sum(r[0].tokens for r in res), "batch_prompt_n": res[0][0].timings["batch_prompt_n"]})
             n_read += 1
+            if n_read == 3:
+                spill = shared_gpu_mb()
+                if spill > 300:
+                    raise SystemExit(f"spilled into shared GPU memory ({spill} MB): lower --n-ctx; stopping")
+                print(f"  no spill (shared GPU memory {spill} MB)", flush=True)
+            if n_read % 50 == 0:
+                el = time.time() - t0
+                print(f"  {n_read} states in {el:.0f} s: p50 {np.median(ms):.0f} ms/state, thermal {THERMAL}", flush=True)
             if len(buf) >= 200:
                 with open(OUT / f"part-{part:04d}.jsonl", "w", encoding="utf-8") as f:
                     f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in buf)
