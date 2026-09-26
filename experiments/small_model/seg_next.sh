@@ -42,7 +42,9 @@ while true; do
   L=$(( $(left) - 4 ))
   [ "$L" -lt 8 ] && exit 3
   say "teacher ($L min)"
-  $PY teacher.py --minutes "$L" --n-ctx 2048 >> "$LOG/teacher.log" 2>&1 || { say "teacher failed"; exit 1; }
+  $PY teacher.py --minutes "$L" --n-ctx 2048 >> "$LOG/teacher.log" 2>&1; rc=$?
+  [ $rc -eq 3 ] && { say "teacher checkpointed for cooling; releasing hold"; exit 3; }
+  [ $rc -ne 0 ] && { say "teacher failed ($rc)"; exit 1; }
 done
 
 # 3. option A arms
@@ -94,5 +96,7 @@ for arm in a-small-30k a-base-30k; do
       || { say "latency $arm cpu$t failed"; exit 1; }
   done
 done
+say "write pilot report"
+$PY report.py >> "$LOG/report.log" 2>&1 || { say "report failed"; exit 1; }
 say "all steps done"
 exit 0

@@ -185,32 +185,53 @@ def gpu_temp() -> int | None:
         return None
 
 
-def thermal_guard(hot: int = 88, cool: int = 86, every: float = 2.0, force: bool = False, max_s: float = 30) -> float:
-    """Pause (seconds returned) while the GPU is at `hot` C or above, until it is back to `cool` (at most max_s).
-    88 / 86 C, checked every 2 s, at most 30 s: the NVIDIA driver holds its own 87 C target by lowering clocks
-    (software slowdown), and run_heavy kills a job only after 15 s above 88 C, so the governor only has to keep the
-    GPU from sitting above 88. With other sessions holding the CPU near 60 % the idle GPU sits at 82-84 C
-    (2026-09-26 20:30); at 86 / 82 C the teacher spent 2,436 of its first 2,898 s paused (0.28 states/s)."""
+class ThermalCooldownTimeout(RuntimeError):
+    """GPU work must stop: cooling failed or the temperature could not be read."""
+
+
+def thermal_guard(hot: int = 86, cool: int = 84, every: float = 1.0, force: bool = False, max_s: float = 60) -> float:
+    """Pause until the GPU cools; raise instead of resuming hot when the cooling budget expires.
+
+    The 88 / 86 C governor was killed by run_heavy at 90 C on 2026-09-26 23:12. Leave headroom below its
+    unchanged 88 C watchdog. Callers can checkpoint and release the lock on ThermalCooldownTimeout.
+    The teacher forces a reading before every state so a recent check cannot permit another hot batch.
+    """
     import time as _t
-    now = _t.time()
+    now = _t.monotonic()
     if not force and now - _THERMAL_LAST[0] < every:
         return 0.0
     _THERMAL_LAST[0] = now
     t = gpu_temp()
     THERMAL["checks"] += 1
     if t is None:
-        return 0.0
+        raise ThermalCooldownTimeout("GPU temperature unavailable; refusing to start more GPU work")
     THERMAL["max_c"] = max(THERMAL["max_c"], t)
     if t < hot:
         return 0.0
-    t0 = _t.time()
-    while True:
-        _t.sleep(3)
-        t = gpu_temp()
-        if t is None or t <= cool or _t.time() - t0 > max_s:
-            break
-    dt = _t.time() - t0
+    t0 = _t.monotonic()
     THERMAL["pauses"] += 1
-    THERMAL["paused_s"] += dt
-    _THERMAL_LAST[0] = _t.time()
-    return dt
+    try:
+        while t > cool:
+            remaining = max_s - (_t.monotonic() - t0)
+            if remaining <= 0:
+                raise ThermalCooldownTimeout(f"GPU still at {t} C after {max_s:.1f} s cooling (target {cool} C)")
+            _t.sleep(min(1.0, remaining))
+            t = gpu_temp()
+            if t is None:
+                raise ThermalCooldownTimeout("GPU temperature unavailable during cooling")
+            THERMAL["checks"] += 1
+            THERMAL["max_c"] = max(THERMAL["max_c"], t)
+        return _t.monotonic() - t0
+    finally:
+        THERMAL["paused_s"] += _t.monotonic() - t0
+        _THERMAL_LAST[0] = _t.monotonic()
+
+
+def thermal_guard_or_checkpoint(checkpoint) -> float:
+    """Training callers persist their optimiser and batch cursor before yielding a hot GPU."""
+    try:
+        return thermal_guard(force=True)
+    except ThermalCooldownTimeout as exc:
+        checkpoint()
+        print(f"cooling stop: {exc}; checkpoint saved, releasing the lock", flush=True)
+        raise SystemExit(3) from None

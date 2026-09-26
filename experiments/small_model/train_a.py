@@ -25,7 +25,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from common import RESULTS, RUNS, THERMAL, dump, thermal_guard
+from common import RESULTS, RUNS, THERMAL, dump, thermal_guard, thermal_guard_or_checkpoint
 from dataset import load_examples, summary
 from student import Encoder, Q, Student, collate, lr_lambda, n_params, ordinal_loss
 
@@ -112,14 +112,14 @@ def step_loss(model, rows, device, ce_w=0.5, ord_w=1.0):
 
 
 @torch.no_grad()
-def evaluate_val(model, val, enc, device, budget):
+def evaluate_val(model, val, enc, device, budget, guard=thermal_guard):
     model.eval()
     rng = random.Random(0)
     rows = make_rows(val, enc, rng, pack_all=1.0)
     agree, kls, recs = [], [], []
     for b in batches(rows, budget, rng):
         if device.type == "cuda":
-            thermal_guard()
+            guard()
         _, logp, tgt, mask = step_loss(model, b, device)
         lp = logp.float().cpu().numpy()
         t = tgt.cpu().numpy()
@@ -205,12 +205,26 @@ def main() -> int:
         print(f"resumed at epoch {st['ep']} batch {st['b']} (step {st['step']})", flush=True)
     st["segments"] += 1
     t0 = time.time()
+    prior_seconds, prior_paused = st["train_s"], st.get("paused_s", 0.0)
+
+    def checkpoint():
+        st["train_s"] = prior_seconds + time.time() - t0
+        st["paused_s"] = prior_paused + THERMAL["paused_s"]
+        st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
+        tmp = ckpt_path.with_suffix(".pt.tmp")
+        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "state": st,
+                    "torch_rng": torch.get_rng_state()}, tmp)
+        tmp.replace(ckpt_path)
+
+    def guard():
+        thermal_guard_or_checkpoint(checkpoint)
+
     stopped = False
     while st["ep"] < args.epochs:
         bs = epoch_batches(st["ep"])
         for bi in range(st["b"], len(bs)):
             if dev.type == "cuda":
-                thermal_guard()
+                guard()
             loss, *_ = step_loss(model, bs[bi], dev)
             opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -229,7 +243,7 @@ def main() -> int:
                 break
         if stopped:
             break
-        agree, kl, _ = evaluate_val(model, val, enc, dev, args.budget)
+        agree, kl, _ = evaluate_val(model, val, enc, dev, args.budget, guard=guard)
         st["log"].append({"epoch": st["ep"], "step": st["step"], "val_agreement": round(agree, 4),
                           "val_kl": round(kl, 4), "seconds": round(st["train_s"] + time.time() - t0, 1)})
         print(f"== epoch {st['ep']}: val agreement {agree:.4f} KL {kl:.4f}", flush=True)
@@ -239,11 +253,10 @@ def main() -> int:
     st["paused_s"] = st.get("paused_s", 0.0) + THERMAL["paused_s"]
     st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
     if stopped:
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "state": st,
-                    "torch_rng": torch.get_rng_state()}, ckpt_path)
+        checkpoint()
         print(f"segment ended at epoch {st['ep']} batch {st['b']}: checkpoint saved", flush=True)
         return 3
-    agree, kl, recs = evaluate_val(model, val, enc, dev, args.budget)
+    agree, kl, recs = evaluate_val(model, val, enc, dev, args.budget, guard=guard)
     temps = fit_type_temps(recs)
     model.enc.save_pretrained(out / "encoder")
     tok.save_pretrained(out / "encoder")

@@ -21,7 +21,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from common import RESULTS, RUNS, THERMAL, dump, thermal_guard
+from common import RESULTS, RUNS, THERMAL, dump, thermal_guard_or_checkpoint
 from dataset import load_examples, summary
 from train_a import fit_type_temps
 
@@ -131,13 +131,27 @@ def main() -> int:
         print(f"resumed at epoch {st['ep']} batch {st['b']} (step {st['step']})", flush=True)
     st["segments"] += 1
     t0 = time.time()
+    prior_seconds, prior_paused = st["train_s"], st.get("paused_s", 0.0)
+
+    def checkpoint():
+        st["train_s"] = prior_seconds + time.time() - t0
+        st["paused_s"] = prior_paused + THERMAL["paused_s"]
+        st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
+        tmp = ckpt_path.with_suffix(".pt.tmp")
+        torch.save({"lora": {n: p.detach().clone() for n, p in trainable}, "opt": opt.state_dict(),
+                    "sched": sched.state_dict(), "state": st, "torch_rng": torch.get_rng_state()}, tmp)
+        tmp.replace(ckpt_path)
+
+    def guard():
+        thermal_guard_or_checkpoint(checkpoint)
+
     stopped = False
     model.train()
-    while st["ep"] < args.epochs:
+    while st["ep"] < args.epochs and not st.get("training_complete", False):
         bs = epoch_batches(st["ep"])
         for bi in range(st["b"], len(bs)):
             b = bs[bi]
-            thermal_guard()
+            guard()
             logp, mask = letter_logp(model, tok, letter_ids, [x["prompt"] for x in b], [x["k"] for x in b], dev)
             K = logp.shape[1]
             tgt = torch.tensor(np.array([np.pad(x["target"], (0, K - x["k"])) for x in b]), dtype=torch.float32, device=dev)
@@ -168,18 +182,19 @@ def main() -> int:
     st["paused_s"] = st.get("paused_s", 0.0) + THERMAL["paused_s"]
     st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
     if stopped and st["segments"] < args.max_segments:
-        torch.save({"lora": {n: p.detach().clone() for n, p in trainable}, "opt": opt.state_dict(),
-                    "sched": sched.state_dict(), "state": st, "torch_rng": torch.get_rng_state()}, ckpt_path)
+        checkpoint()
         print(f"segment ended at epoch {st['ep']} batch {st['b']}: checkpoint saved", flush=True)
         return 3
     # validation: agreement with the teacher + per-type temperatures
+    st["training_complete"] = True
+    st["stopped_early"] = st.get("stopped_early", False) or stopped
     model.eval()
     recs, agree = [], []
     with torch.no_grad():
         vi = items(val, random.Random(0))
         for i in range(0, len(vi), 32):
             b = vi[i:i + 32]
-            thermal_guard()
+            guard()
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 logp, _ = letter_logp(model, tok, letter_ids, [x["prompt"] for x in b], [x["k"] for x in b], dev)
             lp = logp.float().cpu().numpy()
@@ -192,7 +207,7 @@ def main() -> int:
     info = {"arm": args.arm, "backbone": BASE, "lora": {"r": 16, "alpha": 32, "targets": "all-linear"},
             "epochs": args.epochs, "steps": st["step"], "total_steps_planned": total,
             "fraction_of_planned_steps": round(st["step"] / total, 4), "segments": st["segments"],
-            "stopped_early": bool(stopped), "train_seconds": round(st["train_s"], 1),
+            "stopped_early": st["stopped_early"], "train_seconds": round(st["train_s"], 1),
             "decisions_per_s": round(st["step"] * args.batch / st["train_s"], 2),
             "train_tok_per_s": round(st["tokens"] / st["train_s"], 1),
             "train_tok_per_s_excluding_thermal_pauses": round(st["tokens"] / max(1e-9, st["train_s"] - st["paused_s"]), 1),

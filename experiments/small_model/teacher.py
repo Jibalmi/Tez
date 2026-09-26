@@ -9,21 +9,35 @@ T = 1) in both orders, the option keys in the original order, and whether __none
 questions, plan §4). The student's target is built later (dataset.py): the average of the two orders' distributions,
 each at the §5c default temperature of its question type.
 
-Checkpoints: runs/pilot/teacher/part-NNNN.jsonl every 200 states; a rerun skips states already read.
+Checkpoints: runs/pilot/teacher/part-NNNN.jsonl every 25 states, published atomically; a rerun skips saved states.
+Cooling timeouts save the current buffer and exit 3 so the driver releases the lock and re-queues.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import time
 
 import numpy as np
 
-from common import GGUF_12B, LLAMA_LIB, RESULTS, RUNS, THERMAL, dump, read_jsonl, thermal_guard
+from common import GGUF_12B, LLAMA_LIB, RESULTS, RUNS, THERMAL, ThermalCooldownTimeout, dump, read_jsonl, thermal_guard
 
 OUT = RUNS / "teacher"
 NONE_SHARE = 0.2
+CHECKPOINT_STATES = 25
+
+
+def save_part(part: int, rows: list[dict]) -> None:
+    """Only complete, flushed shards are visible to a resumed teacher."""
+    path = OUT / f"part-{part:04d}.jsonl"
+    tmp = path.with_suffix(".jsonl.tmp")
+    with tmp.open("w", encoding="utf-8") as f:
+        f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
 
 
 def shared_gpu_mb() -> int:
@@ -46,7 +60,7 @@ def add_none(state_id: str, qid: str) -> bool:
     return (h / 0xFFFFFFFF) < NONE_SHARE
 
 
-def main() -> None:
+def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=float, default=100, help="stop starting new states after this long")
     ap.add_argument("--limit", type=int, default=0)
@@ -67,7 +81,7 @@ def main() -> None:
         todo = todo[: args.limit]
     print(f"{len(done)} states already read, {len(todo)} to go", flush=True)
     if not todo:
-        return
+        return 0
 
     import os
     import psutil
@@ -92,15 +106,19 @@ def main() -> None:
     mem = {"rss_gb_after_load": round(psutil.Process().memory_info().rss / 2 ** 30, 2),
            "free_ram_gb_after_load": round(psutil.virtual_memory().available / 2 ** 30, 1)}
     print(f"loaded in {load_s:.0f} s; {mem}", flush=True)
-    part = len(list(OUT.glob("part-*.jsonl")))
+    part = max((int(p.stem.split("-")[1]) for p in OUT.glob("part-*.jsonl")), default=-1) + 1
     buf, t0, ms, n_read = [], time.time(), [], 0
     deadline = t0 + args.minutes * 60
+    stopped_for = None
     try:
         for a in todo:
             if time.time() > deadline:
                 print("deadline reached", flush=True)
                 break
-            thermal_guard()
+            thermal_guard(force=True, max_s=min(60.0, max(0.0, deadline - time.time())))
+            if time.time() >= deadline:
+                print("deadline reached during cooling", flush=True)
+                break
             state = pool[a["id"]]["state"]
             prompts, ks, meta = [], [], []
             for qd in a["questions"]:
@@ -133,19 +151,23 @@ def main() -> None:
             if n_read % 50 == 0:
                 el = time.time() - t0
                 print(f"  {n_read} states in {el:.0f} s: p50 {np.median(ms):.0f} ms/state, thermal {THERMAL}", flush=True)
-            if len(buf) >= 200:
-                with open(OUT / f"part-{part:04d}.jsonl", "w", encoding="utf-8") as f:
-                    f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in buf)
+            if len(buf) >= CHECKPOINT_STATES:
+                save_part(part, buf)
                 part += 1
                 buf = []
+            if n_read % 200 == 0:
                 el = time.time() - t0
                 print(f"  {n_read} states in {el:.0f} s: p50 {np.median(ms):.0f} ms/state, {n_read / el:.2f} states/s",
                       flush=True)
+    except ThermalCooldownTimeout as exc:
+        stopped_for = str(exc)
+        print(f"cooling stop: {exc}; checkpointing and releasing the lock", flush=True)
     finally:
-        if buf:
-            with open(OUT / f"part-{part:04d}.jsonl", "w", encoding="utf-8") as f:
-                f.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in buf)
-        be.close()
+        try:
+            if buf:
+                save_part(part, buf)
+        finally:
+            be.close()
     el = time.time() - t0
     stats_path = RESULTS / "teacher_timing.json"
     prev = json.loads(stats_path.read_text(encoding="utf-8")) if stats_path.exists() else {"runs": []}
@@ -154,10 +176,12 @@ def main() -> None:
                          "ms_per_state_p95": round(float(np.percentile(ms, 95)), 1) if ms else None,
                          "readings_per_state": 10, "n_ctx": args.n_ctx, **mem, "load_mode": "none (no mmap)",
                          "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
+                         "stopped_for": stopped_for, "checkpoint_states": CHECKPOINT_STATES,
                          "thermal": dict(THERMAL)})
     dump(stats_path, prev)
     print(f"read {n_read} states in {el:.0f} s", flush=True)
+    return 3 if stopped_for else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
