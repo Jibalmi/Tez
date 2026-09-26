@@ -5,6 +5,7 @@
 # Exit 0: everything done. 3: work left (resumable). 1: a step failed (the driver stops; nothing is retried).
 set -u
 ROOT=/c/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez-pilot
+ROOTW=$(cygpath -m "$ROOT")   # Windows Python cannot open /c/... paths
 PY=$ROOT/.venv-pilot/Scripts/python.exe
 BASH_EXE="C:/Program Files/Git/bin/bash.exe"
 SM=$ROOT/experiments/small_model
@@ -19,8 +20,8 @@ say() { echo "$(date -Iseconds) seg_next: $*" >> "$LOG/driver.log"; }
 teacher_left() {
   $PY -c "
 import glob
-done=sum(1 for p in glob.glob(r'$ROOT/runs/pilot/teacher/part-*.jsonl') for _ in open(p,encoding='utf-8'))
-print(sum(1 for _ in open(r'$ROOT/runs/pilot/assign.jsonl',encoding='utf-8')) - done)"
+done=sum(1 for p in glob.glob(r'$ROOTW/runs/pilot/teacher/part-*.jsonl') for _ in open(p,encoding='utf-8'))
+print(sum(1 for _ in open(r'$ROOTW/runs/pilot/assign.jsonl',encoding='utf-8')) - done)"
 }
 
 # 1. schemas (own llama-server; exits 3 while clusters remain)
@@ -34,7 +35,10 @@ if [ ! -f "$ROOT/runs/pilot/assign.jsonl" ]; then
 fi
 
 # 2. teacher (12B in process; stops starting states before the deadline)
-while [ "$(teacher_left)" -gt 0 ]; do
+while true; do
+  n_left=$(teacher_left)
+  [[ "$n_left" =~ ^-?[0-9]+$ ]] || { say "teacher_left failed: '$n_left'"; exit 1; }
+  [ "$n_left" -gt 0 ] || break
   L=$(( $(left) - 4 ))
   [ "$L" -lt 8 ] && exit 3
   say "teacher ($L min)"

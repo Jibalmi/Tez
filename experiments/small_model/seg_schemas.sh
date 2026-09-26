@@ -4,6 +4,7 @@
 # written. Resumable: a rerun continues with the clusters not yet written. Always stops its server.
 set -u
 ROOT=/c/Users/migue/OneDrive/Desktop/Personal/AILABS/Tez-pilot
+ROOTW=$(cygpath -m "$ROOT")   # Windows Python cannot open /c/... paths
 PY=$ROOT/.venv-pilot/Scripts/python.exe
 GGUF=C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795
 LOG=$ROOT/runs/pilot/logs
@@ -57,8 +58,9 @@ nvidia-smi --query-gpu=temperature.gpu,clocks_throttle_reasons.sw_thermal_slowdo
 
 # all clusters written? then validate, filter and assign (embeds the schema texts on the GPU)
 n_c=$(wc -l < "$ROOT/runs/pilot/clusters.jsonl")
-n_w=$($PY -c "import json;print(len({json.loads(l)['cid'] for l in open(r'$ROOT/runs/pilot/schemas_raw.jsonl',encoding='utf-8') if json.loads(l)['items']}))")
+n_w=$($PY -c "import json;print(len({json.loads(l)['cid'] for l in open(r'$ROOTW/runs/pilot/schemas_raw.jsonl',encoding='utf-8') if json.loads(l)['items']}))")
 echo "clusters written: $n_w of $n_c" >> "$LOG/schemas_write.log"
+[[ "$n_w" =~ ^[0-9]+$ ]] || { echo "could not count written clusters" >> "$LOG/schemas_write.log"; exit 1; }
 if [ "$n_w" -ge "$n_c" ] && [ -s "$ROOT/runs/pilot/gold_questions.jsonl" ]; then
   $PY schemas.py assign --device cuda > "$LOG/schemas_assign.log" 2>&1 || { echo "assign failed"; exit 1; }
   exit 0
