@@ -1,0 +1,48 @@
+{
+  "status": "prepared_not_deployed",
+  "created_from_snapshot_utc": "2026-09-26T22:26:25.435974+00:00",
+  "saved_states": 2700,
+  "pending_states": 3576,
+  "bundle_bytes": 25257759,
+  "bundle_sha256": "53811f02cf23631f04b65605f5721e0228b5ae2fe1dda799dd9c831de61ce077",
+  "bundle_relative_path": "runs\\pilot\\runpod-prep-20260927-v2\\tez-pilot-cloud.tar.gz",
+  "verified_file_hashes": 449,
+  "offline_tests_passed": 37,
+  "preferred_speed_trial": "1 x H100 SXM 80GB, benchmark 1/2/4 isolated model workers",
+  "published_gpu_usd_per_hour": 3.49,
+  "pricing_source": "https://www.runpod.io/pricing",
+  "model_registry_head_status": 200,
+  "model_bytes": 12669645728,
+  "model_sha256": "047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795",
+  "local_eta_estimate_minutes": [
+    86.3,
+    104.2
+  ],
+  "local_eta_basis": {
+    "latest_segment_states": 1700,
+    "latest_segment_seconds": 2461,
+    "window_start_states": 1200,
+    "window_start_seconds": 1587
+  },
+  "eta_scope": "Estimates for remaining teacher labeling only; excludes queue waits, provisioning, transfer/setup, training and evaluation",
+  "cloud_throughput_measured": false,
+  "cloud_rate_scenarios_not_measurements": [
+    {
+      "assumed_states_per_second": 2,
+      "labeling_minutes": 29.8
+    },
+    {
+      "assumed_states_per_second": 5,
+      "labeling_minutes": 11.9
+    },
+    {
+      "assumed_states_per_second": 10,
+      "labeling_minutes": 6.0
+    }
+  ],
+  "launch_requirements": [
+    "RunPod credentials configured locally",
+    "User spending cap",
+    "Authenticated GPU quote and availability"
+  ]
+}

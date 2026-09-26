@@ -54,8 +54,67 @@ its volume disk is deleted with it. [Storage](https://docs.runpod.io/pods/storag
    and separate output directories; merge by ID with duplicate/conflict checks. Do not let two
    writers share `part-NNNN.jsonl` filenames. Stop renting compute when the bounded run ends.
 
-Deployment status: preparation and published-price review only. No Pod benchmark or cloud speedup
-claim exists yet. Provider account access, actual capacity, and a spending cap are launch inputs.
+Deployment status: the portable teacher package and bounded launcher are implemented and offline
+tested. No Pod benchmark or cloud speedup claim exists yet. Provider account access, authenticated
+capacity/price checks, and a spending cap are still launch inputs.
+
+## Speed-focused trial prepared after the deployment request
+
+Start with one H100 SXM (80 GB; listed at $3.49/hour) and benchmark one, two, and four isolated
+Gemma processes. This is a speed-focused candidate, not an assertion that H100 is the fastest
+GPU for this exact workload. H200 ($4.59/hour) and B200 ($6.79/hour) are higher-priced alternatives
+from the same published pricing page; use actual capacity and measured throughput to choose.
+The earlier RTX 6000 Ada option remains the lower-cost trial.
+
+Implemented commands:
+
+```powershell
+.\.venv-pilot\Scripts\python.exe experiments\small_model\cloud_teacher.py prepare --output runs\pilot\runpod-prep-20260927 --canary-states 100
+.\.venv-pilot\Scripts\python.exe experiments\small_model\runpod_trial.py --key-file runs\pilot\runpod.key catalog
+```
+
+`runpod.key` is an optional local raw-key file under the ignored `runs/` tree. An existing
+`RUNPOD_API_KEY` environment variable also works. Do not send its contents in messages or include
+it in an upload. The bundle contains project code, public evaluation data, the pool and question
+assignments, and reference teacher outputs; it excludes credentials, virtual environments, and model binaries.
+
+The model registry answered a HEAD request with HTTP 200 and the exact expected size, and
+GitHub supplies prebuilt b11100 Linux CUDA 12.8 libraries with SHA-256 digests. The cloud bootstrap
+downloads and verifies these directly. The verified container image is
+`runpod/pytorch@sha256:0ad20c96682da30fd04c2f130c13edb68aa5ebe3d370f2d5096eb1fcbbbfddad`
+(`1.3.3-cu1281-torch280-ubuntu2404`). Image and source checks do not replace a live GPU smoke test.
+
+The prepared snapshot is `runs/pilot/runpod-prep-20260927-v2/tez-pilot-cloud.tar.gz`: 25,257,759
+bytes, with 449 verified file hashes, 2,700 completed teacher states, 3,576 pending states, and
+100 parity examples. Saved and pending IDs are disjoint and together cover all 6,276 assignments.
+These are snapshot counts; the local teacher continues progressing. Preparation evidence is in
+`results/pilot/runpod_preparation_20260927.json`.
+
+After account access and budget are provided, resolve the exact GPU ID with `catalog`, generate a
+dedicated SSH key, then use `runpod_trial.py launch` with explicit `--gpu-id`, `--max-hourly-usd`,
+`--minutes`, `--public-key`, and `--receipt`. The launcher checks the current GPU quote and returned
+Pod price and starts a local watcher to stop the created Pod at its deadline. The laptop and
+network must remain available for that provider stop; the cloud runner's compute deadline alone
+does not stop provider billing. Storage remains billable after a GPU stop.
+
+Upload the bundle to the new Pod, extract it into `/workspace/tez-pilot`, and run:
+
+```bash
+cd /workspace/tez-pilot
+bash experiments/small_model/cloud_bootstrap.sh --name h100-trial --workers 1 2 4 --minutes 45 --production
+```
+
+The script verifies input hashes before inference, selects worker counts with enough memory,
+checks 100 saved states against the local target distributions, and only continues if the fixed
+parity gates pass: maximum probability delta <= 0.02, mean total variation <= 0.005, and argmax
+agreement >= 99%. It records timing including process startup and model loading, selects the
+fastest tested worker count, and estimates remaining label time from the measured canary rate.
+Those estimates exclude provisioning, downloads, setup, and later student training.
+
+Cloud workers use disjoint state IDs and isolated shard/result directories. Cloud outputs remain
+under `runs/cloud-output/<name>/`; they are not automatically merged with the still-running
+laptop's shards. The initial job covers the remaining 12B teacher labeling, not all subsequent
+student training, evaluation, and latency measurements.
 
 ## Combining Gemma and Codex targets
 

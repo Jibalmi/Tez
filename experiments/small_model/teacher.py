@@ -18,6 +18,7 @@ import argparse
 import hashlib
 import json
 import os
+from pathlib import Path
 import time
 
 import numpy as np
@@ -45,6 +46,8 @@ def shared_gpu_mb() -> int:
     import os
     import subprocess
     import sys as _sys
+    if os.name != "nt":
+        return -1
     try:
         out = subprocess.run([_sys.executable, "C:/temp/gpu_lock.py", "snapshot"], capture_output=True, text=True,
                              timeout=60).stdout
@@ -64,9 +67,14 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=float, default=100, help="stop starting new states after this long")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--ids-file", type=Path, help="Only these state IDs, one per line; enables isolated cloud canaries")
+    ap.add_argument("--shard-index", type=int, default=0)
+    ap.add_argument("--num-shards", type=int, default=1)
     ap.add_argument("--n-ctx", type=int, default=2048,
                     help="KV cells (swa_full). 4,096 spilled out of VRAM beside 1.9 GB of desktop VRAM on 2026-09-26")
     args = ap.parse_args()
+    if args.num_shards < 1 or not 0 <= args.shard_index < args.num_shards:
+        ap.error("Require 0 <= shard-index < num-shards")
     from tez.inproc import InprocBackend
     from tez.prompt import STATE_FIRST, build_prompt
     from tez.schema import parse_question
@@ -77,6 +85,14 @@ def main() -> int:
         done.update(r["id"] for r in read_jsonl(p))
     pool = {r["id"]: r for r in read_jsonl(RUNS / "pool.jsonl")}
     todo = [a for a in read_jsonl(RUNS / "assign.jsonl") if a["id"] not in done]
+    if args.ids_file:
+        wanted = set(args.ids_file.read_text(encoding="utf-8").splitlines())
+        unknown = wanted - set(pool)
+        if unknown:
+            raise ValueError(f"IDs file contains {len(unknown)} unknown states")
+        todo = [a for a in todo if a["id"] in wanted]
+    todo = [a for a in todo if int(hashlib.sha256(a["id"].encode()).hexdigest()[:16], 16) % args.num_shards
+            == args.shard_index]
     if args.limit:
         todo = todo[: args.limit]
     print(f"{len(done)} states already read, {len(todo)} to go", flush=True)
@@ -147,7 +163,7 @@ def main() -> int:
                 spill = shared_gpu_mb()
                 if spill > 1700:
                     raise SystemExit(f"spilled into shared GPU memory ({spill} MB, 1,130 expected): lower --n-ctx")
-                print(f"  shared GPU memory {spill} MB (1,130 expected: the host-side token embeddings)", flush=True)
+                print(f"  shared GPU memory {spill} MB (Windows-only measurement; -1 means unavailable)", flush=True)
             if n_read % 50 == 0:
                 el = time.time() - t0
                 print(f"  {n_read} states in {el:.0f} s: p50 {np.median(ms):.0f} ms/state, thermal {THERMAL}", flush=True)
@@ -175,6 +191,8 @@ def main() -> int:
                          "ms_per_state_p50": round(float(np.median(ms)), 1) if ms else None,
                          "ms_per_state_p95": round(float(np.percentile(ms, 95)), 1) if ms else None,
                          "readings_per_state": 10, "n_ctx": args.n_ctx, **mem, "load_mode": "none (no mmap)",
+                         "num_shards": args.num_shards, "shard_index": args.shard_index,
+                         "gguf": GGUF_12B, "llama_lib": LLAMA_LIB,
                          "backend": "tez.inproc InprocBackend, llama.cpp b11100, state_first, read_many",
                          "stopped_for": stopped_for, "checkpoint_states": CHECKPOINT_STATES,
                          "thermal": dict(THERMAL)})

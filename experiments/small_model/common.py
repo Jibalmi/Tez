@@ -26,14 +26,14 @@ THREADS = int(os.environ.get("RUN_HEAVY_THREADS", "6"))   # the machine's cap fo
 if "torch" in sys.modules:           # never import torch here: the in-process teacher loads llama.cpp's libomp, and
     sys.modules["torch"].set_num_threads(THREADS)   # torch's libiomp5md first makes it abort (OMP error 15)
 
-RUNS = ROOT / "runs" / "pilot"                   # gitignored: weights, caches, datasets
+RUNS = Path(os.environ.get("TEZ_PILOT_RUNS", ROOT / "runs" / "pilot"))  # isolated cloud workers may override
 DATA = ROOT / "data" / "small_model"             # committed: eval hashes (small), licence ledger copy
-RESULTS = ROOT / "results" / "pilot"             # committed: metrics, manifests
+RESULTS = Path(os.environ.get("TEZ_PILOT_RESULTS", ROOT / "results" / "pilot"))
 for _d in (RUNS, DATA, RESULTS):
     _d.mkdir(parents=True, exist_ok=True)
 
-GGUF_12B = "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795"
-LLAMA_LIB = "C:/temp/llamacpp"
+GGUF_12B = os.environ.get("TEZ_PILOT_GGUF", "C:/Users/migue/.ollama/models/blobs/sha256-047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795")
+LLAMA_LIB = os.environ.get("TEZ_PILOT_LLAMA_LIB", "C:/temp/llamacpp")
 LOCK_OWNER = "projects-0c-pilot"
 
 # MASSIVE's 51 locales in the mteb/amazon_massive_intent configs; the plan's 8 held-out languages (pilot: km)
