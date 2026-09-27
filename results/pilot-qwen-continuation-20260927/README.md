@@ -31,3 +31,13 @@ layout on resume. A one-thread CPU toy test reproduces three subsequent AdamW up
 the random sequence exactly after restoring a checkpoint. Separate checks reject wrong hashes,
 registrations, optimizer parameter order and non-finite adapter values. This tests the persistence
 mechanism only; Qwen GPU training and interruption recovery have not yet been verified.
+
+The [single-decision loss helper](../../experiments/small_model/qwen_continuation_loss.py)
+preserves the original teacher KL plus 0.5 gold CE. Each accumulated decision must be divided
+by the full effective batch size, including rows without gold. A one-thread CPU test compares
+the accumulated loss and shared-parameter gradients with the original padded batch expression,
+using variable option counts, zero-probability targets and missing gold. Other tests verify
+option-permutation invariance and reject malformed targets or gold indices. All three passed.
+This checks loss arithmetic; it does not establish full-model GPU gradient equivalence,
+successful continuation, improved quality or training speed. The queued trainability probe
+and all existing registrations are unchanged.
