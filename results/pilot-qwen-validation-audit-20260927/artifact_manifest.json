@@ -1,0 +1,46 @@
+{
+  ".gitignore": {
+    "sha256": "46f89d6caa1f68d1a4c52be7c4cf79aec61c2e74f178e0072c02fedefd2e9447",
+    "bytes": 22
+  },
+  "audit.json": {
+    "sha256": "e31cde3b116e2579faa0d4b14dfab0a14ab312afd34e7ad3a92047fec0c64115",
+    "bytes": 15588
+  },
+  "RESULTS.md": {
+    "sha256": "da16765fb21cb422fe44ae7809b728c0f4c24b33f570ec2842823d0fab704e69",
+    "bytes": 3177
+  },
+  "validation_rows.jsonl": {
+    "sha256": "845afbf0815560709551b3b179ee54b9021b008d2f89d8877caa45a480661b4d",
+    "bytes": 550871
+  },
+  "analysis_source/audit_qwen_validation.py": {
+    "sha256": "f640d4716889be4a7496920838acc9936364787c656b58d8abdcaac64b6130ee",
+    "bytes": 7832
+  },
+  "analysis_source/dataset.py": {
+    "sha256": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "bytes": 4168
+  },
+  "analysis_source/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "analysis_source/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "analysis_source/parity_evidence.py": {
+    "sha256": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "bytes": 2139
+  },
+  "inputs/teacher_manifest.json": {
+    "sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+    "bytes": 4811
+  },
+  "inputs/reference_parity.json": {
+    "sha256": "42af9e1da336ebd7cb70ececb54273a7343b68abdb8fef35d09b64de9e77b78d",
+    "bytes": 4509
+  }
+}

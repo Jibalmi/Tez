@@ -1,0 +1,437 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T03:13:17.233179+00:00",
+  "reference_rows_sha256": "e353d17b87329541e191a14004e710ba57b292cad0a01a0ea860e80c1c0042e3",
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "sources": {
+    "audit_qwen_validation.py": "f640d4716889be4a7496920838acc9936364787c656b58d8abdcaac64b6130ee",
+    "dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "parity_evidence.py": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5"
+  },
+  "overall": {
+    "n": 1390,
+    "kl": 0.1401374435902039,
+    "teacher_agreement": 0.7899280575539568,
+    "student_confidence": 0.669649604496865,
+    "teacher_confidence": 0.7289886869704728,
+    "student_entropy": 0.8682345686777039,
+    "teacher_entropy": 0.765356575742477,
+    "gold_rows": 21,
+    "student_gold_accuracy": 0.6666666666666666,
+    "teacher_gold_accuracy": 0.8571428571428571
+  },
+  "groups": {
+    "qtype": {
+      "choice": {
+        "n": 526,
+        "kl": 0.2182621119688846,
+        "teacher_agreement": 0.7604562737642585,
+        "student_confidence": 0.6529472117452655,
+        "teacher_confidence": 0.72901393507056,
+        "student_entropy": 1.0012440709242463,
+        "teacher_entropy": 0.8491816300986313,
+        "gold_rows": 21,
+        "student_gold_accuracy": 0.6666666666666666,
+        "teacher_gold_accuracy": 0.8571428571428571
+      },
+      "noul": {
+        "n": 491,
+        "kl": 0.04712935617175918,
+        "teacher_agreement": 0.9307535641547862,
+        "student_confidence": 0.8137028795512832,
+        "teacher_confidence": 0.8424013055891898,
+        "student_entropy": 0.44270646199239483,
+        "teacher_entropy": 0.4056409984025342,
+        "gold_rows": 0
+      },
+      "score": {
+        "n": 373,
+        "kl": 0.15239855714320744,
+        "teacher_agreement": 0.646112600536193,
+        "student_confidence": 0.5035780241634117,
+        "teacher_confidence": 0.5796619410121996,
+        "student_entropy": 1.2408117863742332,
+        "teacher_entropy": 1.1206605164464303,
+        "gold_rows": 0
+      }
+    },
+    "source": {
+      "aya": {
+        "n": 130,
+        "kl": 0.1586377148692891,
+        "teacher_agreement": 0.7769230769230769,
+        "student_confidence": 0.6798738864283019,
+        "teacher_confidence": 0.7375733737901263,
+        "student_entropy": 0.8652238767967007,
+        "teacher_entropy": 0.7534287045838385,
+        "gold_rows": 0
+      },
+      "clinc": {
+        "n": 30,
+        "kl": 0.32852080960126057,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.7651347758452764,
+        "teacher_confidence": 0.8135300045343805,
+        "student_entropy": 0.7085785136139796,
+        "teacher_entropy": 0.6176568961406168,
+        "gold_rows": 6,
+        "student_gold_accuracy": 0.8333333333333334,
+        "teacher_gold_accuracy": 0.8333333333333334
+      },
+      "csqa": {
+        "n": 25,
+        "kl": 0.13433867621048112,
+        "teacher_agreement": 0.68,
+        "student_confidence": 0.5688448792838243,
+        "teacher_confidence": 0.6027008124801819,
+        "student_entropy": 1.0929919542790894,
+        "teacher_entropy": 1.0225970212537272,
+        "gold_rows": 5,
+        "student_gold_accuracy": 0.8,
+        "teacher_gold_accuracy": 0.8
+      },
+      "fineweb": {
+        "n": 655,
+        "kl": 0.11820371352757694,
+        "teacher_agreement": 0.833587786259542,
+        "student_confidence": 0.6859812193637613,
+        "teacher_confidence": 0.7406075864738091,
+        "student_entropy": 0.8350883073236773,
+        "teacher_entropy": 0.7428567920323174,
+        "gold_rows": 0
+      },
+      "fineweb2": {
+        "n": 500,
+        "kl": 0.14749267500939714,
+        "teacher_agreement": 0.756,
+        "student_confidence": 0.6558067884561849,
+        "teacher_confidence": 0.7188923369454335,
+        "student_entropy": 0.8944119814972247,
+        "teacher_entropy": 0.7819472443685875,
+        "gold_rows": 0
+      },
+      "gmmlu": {
+        "n": 50,
+        "kl": 0.19568565197629023,
+        "teacher_agreement": 0.64,
+        "student_confidence": 0.5606617369230587,
+        "teacher_confidence": 0.6678435647028622,
+        "student_entropy": 1.0319192033483948,
+        "teacher_entropy": 0.8852091061024109,
+        "gold_rows": 10,
+        "student_gold_accuracy": 0.5,
+        "teacher_gold_accuracy": 0.9
+      }
+    },
+    "lang": {
+      "ar": {
+        "n": 80,
+        "kl": 0.17127968948287317,
+        "teacher_agreement": 0.7625,
+        "student_confidence": 0.6491166958830002,
+        "teacher_confidence": 0.7104236990448921,
+        "student_entropy": 0.9231210507249512,
+        "teacher_entropy": 0.8103786734238986,
+        "gold_rows": 2,
+        "student_gold_accuracy": 0.0,
+        "teacher_gold_accuracy": 0.5
+      },
+      "arb": {
+        "n": 5,
+        "kl": 0.059351142556311576,
+        "teacher_agreement": 1.0,
+        "student_confidence": 0.5855251196294071,
+        "teacher_confidence": 0.7016976164366542,
+        "student_entropy": 1.0971038940594575,
+        "teacher_entropy": 0.8613331672394245,
+        "gold_rows": 0
+      },
+      "ary": {
+        "n": 5,
+        "kl": 0.3621178752296573,
+        "teacher_agreement": 0.6,
+        "student_confidence": 0.7757505165864533,
+        "teacher_confidence": 0.8560335981102508,
+        "student_entropy": 0.6472860531834445,
+        "teacher_entropy": 0.49064345671002807,
+        "gold_rows": 0
+      },
+      "de": {
+        "n": 65,
+        "kl": 0.170116480261387,
+        "teacher_agreement": 0.6923076923076923,
+        "student_confidence": 0.6599904731969143,
+        "teacher_confidence": 0.7476875209437149,
+        "student_entropy": 0.9110287661378851,
+        "teacher_entropy": 0.7680044652566274,
+        "gold_rows": 0
+      },
+      "en": {
+        "n": 715,
+        "kl": 0.12705530129070128,
+        "teacher_agreement": 0.8265734265734266,
+        "student_confidence": 0.684705834450893,
+        "teacher_confidence": 0.7382389723790709,
+        "student_entropy": 0.8395517147967054,
+        "teacher_entropy": 0.7486447454352303,
+        "gold_rows": 12,
+        "student_gold_accuracy": 0.8333333333333334,
+        "teacher_gold_accuracy": 0.8333333333333334
+      },
+      "es": {
+        "n": 70,
+        "kl": 0.14395488013944177,
+        "teacher_agreement": 0.7714285714285715,
+        "student_confidence": 0.6535743636525312,
+        "teacher_confidence": 0.709144626707646,
+        "student_entropy": 0.9080752533201345,
+        "teacher_entropy": 0.8184604511555671,
+        "gold_rows": 1,
+        "student_gold_accuracy": 1.0,
+        "teacher_gold_accuracy": 1.0
+      },
+      "fr": {
+        "n": 35,
+        "kl": 0.13320542831847465,
+        "teacher_agreement": 0.7428571428571429,
+        "student_confidence": 0.6775904086852159,
+        "teacher_confidence": 0.6968298691067198,
+        "student_entropy": 0.8684519318794705,
+        "teacher_entropy": 0.8272284802262286,
+        "gold_rows": 1,
+        "student_gold_accuracy": 1.0,
+        "teacher_gold_accuracy": 1.0
+      },
+      "fra": {
+        "n": 10,
+        "kl": 0.040428695647816267,
+        "teacher_agreement": 0.9,
+        "student_confidence": 0.7559221384854155,
+        "teacher_confidence": 0.8193954280650271,
+        "student_entropy": 0.7093262916304759,
+        "teacher_entropy": 0.6092179325645749,
+        "gold_rows": 0
+      },
+      "guj": {
+        "n": 5,
+        "kl": 0.159310447415271,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.7639142346576555,
+        "teacher_confidence": 0.7640050480568016,
+        "student_entropy": 0.7023737248284684,
+        "teacher_entropy": 0.7024627485710009,
+        "gold_rows": 0
+      },
+      "hi": {
+        "n": 65,
+        "kl": 0.17443985683224691,
+        "teacher_agreement": 0.6615384615384615,
+        "student_confidence": 0.6022468027352851,
+        "teacher_confidence": 0.7016142350733964,
+        "student_entropy": 0.9554864965600979,
+        "teacher_entropy": 0.7846434302412564,
+        "gold_rows": 2,
+        "student_gold_accuracy": 1.0,
+        "teacher_gold_accuracy": 1.0
+      },
+      "hin": {
+        "n": 5,
+        "kl": 0.04839735261503521,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.6052768831257532,
+        "teacher_confidence": 0.6761874726793935,
+        "student_entropy": 0.9507033207370561,
+        "teacher_entropy": 0.8909104620543188,
+        "gold_rows": 0
+      },
+      "ibo": {
+        "n": 5,
+        "kl": 0.03609713020342609,
+        "teacher_agreement": 1.0,
+        "student_confidence": 0.7410220572189206,
+        "teacher_confidence": 0.7744456107249498,
+        "student_entropy": 0.8023762828233855,
+        "teacher_entropy": 0.7272882507955516,
+        "gold_rows": 0
+      },
+      "ja": {
+        "n": 50,
+        "kl": 0.10772502255485698,
+        "teacher_agreement": 0.74,
+        "student_confidence": 0.6457642488348178,
+        "teacher_confidence": 0.7045627592227602,
+        "student_entropy": 0.8595007705907273,
+        "teacher_entropy": 0.7847188786628032,
+        "gold_rows": 2,
+        "student_gold_accuracy": 0.0,
+        "teacher_gold_accuracy": 1.0
+      },
+      "kir": {
+        "n": 10,
+        "kl": 0.2328372600091805,
+        "teacher_agreement": 0.7,
+        "student_confidence": 0.6241733932530934,
+        "teacher_confidence": 0.7327696137343341,
+        "student_entropy": 0.9563930832267491,
+        "teacher_entropy": 0.7624571627700408,
+        "gold_rows": 0
+      },
+      "ko": {
+        "n": 45,
+        "kl": 0.12372947794712136,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.7240486299374405,
+        "teacher_confidence": 0.7940469324120234,
+        "student_entropy": 0.7134181387927915,
+        "teacher_entropy": 0.6010596558805728,
+        "gold_rows": 0
+      },
+      "mar": {
+        "n": 5,
+        "kl": 0.06050660808305471,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.683166380998448,
+        "teacher_confidence": 0.7458402791983847,
+        "student_entropy": 0.8738116703708461,
+        "teacher_entropy": 0.794290370393181,
+        "gold_rows": 0
+      },
+      "pan": {
+        "n": 5,
+        "kl": 0.21501095468633516,
+        "teacher_agreement": 0.4,
+        "student_confidence": 0.6077746752221329,
+        "teacher_confidence": 0.5563396555673349,
+        "student_entropy": 0.9438205469436888,
+        "teacher_entropy": 1.017107968599864,
+        "gold_rows": 0
+      },
+      "pbt": {
+        "n": 5,
+        "kl": 0.2021036731506196,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.6962249981912286,
+        "teacher_confidence": 0.6880107751583038,
+        "student_entropy": 0.8266792740519616,
+        "teacher_entropy": 0.7461005499284502,
+        "gold_rows": 0
+      },
+      "por": {
+        "n": 5,
+        "kl": 0.45432863601947837,
+        "teacher_agreement": 0.6,
+        "student_confidence": 0.6593824403134981,
+        "teacher_confidence": 0.7916431782268771,
+        "student_entropy": 0.963672904282884,
+        "teacher_entropy": 0.6602858565366324,
+        "gold_rows": 0
+      },
+      "sin": {
+        "n": 5,
+        "kl": 0.16642793905313524,
+        "teacher_agreement": 1.0,
+        "student_confidence": 0.66995683491932,
+        "teacher_confidence": 0.7744216428598144,
+        "student_entropy": 0.8913622222279299,
+        "teacher_entropy": 0.6429293036847678,
+        "gold_rows": 0
+      },
+      "som": {
+        "n": 5,
+        "kl": 0.2152324472083263,
+        "teacher_agreement": 0.8,
+        "student_confidence": 0.5982661225723509,
+        "teacher_confidence": 0.5816810668688398,
+        "student_entropy": 0.9859300975454754,
+        "teacher_entropy": 1.0315097708078518,
+        "gold_rows": 0
+      },
+      "tam": {
+        "n": 10,
+        "kl": 0.3454350422889628,
+        "teacher_agreement": 0.6,
+        "student_confidence": 0.621893511473419,
+        "teacher_confidence": 0.6890785840728876,
+        "student_entropy": 1.0024604976697629,
+        "teacher_entropy": 0.8714681431115088,
+        "gold_rows": 0
+      },
+      "tel": {
+        "n": 10,
+        "kl": 0.15950159855020704,
+        "teacher_agreement": 0.7,
+        "student_confidence": 0.5998311928435106,
+        "teacher_confidence": 0.6860077836474362,
+        "student_entropy": 1.0359144288551074,
+        "teacher_entropy": 0.898824337923163,
+        "gold_rows": 0
+      },
+      "th": {
+        "n": 60,
+        "kl": 0.16418477667643988,
+        "teacher_agreement": 0.7833333333333333,
+        "student_confidence": 0.5895230396841388,
+        "teacher_confidence": 0.6850580287382585,
+        "student_entropy": 1.0752315225094644,
+        "teacher_entropy": 0.8837142473873036,
+        "gold_rows": 0
+      },
+      "vie": {
+        "n": 5,
+        "kl": 0.18242080760503349,
+        "teacher_agreement": 0.6,
+        "student_confidence": 0.694213139946093,
+        "teacher_confidence": 0.7789512661091103,
+        "student_entropy": 0.7370932037889941,
+        "teacher_entropy": 0.5631846706227752,
+        "gold_rows": 0
+      },
+      "yor": {
+        "n": 5,
+        "kl": 0.1334241119288298,
+        "teacher_agreement": 0.6,
+        "student_confidence": 0.7015290950321311,
+        "teacher_confidence": 0.7201634285599051,
+        "student_entropy": 0.828780006972004,
+        "teacher_entropy": 0.7944199615428837,
+        "gold_rows": 0
+      },
+      "zh": {
+        "n": 75,
+        "kl": 0.15574493770601505,
+        "teacher_agreement": 0.76,
+        "student_confidence": 0.655763491289437,
+        "teacher_confidence": 0.6991661339767531,
+        "student_entropy": 0.87147283721943,
+        "teacher_entropy": 0.7908639591849079,
+        "gold_rows": 1,
+        "student_gold_accuracy": 0.0,
+        "teacher_gold_accuracy": 1.0
+      },
+      "zho": {
+        "n": 5,
+        "kl": 0.13790666975462768,
+        "teacher_agreement": 1.0,
+        "student_confidence": 0.6628341090709908,
+        "teacher_confidence": 0.8368123455055974,
+        "student_entropy": 0.8918736887634433,
+        "teacher_entropy": 0.5588244707315327,
+        "gold_rows": 0
+      },
+      "zsm": {
+        "n": 20,
+        "kl": 0.03388489952501052,
+        "teacher_agreement": 0.9,
+        "student_confidence": 0.7570609918851477,
+        "teacher_confidence": 0.7690429788604242,
+        "student_entropy": 0.7361913258427464,
+        "teacher_entropy": 0.7059800395557408,
+        "gold_rows": 0
+      }
+    }
+  },
+  "scope": "Descriptive analysis of the original teacher-validation split, permitted for training monitoring. No public test, authored confirmation, inference or fitting. Targets are the original fixed type-temperature, two-order teacher distributions; this is agreement with that teacher, not general accuracy.",
+  "validation_rows_sha256": "845afbf0815560709551b3b179ee54b9021b008d2f89d8877caa45a480661b4d"
+}
