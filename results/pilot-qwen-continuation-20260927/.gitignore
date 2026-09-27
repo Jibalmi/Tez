@@ -1,2 +1,3 @@
 *.log
 executed_source/
+**/validation_rows.jsonl

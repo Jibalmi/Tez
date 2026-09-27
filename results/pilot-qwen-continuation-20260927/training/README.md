@@ -67,3 +67,14 @@ non-finite values, modified validation inputs and incomplete selection inputs. T
 and reproduced its validation metrics. No trained checkpoint was selected or exported. A selected
 Qwen export must still pass its own GPU reload check before public evaluation. The format follows
 the [PEFT checkpoint documentation](https://huggingface.co/docs/peft/developer_guides/checkpoint).
+
+The selected model's [reload worker](../../../experiments/small_model/qwen_continuation_reload.py)
+and [protocol](../../../experiments/small_model/qwen_continuation_reload_registration.json) are
+also ready. Before loading a model, the worker binds the chosen adapter, config, metadata,
+checkpoint, selected validation predictions and selection record by content hash. It reuses the
+unchanged validation routine on all 1,390 held-out decisions and requires exact argmax agreement,
+maximum probability difference at most 0.000001 and mean total variation at most 0.0000001.
+The independent report recomputes both probability parity and the saved validation metrics.
+Three CPU tests verify that it rejects a different chosen step, changed registration, missing
+validation, or an inconsistent unchanged-model flag. GPU reload is not launched until selection
+and export finish; these tests do not establish model parity. Completed failures will be retained.
