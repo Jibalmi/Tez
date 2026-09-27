@@ -1,7 +1,7 @@
 {
   "status": "registered_before_Tev1_public_execution",
   "registered_utc": "2026-09-27T08:53:03.875041+00:00",
-  "inference_registration_sha256": "7096c4743a7d2a52c58505cc8dd442e1046c44fa802d840ffc60ad9c9e95eab6",
+  "inference_registration_sha256": "b3b59dafeae3955255ab15ecb3c4b2c962ca991ff45f8d8f90f0f1d755878c67",
   "sources": {
     "experiments/small_model/report_tev1.py": "d88d25f72a80959c2d83dc972e156b13ea8ca51fed87610fc64945db7f00bf63",
     "experiments/small_model/report_gliner2.py": "f08cdbce3b73e5fa637fb28887301aafec2a4f107836663c81b8c529468bad9a",
@@ -57,5 +57,6 @@
     "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_semif_authored144_tez-s-decider08-native.jsonl": "69b02fa6a7f51e1982e383652d7cfa63cf7edf130e3eeb57b5e70b3079129ced",
     "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_semif_perturbations108_tez-s-decider08-native.jsonl": "9b703e40a75a9ff90227dc5a68bf6ec101c3569bdb9ac48c9c05be802c57f65b"
   },
-  "scope": "Recompute complete raw T=1 metrics and native input/logit checks, plus semantic F1 for app and intent labels. No fitting, selection or latency claims."
+  "scope": "Recompute complete raw T=1 metrics and native input/logit checks, plus semantic F1 for app and intent labels. No fitting, selection or latency claims.",
+  "resource_amended_utc": "2026-09-27T09:07:29.397515+00:00"
 }

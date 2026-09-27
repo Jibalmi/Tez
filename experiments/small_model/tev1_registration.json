@@ -13,7 +13,7 @@
     "results/pilot-tev1-eval-20260927/input_audit.json": "023a8234d81f9edd332881a42a171f45f660250d1106de5fca734e62eff34841"
   },
   "inference_sources": {
-    "experiments/small_model/eval_tev1.py": "644a5af64b4e226f2e821cfe3119072ab7ff5ca13c0656e8a5fde667d289ce56",
+    "experiments/small_model/eval_tev1.py": "c99e6057928e0fdf695844dd1d9ac71493b6b059c88d1e984882cf7ad3d4ebef",
     "experiments/small_model/tev1_adapter.py": "e11a8744474b0f43f246052ef4858dfe6eb5b7a42983544326ecbde4215a7695",
     "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
     "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
@@ -32,10 +32,13 @@
   "smoke": "Repeat all four frozen native probes before any public case. Require identical predictions and max probability delta <= 0.00001.",
   "evaluation": "All 6151 original public decisions in 21 tasks, plus all 1100 reversed-option MASSIVE cases. Raw accuracy, ECE15, NLL, Brier, typed soft accuracy, official SemIf family metrics and option-order flip. Option-index macro-F1 is diagnostic only; semantic macro-F1 can be recomputed for app and intent taxonomies.",
   "scope": "Exploratory utility comparison against already-observed public suites and frozen Qwen/Decider outputs; training exposures differ. No calibration fitting, training, threshold selection, quality-driven tuning or runtime promotion. Published hosted-model parity and development scores are not measured here.",
-  "compute": "Local shared run_heavy lock, four threads, original thermal governor/watchdog, 45-minute worker cap including loading. No paid endpoint or new cloud resource.",
+  "compute": "Local shared run_heavy lock, four threads, process-local hot=80/cool=76/every=0 thermal guard with 60-second timeout, wrapper max_gpu_c=84. Original hardware-throttle/free-memory safeguards. No cloud or paid endpoint. Worker deadline unchanged.",
   "failure_policy": "Stop and retain partial raw rows on source/model mismatch, smoke failure, context bound, memory, thermal or deadline error. No silently dropped cases or precision changes.",
   "references": [
     "https://huggingface.co/togethercomputer/Tev1-0.8B-experimental",
     "https://github.com/togethercomputer/tev1"
-  ]
+  ],
+  "resource_amended_utc": "2026-09-27T09:07:29.377619+00:00",
+  "previous_registration_sha256": "7096c4743a7d2a52c58505cc8dd442e1046c44fa802d840ffc60ad9c9e95eab6",
+  "resource_amendment": "Before any execution of this plan, tighten process-local thermal pacing to hot=80 C/cool=76 C before every call and run_heavy max_gpu_c=84 C after confirmed Windows host reboot with bugcheck 0x20001. Cause is not established. Model, inputs, probability limits and quality criteria are unchanged."
 }

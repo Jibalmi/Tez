@@ -1,0 +1,16 @@
+{
+    "source":  "https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/bug-check-0x20001--hypervisor-error",
+    "interpretation":  "Windows recorded an unexpected reboot and bugcheck 0x20001, HYPERVISOR_ERROR. Root cause and relationship to this workload are not established.",
+    "last_boot_utc":  "2026-09-27T08:59:47.5000000Z",
+    "bugcheck_parameters":  [
+                                "0x28",
+                                "0x1",
+                                "0x29b92701",
+                                "0xfc800000"
+                            ],
+    "created_utc":  "2026-09-27T08:59:52.2892604Z",
+    "event_id":  41,
+    "record_id":  228601,
+    "bugcheck_code_hex":  "0x20001",
+    "bugcheck_code_decimal":  "131073"
+}

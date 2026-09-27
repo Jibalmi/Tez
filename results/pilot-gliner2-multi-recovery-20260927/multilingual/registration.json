@@ -1,0 +1,57 @@
+{
+  "status": "registered_before_benchmark_execution",
+  "registered_utc": "2026-09-27T08:40:50.299181+00:00",
+  "purpose": "Matched utility comparison of released English and multilingual GLiNER decision checkpoints against frozen Qwen and Decider results.",
+  "preparation": "results/pilot-gliner2-discovery-20260927/preparation_attempt2.json",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "suite": "runs/pilot/student-prep-20260927-v2/eval-suites.json",
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "models": {
+    "english": {
+      "repository": "fastino/GLiNER2.5-Decide",
+      "revision": "7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6",
+      "probe": "results/pilot-gliner2-probe-attempt2-20260927/GLiNER2.5-Decide.json",
+      "probe_sha256": "5b22a2cf8a66c540b836d6b8b75b65bceb1c53844306463d27d2365c3ca8d1f7",
+      "probe_source_sha256": "267257c4f50b7ab97cde5848882cbf76b9c8e1e1a7e632970dc13ed22d8734d1"
+    },
+    "multilingual": {
+      "repository": "fastino/GLiNER2.5-multi-Decide",
+      "revision": "6bc1d43d201b0691e733626389af8c57eea3ea68",
+      "probe": "results/pilot-gliner2-probe-20260927/GLiNER2.5-multi-Decide.json",
+      "probe_sha256": "f64a792df2b2ff623791fc9a36797aa40c43d5b8a744d734035c47b76806078c",
+      "probe_source_sha256": "a7a1f8ac978494529adb4ea7a64007cb7bdf1bd761f3f4ab198cb1b8a115b90c"
+    }
+  },
+  "inference_sources": {
+    "experiments/small_model/gliner2_adapter.py": "3e91679ff0e4bd2058d779886b55736fdbea43123a625bc33f9ec5025e421177",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "data/semif/evaluate.py": "99d78df9d59b28ea2f0e58a2c6bab1eddce9e4835aad137c0118e40ac6802beb",
+    "data/semif/authored144.jsonl": "356f9728ef7280bebb792ac2ed0f49466cc4ec318a11f3ebd237d91f0a05815e",
+    "data/semif/perturbations108.jsonl": "91559297efc30dde4daa9ae174ecfc3aa2886e7774b587587dceeff574fb5bad",
+    "experiments/small_model/eval_gliner2_multi_recovery.py": "fe8fbe837cc6776a7f3e23bdc34f177d693ab59979a8252c84cb0f643aef3b7d"
+  },
+  "batch_size": 4,
+  "worker_timeout_seconds": 1800,
+  "checkpoint_deadline_seconds": 1740,
+  "inference": "Original FP32 weights, native eager fallback, flashdeberta disabled, independent records with native schema rendering. Tez render_state supplies the original state. No context truncation. Preserve exact instructions, option keys, descriptions and order. Read-only classifier hook recovers all logits; verify full softmax against every native answer/confidence.",
+  "batch_smoke": "Before any benchmark case, repeat the four frozen non-benchmark probe inputs in batches. Require identical native labels and maximum probability change <= 0.00001. No threshold relaxation.",
+  "evaluation": "All 6151 primary decisions in 21 original public tasks, plus 1100 reversed-option MASSIVE decisions. T=1 raw accuracy, ECE15, NLL, Brier, macro-F1, typed soft accuracy, official SemIf evaluator. No calibration fit, task routing, prompt selection, label-dependent configuration, or training.",
+  "scope": "These already-observed public tasks are exploratory regression comparisons, not fresh confirmation. Released competitor training membership is unknown; comparisons do not isolate architecture effects. GPU elapsed time includes model setup and thermal pauses and is not a valid latency result.",
+  "compute": "Local laptop only, one arm at a time through C:/temp/run_heavy.py, four threads, unchanged thermal rules. Thirty-minute worker cap including setup, with 29-minute checkpoints. No cloud spending.",
+  "failure_policy": "Stop and preserve raw partial rows/logs if input audit, smoke parity, memory, thermal or time limits fail. A partial result does not count as a completed benchmark. Do not silently truncate or change precision.",
+  "promotion": "No runtime promotion. Existing quality, calibration, option-order, probability-parity and target-laptop latency gates remain unchanged.",
+  "references": [
+    "https://huggingface.co/fastino/GLiNER2.5-Decide",
+    "https://huggingface.co/fastino/GLiNER2.5-multi-Decide",
+    "https://github.com/fastino-ai/GLiNER2"
+  ],
+  "attempt": 4,
+  "previous_registration_sha256": "78dc69d13647175330edce0ad64911958c3ab036523b943bab0c2a5d2f506cce",
+  "amendment": "The interrupted multilingual worker and its former tool handle are absent. Re-run the complete original suite with the same model, FP32 precision, batch four, inputs, native rendering, probability checks and bounds. Keep partial predictions separate; no splicing or overwrite.",
+  "interruption": "results/pilot-gliner2-eval-attempt2-20260927/interruption_multilingual.json",
+  "interruption_sha256": "9db96cc8c58fa1b1636ab98ecc75b1d6453797160049e983a06ec11dd99246d5"
+}

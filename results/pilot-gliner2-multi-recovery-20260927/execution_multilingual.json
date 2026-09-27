@@ -1,0 +1,7 @@
+{
+  "status": "running",
+  "arm": "multilingual",
+  "started_utc": "2026-09-27T08:55:44.520801+00:00",
+  "registration_sha256": "a05d8e463c1400e2665d3afb875ab87a8d96a659acfaafe61eeca4622779d697",
+  "timeout_seconds": 1800
+}

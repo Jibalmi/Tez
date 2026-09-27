@@ -1,0 +1,22 @@
+{
+  "status": "interrupted_by_host_reboot",
+  "observed_utc": "2026-09-27T09:05:46.385619+00:00",
+  "missing_session_id": 86274,
+  "previous_wrapper_pid": 16132,
+  "matching_processes_alive": 0,
+  "original_receipts_retained": true,
+  "last_progress": {
+    "task": "app_email_spam",
+    "completed_rows": 128
+  },
+  "partial_row_counts": {
+    "rows_app_email_spam.jsonl": 128,
+    "rows_app_guardrails_jailbreak.jsonl": 400,
+    "rows_app_model_routing_domain.jsonl": 399,
+    "rows_app_moderation_toxicity.jsonl": 400,
+    "rows_typed_decisions.jsonl": 2000
+  },
+  "rows_present": 3327,
+  "windows_evidence_sha256": "4122adaee5cf02455296a90ad7fa62f67b82c42a4a9024b2c5349c41f6aa9405",
+  "scope": "No complete score. The prior batch-four recovery also stopped at spam 128. Repeated location suggests checking resource use, but a hypervisor bugcheck does not establish GPU-memory or thermal causality."
+}

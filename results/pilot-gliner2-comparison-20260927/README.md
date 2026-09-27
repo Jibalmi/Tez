@@ -1,10 +1,13 @@
 # Complete GLiNER comparison assembly
 
-The [assembly registration](../../experiments/small_model/gliner2_comparison_registration.json)
-pins the separately registered English batch-one run and multilingual batch-four recovery.
+The [current assembly registration](../../experiments/small_model/gliner2_comparison_serial_registration.json)
+pins the separately registered English and multilingual batch-one runs. The preceding multilingual
+batch-four recovery was interrupted by a Windows reboot and remains archived. Its replacement
+also uses more conservative process-local thermal pacing; model inputs and quality checks are unchanged.
 Both must finish all 6,151 primary and 1,100 reversed-option decisions before the report can
 be generated. Incomplete and interrupted runs remain in their own archived directories.
-Run `experiments/small_model/report_gliner2.py --attempt 4` only after both complete.
+Run `experiments/small_model/report_gliner2_serial_assembly.py --attempt 4` only after both complete.
+The earlier assembly registration and reporter are retained as history.
 
 The original worker's `macro_f1` aggregates option indices. Those indices are not consistent
 semantic classes when each record has a different option order, as in MASSIVE. The analysis

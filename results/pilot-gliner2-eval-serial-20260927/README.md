@@ -1,5 +1,10 @@
 # GLiNER comparison with bounded English batch memory
 
+**Completed and independently verified:** all 6,151 primary decisions and 1,100 reversed-option
+intent decisions. [Results](RESULTS.md), [validation](validation_english.json), and
+[verified artifact receipt](artifact_receipt_english.json) preserve the complete serial arm.
+The multilingual recovery and final combined report remain separate.
+
 The previous English run passed its probability smoke and completed four tasks, then slowed
 on longer emails while total GPU memory was repeatedly near 15,943 of 16,303 MiB. Its owned
 worker processes were explicitly terminated and their absence verified; the driver recorded

@@ -36,6 +36,9 @@ def worker():
     spec = json.loads(REGISTRATION.read_text(encoding="utf-8"))
     prep, probe, suite = inputs(spec)
     import torch
+    import common
+    from functools import partial
+    common.thermal_guard = partial(common.thermal_guard, hot=80, cool=76, every=0.0)
     from common import THERMAL, thermal_guard
     from eval_gliner2 import raw_metrics
     from tev1_adapter import NativeTev

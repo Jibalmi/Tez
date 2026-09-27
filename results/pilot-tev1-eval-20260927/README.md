@@ -14,5 +14,8 @@ The context safety bound remains 4,096 tokens; exceeding it stops the run rather
 No calibration fitting, prompt selection or training uses these public cases. Training exposures
 differ between competitors, so this is a utility comparison and not a controlled architecture test.
 Model loading, thermal pauses and audit work make total job duration unsuitable as a latency score.
-The 45-minute worker bound, original thermal rules and all release gates remain in force.
+The 45-minute worker bound and all release gates remain in force. Before execution, resource
+pacing was tightened after a host reboot: pause at 80 C until 76 C, check before each case,
+and use the shared wrapper's 84 C ceiling. The original unexecuted plan is retained in
+`pre_reboot_plan/`; model settings and probability checks did not change.
 No hosted endpoint, new paid resource or runtime promotion is involved.

@@ -1,0 +1,41 @@
+{
+  "status": "registered_before_public_benchmark_execution",
+  "registered_utc": "2026-09-27T08:50:21.606392+00:00",
+  "preparation": "results/pilot-tev1-discovery-20260927/preparation.json",
+  "probe": "results/pilot-tev1-probe-20260927/probe.json",
+  "suite": "runs/pilot/student-prep-20260927-v2/eval-suites.json",
+  "input_audit": "results/pilot-tev1-eval-20260927/input_audit.json",
+  "native_helper": "runs/research/tev1-discovery-20260927/source/examples/decide.py",
+  "prerequisites": {
+    "results/pilot-tev1-discovery-20260927/preparation.json": "171f46619edc68dc7be1278551b4be53e5a9ea2985f683e0c8e5f9c668866536",
+    "results/pilot-tev1-probe-20260927/probe.json": "51963b6b7dd021134f9cf95da1c5695ce5e285c40f1c666f7d65dfae08f1b8d5",
+    "runs/pilot/student-prep-20260927-v2/eval-suites.json": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+    "results/pilot-tev1-eval-20260927/input_audit.json": "023a8234d81f9edd332881a42a171f45f660250d1106de5fca734e62eff34841"
+  },
+  "inference_sources": {
+    "experiments/small_model/eval_tev1.py": "644a5af64b4e226f2e821cfe3119072ab7ff5ca13c0656e8a5fde667d289ce56",
+    "experiments/small_model/tev1_adapter.py": "e11a8744474b0f43f246052ef4858dfe6eb5b7a42983544326ecbde4215a7695",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "experiments/small_model/eval_gliner2.py": "937bc9c7c1326a29bef642b4775597defcb497973e8d947152bcf7a128f31983",
+    "runs/research/tev1-discovery-20260927/source/examples/decide.py": "d0bfb6add3a9b87475737568613c40f48c8f0bc927574351ce558da87db640bb",
+    "runs/research/tev1-discovery-20260927/source/LICENSE": "78c317bb617d8048bdc3504d92fb728839940c1f30f76fb368d845b657299337",
+    "data/semif/evaluate.py": "99d78df9d59b28ea2f0e58a2c6bab1eddce9e4835aad137c0118e40ac6802beb",
+    "data/semif/authored144.jsonl": "356f9728ef7280bebb792ac2ed0f49466cc4ec318a11f3ebd237d91f0a05815e",
+    "data/semif/perturbations108.jsonl": "91559297efc30dde4daa9ae174ecfc3aa2886e7774b587587dceeff574fb5bad"
+  },
+  "batch_size": 1,
+  "context_bound": 4096,
+  "worker_timeout_seconds": 2700,
+  "checkpoint_deadline_seconds": 2640,
+  "inference": "Full pinned Tev1 0.8B released checkpoint, BF16, eager attention, native publisher system and JSON payload, thinking disabled, single-case forward, full final-position vocabulary logits. T=1 softmax over every supplied option letter. No truncation or prompt selection.",
+  "smoke": "Repeat all four frozen native probes before any public case. Require identical predictions and max probability delta <= 0.00001.",
+  "evaluation": "All 6151 original public decisions in 21 tasks, plus all 1100 reversed-option MASSIVE cases. Raw accuracy, ECE15, NLL, Brier, typed soft accuracy, official SemIf family metrics and option-order flip. Option-index macro-F1 is diagnostic only; semantic macro-F1 can be recomputed for app and intent taxonomies.",
+  "scope": "Exploratory utility comparison against already-observed public suites and frozen Qwen/Decider outputs; training exposures differ. No calibration fitting, training, threshold selection, quality-driven tuning or runtime promotion. Published hosted-model parity and development scores are not measured here.",
+  "compute": "Local shared run_heavy lock, four threads, original thermal governor/watchdog, 45-minute worker cap including loading. No paid endpoint or new cloud resource.",
+  "failure_policy": "Stop and retain partial raw rows on source/model mismatch, smoke failure, context bound, memory, thermal or deadline error. No silently dropped cases or precision changes.",
+  "references": [
+    "https://huggingface.co/togethercomputer/Tev1-0.8B-experimental",
+    "https://github.com/togethercomputer/tev1"
+  ]
+}
