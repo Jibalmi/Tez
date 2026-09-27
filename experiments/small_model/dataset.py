@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import dataclass
 
 import numpy as np
@@ -85,8 +86,12 @@ def load_examples() -> tuple[list[Example], list[Example], list[Example]]:
             decs.append(Decision(tq["qid"], q.type, q.instructions_text, opts, tgt, softmax(zo), gold))
         out.append(Example(sid, st["source"], st["lang"], st["state"], decs))
     out.sort(key=lambda e: hkey(e.id))
-    val = [e for e in out if hkey("val|" + e.id) < 0.05]
-    train = [e for e in out if hkey("val|" + e.id) >= 0.05]
+    # A later, added sample (ids with TEZ_PILOT_TRAIN_ONLY_PREFIX, e.g. "v2-") trains only, so the original
+    # 5 % validation split stays exactly the same states; unset, every state follows the hash rule as before.
+    only = os.environ.get("TEZ_PILOT_TRAIN_ONLY_PREFIX", "")
+    is_val = [hkey("val|" + e.id) < 0.05 and not (only and e.id.startswith(only)) for e in out]
+    val = [e for e, v in zip(out, is_val) if v]
+    train = [e for e, v in zip(out, is_val) if not v]
     return train, train[:2000], val
 
 

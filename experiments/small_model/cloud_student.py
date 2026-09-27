@@ -55,7 +55,7 @@ def prepare(output: Path):
     print(json.dumps(record), flush=True)
 
 
-def run(minutes: float):
+def run(minutes: float, qwen_arms: list[str] | None = None):
     manifest = json.loads((ROOT / "runs/student-input/manifest.json").read_text())
     for name, digest in manifest["files"].items():
         p = (ROOT / name).resolve()
@@ -71,12 +71,18 @@ def run(minutes: float):
             ("a-base-10k", "jhu-clsp/mmBERT-base", "10k", "3e-5"),
             ("a-small-30k", "jhu-clsp/mmBERT-small", "30k", "5e-5")]
     stages = []
+    if qwen_arms:   # only these Qwen control-recipe arms (train_c.py defaults), each trained then evaluated
+        arms = []
+        for arm in qwen_arms:
+            stages += [("train_" + arm, "train_c.py", ["--arm", arm, "--max-segments", "99"]),
+                       ("eval_" + arm, "eval_arms.py", ["--arm", arm])]
     for arm, backbone, data, lr in arms:
         stages += [("train_" + arm, "train_a.py", ["--arm", arm, "--backbone", backbone, "--data", data, "--lr", lr]),
                    ("eval_" + arm, "eval_arms.py", ["--arm", arm])]
-    stages += [("train_c-qwen08-30k", "train_c.py", ["--arm", "c-qwen08-30k", "--max-segments", "99"]),
-               ("eval_c-qwen08-30k", "eval_arms.py", ["--arm", "c-qwen08-30k"]),
-               ("eval_gliclass-x-base", "eval_arms.py", ["--arm", "gliclass-x-base"])]
+    if not qwen_arms:
+        stages += [("train_c-qwen08-30k", "train_c.py", ["--arm", "c-qwen08-30k", "--max-segments", "99"]),
+                   ("eval_c-qwen08-30k", "eval_arms.py", ["--arm", "c-qwen08-30k"]),
+                   ("eval_gliclass-x-base", "eval_arms.py", ["--arm", "gliclass-x-base"])]
     for name, script, arguments in stages:
         if (RESULTS / (name + ".json")).exists():
             continue
@@ -121,8 +127,9 @@ if __name__ == "__main__":
     prep.add_argument("--output", type=Path, required=True)
     execute = commands.add_parser("run")
     execute.add_argument("--minutes", type=float, default=50)
+    execute.add_argument("--qwen-arms", nargs="*", default=None, help="run only these Qwen control-recipe arms")
     args = parser.parse_args()
     if args.command == "prepare":
         prepare(args.output)
     else:
-        raise SystemExit(run(args.minutes))
+        raise SystemExit(run(args.minutes, args.qwen_arms))
