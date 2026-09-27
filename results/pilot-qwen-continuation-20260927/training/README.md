@@ -9,7 +9,9 @@ retains raw held-out predictions and inputs. Four bounded training segments are 
 successful checkpoint resumption. The [step-50 validation](attempt-05-validate-050/README.md)
 regressed on both registered metrics. The [step-100 validation](attempt-09-validate-100/README.md)
 recovered agreement (0.7906) but has the highest mean KL (0.1482); step zero (0.1401) still leads.
-Training toward step 150 is queued; no selected-checkpoint public-quality result is available yet.
+The first segment toward step 150 stopped on the thermal guard after nine updates and is
+[preserved](attempt-10-train-150/README.md); its retry waits for a cool, quiet machine. No
+selected-checkpoint public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training
