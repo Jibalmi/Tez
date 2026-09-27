@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "training_batches": 150,
+  "training_decisions": 2400,
+  "validation_decisions": 1390,
+  "max_training_tokens": 1650,
+  "max_validation_tokens": 1607,
+  "source_sha256": "5be4686e75113f3ebc5f11b26845e812dc6e2585372f9ebd513dc2dac3b7af4c",
+  "scope": "CPU one-thread tokenizer and input reconstruction only; no model loading, inference or training."
+}

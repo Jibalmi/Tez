@@ -1,0 +1,8 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T10:15:53.109343+00:00",
+  "registration_sha256": "3acc617242bc24cce3bd59833b33389d6f48e9ab7378abab103c89473cb6f93b",
+  "timeout_seconds": 300,
+  "returncode": 0,
+  "finished_utc": "2026-09-27T10:16:12.286609+00:00"
+}

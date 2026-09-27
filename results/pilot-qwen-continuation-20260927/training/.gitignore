@@ -1,0 +1,4 @@
+*.log
+**/*.log
+**/validation_rows.jsonl
+**/executed_source/

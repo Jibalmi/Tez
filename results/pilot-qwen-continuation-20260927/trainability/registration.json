@@ -1,0 +1,39 @@
+{
+  "status": "registered_before_training_probe",
+  "registered_utc": "2026-09-27T09:22:12.045605+00:00",
+  "sources": {
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "experiments/small_model/train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "experiments/small_model/competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "experiments/small_model/student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "experiments/small_model/dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "experiments/small_model/train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "experiments/small_model/qwen_trainability_probe.py": "b12dfc45a37a6bbc8ed3265e4ec7de188b18cf1ce994bd1f1675b2392fa384c1"
+  },
+  "prerequisites": {
+    "results/pilot-restricted-qwen-20260927/parity.json": "42af9e1da336ebd7cb70ececb54273a7343b68abdb8fef35d09b64de9e77b78d",
+    "results/pilot-restricted-qwen-20260927/analysis.json": "1c57bf809a31542c1cb8d59f13d7cbfdabbcbe7b17b9775e8bb7b27b5dda2fe3",
+    "runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/adapter/adapter_model.safetensors": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482",
+    "runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/adapter/adapter_config.json": "822abdd0056b86fd9a624832236ef34204dd14f8bf3b1bb0e0242323bdc7a827",
+    "runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/student.json": "5b11179f1a825c9cad44bbd4156061490e66b753c1ca74eca8adea9398c38b6a",
+    "runs/pilot-cloud-h200-20260927/manifest.json": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+    "results/pilot-qwen-continuation-20260927/preparation.json": "f7e67ced8ed02a74a8bae969dcdbc4624f442613211d19849ba560b6263dad2e",
+    "runs/pilot-qwen-continuation-20260927/schedule.json": "0153cc8b208004e0776ab7846c36cfde90495b98db73d6b9920bf1519573dc63"
+  },
+  "base_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "base_sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696",
+  "adapter_directory": "runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/adapter",
+  "teacher_directory": "runs/pilot-cloud-h200-20260927",
+  "schedule": "runs/pilot-qwen-continuation-20260927/schedule.json",
+  "context_bound": 2048,
+  "selection": "Deterministically use the longest already prepared training-only prompt; this chooses a resource stress input, never a public or validation example.",
+  "step": "One unmerged trainable-LoRA AdamW update at lr=5e-5, weight_decay=0, BF16 frozen base, original KL plus 0.5 gold CE when available, gradient checkpointing, clip norm 1.0, cache off. Batch one, no truncation.",
+  "acceptance": "Only LoRA parameters may require gradients. Loss and every LoRA gradient must be finite, total gradient norm positive, and at least one finite adapter tensor must change. Save no probe weights.",
+  "scope": "Training feasibility only, not a continuation candidate or measured quality improvement. The full continuation optimizer/selection/resume implementation remains pending after this probe.",
+  "compute": "Local shared run_heavy lock, four threads, process-local hot=80/cool=76/every=0, cooling deadline60 seconds, wrapper max_gpu_c=84, five-minute worker bound. No cloud resources or paid endpoint."
+}

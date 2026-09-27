@@ -1,0 +1,6 @@
+{
+  "sha256": "531afb8db1b3700dbc5f76724094ccaaec74d8128b62e782aeab709ffa49c365",
+  "bytes": 49766,
+  "files_verified": 19,
+  "scope": "Executed-source and receipt integrity. Gradients and probe weights were not retained, so this is not an independent numerical replay or a trained candidate."
+}

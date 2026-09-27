@@ -14,18 +14,19 @@ quantifies this defect without attributing the broad accuracy gap to it.
 The first preparation rejected the old context limit before training. Its source and failure
 record remain in `preparation_attempt1/`; the second preparation preserves complete inputs.
 
-Before implementing/running the full continuation, the [trainability probe](../../experiments/small_model/qwen_trainability_registration.json)
-will test one LoRA backward/update on the longest scheduled training prompt, under the shared
-compute lock and conservative 80/76 C pacing. It requires finite loss and gradients and a
-finite nonzero adapter update. It saves no weights and cannot serve as a candidate.
+The [trainability probe](trainability/README.md) passed one LoRA backward/update on the longest
+scheduled training prompt, under the shared compute lock and conservative 80/76 C pacing.
+Loss and every LoRA gradient were finite, and 372 adapter tensors changed. Probe weights were
+discarded; the probe cannot serve as a candidate or a training throughput measurement.
 
-The subsequent continuation should retain the unchanged checkpoint as step zero and select
-only from original validation data. Its full optimizer, checkpoint selection and resumable
-training driver remain to be registered and implemented. No training improvement or release
-gate is claimed from this preparation.
+The [registered continuation](training/README.md) retains the unchanged checkpoint as step zero
+and selects only from original validation data. Its optimizer, checkpoint selection, input
+reconstruction and resumable driver are implemented. The next operation is complete step-zero
+validation, including comparison with the frozen inference probabilities, before any training.
+No training improvement or release gate is claimed from this preparation.
 
-A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) is now prepared for
-that future driver. It saves only named trainable LoRA tensors, optimizer state, progress and
+A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) supports
+that driver. It saves only named trainable LoRA tensors, optimizer state, progress and
 random state; it refuses overwrite and verifies the registration, content hash and parameter
 layout on resume. A one-thread CPU toy test reproduces three subsequent AdamW updates and
 the random sequence exactly after restoring a checkpoint. Separate checks reject wrong hashes,
@@ -39,5 +40,5 @@ the accumulated loss and shared-parameter gradients with the original padded bat
 using variable option counts, zero-probability targets and missing gold. Other tests verify
 option-permutation invariance and reject malformed targets or gold indices. All three passed.
 This checks loss arithmetic; it does not establish full-model GPU gradient equivalence,
-successful continuation, improved quality or training speed. The queued trainability probe
-and all existing registrations are unchanged.
+successful continuation, improved quality or training speed. The completed trainability probe
+and its registration are unchanged.
