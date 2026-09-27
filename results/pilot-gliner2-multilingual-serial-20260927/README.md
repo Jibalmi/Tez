@@ -1,5 +1,12 @@
 # Multilingual GLiNER recovery after a Windows reboot
 
+The recovery completed all 6,151 original and 1,100 reversed-option decisions. The
+[combined independent analysis](../pilot-gliner2-comparison-20260927/RESULTS.md) verifies its
+raw rows, probability vectors, option-order checks and official SemIf metrics. Its
+[artifact receipt](../pilot-gliner2-comparison-20260927/artifact_receipt.json) covers this run.
+The worker recorded 841.41 seconds including setup and 18.07 seconds of thermal pauses,
+with a maximum sampled temperature of 81 C. This is operational elapsed time, not latency.
+
 The preceding batch-four run stopped after 3,327 rows. Its worker and queue handles disappeared,
 and scoped OS process inspection found no matching workers. Windows recorded an unexpected
 reboot at 08:59:52 UTC with bugcheck `0x20001` (`HYPERVISOR_ERROR`). This identifies a hypervisor

@@ -17,13 +17,14 @@ not a pooled leaderboard score. Native rendering is retained for released compet
 | Our Qwen 0.8B student | 50.15 | 64.09 | 89.22 | 85.75 | 60.25 | 70.50 |
 | Kev 0.8B | 49.10 | 61.27 | 84.96 | 89.00 | 64.25 | Not measured |
 | GLiNER2.5-Decide, English | 40.30 | 41.55 | 60.90 | 76.00 | 45.75 | Not measured |
+| GLiNER2.5-multi-Decide | 39.00 | 48.27 | 50.63 | 74.75 | 54.25 | Not measured |
 | Our encoder, 12 epochs | 39.05 | 51.73 | 58.65 | 85.50 | 53.75 | 35.61 |
 | Our encoder, rule continuation | 38.80 | 53.18 | 56.89 | 85.50 | 53.50 | 54.67 |
 
 Sources: [full public comparison, including all 16 configurations](COMPARISON.md),
 [encoder continuation](../pilot-reasoning-round2-20260927/RESULTS.md), and
 [fresh rule comparison](../pilot-reasoning-competitors-20260927/RESULTS.md), and
-[complete native English GLiNER run](../pilot-gliner2-eval-serial-20260927/RESULTS.md).
+[complete native GLiNER comparison](../pilot-gliner2-comparison-20260927/RESULTS.md).
 Each source links measurement receipts and archived raw predictions.
 
 Decider leads our Qwen student on six of seven application tasks; Qwen leads on routing.
@@ -80,16 +81,20 @@ the original attention kernels. Neither experiment establishes a measured speedu
 but have not been measured here and would be a different size/cost class. Published JevBench
 or DecisionIndex scores use different protocols and cannot be inserted into this table.
 
-English GLiNER is now verified on all 6,151 public decisions and 1,100 option-order checks.
-Its native FP32, batch-one checkpoint trails our Qwen student on the five public columns above.
-The English model's multilingual score should not stand in for its separate multilingual checkpoint.
-[Multilingual GLiNER](../pilot-gliner2-comparison-20260927/README.md)
-and [Together's Tev1 0.8B](../pilot-tev1-eval-20260927/README.md) remain pending and have no completed
-public score in this report yet. GLiNER's input-guard failure, English memory-driven cancellation
-and interrupted multilingual runs remain archived. Windows recorded a hypervisor bugcheck during
-the second multilingual attempt; causality is unresolved. A complete batch-one recovery with
-more conservative thermal pacing is registered separately.
-Tev1 passed its four-case native probability check and its full matched evaluation is registered.
+Both GLiNER checkpoints are verified on all 6,151 public decisions and 1,100 option-order checks each.
+Their native FP32, batch-one runs trail our Qwen student on the five public columns above. They
+are not uniformly worse: both score 53.50% on RAG relevance versus Qwen's 51.50%, and English
+GLiNER scores 54.92% on the official SemIf perturbation metric versus Qwen's 50.12%.
+Multilingual GLiNER improves its English counterpart's mean intent accuracy, but its 17.73%
+option-order flip rate still exceeds the later 10% requirement; English GLiNER flips 38.73%.
+These results do not measure either GLiNER model's speed or its published server implementation.
+The [complete comparison and archived raw predictions](../pilot-gliner2-comparison-20260927/RESULTS.md)
+retain every task, including those favoring the competitors. Earlier input-guard failures,
+the English memory-driven cancellation and interrupted multilingual runs remain archived.
+Windows recorded a hypervisor bugcheck during the second multilingual attempt; causality is
+unresolved. The separate batch-one recovery with conservative thermal pacing completed.
+[Together's Tev1 0.8B](../pilot-tev1-eval-20260927/README.md) passed its four-case native probability
+check and has started the full matched evaluation. It has no completed public score here yet.
 Availability, interface compatibility and published development scores are not measured quality wins.
 
 All cloud pods from the trial are terminated. The elapsed-rate estimate is $9.1452 of the

@@ -1,5 +1,11 @@
 # Complete GLiNER comparison assembly
 
+The [verified results](RESULTS.md) now include both complete native runs and the frozen Qwen
+and Decider references. The analysis checks 24,604 primary predictions and 2,200 reversed-option
+predictions. The [archive receipt](artifact_receipt.json) records a 5,218,815-byte bundle with
+147 verified files, including raw rows and executed sources. The archive remains unchanged;
+this completion notice was added after its creation.
+
 The [current assembly registration](../../experiments/small_model/gliner2_comparison_serial_registration.json)
 pins the separately registered English and multilingual batch-one runs. The preceding multilingual
 batch-four recovery was interrupted by a Windows reboot and remains archived. Its replacement

@@ -1,0 +1,1035 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T09:28:42.698849+00:00",
+  "registration_sha256": "275e1f16d10174701c7e9faf8f39843755ff5cd23c47a26e166401a48fefd054",
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "analysis_source_sha256": "7dc38f85bb55b8b4572853a52615ca34ddeea29bac9134a7b5ad8f6570cfd31a",
+  "prediction_hashes": {
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_typed_decisions.jsonl": "382057e94fa458ed660577db66a4f13406ca929516f9ff5f3cd672eb2728e9b0",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_model_routing_domain.jsonl": "34ff6fde91dd7b2ff3ff74f32096503d27c2a4b8724f0f6a0db3a243c67971ec",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_guardrails_jailbreak.jsonl": "f5848fa53ed8aae637f8ba1900ab7473321b8d5f44c6a9e96bc8eff6c939d0f3",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_moderation_toxicity.jsonl": "0b30e4b0b07489ab7d19b42819b84547c676d5303e36f9a4c29daabc2f788490",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_email_spam.jsonl": "d427657915b85ac6adfb009e65757a76dfc1dcca224bda923f66d3308466e913",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_phishing.jsonl": "7e4a194b9401ed01ba88448481df6ee51f99ec347b53e17e60d1610e41d8eecd",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_rag_relevance.jsonl": "a2103f6d9e239fdbd9683e7793d6c7dae7e8916d4b75350c52d67a624ba8669f",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_app_support_triage.jsonl": "4eba1ec176c82706506238327feb86b739066d7a9f0e899d12d91c5f3f009426",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_en_reversed.jsonl": "8ef0b5b3ad503f841fd96d12f908bafba2f77336dc4d87c1714a418a90210c8d",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_en.jsonl": "34d957d36591e55ef397c356a5de1d09b028d633d524069573d9cb3ac3e46b53",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_de_reversed.jsonl": "127c400b896d421b6b8a7199d889af6ec3d32f88db5d81017d1eb620d47bf1b0",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_de.jsonl": "eaeea956afdb25dd7b726e69cd8c250b95c7df5cad44968c36360f76252f65f6",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_fr_reversed.jsonl": "5d21f0b390be959fccddd81af74d5f478dfe8c06db6f2ce15ed45e9c4b52f05c",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_fr.jsonl": "66151af40a724c447689bb3c8802c7fbab887a1b8b7a95230a968a37ed9a8e14",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_es_reversed.jsonl": "ca2c58105ac5ba7501d3e24a0a81d771bf8d635785a7c5f079f975e75bc01bc3",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_es.jsonl": "19f2a666c91d7d9a5f22f4f61700dca96091a43ac50a809fba8acb525df56bb9",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ja_reversed.jsonl": "85d7680d05be39586c235bfb4e05c35b2ad13e4317c3880b8d0d922657e9a2f9",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ja.jsonl": "420532c1db769a4756d0c2e7fdb68bb77c7fb3591705a2e74d1614e869f8d7ef",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_zh-CN_reversed.jsonl": "b0146aa0870d000a343c7bb863924a6bf0ab41d542d479da1ff4b8ffbdd3026e",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_zh-CN.jsonl": "c6c25544032c98f83d6ba0e7e0e6fe48447a065c54f05d1f1ce55a6a4496c9ee",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ar_reversed.jsonl": "e33a4e88afd668980d8bda3027cd12d6ee19088a8cb5079a077c1be38ebe5d53",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ar.jsonl": "7fb7a841e64e777a8c4bde9c658e718d9466bf93f9f4a140c75ed29bde3b85cc",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_hi_reversed.jsonl": "7212f0dd7783608c05593af4b0be1218aa61c9c6dc5229e00d1f2834634d86ef",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_hi.jsonl": "870e81f6c8709521c549a7c151b3bd471e1dfd03a5ecb21db8fbae0169ea4bfc",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_th_reversed.jsonl": "43c39e8245e812451938a56d61e0bfe395d4f2d9b1dc96339bbc320a8d4a89cf",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_th.jsonl": "9afb5dc91bed3808bafb462bb842642bb0decfb84faf7244f8edc619ad68901d",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ko_reversed.jsonl": "6e9dca6dc44544192a60cdebea7387cd31092caa5ce56176a34287391fb2c031",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_ko.jsonl": "0e790c1186d63068524e4320ba36049c2f40eb690860442b186502e270ccea1d",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_km_reversed.jsonl": "aecf7efea0a1669cafd6d712b55ec6e81035abe5eb3795c45e7f8537b2fbb5f7",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_massive_km.jsonl": "ef8a33540a00547dc0e5137d742fe9c7a07f1b3d26c6ce681660d73cc7fe4d7e",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_semif_authored144.jsonl": "9c11b02809e0c742f3c4e678ccd6ad417b4334d143d54756a1023a81bf0687f5",
+    "results/pilot-gliner2-eval-serial-20260927/english/rows_semif_perturbations108.jsonl": "74ef802737c406e7d474cee00a3f31cbd319a6065eed4471592a6ba56423963d",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_typed_decisions.jsonl": "dd352541e6dd8bc964e1bf6b7f52bf4309c66a84118afd33896c169de43f00c5",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_model_routing_domain.jsonl": "ffd9aa2d928fc13e999fb4f29d6605de6ad4a8e7f0a07780a95914b640413d2d",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_guardrails_jailbreak.jsonl": "b32f10939e88b807aacb5bd7c23aa453d2122b7fb327ffd755422114643eef69",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_moderation_toxicity.jsonl": "1a6399986bb795247d123f26c948dada584b71cbab0ff7970acdf109d27b417e",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_email_spam.jsonl": "11bc2dc036bf68ae67b5342e3a414947e0eb6dbf46ff44d9afdcbc31446686ad",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_phishing.jsonl": "b1ae616f2967e62c605749756a7c2c57d921cc42a4fa475ca4eac6e489fec4ce",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_rag_relevance.jsonl": "e021fd7c3e78e26f5cb94e9eb510fc72c9d14292477ce8e1ed1b20a0ee9119b9",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_app_support_triage.jsonl": "4af986dda6039665d57d0615d8ee1a134ee6dac58aa47082a4148ea2571131d5",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_en_reversed.jsonl": "169c37b3df9fc866d789364622b2d9e591849ea58edb293ecc2d6e142fc7b4a6",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_en.jsonl": "dc2618c47e104342db127e320b6cf516a6f25b27add43f59803479533c00b70f",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_de_reversed.jsonl": "977a105f4c62de005c184f8daa92bb35e62ec4ee1fd50e5495e8c2584389339c",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_de.jsonl": "8af539344fa2724ead4347502a4ce62f27d4aef66060d1d5375af26c347f0e82",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_fr_reversed.jsonl": "eb08b1f3c8ed012935cc17aaf41e9344e500f645981d89621d8177e6bd44f9a2",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_fr.jsonl": "44a87f36c963ee15cedc15ac9df941d8e2c3b6135337c2645fa677c3c462769e",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_es_reversed.jsonl": "fa41e862e887fab1ef53a7e8c49e22c54244c62843dc2518d01f14ed3af0286a",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_es.jsonl": "c9d81260eb208111a5320a9a40e68529092463181c3a6a816763c808857971de",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ja_reversed.jsonl": "193bf652d63421c30c435cb7923e3d69554c81ecdd4f80c73d2ec0b02369b7fc",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ja.jsonl": "5a44cb85603808e598f0699135c3b3da35fa8a7429badc6f1b99f313ad281af6",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_zh-CN_reversed.jsonl": "172d823224ac25320668e4b36d842c9cb2d47420060c5d4f9a8f792916139f1f",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_zh-CN.jsonl": "3198f37e55712b927ca782435f51eeb07aa8341ed9ac9b6f5258bd0b5e7642bb",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ar_reversed.jsonl": "abcd6ec801dd1d0428ebe682c2279bf36daec6e3e974b5e8baee466d26beee8f",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ar.jsonl": "2a8cf86f9aa82de5e784f0c92543fb746017146d56498594d01a853c78c50a68",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_hi_reversed.jsonl": "d63d1e970eaf71e2f260e07e2029984f95ba53c39db0bd5388762eb7ddeaac83",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_hi.jsonl": "9fcf8953836d4c0c4c1e2477e56b25b27fd048fb0f7a20c72f607dee3fda82e6",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_th_reversed.jsonl": "0675740490b5f809bc4fc63770a80f323e2dce2274affabd25875f3d8ec663f1",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_th.jsonl": "83d5ec5653f50680b6b9484822da053e8e72111b6982f22455cac60e56664e2f",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ko_reversed.jsonl": "212142407cec306546f15d6bd38c5fe49dc5d9e789ea86a2f8b9875190080d5f",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_ko.jsonl": "dc575fd77e079746a4b0b38031d32832220d8810aac90cf570e746524b0e89c2",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_km_reversed.jsonl": "2ef7afb27d1ef19feda2a565da754aeabac4ba211ed68604d7157eaf9db1bb34",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_massive_km.jsonl": "e34e28963f0cd35985eebb1a8725e6b0c353fcec1859f0eb5ce6fb2301a53135",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_semif_authored144.jsonl": "243f98591a4c0fcb30060f29de1f93c86b780b1fa96e6c0744fab86241f2304d",
+    "results/pilot-gliner2-multilingual-serial-20260927/multilingual/rows_semif_perturbations108.jsonl": "3637c86c540bab3c73c32a851e7e7a86ab58d14b7105874090653d060a2eabbb",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_typed_decisions_tez-s-c-qwen08-30k.jsonl": "d888d0b779bbc902ed8aee1d090a1488f2b96df5ad02ba314aea3dba90b646a9",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_model_routing_domain_tez-s-c-qwen08-30k.jsonl": "37d273c3fb8f370b6c36dfb86afe5c1eacc706270b5bace680f008d6c24cd1de",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_guardrails_jailbreak_tez-s-c-qwen08-30k.jsonl": "dd507c2346af2c8ccc27622d1fd53b7b592f638e31d99b6f9488c517ce7157ae",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_moderation_toxicity_tez-s-c-qwen08-30k.jsonl": "022c8d76fd350e4c03da4db5ad7c037aa29eb49c340e605ca66a39b47fb25fc6",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_email_spam_tez-s-c-qwen08-30k.jsonl": "c6e455a8a46f6396ed81ca924485576bd9c7fae9263e0eb9e35d6dd3de7cb9fc",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_phishing_tez-s-c-qwen08-30k.jsonl": "f104872816e03f8e26a356f7e90d3c33f505d7001206ca86f4988307ed849112",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_rag_relevance_tez-s-c-qwen08-30k.jsonl": "c0b4243754693ecb81f6b8264553e58c8a6385bb8c01b1e354c52f9f0912902e",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_app_support_triage_tez-s-c-qwen08-30k.jsonl": "f3cbfa4add61b4851748f90202db2e3c4edb5fbccdf4cb0f2c5296a2f778798a",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_en_tez-s-c-qwen08-30k.jsonl": "d05e5654c4716e9bc79ed86d6c759d15a7db2c867d587bb492ec9e8e529e56bc",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_de_tez-s-c-qwen08-30k.jsonl": "2e4ffb63bcf2cca6972e0a1d0cf376e39fe426053a935b0b822e51d1f464c000",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_fr_tez-s-c-qwen08-30k.jsonl": "40d367194f4713b36c84b639dc4c1358c09d3c777eca96443a396b0a2e100ade",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_es_tez-s-c-qwen08-30k.jsonl": "d13824660054485ece445dbafcf3ac366ef1decf7413d8f75be4b67f088d5ad7",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_ja_tez-s-c-qwen08-30k.jsonl": "ace2e1c842e397fd03b158248d10534f0c6c4c0731fa87ed9dbde1ab411c4b1c",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_zh-CN_tez-s-c-qwen08-30k.jsonl": "93f00bde357be42d8b5076f8cc643b4c171c6678482a2a6793d2b50b3e51f09e",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_ar_tez-s-c-qwen08-30k.jsonl": "34bf7ce0f56642690078f232332d7e53910ed29bee4a146a6ef3ba12c31f7afd",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_hi_tez-s-c-qwen08-30k.jsonl": "21d95ff13e5c9315f4d6ec831000aeaf875c33fff9bece0e207e76864cf064f8",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_th_tez-s-c-qwen08-30k.jsonl": "b8bd2ef8c9a9bc0638f2ff78181eb59689c648f078250ea495ff8ee3cc20b5dd",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_ko_tez-s-c-qwen08-30k.jsonl": "ecf75bcbcf303690d68c388ddffcbcec0ad3db862df2e68f8389933cfcea2222",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_massive_km_tez-s-c-qwen08-30k.jsonl": "a73ef99f3f51272c9a0407976bd8cb47999470fd08cbe167ee1df583a33dad7e",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_semif_authored144_tez-s-c-qwen08-30k.jsonl": "aee96448079c719d5d977674623f209242a777f729bfe06995dada3c232a51e1",
+    "runs/student-artifacts-h200-20260927/results/pilot-student-h200-20260927/rows/rows_semif_perturbations108_tez-s-c-qwen08-30k.jsonl": "9f70369579e65c24ae48d0db518616d3ea0de53bb757085896f80e426bc3e5da",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_typed_decisions_tez-s-decider08-native.jsonl": "17aa49196a9708ccedace3fa869e8bc7e43747f443b5b7d3f861577ade9d43c1",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_model_routing_domain_tez-s-decider08-native.jsonl": "0c463c833e0100052007a23c9e6b28129b64b4e8d3cb979fcfd6517309882dac",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_guardrails_jailbreak_tez-s-decider08-native.jsonl": "b309a120fe375162b4957b48e9f8bcca84102feaf50c2812ba0fede0295b9d6a",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_moderation_toxicity_tez-s-decider08-native.jsonl": "a65d35ab03fdad3a46efafb40c925772b9abafb413098b1ed35d72d021c96b98",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_email_spam_tez-s-decider08-native.jsonl": "22bf8358dbc060a5db835aabaa832dd55b508a616076d4666097d7f6b6e7f015",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_phishing_tez-s-decider08-native.jsonl": "e4fb7a880a15bc7b1329cb8282332db3c32aeaea051baa32a820922d8d99b2c3",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_rag_relevance_tez-s-decider08-native.jsonl": "bd245c3ac7452e52f83f3ddcd0842da738a5133e9cddd77c7d479c7fe9e15d72",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_app_support_triage_tez-s-decider08-native.jsonl": "f5b9dc8fe14a12b840c0f0ccf3f07a7040fdef18d467b6e04c1a96d4a416211c",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_en_tez-s-decider08-native.jsonl": "ca05a79525f4553dbc94ca166802c9e38386172b95955e4d8c5fd2e475cfa05b",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_de_tez-s-decider08-native.jsonl": "5a7ac401d00ad20b8a13bc1dcb2eb1aa35e73bd285a36422deccbc0b3f59085b",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_fr_tez-s-decider08-native.jsonl": "e0ffb6285fabcbdd4c3c795a4ce0caa6b0372d6b0ba25a2d222e9720fd29ae56",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_es_tez-s-decider08-native.jsonl": "50ec6b1f43b6a8ca1c8bd7bc412cc3b17c4dd90ef1a26266ebd26847a35fe795",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_ja_tez-s-decider08-native.jsonl": "55a227c544a68efb3a767668a9f5496932a0c1cea0a59ab54f596ebdbf25512a",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_zh-CN_tez-s-decider08-native.jsonl": "f6ca4175f5c9589b160b3b7fcaa69e7c50952ca2f2411f838e728a9252f27152",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_ar_tez-s-decider08-native.jsonl": "55fe57180347e958eb67edb4a99f10a5b5fd1fd27e17f7b1248d2f3cee0e8ef2",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_hi_tez-s-decider08-native.jsonl": "89dea7a2bec622ea019b69842baf7f4378829a19f73ddb6d6ebb53f55ac375b4",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_th_tez-s-decider08-native.jsonl": "9052ec77f922f6d3d9ee170f68e06eb32b624ead5fbadc392821028e408d7cbc",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_ko_tez-s-decider08-native.jsonl": "c49cbb261dda46ed907506f82867b86a00abd184e4ad5763a227d930f1f3893e",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_massive_km_tez-s-decider08-native.jsonl": "8d8f06453ac73e4ddb12f66b91f03dcad2e99c66eceb1a23d21d291e74d94fe3",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_semif_authored144_tez-s-decider08-native.jsonl": "69b02fa6a7f51e1982e383652d7cfa63cf7edf130e3eeb57b5e70b3079129ced",
+    "runs/improvement-artifacts-h200-20260927/results/pilot-improvement-20260927/rows/rows_semif_perturbations108_tez-s-decider08-native.jsonl": "9b703e40a75a9ff90227dc5a68bf6ec101c3569bdb9ac48c9c05be802c57f65b"
+  },
+  "scores": {
+    "english": {
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.403,
+        "ece": 0.13514392187817528,
+        "nll": 1.145429977229263,
+        "brier": 0.667037387598724,
+        "soft_accuracy": 0.36487155111890024,
+        "option_index_macro_f1_diagnostic": 0.4339024919601445
+      },
+      "app_model_routing_domain": {
+        "n": 399,
+        "accuracy": 0.6090225563909775,
+        "ece": 0.1587844584078706,
+        "nll": 1.1694415145296226,
+        "brier": 0.5445299974885478,
+        "option_index_macro_f1_diagnostic": 0.37638211669375543,
+        "semantic_macro_f1": 0.37638211669375543
+      },
+      "app_guardrails_jailbreak": {
+        "n": 400,
+        "accuracy": 0.76,
+        "ece": 0.17365807345128353,
+        "nll": 0.6011179258004682,
+        "brier": 0.4078293917581034,
+        "option_index_macro_f1_diagnostic": 0.4940711462450593,
+        "semantic_macro_f1": 0.4940711462450593
+      },
+      "app_moderation_toxicity": {
+        "n": 400,
+        "accuracy": 0.4575,
+        "ece": 0.16655399899781886,
+        "nll": 0.7781064292448423,
+        "brier": 0.5791021285859559,
+        "option_index_macro_f1_diagnostic": 0.3829924864407623,
+        "semantic_macro_f1": 0.3829924864407623
+      },
+      "app_email_spam": {
+        "n": 400,
+        "accuracy": 0.3225,
+        "ece": 0.2846971703268771,
+        "nll": 0.8283608909208935,
+        "brier": 0.6282554795160009,
+        "option_index_macro_f1_diagnostic": 0.28721256715259835,
+        "semantic_macro_f1": 0.28721256715259835
+      },
+      "app_phishing": {
+        "n": 400,
+        "accuracy": 0.7075,
+        "ece": 0.029799095566922656,
+        "nll": 0.5610829293684202,
+        "brier": 0.3814545769829502,
+        "option_index_macro_f1_diagnostic": 0.6686279924379208,
+        "semantic_macro_f1": 0.6686279924379208
+      },
+      "app_rag_relevance": {
+        "n": 400,
+        "accuracy": 0.535,
+        "ece": 0.16209583581682754,
+        "nll": 0.751832136026405,
+        "brier": 0.5513052100095553,
+        "option_index_macro_f1_diagnostic": 0.4998790029845931,
+        "semantic_macro_f1": 0.4998790029845931
+      },
+      "app_support_triage": {
+        "n": 400,
+        "accuracy": 0.4275,
+        "ece": 0.0572062713399562,
+        "nll": 1.731959357074068,
+        "brier": 0.7446276476680677,
+        "option_index_macro_f1_diagnostic": 0.4182048384755939,
+        "semantic_macro_f1": 0.4182048384755939
+      },
+      "massive_en": {
+        "n": 100,
+        "accuracy": 0.8,
+        "ece": 0.2387618615045715,
+        "nll": 0.925650430506815,
+        "brier": 0.33325988221705677,
+        "option_index_macro_f1_diagnostic": 0.7737609612609613,
+        "semantic_macro_f1": 0.5813908694791048,
+        "order_flip": 0.12
+      },
+      "massive_de": {
+        "n": 100,
+        "accuracy": 0.64,
+        "ece": 0.2588507503576037,
+        "nll": 1.4597354066247579,
+        "brier": 0.5541741711182859,
+        "option_index_macro_f1_diagnostic": 0.6500799785010312,
+        "semantic_macro_f1": 0.4219780917127097,
+        "order_flip": 0.25
+      },
+      "massive_fr": {
+        "n": 100,
+        "accuracy": 0.64,
+        "ece": 0.17422498113234405,
+        "nll": 1.3602813704886054,
+        "brier": 0.515248910475628,
+        "option_index_macro_f1_diagnostic": 0.5983359695859696,
+        "semantic_macro_f1": 0.45958394952183773,
+        "order_flip": 0.3
+      },
+      "massive_es": {
+        "n": 100,
+        "accuracy": 0.6,
+        "ece": 0.17041795360022183,
+        "nll": 1.4213119951781545,
+        "brier": 0.534336385599617,
+        "option_index_macro_f1_diagnostic": 0.5388309566250743,
+        "semantic_macro_f1": 0.4013642494034651,
+        "order_flip": 0.25
+      },
+      "massive_ja": {
+        "n": 100,
+        "accuracy": 0.65,
+        "ece": 0.19461924192495372,
+        "nll": 1.1839123848686388,
+        "brier": 0.46285414726562224,
+        "option_index_macro_f1_diagnostic": 0.6341778390691435,
+        "semantic_macro_f1": 0.415638813682292,
+        "order_flip": 0.21
+      },
+      "massive_zh-CN": {
+        "n": 100,
+        "accuracy": 0.54,
+        "ece": 0.17377196540496329,
+        "nll": 1.5177856717862264,
+        "brier": 0.5741789852437758,
+        "option_index_macro_f1_diagnostic": 0.5218777056277056,
+        "semantic_macro_f1": 0.3166789904367544,
+        "order_flip": 0.28
+      },
+      "massive_ar": {
+        "n": 100,
+        "accuracy": 0.2,
+        "ece": 0.16025297287058637,
+        "nll": 2.8715636416866714,
+        "brier": 0.91945518266679,
+        "option_index_macro_f1_diagnostic": 0.16650560224089633,
+        "semantic_macro_f1": 0.11941937205095099,
+        "order_flip": 0.49
+      },
+      "massive_hi": {
+        "n": 100,
+        "accuracy": 0.11,
+        "ece": 0.1540532644593616,
+        "nll": 3.0608086572326196,
+        "brier": 0.9596071565526572,
+        "option_index_macro_f1_diagnostic": 0.10174603174603174,
+        "semantic_macro_f1": 0.07217668937822982,
+        "order_flip": 0.65
+      },
+      "massive_th": {
+        "n": 100,
+        "accuracy": 0.01,
+        "ece": 0.20237193215398802,
+        "nll": 3.353554630833571,
+        "brier": 1.0175905863989907,
+        "option_index_macro_f1_diagnostic": 0.004347826086956522,
+        "semantic_macro_f1": 0.002962962962962963,
+        "order_flip": 0.63
+      },
+      "massive_ko": {
+        "n": 100,
+        "accuracy": 0.37,
+        "ece": 0.14719952879058146,
+        "nll": 2.0955245095900845,
+        "brier": 0.732459056129765,
+        "option_index_macro_f1_diagnostic": 0.36699610030492386,
+        "semantic_macro_f1": 0.18323677230210805,
+        "order_flip": 0.43
+      },
+      "massive_km": {
+        "n": 100,
+        "accuracy": 0.01,
+        "ece": 0.2517210811502244,
+        "nll": 3.528307880643076,
+        "brier": 1.0516491431182602,
+        "option_index_macro_f1_diagnostic": 0.00625,
+        "semantic_macro_f1": 0.004761904761904762,
+        "order_flip": 0.65
+      },
+      "semif_authored144": {
+        "n": 144,
+        "accuracy": 0.6736111111111112,
+        "ece": 0.15217856464186263,
+        "nll": 0.8447870401207925,
+        "brier": 0.48966640712601034,
+        "option_index_macro_f1_diagnostic": 0.6697234302411852,
+        "semif_mean_family_balanced_accuracy": 0.678345373237014
+      },
+      "semif_perturbations108": {
+        "n": 108,
+        "accuracy": 0.5555555555555556,
+        "ece": 0.10320109009590513,
+        "nll": 0.9669668414461081,
+        "brier": 0.5758789304775283,
+        "option_index_macro_f1_diagnostic": 0.5525941855055779,
+        "semif_mean_family_balanced_accuracy": 0.5492063492063491
+      }
+    },
+    "multilingual": {
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.39,
+        "ece": 0.1504475846283707,
+        "nll": 1.2043860605689,
+        "brier": 0.7007986273636984,
+        "soft_accuracy": 0.3546470499371846,
+        "option_index_macro_f1_diagnostic": 0.38624809538285987
+      },
+      "app_model_routing_domain": {
+        "n": 399,
+        "accuracy": 0.506265664160401,
+        "ece": 0.22375080229196448,
+        "nll": 1.3735050529548902,
+        "brier": 0.7037006589333996,
+        "option_index_macro_f1_diagnostic": 0.24081775102194336,
+        "semantic_macro_f1": 0.24081775102194336
+      },
+      "app_guardrails_jailbreak": {
+        "n": 400,
+        "accuracy": 0.7475,
+        "ece": 0.173110820681552,
+        "nll": 0.5888752169501863,
+        "brier": 0.39761581799470996,
+        "option_index_macro_f1_diagnostic": 0.5746249012898131,
+        "semantic_macro_f1": 0.5746249012898131
+      },
+      "app_moderation_toxicity": {
+        "n": 400,
+        "accuracy": 0.5425,
+        "ece": 0.0798746201746299,
+        "nll": 0.7016685211028681,
+        "brier": 0.5073177349893063,
+        "option_index_macro_f1_diagnostic": 0.4912108764101174,
+        "semantic_macro_f1": 0.4912108764101174
+      },
+      "app_email_spam": {
+        "n": 400,
+        "accuracy": 0.4975,
+        "ece": 0.15890832212798628,
+        "nll": 0.7605778680068381,
+        "brier": 0.5591769630359937,
+        "option_index_macro_f1_diagnostic": 0.49316337916296316,
+        "semantic_macro_f1": 0.49316337916296316
+      },
+      "app_phishing": {
+        "n": 400,
+        "accuracy": 0.695,
+        "ece": 0.08365547765286671,
+        "nll": 0.6098004233000335,
+        "brier": 0.41997604162638885,
+        "option_index_macro_f1_diagnostic": 0.6419242170761057,
+        "semantic_macro_f1": 0.6419242170761057
+      },
+      "app_rag_relevance": {
+        "n": 400,
+        "accuracy": 0.535,
+        "ece": 0.09386681115493435,
+        "nll": 0.7306095272652188,
+        "brier": 0.5291268570165809,
+        "option_index_macro_f1_diagnostic": 0.5078193220608082,
+        "semantic_macro_f1": 0.5078193220608082
+      },
+      "app_support_triage": {
+        "n": 400,
+        "accuracy": 0.35,
+        "ece": 0.12364581575771909,
+        "nll": 1.7610435218229568,
+        "brier": 0.7700343926843908,
+        "option_index_macro_f1_diagnostic": 0.392451729701453,
+        "semantic_macro_f1": 0.392451729701453
+      },
+      "massive_en": {
+        "n": 100,
+        "accuracy": 0.71,
+        "ece": 0.2795240827982376,
+        "nll": 1.208307536385948,
+        "brier": 0.4748934562247466,
+        "option_index_macro_f1_diagnostic": 0.6560424379542027,
+        "semantic_macro_f1": 0.4914586533538146,
+        "order_flip": 0.1
+      },
+      "massive_de": {
+        "n": 100,
+        "accuracy": 0.6,
+        "ece": 0.20071484473250528,
+        "nll": 1.433499400921371,
+        "brier": 0.5492940878605298,
+        "option_index_macro_f1_diagnostic": 0.5809138668349194,
+        "semantic_macro_f1": 0.3505868430006361,
+        "order_flip": 0.14
+      },
+      "massive_fr": {
+        "n": 100,
+        "accuracy": 0.58,
+        "ece": 0.1838662780855689,
+        "nll": 1.5335761800572931,
+        "brier": 0.6012547169900888,
+        "option_index_macro_f1_diagnostic": 0.5224812760339076,
+        "semantic_macro_f1": 0.4158975383113314,
+        "order_flip": 0.16
+      },
+      "massive_es": {
+        "n": 100,
+        "accuracy": 0.58,
+        "ece": 0.20590243672982173,
+        "nll": 1.5033031493858806,
+        "brier": 0.5947769537815462,
+        "option_index_macro_f1_diagnostic": 0.5172970167087814,
+        "semantic_macro_f1": 0.4425353218210361,
+        "order_flip": 0.13
+      },
+      "massive_ja": {
+        "n": 100,
+        "accuracy": 0.66,
+        "ece": 0.21797222428054225,
+        "nll": 1.1791911393977523,
+        "brier": 0.48448436593628946,
+        "option_index_macro_f1_diagnostic": 0.6210989736957229,
+        "semantic_macro_f1": 0.4591673628515734,
+        "order_flip": 0.1
+      },
+      "massive_zh-CN": {
+        "n": 100,
+        "accuracy": 0.63,
+        "ece": 0.19936746653359635,
+        "nll": 1.3771832989139126,
+        "brier": 0.5538989028098632,
+        "option_index_macro_f1_diagnostic": 0.5918927967457379,
+        "semantic_macro_f1": 0.4007553157086264,
+        "order_flip": 0.14
+      },
+      "massive_ar": {
+        "n": 100,
+        "accuracy": 0.53,
+        "ece": 0.17526276340847083,
+        "nll": 1.6863882515407247,
+        "brier": 0.6180851646244767,
+        "option_index_macro_f1_diagnostic": 0.5119759626338574,
+        "semantic_macro_f1": 0.3270666924940891,
+        "order_flip": 0.16
+      },
+      "massive_hi": {
+        "n": 100,
+        "accuracy": 0.06,
+        "ece": 0.2800416020961086,
+        "nll": 3.1698197333340694,
+        "brier": 1.043792736984724,
+        "option_index_macro_f1_diagnostic": 0.056313131313131315,
+        "semantic_macro_f1": 0.057732589048378524,
+        "order_flip": 0.3
+      },
+      "massive_th": {
+        "n": 100,
+        "accuracy": 0.35,
+        "ece": 0.11167338664065861,
+        "nll": 2.405918714564315,
+        "brier": 0.8108949926844946,
+        "option_index_macro_f1_diagnostic": 0.33036646102435574,
+        "semantic_macro_f1": 0.197994797994798,
+        "order_flip": 0.28
+      },
+      "massive_ko": {
+        "n": 100,
+        "accuracy": 0.59,
+        "ece": 0.18348353109231716,
+        "nll": 1.3949641927048484,
+        "brier": 0.5554322063176501,
+        "option_index_macro_f1_diagnostic": 0.5367909867909868,
+        "semantic_macro_f1": 0.3912714789026633,
+        "order_flip": 0.17
+      },
+      "massive_km": {
+        "n": 100,
+        "accuracy": 0.02,
+        "ece": 0.3378392262390427,
+        "nll": 3.606668106253795,
+        "brier": 1.12406354850778,
+        "option_index_macro_f1_diagnostic": 0.010644257703081233,
+        "semantic_macro_f1": 0.005263157894736842,
+        "order_flip": 0.27
+      },
+      "semif_authored144": {
+        "n": 144,
+        "accuracy": 0.5763888888888888,
+        "ece": 0.11019932179839403,
+        "nll": 0.941402626929678,
+        "brier": 0.5561151205733298,
+        "option_index_macro_f1_diagnostic": 0.5731828996853173,
+        "semif_mean_family_balanced_accuracy": 0.5732533949252215
+      },
+      "semif_perturbations108": {
+        "n": 108,
+        "accuracy": 0.4537037037037037,
+        "ece": 0.2584469037784603,
+        "nll": 1.2396933884045143,
+        "brier": 0.7382254152437043,
+        "option_index_macro_f1_diagnostic": 0.45082970037432696,
+        "semif_mean_family_balanced_accuracy": 0.46507936507936504
+      }
+    },
+    "qwen": {
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.5015,
+        "ece": 0.06123308587278025,
+        "nll": 1.043632510519573,
+        "brier": 0.5944934097111493,
+        "soft_accuracy": 0.38668384724747357,
+        "option_index_macro_f1_diagnostic": 0.49828713857393925
+      },
+      "app_model_routing_domain": {
+        "n": 399,
+        "accuracy": 0.8922305764411027,
+        "ece": 0.2169825013938247,
+        "nll": 0.5110421563615495,
+        "brier": 0.22197220935789744,
+        "option_index_macro_f1_diagnostic": 0.45987535693418047,
+        "semantic_macro_f1": 0.45987535693418047
+      },
+      "app_guardrails_jailbreak": {
+        "n": 400,
+        "accuracy": 0.8575,
+        "ece": 0.14717395734689215,
+        "nll": 0.4063254066089966,
+        "brier": 0.23943950854168833,
+        "option_index_macro_f1_diagnostic": 0.7861945442099045,
+        "semantic_macro_f1": 0.7861945442099045
+      },
+      "app_moderation_toxicity": {
+        "n": 400,
+        "accuracy": 0.6025,
+        "ece": 0.17492156746697263,
+        "nll": 0.7171895281109218,
+        "brier": 0.5103158747893033,
+        "option_index_macro_f1_diagnostic": 0.5404325425786359,
+        "semantic_macro_f1": 0.5404325425786359
+      },
+      "app_email_spam": {
+        "n": 400,
+        "accuracy": 0.8725,
+        "ece": 0.17388844289904518,
+        "nll": 0.40993874681775133,
+        "brier": 0.24072093808801953,
+        "option_index_macro_f1_diagnostic": 0.8724609411632313,
+        "semantic_macro_f1": 0.8724609411632313
+      },
+      "app_phishing": {
+        "n": 400,
+        "accuracy": 0.7425,
+        "ece": 0.06910920378754007,
+        "nll": 0.5055943311234293,
+        "brier": 0.33613185889111746,
+        "option_index_macro_f1_diagnostic": 0.6664480768140933,
+        "semantic_macro_f1": 0.6664480768140933
+      },
+      "app_rag_relevance": {
+        "n": 400,
+        "accuracy": 0.515,
+        "ece": 0.22573084546343827,
+        "nll": 0.7876587314903588,
+        "brier": 0.5806928905116275,
+        "option_index_macro_f1_diagnostic": 0.37368845843422116,
+        "semantic_macro_f1": 0.37368845843422116
+      },
+      "app_support_triage": {
+        "n": 400,
+        "accuracy": 0.435,
+        "ece": 0.10280296397285332,
+        "nll": 1.7584096945925014,
+        "brier": 0.729478902835658,
+        "option_index_macro_f1_diagnostic": 0.4002509241089359,
+        "semantic_macro_f1": 0.4002509241089359
+      },
+      "massive_en": {
+        "n": 100,
+        "accuracy": 0.83,
+        "ece": 0.11011258027743343,
+        "nll": 0.5759922774618758,
+        "brier": 0.2189008703800644,
+        "option_index_macro_f1_diagnostic": 0.8089629814629815,
+        "semantic_macro_f1": 0.6694169942445803
+      },
+      "massive_de": {
+        "n": 100,
+        "accuracy": 0.68,
+        "ece": 0.10934725286556483,
+        "nll": 1.1746096101138486,
+        "brier": 0.4328322120271576,
+        "option_index_macro_f1_diagnostic": 0.6351411161937477,
+        "semantic_macro_f1": 0.5095679983223236
+      },
+      "massive_fr": {
+        "n": 100,
+        "accuracy": 0.69,
+        "ece": 0.11363460371417178,
+        "nll": 1.058945379315858,
+        "brier": 0.3882462987081458,
+        "option_index_macro_f1_diagnostic": 0.6384300271451975,
+        "semantic_macro_f1": 0.4901789130624005
+      },
+      "massive_es": {
+        "n": 100,
+        "accuracy": 0.68,
+        "ece": 0.09196634868039755,
+        "nll": 1.1197489391149795,
+        "brier": 0.4062805591584535,
+        "option_index_macro_f1_diagnostic": 0.6283040652158298,
+        "semantic_macro_f1": 0.5187367929627991
+      },
+      "massive_ja": {
+        "n": 100,
+        "accuracy": 0.76,
+        "ece": 0.14577261936316366,
+        "nll": 0.8087522018245662,
+        "brier": 0.30125738414010866,
+        "option_index_macro_f1_diagnostic": 0.7257844932844933,
+        "semantic_macro_f1": 0.569615212097911
+      },
+      "massive_zh-CN": {
+        "n": 100,
+        "accuracy": 0.8,
+        "ece": 0.1154574546159187,
+        "nll": 0.6860656970693841,
+        "brier": 0.26383595064930176,
+        "option_index_macro_f1_diagnostic": 0.7822207032733348,
+        "semantic_macro_f1": 0.6193566987308784
+      },
+      "massive_ar": {
+        "n": 100,
+        "accuracy": 0.51,
+        "ece": 0.11400885968039688,
+        "nll": 1.7245928966065107,
+        "brier": 0.586508563982242,
+        "option_index_macro_f1_diagnostic": 0.4749158658678782,
+        "semantic_macro_f1": 0.3061808417146763
+      },
+      "massive_hi": {
+        "n": 100,
+        "accuracy": 0.51,
+        "ece": 0.11399565143976642,
+        "nll": 1.6902496448165802,
+        "brier": 0.5779656730488233,
+        "option_index_macro_f1_diagnostic": 0.4799095349095349,
+        "semantic_macro_f1": 0.30305860805860807
+      },
+      "massive_th": {
+        "n": 100,
+        "accuracy": 0.51,
+        "ece": 0.11349933164348593,
+        "nll": 1.8207902128274585,
+        "brier": 0.6174451136477166,
+        "option_index_macro_f1_diagnostic": 0.5022651857945976,
+        "semantic_macro_f1": 0.2562725803003581
+      },
+      "massive_ko": {
+        "n": 100,
+        "accuracy": 0.76,
+        "ece": 0.11592823106543292,
+        "nll": 0.9406439806127225,
+        "brier": 0.3539281448308784,
+        "option_index_macro_f1_diagnostic": 0.7269011544011544,
+        "semantic_macro_f1": 0.6417613017429193
+      },
+      "massive_km": {
+        "n": 100,
+        "accuracy": 0.32,
+        "ece": 0.14056903078406313,
+        "nll": 2.5111788182512806,
+        "brier": 0.8420751625650744,
+        "option_index_macro_f1_diagnostic": 0.3012049306902248,
+        "semantic_macro_f1": 0.2120384517443341
+      },
+      "semif_authored144": {
+        "n": 144,
+        "accuracy": 0.6875,
+        "ece": 0.14166786351073862,
+        "nll": 0.7988029876155066,
+        "brier": 0.4630102626827725,
+        "option_index_macro_f1_diagnostic": 0.6846063212802709
+      },
+      "semif_perturbations108": {
+        "n": 108,
+        "accuracy": 0.5,
+        "ece": 0.09323393493663165,
+        "nll": 0.9921057058160471,
+        "brier": 0.606969779416479,
+        "option_index_macro_f1_diagnostic": 0.4891774891774892
+      }
+    },
+    "decider": {
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.534,
+        "ece": 0.13389129305464123,
+        "nll": 1.1094467477536187,
+        "brier": 0.6301152366386549,
+        "soft_accuracy": 0.42507182121751136,
+        "option_index_macro_f1_diagnostic": 0.5212693183872553
+      },
+      "app_model_routing_domain": {
+        "n": 399,
+        "accuracy": 0.8446115288220551,
+        "ece": 0.06671409249695581,
+        "nll": 0.4543286713150658,
+        "brier": 0.2439917015238109,
+        "option_index_macro_f1_diagnostic": 0.5138467338205693,
+        "semantic_macro_f1": 0.5138467338205693
+      },
+      "app_guardrails_jailbreak": {
+        "n": 400,
+        "accuracy": 0.925,
+        "ece": 0.048761250000000006,
+        "nll": 0.22712512621246478,
+        "brier": 0.12469984954999999,
+        "option_index_macro_f1_diagnostic": 0.8805542283803154,
+        "semantic_macro_f1": 0.8805542283803154
+      },
+      "app_moderation_toxicity": {
+        "n": 400,
+        "accuracy": 0.7525,
+        "ece": 0.11132099999999995,
+        "nll": 0.5583006522056185,
+        "brier": 0.3540615124,
+        "option_index_macro_f1_diagnostic": 0.7407952871870398,
+        "semantic_macro_f1": 0.7407952871870398
+      },
+      "app_email_spam": {
+        "n": 400,
+        "accuracy": 0.955,
+        "ece": 0.01806874999999993,
+        "nll": 0.1250782028866808,
+        "brier": 0.06895016605,
+        "option_index_macro_f1_diagnostic": 0.9549819927971188,
+        "semantic_macro_f1": 0.9549819927971188
+      },
+      "app_phishing": {
+        "n": 400,
+        "accuracy": 0.925,
+        "ece": 0.034429999999999905,
+        "nll": 0.18677893878295898,
+        "brier": 0.1160279271,
+        "option_index_macro_f1_diagnostic": 0.9173075332837178,
+        "semantic_macro_f1": 0.9173075332837178
+      },
+      "app_rag_relevance": {
+        "n": 400,
+        "accuracy": 0.65,
+        "ece": 0.06197400000000004,
+        "nll": 0.6522363275022262,
+        "brier": 0.4526445527,
+        "option_index_macro_f1_diagnostic": 0.6368917937545389,
+        "semantic_macro_f1": 0.6368917937545389
+      },
+      "app_support_triage": {
+        "n": 400,
+        "accuracy": 0.4475,
+        "ece": 0.24059730867661142,
+        "nll": 1.9000146732879164,
+        "brier": 0.7701363940990232,
+        "option_index_macro_f1_diagnostic": 0.39386055994400226,
+        "semantic_macro_f1": 0.39386055994400226
+      },
+      "massive_en": {
+        "n": 100,
+        "accuracy": 0.89,
+        "ece": 0.0645718724749289,
+        "nll": 0.4013923545219001,
+        "brier": 0.16089958208595775,
+        "option_index_macro_f1_diagnostic": 0.8654256854256854,
+        "semantic_macro_f1": 0.7380346224511309
+      },
+      "massive_de": {
+        "n": 100,
+        "accuracy": 0.83,
+        "ece": 0.08199058107003532,
+        "nll": 0.593405115364478,
+        "brier": 0.24398062609582472,
+        "option_index_macro_f1_diagnostic": 0.8319937080463395,
+        "semantic_macro_f1": 0.6204036159918513
+      },
+      "massive_fr": {
+        "n": 100,
+        "accuracy": 0.83,
+        "ece": 0.06332869653273367,
+        "nll": 0.6593372635185023,
+        "brier": 0.26538646131901567,
+        "option_index_macro_f1_diagnostic": 0.7855852480852481,
+        "semantic_macro_f1": 0.653469304388422
+      },
+      "massive_es": {
+        "n": 100,
+        "accuracy": 0.86,
+        "ece": 0.08771461739192266,
+        "nll": 0.5913844471848355,
+        "brier": 0.23008373676686256,
+        "option_index_macro_f1_diagnostic": 0.8296106232948338,
+        "semantic_macro_f1": 0.6910534274193548
+      },
+      "massive_ja": {
+        "n": 100,
+        "accuracy": 0.89,
+        "ece": 0.05083760222991725,
+        "nll": 0.4225347962599366,
+        "brier": 0.15888837499518774,
+        "option_index_macro_f1_diagnostic": 0.8696562261268144,
+        "semantic_macro_f1": 0.6763814616755793
+      },
+      "massive_zh-CN": {
+        "n": 100,
+        "accuracy": 0.9,
+        "ece": 0.04813702021166179,
+        "nll": 0.36501188049539013,
+        "brier": 0.14833348054957743,
+        "option_index_macro_f1_diagnostic": 0.8900055500055499,
+        "semantic_macro_f1": 0.731343005952381
+      },
+      "massive_ar": {
+        "n": 100,
+        "accuracy": 0.61,
+        "ece": 0.14904723544367618,
+        "nll": 1.3354387102275396,
+        "brier": 0.47968963578637336,
+        "option_index_macro_f1_diagnostic": 0.5861562049062049,
+        "semantic_macro_f1": 0.3815717116004472
+      },
+      "massive_hi": {
+        "n": 100,
+        "accuracy": 0.52,
+        "ece": 0.160433066590099,
+        "nll": 1.6838758136749823,
+        "brier": 0.5903310666738815,
+        "option_index_macro_f1_diagnostic": 0.4912531620426357,
+        "semantic_macro_f1": 0.3766328352973068
+      },
+      "massive_th": {
+        "n": 100,
+        "accuracy": 0.58,
+        "ece": 0.14691788395959252,
+        "nll": 1.8394103245486253,
+        "brier": 0.596796453267518,
+        "option_index_macro_f1_diagnostic": 0.5682458880988293,
+        "semantic_macro_f1": 0.3596453201970443
+      },
+      "massive_ko": {
+        "n": 100,
+        "accuracy": 0.87,
+        "ece": 0.07727587475520994,
+        "nll": 0.5183637718738978,
+        "brier": 0.20612472747580024,
+        "option_index_macro_f1_diagnostic": 0.8562481962481963,
+        "semantic_macro_f1": 0.7280184666459176
+      },
+      "massive_km": {
+        "n": 100,
+        "accuracy": 0.41,
+        "ece": 0.25669242022017974,
+        "nll": 2.1146666976108293,
+        "brier": 0.8079747893029353,
+        "option_index_macro_f1_diagnostic": 0.3953035526564938,
+        "semantic_macro_f1": 0.23885281385281384
+      },
+      "semif_authored144": {
+        "n": 144,
+        "accuracy": 0.7708333333333334,
+        "ece": 0.06311395333897982,
+        "nll": 0.5120917646947175,
+        "brier": 0.29538327988576357,
+        "option_index_macro_f1_diagnostic": 0.7723683265478932
+      },
+      "semif_perturbations108": {
+        "n": 108,
+        "accuracy": 0.7129629629629629,
+        "ece": 0.12287814197306843,
+        "nll": 0.6287105737326408,
+        "brier": 0.355027337465305,
+        "option_index_macro_f1_diagnostic": 0.7130558592549717
+      }
+    }
+  },
+  "metric_scope": "The worker macro_f1 used option-position integers and is relabeled option_index_macro_f1_diagnostic. Supplemental semantic_macro_f1 maps positions to actual option keys for app and MASSIVE taxonomies. Neither affects fitting, model selection or release gates; typed decisions mix taxonomies, and SemIf retains its official evaluator.",
+  "scope": "Exploratory comparison of native frozen checkpoints on already-observed public cases; training exposure differs. No fitting, routing selection, latency claim or runtime promotion.",
+  "massive_11": {
+    "english": {
+      "accuracy": 0.41545454545454547,
+      "order_flip": 0.38727272727272727
+    },
+    "multilingual": {
+      "accuracy": 0.48272727272727267,
+      "order_flip": 0.17727272727272728
+    },
+    "qwen": {
+      "accuracy": 0.6409090909090909
+    },
+    "decider": {
+      "accuracy": 0.7445454545454545
+    }
+  },
+  "typed_by_question_type": {
+    "english": {
+      "choice": {
+        "n": 600,
+        "accuracy": 0.47833333333333333,
+        "ece": 0.047967171894821664,
+        "nll": 1.2119378600985782,
+        "brier": 0.6394382638224102,
+        "soft_accuracy": 0.3427863727310938,
+        "option_index_macro_f1_diagnostic": 0.5096938750586448
+      },
+      "noul": {
+        "n": 600,
+        "accuracy": 0.36833333333333335,
+        "ece": 0.27652860505742594,
+        "nll": 0.8550612311035659,
+        "brier": 0.6433873955284987,
+        "soft_accuracy": 0.4672246017332799,
+        "option_index_macro_f1_diagnostic": 0.33967332123411975
+      },
+      "score": {
+        "n": 800,
+        "accuracy": 0.3725,
+        "ece": 0.12864323092577057,
+        "nll": 1.3133256246715497,
+        "brier": 0.7054742244836284,
+        "soft_accuracy": 0.3046706469489703,
+        "option_index_macro_f1_diagnostic": 0.41869220264581053
+      }
+    },
+    "multilingual": {
+      "choice": {
+        "n": 600,
+        "accuracy": 0.365,
+        "ece": 0.21291664200771251,
+        "nll": 1.4448290912934998,
+        "brier": 0.7680907711982391,
+        "soft_accuracy": 0.3177660857502527,
+        "option_index_macro_f1_diagnostic": 0.37073656873277594
+      },
+      "noul": {
+        "n": 600,
+        "accuracy": 0.38,
+        "ece": 0.25443164020089304,
+        "nll": 0.8749663418293202,
+        "brier": 0.6574497877515962,
+        "soft_accuracy": 0.4691587129657072,
+        "option_index_macro_f1_diagnostic": 0.37944149734761284
+      },
+      "score": {
+        "n": 800,
+        "accuracy": 0.41625,
+        "ece": 0.07891147994301634,
+        "nll": 1.2711185765801354,
+        "brier": 0.6828411491968693,
+        "soft_accuracy": 0.2964240258059914,
+        "option_index_macro_f1_diagnostic": 0.3104047483244768
+      }
+    },
+    "qwen": {
+      "choice": {
+        "n": 600,
+        "accuracy": 0.495,
+        "ece": 0.07355545957080303,
+        "nll": 1.1757246625277566,
+        "brier": 0.6208845687986901,
+        "soft_accuracy": 0.34898402533860695,
+        "option_index_macro_f1_diagnostic": 0.5059724130547394
+      },
+      "noul": {
+        "n": 600,
+        "accuracy": 0.5533333333333333,
+        "ece": 0.16903644371527396,
+        "nll": 0.6894497339072162,
+        "brier": 0.49178741164610934,
+        "soft_accuracy": 0.5270742856509365,
+        "option_index_macro_f1_diagnostic": 0.49097815764482433
+      },
+      "score": {
+        "n": 800,
+        "accuracy": 0.4675,
+        "ece": 0.05377396176464502,
+        "nll": 1.2102004789727026,
+        "brier": 0.6517295389442737,
+        "soft_accuracy": 0.30966588487652646,
+        "option_index_macro_f1_diagnostic": 0.3774792907343946
+      }
+    },
+    "decider": {
+      "choice": {
+        "n": 600,
+        "accuracy": 0.4666666666666667,
+        "ece": 0.2888417446618927,
+        "nll": 1.4398753805645366,
+        "brier": 0.7580454454170973,
+        "soft_accuracy": 0.40101273536773735,
+        "option_index_macro_f1_diagnostic": 0.4801875239792137
+      },
+      "noul": {
+        "n": 600,
+        "accuracy": 0.64,
+        "ece": 0.15749483333333336,
+        "nll": 0.7350529153816804,
+        "brier": 0.5158692709666667,
+        "soft_accuracy": 0.5281677582483333,
+        "option_index_macro_f1_diagnostic": 0.6305418719211823
+      },
+      "score": {
+        "n": 800,
+        "accuracy": 0.505,
+        "ece": 0.045157424152633685,
+        "nll": 1.1424206474243837,
+        "brier": 0.6198520543088142,
+        "soft_accuracy": 0.3657941828317254,
+        "option_index_macro_f1_diagnostic": 0.42870258305741454
+      }
+    }
+  }
+}
