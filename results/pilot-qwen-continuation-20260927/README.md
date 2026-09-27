@@ -23,3 +23,11 @@ The subsequent continuation should retain the unchanged checkpoint as step zero 
 only from original validation data. Its full optimizer, checkpoint selection and resumable
 training driver remain to be registered and implemented. No training improvement or release
 gate is claimed from this preparation.
+
+A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) is now prepared for
+that future driver. It saves only named trainable LoRA tensors, optimizer state, progress and
+random state; it refuses overwrite and verifies the registration, content hash and parameter
+layout on resume. A one-thread CPU toy test reproduces three subsequent AdamW updates and
+the random sequence exactly after restoring a checkpoint. Separate checks reject wrong hashes,
+registrations, optimizer parameter order and non-finite adapter values. This tests the persistence
+mechanism only; Qwen GPU training and interruption recovery have not yet been verified.
