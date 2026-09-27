@@ -1,3 +1,4 @@
 *.log
 executed_source/
 confirmation_rows_*.jsonl
+rows/
