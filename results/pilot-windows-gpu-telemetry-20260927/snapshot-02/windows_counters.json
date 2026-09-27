@@ -1,0 +1,1013 @@
+{
+  "captured_utc": "2026-09-27T12:17:34.7825644Z",
+  "samples": [
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_11412_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_11412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12800000,
+      "status": 0,
+      "name": "NahimicSvc64"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_12316_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_12316_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11599872,
+      "status": 0,
+      "name": "ShellHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_13068_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_13068_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 58716160,
+      "status": 0,
+      "name": "steamwebhelper"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_13548_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_13548_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11599872,
+      "status": 0,
+      "name": "CrossDeviceResume"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15492_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_15492_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12521472,
+      "status": 0,
+      "name": "SearchHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15516_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_15516_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 18030592,
+      "status": 0,
+      "name": "StartMenuExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15776_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_15776_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "RuntimeBroker"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15860_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_15860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12812288,
+      "status": 0,
+      "name": "Spotify"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17328_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_17328_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11223040,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17412_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_17412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 24686592,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17800_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_17800_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 48893952,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17800_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_17800_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_1984_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_1984_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 86548480,
+      "status": 0,
+      "name": "csrss"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_20392_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_20392_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 327573504,
+      "status": 0,
+      "name": "TradingView"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_20660_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_20660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12517376,
+      "status": 0,
+      "name": "TextInputHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24428_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_24428_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11235328,
+      "status": 0,
+      "name": "msedge"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_24900_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 354574336,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_24900_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_24900_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2632_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_2632_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 754880512,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2632_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_2632_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2860_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_2860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 23932928,
+      "status": 0,
+      "name": "ShellExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_29564_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 70672384,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_29564_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_29564_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29796_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_29796_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11595776,
+      "status": 0,
+      "name": "PhoneExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_31200_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_31200_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 26427392,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_31200_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_31200_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_32660_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_32660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 13045760,
+      "status": 0,
+      "name": "Nahimic3"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_32780_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_32780_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 20557824,
+      "status": 0,
+      "name": "Notion"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_33476_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_33476_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 18190336,
+      "status": 0,
+      "name": "ApplicationFrameHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_35288_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_35288_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 39780352,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_35288_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_35288_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_41976_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_41976_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "LenovoVantage-(DeviceSettingsSystemAddin)"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_43484_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_43484_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 2058919936,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_46672_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_46672_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 153493504,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_46672_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_46672_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_47332_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_47332_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12800000,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_49744_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_49744_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 270336,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_4_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 4493312,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_4_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_4_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x00017a54_phys_0)\\dedicated usage",
+      "instance": "pid_4_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_5304_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_5304_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 201383936,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_5304_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_5304_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_6080_luid_0x00000000_0x00017a54_phys_0)\\dedicated usage",
+      "instance": "pid_6080_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "audiodg"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_7608_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_7608_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 107814912,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_7608_luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "pid_7608_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "pid_9820_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x000171cc_phys_0#1)\\dedicated usage",
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x00017a54_phys_0)\\dedicated usage",
+      "instance": "pid_9820_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_11412_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_11412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "NahimicSvc64"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_12316_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_12316_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1097728,
+      "status": 0,
+      "name": "ShellHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_13068_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_13068_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 258048,
+      "status": 0,
+      "name": "steamwebhelper"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_13548_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_13548_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1097728,
+      "status": 0,
+      "name": "CrossDeviceResume"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15492_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_15492_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "SearchHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15516_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_15516_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "StartMenuExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15776_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_15776_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "RuntimeBroker"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_15860_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_15860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Spotify"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17328_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_17328_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17412_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_17412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17800_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_17800_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_17800_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_17800_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 25530368,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_1984_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_1984_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 49995776,
+      "status": 0,
+      "name": "csrss"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_20392_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_20392_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8523776,
+      "status": 0,
+      "name": "TradingView"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_20660_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_20660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 212992,
+      "status": 0,
+      "name": "TextInputHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24428_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_24428_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "msedge"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_24900_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 38883328,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_24900_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_24900_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_24900_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 25530368,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2632_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_2632_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 3092480,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2632_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_2632_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_2860_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_2860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "ShellExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_29564_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_29564_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29564_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_29564_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 12783616,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_29796_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_29796_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1228800,
+      "status": 0,
+      "name": "PhoneExperienceHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_31200_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_31200_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_31200_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_31200_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_32660_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_32660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Nahimic3"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_32780_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_32780_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Notion"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_33476_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_33476_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 212992,
+      "status": 0,
+      "name": "ApplicationFrameHost"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_35288_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_35288_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 622592,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_35288_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_35288_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_41976_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_41976_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "LenovoVantage-(DeviceSettingsSystemAddin)"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_43484_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_43484_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 85983232,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_46672_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_46672_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_46672_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_46672_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_47332_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_47332_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_49744_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_49744_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_4_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 262144,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_4_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_4_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 491520,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_4_luid_0x00000000_0x00017a54_phys_0)\\shared usage",
+      "instance": "pid_4_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_5304_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_5304_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 5144576,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_5304_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_5304_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_6080_luid_0x00000000_0x00017a54_phys_0)\\shared usage",
+      "instance": "pid_6080_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 2498560,
+      "status": 0,
+      "name": "audiodg"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_7608_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_7608_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 2158592,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_7608_luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "pid_7608_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "pid_9820_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x000171cc_phys_0#1)\\shared usage",
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 6475776,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu process memory(pid_9820_luid_0x00000000_0x00017a54_phys_0)\\shared usage",
+      "instance": "pid_9820_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x0001389b_phys_0)\\dedicated usage",
+      "instance": "luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 3970637824,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x00017164_phys_0)\\dedicated usage",
+      "instance": "luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x000171cc_phys_0)\\dedicated usage",
+      "instance": "luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x00017a54_phys_0)\\dedicated usage",
+      "instance": "luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x0001389b_phys_0)\\shared usage",
+      "instance": "luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 202924032,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x00017164_phys_0)\\shared usage",
+      "instance": "luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x000171cc_phys_0)\\shared usage",
+      "instance": "luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 70811648,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "path": "\\\\miguel_lenovo\\gpu adapter memory(luid_0x00000000_0x00017a54_phys_0)\\shared usage",
+      "instance": "luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 2506752,
+      "status": 0,
+      "name": "Idle"
+    }
+  ]
+}

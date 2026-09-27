@@ -1,0 +1,306 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T12:17:32.962082+00:00",
+  "own_pid": 49744,
+  "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Python314\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "argv": [
+    "experiments/small_model/probe_windows_gpu_telemetry.py",
+    "--output",
+    "results/pilot-windows-gpu-telemetry-20260927/snapshot-02"
+  ],
+  "scope": "One read-only sensor snapshot. No model, tensor, latency, GPU settings or workload change. Other workloads may be running; these observations do not certify any timed inference run.",
+  "identity": {
+    "cuda_ordinal": 0,
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "pci_bus_id": "0000:02:00.0",
+    "luid": "0x00000000_0x0001389b",
+    "node_mask": 1,
+    "physical_node": 0,
+    "current_cuda_context_present": false,
+    "nvml_name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "uuid": "GPU-19b3ab02-8b29-f158-cf71-1dea22ebac9f"
+  },
+  "nvml_library": "C:\\Windows\\System32\\nvml.dll",
+  "before": {
+    "utc": "2026-09-27T12:17:33.047652+00:00",
+    "monotonic_ns": 11865881818600,
+    "temp_c": 76,
+    "sm_mhz": 1110,
+    "util_pct": 15,
+    "memory_util_pct": 5,
+    "total_bytes": 17094934528,
+    "free_bytes": 12787486720,
+    "used_bytes": 4307447808,
+    "clocks_event_reasons": 0,
+    "clocks_event_api": "nvmlDeviceGetCurrentClocksEventReasons",
+    "sw_thermal": false,
+    "hw_thermal": false
+  },
+  "after": {
+    "utc": "2026-09-27T12:17:34.962784+00:00",
+    "monotonic_ns": 11867796933300,
+    "temp_c": 76,
+    "sm_mhz": 2092,
+    "util_pct": 17,
+    "memory_util_pct": 5,
+    "total_bytes": 17094934528,
+    "free_bytes": 12827004928,
+    "used_bytes": 4267929600,
+    "clocks_event_reasons": 0,
+    "clocks_event_api": "nvmlDeviceGetCurrentClocksEventReasons",
+    "sw_thermal": false,
+    "hw_thermal": false
+  },
+  "memory": {
+    "status": "complete",
+    "luid": "0x00000000_0x0001389b",
+    "physical_node": 0,
+    "own_pid": 49744,
+    "adapter": {
+      "dedicated_bytes": 3970637824,
+      "shared_bytes": 202924032
+    },
+    "processes": [
+      {
+        "pid": 4,
+        "name": "System",
+        "dedicated_bytes": 4493312,
+        "shared_bytes": 262144
+      },
+      {
+        "pid": 1984,
+        "name": "csrss",
+        "dedicated_bytes": 86548480,
+        "shared_bytes": 49995776
+      },
+      {
+        "pid": 2632,
+        "name": "dwm",
+        "dedicated_bytes": 754880512,
+        "shared_bytes": 3092480
+      },
+      {
+        "pid": 2860,
+        "name": "ShellExperienceHost",
+        "dedicated_bytes": 23932928,
+        "shared_bytes": 0
+      },
+      {
+        "pid": 5304,
+        "name": "Code",
+        "dedicated_bytes": 201383936,
+        "shared_bytes": 5144576
+      },
+      {
+        "pid": 7608,
+        "name": "explorer",
+        "dedicated_bytes": 107814912,
+        "shared_bytes": 2158592
+      },
+      {
+        "pid": 9820,
+        "name": "vmwp",
+        "dedicated_bytes": 0,
+        "shared_bytes": 0
+      },
+      {
+        "pid": 11412,
+        "name": "NahimicSvc64",
+        "dedicated_bytes": 12800000,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 12316,
+        "name": "ShellHost",
+        "dedicated_bytes": 11599872,
+        "shared_bytes": 1097728
+      },
+      {
+        "pid": 13068,
+        "name": "steamwebhelper",
+        "dedicated_bytes": 58716160,
+        "shared_bytes": 258048
+      },
+      {
+        "pid": 13548,
+        "name": "CrossDeviceResume",
+        "dedicated_bytes": 11599872,
+        "shared_bytes": 1097728
+      },
+      {
+        "pid": 15492,
+        "name": "SearchHost",
+        "dedicated_bytes": 12521472,
+        "shared_bytes": 319488
+      },
+      {
+        "pid": 15516,
+        "name": "StartMenuExperienceHost",
+        "dedicated_bytes": 18030592,
+        "shared_bytes": 319488
+      },
+      {
+        "pid": 15860,
+        "name": "Spotify",
+        "dedicated_bytes": 12812288,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 17328,
+        "name": "chrome",
+        "dedicated_bytes": 11223040,
+        "shared_bytes": 319488
+      },
+      {
+        "pid": 17412,
+        "name": "msedgewebview2",
+        "dedicated_bytes": 24686592,
+        "shared_bytes": 319488
+      },
+      {
+        "pid": 17800,
+        "name": "Docker Desktop",
+        "dedicated_bytes": 48893952,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 20392,
+        "name": "TradingView",
+        "dedicated_bytes": 327573504,
+        "shared_bytes": 8523776
+      },
+      {
+        "pid": 20660,
+        "name": "TextInputHost",
+        "dedicated_bytes": 12517376,
+        "shared_bytes": 212992
+      },
+      {
+        "pid": 24428,
+        "name": "msedge",
+        "dedicated_bytes": 11235328,
+        "shared_bytes": 319488
+      },
+      {
+        "pid": 24900,
+        "name": "chrome",
+        "dedicated_bytes": 354574336,
+        "shared_bytes": 38883328
+      },
+      {
+        "pid": 29564,
+        "name": "msedgewebview2",
+        "dedicated_bytes": 70672384,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 29796,
+        "name": "PhoneExperienceHost",
+        "dedicated_bytes": 11595776,
+        "shared_bytes": 1228800
+      },
+      {
+        "pid": 31200,
+        "name": "SystemSettings",
+        "dedicated_bytes": 26427392,
+        "shared_bytes": 0
+      },
+      {
+        "pid": 32660,
+        "name": "Nahimic3",
+        "dedicated_bytes": 13045760,
+        "shared_bytes": 0
+      },
+      {
+        "pid": 32780,
+        "name": "Notion",
+        "dedicated_bytes": 20557824,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 33476,
+        "name": "ApplicationFrameHost",
+        "dedicated_bytes": 18190336,
+        "shared_bytes": 212992
+      },
+      {
+        "pid": 35288,
+        "name": "WhatsApp.Root",
+        "dedicated_bytes": 39780352,
+        "shared_bytes": 622592
+      },
+      {
+        "pid": 43484,
+        "name": "python",
+        "dedicated_bytes": 2058919936,
+        "shared_bytes": 85983232
+      },
+      {
+        "pid": 46672,
+        "name": "claude",
+        "dedicated_bytes": 153493504,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 47332,
+        "name": "claude",
+        "dedicated_bytes": 12800000,
+        "shared_bytes": 364544
+      },
+      {
+        "pid": 49744,
+        "name": "python",
+        "dedicated_bytes": 270336,
+        "shared_bytes": 0
+      }
+    ],
+    "foreign_over_limit": [
+      {
+        "pid": 2632,
+        "name": "dwm",
+        "dedicated_bytes": 754880512,
+        "shared_bytes": 3092480
+      },
+      {
+        "pid": 20392,
+        "name": "TradingView",
+        "dedicated_bytes": 327573504,
+        "shared_bytes": 8523776
+      },
+      {
+        "pid": 24900,
+        "name": "chrome",
+        "dedicated_bytes": 354574336,
+        "shared_bytes": 38883328
+      },
+      {
+        "pid": 43484,
+        "name": "python",
+        "dedicated_bytes": 2058919936,
+        "shared_bytes": 85983232
+      }
+    ],
+    "contaminated": true,
+    "per_process_limit_bytes": 314572800,
+    "other_adapter_nodes": [
+      [
+        "0x00000000_0x00017164",
+        0
+      ],
+      [
+        "0x00000000_0x000171cc",
+        0
+      ],
+      [
+        "0x00000000_0x00017a54",
+        0
+      ]
+    ],
+    "scope": "Per-process memory may count allocations shared across processes. Do not sum these rows into physical GPU memory, and do not infer active compute contention from allocated bytes alone."
+  },
+  "snapshot_start_thermal_eligible": false,
+  "snapshot_during_thermal_eligible": false,
+  "finished_utc": "2026-09-27T12:17:34.965394+00:00"
+}

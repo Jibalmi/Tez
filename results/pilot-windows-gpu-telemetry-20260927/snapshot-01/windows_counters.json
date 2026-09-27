@@ -1,0 +1,869 @@
+{
+  "captured_utc": "2026-09-27T12:16:34.8012985Z",
+  "samples": [
+    {
+      "instance": "pid_11412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12800000,
+      "status": 0,
+      "name": "NahimicSvc64"
+    },
+    {
+      "instance": "pid_12316_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11599872,
+      "status": 0,
+      "name": "ShellHost"
+    },
+    {
+      "instance": "pid_13068_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 58716160,
+      "status": 0,
+      "name": "steamwebhelper"
+    },
+    {
+      "instance": "pid_13548_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11599872,
+      "status": 0,
+      "name": "CrossDeviceResume"
+    },
+    {
+      "instance": "pid_15492_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12521472,
+      "status": 0,
+      "name": "SearchHost"
+    },
+    {
+      "instance": "pid_15516_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 18030592,
+      "status": 0,
+      "name": "StartMenuExperienceHost"
+    },
+    {
+      "instance": "pid_15776_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "RuntimeBroker"
+    },
+    {
+      "instance": "pid_15860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12812288,
+      "status": 0,
+      "name": "Spotify"
+    },
+    {
+      "instance": "pid_17328_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11223040,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_17412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 24686592,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_17800_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 48893952,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "instance": "pid_17800_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "instance": "pid_1984_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 86536192,
+      "status": 0,
+      "name": "csrss"
+    },
+    {
+      "instance": "pid_20392_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 315748352,
+      "status": 0,
+      "name": "TradingView"
+    },
+    {
+      "instance": "pid_20660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12517376,
+      "status": 0,
+      "name": "TextInputHost"
+    },
+    {
+      "instance": "pid_24428_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11235328,
+      "status": 0,
+      "name": "msedge"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 455536640,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_2632_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 789749760,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "instance": "pid_2632_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "instance": "pid_2860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 23932928,
+      "status": 0,
+      "name": "ShellExperienceHost"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 70672384,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29796_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 11595776,
+      "status": 0,
+      "name": "PhoneExperienceHost"
+    },
+    {
+      "instance": "pid_31200_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 26427392,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "instance": "pid_31200_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "instance": "pid_32660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 13045760,
+      "status": 0,
+      "name": "Nahimic3"
+    },
+    {
+      "instance": "pid_32780_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 20557824,
+      "status": 0,
+      "name": "Notion"
+    },
+    {
+      "instance": "pid_33476_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 18190336,
+      "status": 0,
+      "name": "ApplicationFrameHost"
+    },
+    {
+      "instance": "pid_35288_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 39780352,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "instance": "pid_35288_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "instance": "pid_43484_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 270336,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "instance": "pid_46672_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 153493504,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_46672_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_47332_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 12800000,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 4493312,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_5304_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 202174464,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "instance": "pid_5304_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "instance": "pid_6080_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "audiodg"
+    },
+    {
+      "instance": "pid_7608_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 107814912,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "instance": "pid_7608_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_11412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "NahimicSvc64"
+    },
+    {
+      "instance": "pid_12316_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1097728,
+      "status": 0,
+      "name": "ShellHost"
+    },
+    {
+      "instance": "pid_13068_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 258048,
+      "status": 0,
+      "name": "steamwebhelper"
+    },
+    {
+      "instance": "pid_13548_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1097728,
+      "status": 0,
+      "name": "CrossDeviceResume"
+    },
+    {
+      "instance": "pid_15492_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "SearchHost"
+    },
+    {
+      "instance": "pid_15516_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "StartMenuExperienceHost"
+    },
+    {
+      "instance": "pid_15776_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "RuntimeBroker"
+    },
+    {
+      "instance": "pid_15860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Spotify"
+    },
+    {
+      "instance": "pid_17328_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_17412_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_17800_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "instance": "pid_17800_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 25530368,
+      "status": 0,
+      "name": "Docker Desktop"
+    },
+    {
+      "instance": "pid_1984_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 42876928,
+      "status": 0,
+      "name": "csrss"
+    },
+    {
+      "instance": "pid_20392_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8392704,
+      "status": 0,
+      "name": "TradingView"
+    },
+    {
+      "instance": "pid_20660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 212992,
+      "status": 0,
+      "name": "TextInputHost"
+    },
+    {
+      "instance": "pid_24428_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 319488,
+      "status": 0,
+      "name": "msedge"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 33738752,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_24900_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 25530368,
+      "status": 0,
+      "name": "chrome"
+    },
+    {
+      "instance": "pid_2632_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 2609152,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "instance": "pid_2632_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "dwm"
+    },
+    {
+      "instance": "pid_2860_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "ShellExperienceHost"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29564_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 12783616,
+      "status": 0,
+      "name": "msedgewebview2"
+    },
+    {
+      "instance": "pid_29796_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 1228800,
+      "status": 0,
+      "name": "PhoneExperienceHost"
+    },
+    {
+      "instance": "pid_31200_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "instance": "pid_31200_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "SystemSettings"
+    },
+    {
+      "instance": "pid_32660_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Nahimic3"
+    },
+    {
+      "instance": "pid_32780_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "Notion"
+    },
+    {
+      "instance": "pid_33476_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 212992,
+      "status": 0,
+      "name": "ApplicationFrameHost"
+    },
+    {
+      "instance": "pid_35288_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 622592,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "instance": "pid_35288_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "WhatsApp.Root"
+    },
+    {
+      "instance": "pid_43484_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "python"
+    },
+    {
+      "instance": "pid_46672_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_46672_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_47332_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 364544,
+      "status": 0,
+      "name": "claude"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 262144,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 491520,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_4_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "System"
+    },
+    {
+      "instance": "pid_5304_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 5406720,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "instance": "pid_5304_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Code"
+    },
+    {
+      "instance": "pid_6080_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 2498560,
+      "status": 0,
+      "name": "audiodg"
+    },
+    {
+      "instance": "pid_7608_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 2400256,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "instance": "pid_7608_luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "explorer"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 6475776,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "pid_9820_luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu process memory",
+      "counter": "shared usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "vmwp"
+    },
+    {
+      "instance": "luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 2001637376,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "dedicated usage",
+      "bytes": 0,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x0001389b_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 104566784,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x00017164_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 8192,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x000171cc_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 70811648,
+      "status": 0,
+      "name": "Idle"
+    },
+    {
+      "instance": "luid_0x00000000_0x00017a54_phys_0",
+      "object": "gpu adapter memory",
+      "counter": "shared usage",
+      "bytes": 2506752,
+      "status": 0,
+      "name": "Idle"
+    }
+  ]
+}

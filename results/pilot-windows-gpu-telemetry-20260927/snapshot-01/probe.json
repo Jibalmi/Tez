@@ -1,0 +1,62 @@
+{
+  "status": "failed",
+  "started_utc": "2026-09-27T12:16:32.996348+00:00",
+  "own_pid": 43484,
+  "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Python314\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "argv": [
+    "experiments/small_model/probe_windows_gpu_telemetry.py",
+    "--output",
+    "results/pilot-windows-gpu-telemetry-20260927/snapshot-01"
+  ],
+  "scope": "One read-only sensor snapshot. No model, tensor, latency, GPU settings or workload change. Other workloads may be running; these observations do not certify any timed inference run.",
+  "identity": {
+    "cuda_ordinal": 0,
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "pci_bus_id": "0000:02:00.0",
+    "luid": "0x00000000_0x0001389b",
+    "node_mask": 1,
+    "physical_node": 0,
+    "current_cuda_context_present": false,
+    "nvml_name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "uuid": "GPU-19b3ab02-8b29-f158-cf71-1dea22ebac9f"
+  },
+  "nvml_library": "C:\\Windows\\System32\\nvml.dll",
+  "before": {
+    "utc": "2026-09-27T12:16:33.106219+00:00",
+    "monotonic_ns": 11805940374500,
+    "temp_c": 71,
+    "sm_mhz": 877,
+    "util_pct": 10,
+    "memory_util_pct": 26,
+    "total_bytes": 17094934528,
+    "free_bytes": 14912462848,
+    "used_bytes": 2182471680,
+    "clocks_event_reasons": 0,
+    "clocks_event_api": "nvmlDeviceGetCurrentClocksEventReasons",
+    "sw_thermal": false,
+    "hw_thermal": false
+  },
+  "after": {
+    "utc": "2026-09-27T12:16:35.020810+00:00",
+    "monotonic_ns": 11807854970800,
+    "temp_c": 72,
+    "sm_mhz": 1740,
+    "util_pct": 8,
+    "memory_util_pct": 4,
+    "total_bytes": 17094934528,
+    "free_bytes": 14812241920,
+    "used_bytes": 2282692608,
+    "clocks_event_reasons": 0,
+    "clocks_event_api": "nvmlDeviceGetCurrentClocksEventReasons",
+    "sw_thermal": false,
+    "hw_thermal": false
+  },
+  "error": {
+    "type": "ValueError",
+    "message": "Duplicate counter instance",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\experiments\\small_model\\probe_windows_gpu_telemetry.py\", line 48, in main\n    result[\"memory\"] = selected_memory(raw, monitor.identity, os.getpid())\n                       ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\experiments\\small_model\\windows_gpu_telemetry.py\", line 157, in selected_memory\n    raise ValueError(\"Duplicate counter instance\")\nValueError: Duplicate counter instance\n"
+  },
+  "finished_utc": "2026-09-27T12:16:35.025484+00:00"
+}

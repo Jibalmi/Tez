@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "files_verified": 5,
+  "files": [
+    {
+      "path": "executed_source/probe_windows_gpu_telemetry.py",
+      "bytes": 3852,
+      "sha256": "a2fc8b01c4f7bef42cb654f12f7dba08687af6c9a478c9314bed3dce99188511"
+    },
+    {
+      "path": "executed_source/test_windows_gpu_telemetry.py",
+      "bytes": 3545,
+      "sha256": "00c02dabc1eb98eed3f00b5397deef483de0e196a87da62aeae75aa711237505"
+    },
+    {
+      "path": "executed_source/windows_gpu_telemetry.py",
+      "bytes": 10999,
+      "sha256": "44a309835f18143533fc70935dccb888a7cfb2a51fef95a25fc6fcaf384a6a13"
+    },
+    {
+      "path": "probe.json",
+      "bytes": 2720,
+      "sha256": "279d5834651f70b1b15aadf66fc639e2488d2a240851f961960546cbe0d6cdcf"
+    },
+    {
+      "path": "windows_counters.json",
+      "bytes": 24302,
+      "sha256": "ce92640692ea772938535c380c9fd166cacdb143f6a0e11d09e8442b9018f533"
+    }
+  ]
+}
