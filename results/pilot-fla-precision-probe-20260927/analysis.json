@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T10:22:10.325539+00:00",
+  "registration_sha256": "5818ac79adbfdd81e67d57a2b6db1ffbbbb127b5ed3ba4b15413c1d1c2a72050",
+  "probe_sha256": "92beb36fc3619dd6ddaa5ce15690ee4bfe77b54235e51701682da7cd2fe4dcaf",
+  "analysis_source_sha256": "469d0941a1a5801ed112e04e94ed5a4b75687c797e07fdf3ea17875534e57979",
+  "metrics": {
+    "fla_native": {
+      "argmax_agreement": 1.0,
+      "max_probability_delta": 0.00761181116104126,
+      "mean_total_variation": 0.002976632909849286,
+      "decisions_validated": 8,
+      "passed": true
+    },
+    "fla_fp32_inputs": {
+      "argmax_agreement": 1.0,
+      "max_probability_delta": 0.013995826244354248,
+      "mean_total_variation": 0.006326152244582772,
+      "decisions_validated": 8,
+      "passed": false
+    }
+  },
+  "probability_vectors_validated": 24,
+  "scope": "Four non-benchmark cases in two batch orders only. FP32 inputs fail the unchanged mean-TV limit; do not advance this candidate. Native FLA passing this small probe does not supersede its failed full-validation result. No quality, throughput or latency claim."
+}

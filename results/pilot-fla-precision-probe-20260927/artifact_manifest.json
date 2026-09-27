@@ -1,0 +1,126 @@
+{
+  "README.md": {
+    "sha256": "0af773f1a060945f2bd550b25a9c00e2eb23d6fc141076876ea51f38f119773d",
+    "bytes": 2223
+  },
+  "RESULTS.md": {
+    "sha256": "e654bb525f7aac4b063c63891d48751df1001838d26dbc360cb5630744880dc5",
+    "bytes": 1110
+  },
+  "analysis.json": {
+    "sha256": "268da4c0d367984f195f0c8573e67a45b33f6e282fb716c7c1b9beee28eb425a",
+    "bytes": 1149
+  },
+  "analysis_source/parity_evidence.py": {
+    "sha256": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "bytes": 2139
+  },
+  "analysis_source/report_fla_precision.py": {
+    "sha256": "469d0941a1a5801ed112e04e94ed5a4b75687c797e07fdf3ea17875534e57979",
+    "bytes": 8249
+  },
+  "analysis_source/test_fla_precision_probe.py": {
+    "sha256": "83aca8e5f7566ba215dd3f71bdb144d2d64a0fb3651f7a58da7c869da441942e",
+    "bytes": 1275
+  },
+  "analysis_source/test_parity_evidence.py": {
+    "sha256": "a724107d67b4cfea1361a48c91b40ee749f1bedd798fe990719db448a4e6e4a5",
+    "bytes": 2950
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/torch/_dynamo/eval_frame.py": {
+    "sha256": "1290b074b160198828ebe6836ef58c21277b2f8919ac5e9ea3c47e218e76516a",
+    "bytes": 101107
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/integrations/hub_kernels.py": {
+    "sha256": "c1eafefe0cbdf7f0deaa21b1ef6cb6d7c6082b3f486651d069ff38fcf3e53c95",
+    "bytes": 44974
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/masking_utils.py": {
+    "sha256": "50a737f63d8c778a5597fa34ac139049af921f44958205e3e1c29fe2bae77254",
+    "bytes": 80403
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py": {
+    "sha256": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    "bytes": 95685
+  },
+  "executed_source/experiments/small_model/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/experiments/small_model/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/experiments/small_model/dataset.py": {
+    "sha256": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "bytes": 4168
+  },
+  "executed_source/experiments/small_model/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/experiments/small_model/fla_precision_probe.py": {
+    "sha256": "5b94a0c1f957718beacb8f63e5444bb2ac44a936ee0b9030d3398da090b24ff8",
+    "bytes": 13529
+  },
+  "executed_source/experiments/small_model/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/experiments/small_model/student.py": {
+    "sha256": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "bytes": 8032
+  },
+  "executed_source/experiments/small_model/test_fla_precision_probe.py": {
+    "sha256": "83aca8e5f7566ba215dd3f71bdb144d2d64a0fb3651f7a58da7c869da441942e",
+    "bytes": 1275
+  },
+  "executed_source/experiments/small_model/train_a.py": {
+    "sha256": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "bytes": 14540
+  },
+  "executed_source/experiments/small_model/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "executed_source/tez/errors.py": {
+    "sha256": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "bytes": 1777
+  },
+  "executed_source/tez/prompt.py": {
+    "sha256": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "bytes": 9953
+  },
+  "executed_source/tez/schema.py": {
+    "sha256": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "bytes": 18988
+  },
+  "execution.json": {
+    "sha256": "c97463e524dd2bee000cc81f4919dccb0ed11e47445d8c7dc7270828a177b91d",
+    "bytes": 278
+  },
+  "inputs/kernel_preparation.json": {
+    "sha256": "d8d96cef02621c02be6d6e829137985d7ef27cb8f594fc046008b2443b204f89",
+    "bytes": 69185
+  },
+  "kernel_source/fla/ops/gated_delta_rule/chunk.py": {
+    "sha256": "fd4e01dc22a8c139c2a6eb61e47ae472a50322e4b4fff006cc5039a4602b310e",
+    "bytes": 20302
+  },
+  "kernel_source/fla/ops/gated_delta_rule/fused_recurrent.py": {
+    "sha256": "9c15dc68d37a150da5317431a51fe7def362264ac92770e32261c8557cd5889b",
+    "bytes": 16959
+  },
+  "probe.json": {
+    "sha256": "92beb36fc3619dd6ddaa5ce15690ee4bfe77b54235e51701682da7cd2fe4dcaf",
+    "bytes": 14083
+  },
+  "probe.log": {
+    "sha256": "42de7388be23e844fc7b599215bcafdec151b1ac34b097742d683dc5aa63e585",
+    "bytes": 751
+  },
+  "registration.json": {
+    "sha256": "5818ac79adbfdd81e67d57a2b6db1ffbbbb127b5ed3ba4b15413c1d1c2a72050",
+    "bytes": 7854
+  }
+}

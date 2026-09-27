@@ -132,5 +132,13 @@ the limited incidence does not establish a cause of the broad quality gap.
 
 An [additional kernel audit](../pilot-kernel-discovery-20260927/README.md) records FlashQLA's
 current SM120 path and the difference between its released and source dependency requirements.
-This metadata is separate from measured performance. The queued FLA precision probe uses the
-existing isolated FLA/Triton files and keeps its original numerical acceptance limits.
+This metadata is separate from measured performance. The completed
+[FLA precision probe](../pilot-fla-precision-probe-20260927/RESULTS.md) used the existing isolated
+FLA/Triton files. Promoting attention inputs to FP32 still failed the unchanged mean-TV limit
+on four non-benchmark cases, so that candidate does not advance. Its native FLA arm passing
+this small check does not supersede the earlier failed full-validation result.
+
+The [Qwen continuation](../pilot-qwen-continuation-20260927/training/README.md) is registered
+after the one-step laptop trainability probe passed. It tests 150 updates from original
+training data, retaining step zero and selecting solely from the original validation split.
+Step-zero probability verification precedes training; a queued run is not a quality improvement.

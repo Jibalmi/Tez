@@ -1,5 +1,11 @@
 # FLA precision compatibility probe
 
+Completed: the FP32-input candidate failed the unchanged mean-total-variation limit.
+The [independently recomputed result](RESULTS.md) retains all 24 probability vectors and
+verified dispatch evidence in its archive. No full-validation or latency run is warranted
+for this candidate. This completion notice was added after archiving; the measurement
+snapshot remains unchanged.
+
 The [registered probe](../../experiments/small_model/fla_precision_registration.json) compares
 three attention paths in the same frozen Qwen model: the Torch fallback, native FLA and FLA
 with FP32 inputs. It uses four existing non-benchmark inputs in two batch orders. It is queued
