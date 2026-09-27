@@ -24,7 +24,9 @@ and selects only from original validation data. Its optimizer, checkpoint select
 reconstruction and resumable driver are implemented. Complete step-zero validation is now
 [independently verified](training/attempt-02-baseline-000/verification.json): all 1,390 predictions
 match the frozen reference, and all 372 saved adapter tensors equal the originals. The first
-bounded training segment is queued. No training improvement or release gate is claimed yet.
+[training segment is complete and verified](training/attempt-03-train-050/verification.json):
+25 updates, 400 training decisions, and a saved optimizer checkpoint. The next segment is queued
+from that checkpoint toward step 50. No trained validation improvement or release gate is claimed yet.
 
 A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) supports
 that driver. It saves only named trainable LoRA tensors, optimizer state, progress and

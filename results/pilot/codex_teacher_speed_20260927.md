@@ -3,6 +3,10 @@
 Latest assessment: [are the students competitive?](../pilot-improvement-20260927/COMPETITIVENESS.md)
 summarizes the matched quality comparisons, the fresh rule test, and the outstanding release gates.
 
+Current improvement work: [Qwen continuation](../pilot-qwen-continuation-20260927/training/README.md)
+has completed its first verified training segment. A [full CUDA graph validation](../pilot-qwen-graph-validation-20260927/README.md)
+is registered and queued after the small compatibility probe passed. Neither establishes a new quality or speed gain yet.
+
 Continuation: the teacher and first student runs are documented in the
 [student pilot report](../pilot-student-h200-20260927/README.md). Current student quality comparisons
 with released alternatives are in the [matched comparison](../pilot-improvement-20260927/COMPARISON.md)

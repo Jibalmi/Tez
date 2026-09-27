@@ -4,8 +4,9 @@ Step-zero validation is [complete and independently verified](attempt-02-baselin
 All 1,390 argmax predictions match the frozen reference; maximum probability difference is
 4.44e-16. Teacher agreement is 78.9928% and mean KL is 0.14013744. All 372 saved adapter tensors
 equal the original checkpoint, and the optimizer has no prior update state. The evidence archive
-retains raw held-out predictions and inputs. The first bounded training segment is queued;
-no trained-candidate quality result is available yet.
+retains raw held-out predictions and inputs. The first [bounded training segment](attempt-03-train-050/README.md)
+completed and independently verified 25 updates. Its checkpoint now feeds the queued second segment
+toward step 50; no trained-candidate validation or public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training
@@ -31,8 +32,8 @@ They remain under ignored `runs/`; reports record their hashes, without committi
 The [input preflight](../driver_preflight.json) reconstructs all scheduled training prompts
 and validation prompts without truncation. CPU checks verify loss/gradient accumulation,
 checkpoint replay and validation selection. The one-step [GPU feasibility probe](../trainability/README.md)
-passed, but full GPU continuation and checkpoint replay have not yet been exercised. A
-registration or queued step-zero evaluation is not a completed training result or a release.
+passed, and the first bounded GPU segment has completed. The full continuation and resumption of
+a trained GPU checkpoint remain unfinished. A partial training run is not a quality result or release.
 
 The [first baseline attempt](attempt-01-baseline-000/README.md) failed before saving any
 prediction or checkpoint because the validation mask omitted the per-row broadcast dimension.
