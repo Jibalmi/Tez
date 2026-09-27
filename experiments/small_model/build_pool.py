@@ -41,6 +41,13 @@ FW2 = {"de": "deu_Latn", "es": "spa_Latn", "fr": "fra_Latn", "ja": "jpn_Jpan", "
 CPT = {"en": 4.2, "de": 3.6, "es": 3.8, "fr": 3.8, "ja": 1.3, "zh": 1.2, "ar": 3.0, "hi": 2.6, "th": 2.4, "ko": 1.6}
 TARGET = {"fineweb": 3150, "fineweb2": 2100, "aya": 525, "clinc": 175, "csqa": 175, "gmmlu": 175}   # 6,300 states: 6,000 train + 5 % val
 OVER = 1.25
+# A later, larger sample (--scale, --seed, --exclude-pool, --id-prefix) draws fresh rows disjoint from an earlier pool,
+# under its own TEZ_PILOT_RUNS directory; the defaults reproduce the original pilot sample exactly.
+SCALE = 1.0
+PREFIX = ""
+EXCLUDE_IDS: set[str] = set()
+EXCLUDE_REFS: set[str] = set()
+EXCLUDE_TEXT: set[str] = set()   # sha of normalised text of the earlier pool's states
 AYA_HELD_OUT = {"Amharic", "Welsh", "Icelandic", "Javanese", "Khmer", "Mongolian", "Burmese", "Swahili"}
 GMMLU_LANGS = ["en", "de", "es", "fr", "ja", "zh", "ar", "hi", "ko"]
 
@@ -88,15 +95,21 @@ def sample() -> None:
     t0 = time.time()
 
     n = int(TARGET["fineweb"] * OVER)
-    for i, r in enumerate(stream("HuggingFaceFW/fineweb", "sample/10BT", n, SEED, groups=8)):
-        rows.append({"id": f"fw-{i:05d}", "source": "fineweb", "lang": "en", "state": {"text": cut(r["text"], "en", rng)},
+    for i, r in enumerate(stream("HuggingFaceFW/fineweb", "sample/10BT", n + len(EXCLUDE_REFS), SEED,
+                                 groups=math.ceil(8 * SCALE))):
+        if r["id"] in EXCLUDE_REFS:
+            continue
+        rows.append({"id": f"{PREFIX}fw-{i:05d}", "source": "fineweb", "lang": "en", "state": {"text": cut(r["text"], "en", rng)},
                      "src_ref": r["id"], "shard": r["ref"]})
     print(f"fineweb {sum(r['source'] == 'fineweb' for r in rows)} ({time.time() - t0:.0f} s)", flush=True)
 
     per = int(TARGET["fineweb2"] * OVER / len(FW2)) + 1
     for lang, cfg in FW2.items():
-        for i, r in enumerate(stream("HuggingFaceFW/fineweb-2", f"data/{cfg}/train", per, SEED, groups=3)):
-            rows.append({"id": f"fw2-{lang}-{i:04d}", "source": "fineweb2", "lang": lang,
+        for i, r in enumerate(stream("HuggingFaceFW/fineweb-2", f"data/{cfg}/train", per, SEED,
+                                     groups=math.ceil(3 * SCALE))):
+            if r["id"] in EXCLUDE_REFS:
+                continue
+            rows.append({"id": f"{PREFIX}fw2-{lang}-{i:04d}", "source": "fineweb2", "lang": lang,
                          "state": {"text": cut(r["text"], lang, rng)}, "src_ref": r["id"], "shard": r["ref"]})
         print(f"fineweb2 {lang} ({time.time() - t0:.0f} s)", flush=True)
 
@@ -107,9 +120,9 @@ def sample() -> None:
     k = 0
     for i in idx:
         r = aya[i]
-        if len(r["inputs"]) + len(r["targets"]) > 2400:
+        if f"aya-{i}" in EXCLUDE_IDS or len(r["inputs"]) + len(r["targets"]) > 2400:
             continue
-        rows.append({"id": f"aya-{i}", "source": "aya", "lang": r["language_code"], "lang_name": r["language"],
+        rows.append({"id": f"{PREFIX}aya-{i}", "source": "aya", "lang": r["language_code"], "lang_name": r["language"],
                      "state": {"prompt": r["inputs"], "response": r["targets"]}})
         k += 1
         if k >= int(TARGET["aya"] * OVER):
@@ -124,11 +137,11 @@ def sample() -> None:
     for i in idx[: int(TARGET["clinc"] * OVER)]:
         r = clinc[i]
         gold = names[r["intent"]]
-        if gold == "oos":
+        if gold == "oos" or f"clinc-{i}" in EXCLUDE_IDS:
             continue
         keys = [gold] + rng.sample([x for x in names if x not in (gold, "oos")], 19)
         rng.shuffle(keys)
-        rows.append({"id": f"clinc-{i}", "source": "clinc", "lang": "en", "state": {"text": r["text"]},
+        rows.append({"id": f"{PREFIX}clinc-{i}", "source": "clinc", "lang": "en", "state": {"text": r["text"]},
                      "gold_q": {"dataset": "clinc", "type": "choice",
                                 "criteria": {k: k.replace("_", " ") for k in keys}, "label": gold}})
     csqa = load_dataset("tau/commonsense_qa", split="train")
@@ -137,9 +150,9 @@ def sample() -> None:
     for i in idx[: int(TARGET["csqa"] * OVER)]:
         r = csqa[i]
         labels, texts = r["choices"]["label"], r["choices"]["text"]
-        if r["answerKey"] not in labels or len(set(texts)) != len(texts):
+        if r["answerKey"] not in labels or len(set(texts)) != len(texts) or f"csqa-{i}" in EXCLUDE_IDS:
             continue
-        rows.append({"id": f"csqa-{i}", "source": "csqa", "lang": "en", "state": {"question": r["question"]},
+        rows.append({"id": f"{PREFIX}csqa-{i}", "source": "csqa", "lang": "en", "state": {"question": r["question"]},
                      "gold_q": {"dataset": "csqa", "type": "choice", "criteria": {t: None for t in texts},
                                 "label": texts[labels.index(r["answerKey"])]}})
     per = int(TARGET["gmmlu"] * OVER / len(GMMLU_LANGS)) + 1
@@ -150,9 +163,9 @@ def sample() -> None:
         for i in idx[:per]:
             r = d[i]
             opts = [r["option_a"], r["option_b"], r["option_c"], r["option_d"]]
-            if len(set(opts)) != 4 or r["answer"] not in "ABCD":
+            if len(set(opts)) != 4 or r["answer"] not in "ABCD" or f"gmmlu-{lang}-{i}" in EXCLUDE_IDS:
                 continue
-            rows.append({"id": f"gmmlu-{lang}-{i}", "source": "gmmlu", "lang": lang, "state": {"question": r["question"]},
+            rows.append({"id": f"{PREFIX}gmmlu-{lang}-{i}", "source": "gmmlu", "lang": lang, "state": {"question": r["question"]},
                          "gold_q": {"dataset": "gmmlu", "type": "choice", "criteria": {o: None for o in opts},
                                     "label": opts["ABCD".index(r["answer"])], "subject": r.get("subject")}})
     print(f"gold done ({time.time() - t0:.0f} s)", flush=True)
@@ -174,7 +187,7 @@ def filt(k_clusters: int = 64, device: str = "cuda") -> None:
     drops: list[dict] = []
 
     # 0. empty / duplicate within the pool
-    keep, seen = [], set()
+    keep, seen = [], set(EXCLUDE_TEXT)
     for r in rows:
         t = norm_text(r["state"])
         if len(t) < 8 or sha(t) in seen:
@@ -288,10 +301,24 @@ def filt(k_clusters: int = 64, device: str = "cuda") -> None:
 
 
 def main() -> None:
+    global SCALE, PREFIX, SEED
     ap = argparse.ArgumentParser()
     ap.add_argument("step", choices=["sample", "filter"])
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--scale", type=float, default=1.0, help="multiply every source's target")
+    ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument("--exclude-pool", help="an earlier pool.jsonl whose rows, sources and texts this sample must avoid")
+    ap.add_argument("--id-prefix", default="", help="prefix for new state ids, keeping them disjoint from earlier pools")
     args = ap.parse_args()
+    SCALE, PREFIX, SEED = args.scale, args.id_prefix, args.seed
+    for k in TARGET:
+        TARGET[k] = round(TARGET[k] * SCALE)
+    if args.exclude_pool:
+        for r in read_jsonl(args.exclude_pool):
+            EXCLUDE_IDS.add(r["id"])
+            if r.get("src_ref"):
+                EXCLUDE_REFS.add(r["src_ref"])
+            EXCLUDE_TEXT.add(sha(norm_text(r["state"])))
     sample() if args.step == "sample" else filt(device=args.device)
 
 
