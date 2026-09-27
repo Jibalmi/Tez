@@ -1,0 +1,7 @@
+{
+  "archive_sha256": "c4b868978a1513c6456c2c78da4b0056210c1b1fd8f17e6ba440534fce8c4709",
+  "bytes": 6997,
+  "files_verified": 9,
+  "terminal_execution_status": "failed",
+  "scope": "Evidence export; preserves completed checks and failures without treating partial work as a benchmark result."
+}

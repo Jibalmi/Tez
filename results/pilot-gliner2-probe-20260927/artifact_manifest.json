@@ -1,0 +1,38 @@
+{
+  ".gitignore": {
+    "sha256": "318d9a16533732a69cda7bb7b174ee392fdd15be3d72a114cd8f2d51f3eab510",
+    "bytes": 6
+  },
+  "GLiNER2.5-Decide.json": {
+    "sha256": "48f26964f8b047e18b2dc8dc9f448dd33abfe168b942823b071036f23950e792",
+    "bytes": 2239
+  },
+  "GLiNER2.5-Decide.log": {
+    "sha256": "dec27afeec8cf837b3306a47b067d65c748173e642044f47d6792b1b1f4da287",
+    "bytes": 3058
+  },
+  "GLiNER2.5-multi-Decide.json": {
+    "sha256": "f64a792df2b2ff623791fc9a36797aa40c43d5b8a744d734035c47b76806078c",
+    "bytes": 4362
+  },
+  "GLiNER2.5-multi-Decide.log": {
+    "sha256": "340ff6985ec8d640cf445d7211516915a557f434169b33f86e99acc75e6983d3",
+    "bytes": 1202
+  },
+  "README.md": {
+    "sha256": "10a9ee2cf90a72b82f2772529f7ad4b9576f2246f348bd04fb477c0aa7fe3485",
+    "bytes": 1663
+  },
+  "cases.json": {
+    "sha256": "249654942175525efb416c75f9d3dfeab45721442b478d518000edd19034dbe5",
+    "bytes": 1173
+  },
+  "executed_source.py": {
+    "sha256": "a7a1f8ac978494529adb4ea7a64007cb7bdf1bd761f3f4ab198cb1b8a115b90c",
+    "bytes": 8576
+  },
+  "execution.json": {
+    "sha256": "cf74217b5bee265b3fa9897a7f82d94f8df46bb9ee3b1862c7ea9a889d88b3c3",
+    "bytes": 340
+  }
+}
