@@ -1,0 +1,22 @@
+{
+  "status": "complete",
+  "verified_utc": "2026-09-27T13:23:34.734432+00:00",
+  "registration_sha256": "236414040fb2bdf4701a3f294844806d544ea5b357302e4e326436467bcfde6a",
+  "verifier_sha256": "e4fd2d26c49d584e551fbbc9bfbdd662ec5eaf2a5977f22fb146b15c24482cf5",
+  "decisions": 1390,
+  "native_batch_size_parity": {
+    "argmax_agreement": 0.9971223021582734,
+    "max_probability_delta": 0.036175947999604774,
+    "mean_total_variation": 0.0065139696545912845,
+    "decisions_validated": 1390,
+    "passed": false
+  },
+  "graph_against_native_single": {
+    "argmax_agreement": 0.99568345323741,
+    "max_probability_delta": 0.036175947999604774,
+    "mean_total_variation": 0.006702410142658904,
+    "decisions_validated": 1390,
+    "passed": false
+  },
+  "scope": "Diagnostic control only. No training, checkpoint selection, public accuracy, graph acceptance, threshold change, speed measurement or runtime promotion."
+}

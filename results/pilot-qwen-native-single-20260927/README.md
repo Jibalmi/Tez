@@ -4,7 +4,18 @@ The completed [single-question graph validation](../pilot-qwen-prefix-single-202
 failed mean total variation against the frozen native batch-16 reference, while its captured
 and identical uncaptured outputs matched exactly. This [separate registration](../../experiments/small_model/qwen_native_single_registration.json)
 isolates the native batch-size comparison before another inference candidate is chosen.
-The registered control is queued under the shared compute lock; no result is available yet.
+
+**Result.** The control completed and its [independent report](control/verification.json)
+checked all 1,390 decisions. Native batch-one against the frozen native batch-16 reference:
+argmax agreement 0.99712, maximum probability change 0.03618, mean total variation 0.00651.
+The failed graph against this native batch-one control: 0.99568, 0.03618 and 0.00670. Both
+comparisons fail the retained 0.005 mean-total-variation check and pass the other two. Batch
+shape alone therefore moves the native model's probabilities by about as much as the graph
+path does; the graph's gap to either native reference is of the same size as the gap between
+the two native references. This is consistent with BF16 reduction-order sensitivity to batch
+shape, but it does not identify a cause, and it neither accepts the graph nor changes any limit.
+The [evidence archive](control/artifact_receipt.json) holds 45 verified files in 1,318,720 bytes,
+SHA-256 `e04385b006ca87a6bcb3f592788d04c0475971d0935889f916f97d54cf2b5021`.
 
 It evaluates all 278 original validation states and 1,390 decisions with the original full
 vocabulary head, cache enabled, native SDPA/PyTorch recurrence, unmerged FP32 LoRA over BF16
