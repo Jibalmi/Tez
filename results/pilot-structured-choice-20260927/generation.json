@@ -1,0 +1,91 @@
+{
+  "status": "unfiltered_do_not_train",
+  "version": "structured-choice-v1",
+  "generated_utc": "2026-09-27T09:47:18.839881+00:00",
+  "generator_sha256": "765ed5467cb63ebc0cf8a673777fe15fb716ccc47fa1ef0f4aded8ca22db5be0",
+  "provenance": "Deterministic rule-derived hard labels; no external examples or model-generated answers are read by the generator. They are not teacher probabilities.",
+  "holdout": "Distinct domains, field names, action labels and bin labels across splits. Policy priority and largest-with-ties logic families, generic JSON layout and wording patterns recur. This does not establish unseen-family generalization.",
+  "training_permission": "Require the unchanged exact/normalized hash, MinHash, choice-label, embedding and domain-centroid filters against public evaluation, prior authored held-outs, prior probes and the new validation/confirmation sets. No threshold relaxation.",
+  "scope": "Candidate preparation only. No training or checkpoint selection. Keep confirmation closed to model evaluation until a subsequent training protocol and checkpoint selection complete.",
+  "splits": {
+    "train": {
+      "states": 1200,
+      "decisions": 2400,
+      "sha256": "29c758c2602efb1e1f3e034f006e8dfce7710aa975259b063cf277358983056a",
+      "domains": [
+        "mosaic",
+        "lantern",
+        "origami",
+        "ribbon",
+        "tapestry",
+        "marble"
+      ],
+      "option_count_distribution": {
+        "3": 1440,
+        "4": 240,
+        "7": 240,
+        "5": 240,
+        "6": 240
+      },
+      "gold_option_positions": {
+        "0": 670,
+        "1": 678,
+        "2": 657,
+        "5": 77,
+        "3": 172,
+        "4": 113,
+        "6": 33
+      }
+    },
+    "validation": {
+      "states": 200,
+      "decisions": 400,
+      "sha256": "a4ab7174ef5ef5d1641ded3e058bc0cac5aaa0e87d76a9b71cb97080303633fe",
+      "domains": [
+        "stencil",
+        "bookmark"
+      ],
+      "option_count_distribution": {
+        "3": 240,
+        "6": 40,
+        "7": 40,
+        "5": 40,
+        "4": 40
+      },
+      "gold_option_positions": {
+        "1": 104,
+        "3": 39,
+        "2": 131,
+        "0": 97,
+        "5": 5,
+        "4": 19,
+        "6": 5
+      }
+    },
+    "confirmation": {
+      "states": 300,
+      "decisions": 600,
+      "sha256": "3da7f0b4e0691f00f6df2d1aefb5eba143be9a0b465488e8c06be3112567a216",
+      "domains": [
+        "wreath",
+        "costume"
+      ],
+      "option_count_distribution": {
+        "3": 360,
+        "4": 60,
+        "6": 60,
+        "5": 60,
+        "7": 60
+      },
+      "gold_option_positions": {
+        "1": 157,
+        "3": 51,
+        "2": 178,
+        "5": 17,
+        "4": 30,
+        "0": 160,
+        "6": 7
+      }
+    }
+  }
+}

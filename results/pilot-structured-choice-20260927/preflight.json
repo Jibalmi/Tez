@@ -1,0 +1,7 @@
+{
+  "status": "complete",
+  "checked_utc": "2026-09-27T09:51:15.842993+00:00",
+  "generator_sha256": "765ed5467cb63ebc0cf8a673777fe15fb716ccc47fa1ef0f4aded8ca22db5be0",
+  "manifest_sha256": "46e5b6924884f13eaa49dc9e85e3e3a4ec83e0d9895545e11cf709a8baf24d2e",
+  "scope": "CPU-only persisted JSON round-trip and exact-rule validation. Does not replace pending leakage filters or establish trained quality."
+}
