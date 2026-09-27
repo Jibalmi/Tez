@@ -1,0 +1,12 @@
+{
+  "verified_utc": "2026-09-27T08:37:31.388265+00:00",
+  "repository": "Qwen/Qwen3.5-0.8B",
+  "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "files": {
+    "model.safetensors-00001-of-00001.safetensors": {
+      "sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696",
+      "bytes": 1746942600
+    }
+  },
+  "registered_hash_matched": true
+}

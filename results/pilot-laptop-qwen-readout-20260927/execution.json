@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T08:41:04.878527+00:00",
+  "stages": [
+    {
+      "readout": "full",
+      "returncode": 0,
+      "seconds": 118.75439440000264
+    },
+    {
+      "readout": "restricted",
+      "returncode": 0,
+      "seconds": 106.43040779999865
+    }
+  ],
+  "registration_sha256": "9aac990037f39e734d7d314dc6976c30e213ae2444826a38bd628407c7fe60d3",
+  "sources_verified": true,
+  "finished_utc": "2026-09-27T08:44:50.067867+00:00",
+  "validity": "Execution success is not a gate pass; verify raw samples, weights, temperature, throttling and contamination separately."
+}

@@ -1,0 +1,117 @@
+{
+  "status": "complete",
+  "audited_utc": "2026-09-27T08:48:45.375063+00:00",
+  "tasks": {
+    "typed_decisions": {
+      "n": 2000,
+      "max_encoded_tokens": 736,
+      "total_tokens": 798430
+    },
+    "app_model_routing_domain": {
+      "n": 399,
+      "max_encoded_tokens": 394,
+      "total_tokens": 112948
+    },
+    "app_guardrails_jailbreak": {
+      "n": 400,
+      "max_encoded_tokens": 668,
+      "total_tokens": 81909
+    },
+    "app_moderation_toxicity": {
+      "n": 400,
+      "max_encoded_tokens": 667,
+      "total_tokens": 76417
+    },
+    "app_email_spam": {
+      "n": 400,
+      "max_encoded_tokens": 1827,
+      "total_tokens": 169677
+    },
+    "app_phishing": {
+      "n": 400,
+      "max_encoded_tokens": 1493,
+      "total_tokens": 177429
+    },
+    "app_rag_relevance": {
+      "n": 400,
+      "max_encoded_tokens": 356,
+      "total_tokens": 93029
+    },
+    "app_support_triage": {
+      "n": 400,
+      "max_encoded_tokens": 542,
+      "total_tokens": 174842
+    },
+    "massive_en": {
+      "n": 100,
+      "max_encoded_tokens": 529,
+      "total_tokens": 51164
+    },
+    "massive_de": {
+      "n": 100,
+      "max_encoded_tokens": 533,
+      "total_tokens": 51368
+    },
+    "massive_fr": {
+      "n": 100,
+      "max_encoded_tokens": 533,
+      "total_tokens": 51411
+    },
+    "massive_es": {
+      "n": 100,
+      "max_encoded_tokens": 533,
+      "total_tokens": 51289
+    },
+    "massive_ja": {
+      "n": 100,
+      "max_encoded_tokens": 532,
+      "total_tokens": 51193
+    },
+    "massive_zh-CN": {
+      "n": 100,
+      "max_encoded_tokens": 529,
+      "total_tokens": 51030
+    },
+    "massive_ar": {
+      "n": 100,
+      "max_encoded_tokens": 536,
+      "total_tokens": 51292
+    },
+    "massive_hi": {
+      "n": 100,
+      "max_encoded_tokens": 550,
+      "total_tokens": 52437
+    },
+    "massive_th": {
+      "n": 100,
+      "max_encoded_tokens": 540,
+      "total_tokens": 51801
+    },
+    "massive_ko": {
+      "n": 100,
+      "max_encoded_tokens": 531,
+      "total_tokens": 51267
+    },
+    "massive_km": {
+      "n": 100,
+      "max_encoded_tokens": 592,
+      "total_tokens": 53547
+    },
+    "semif_authored144": {
+      "n": 144,
+      "max_encoded_tokens": 194,
+      "total_tokens": 24545
+    },
+    "semif_perturbations108": {
+      "n": 108,
+      "max_encoded_tokens": 226,
+      "total_tokens": 20343
+    }
+  },
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "native_helper_sha256": "d0bfb6add3a9b87475737568613c40f48c8f0bc927574351ce558da87db640bb",
+  "preparation_sha256": "171f46619edc68dc7be1278551b4be53e5a9ea2985f683e0c8e5f9c668866536",
+  "source_sha256": "293a193d26152b98af64fd7728882ae09d5887b44564cdc275dd2fde99fb55e6",
+  "adapter_sha256": "e11a8744474b0f43f246052ef4858dfe6eb5b7a42983544326ecbde4215a7695",
+  "scope": "Only original inputs and lengths; no model inference, gold labels, fitting or quality scores. Reversing option order preserves total prompt length for these native JSON option records."
+}

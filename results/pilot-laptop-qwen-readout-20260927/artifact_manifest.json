@@ -1,0 +1,126 @@
+{
+  "README.md": {
+    "sha256": "91b33076a5aa6c313401f955bd9f1d2965fa8668d97e2d61444691edcf08e2b4",
+    "bytes": 1018
+  },
+  "RESULTS.md": {
+    "sha256": "d07a5566e64af4bc842e2c33924aa06294d1b68447174efb28efd45574d020a5",
+    "bytes": 1916
+  },
+  "analysis.json": {
+    "sha256": "8e723f678bc0c6259e26813d6c5cd101cd8162f1a5699da9831f38b9d2ffd128",
+    "bytes": 4889
+  },
+  "analysis_source/report_qwen_latency.py": {
+    "sha256": "738b9856b6e39c847968f2906b06404f49dc1864ec7833f6dac05bbee170ac92",
+    "bytes": 12835
+  },
+  "base_weight_verification.json": {
+    "sha256": "e5b23ac647fe7e81d64c2627eec0d2daf17ee976334108357aa355399176ba0a",
+    "bytes": 387
+  },
+  "executed_source/experiments/small_model/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/experiments/small_model/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/experiments/small_model/dataset.py": {
+    "sha256": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "bytes": 4168
+  },
+  "executed_source/experiments/small_model/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/experiments/small_model/latency.py": {
+    "sha256": "7c7f923f68d2cdaa51b374989818456fbd4f7dd61bb61e29552d35c2f45af5d2",
+    "bytes": 10435
+  },
+  "executed_source/experiments/small_model/qwen_readout_latency.py": {
+    "sha256": "378d392a60fd2156cd22b43d295cabc58967d67f51600183e06d17413d6686ba",
+    "bytes": 3638
+  },
+  "executed_source/experiments/small_model/restricted_qwen.py": {
+    "sha256": "f3af23a8e3fa6b20396d433033d6c51f6bf9da07e1019883c877469c44a81021",
+    "bytes": 4090
+  },
+  "executed_source/experiments/small_model/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/experiments/small_model/student.py": {
+    "sha256": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "bytes": 8032
+  },
+  "executed_source/experiments/small_model/train_a.py": {
+    "sha256": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "bytes": 14540
+  },
+  "executed_source/experiments/small_model/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "executed_source/experiments/vs_laya_speed.py": {
+    "sha256": "0632e74af058780ba4694c883a5318d055c8acfc287594dc58f52ab3d0fe34a5",
+    "bytes": 15467
+  },
+  "executed_source/tez/errors.py": {
+    "sha256": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "bytes": 1777
+  },
+  "executed_source/tez/prompt.py": {
+    "sha256": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "bytes": 9953
+  },
+  "executed_source/tez/schema.py": {
+    "sha256": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "bytes": 18988
+  },
+  "execution.json": {
+    "sha256": "28f119679e3be0fe0f803e8efd4be2f9547c55b777073d9ce42c5f99f923b65c",
+    "bytes": 631
+  },
+  "full.log": {
+    "sha256": "f143066e54c6586537567b5fe4fd65080a0b657b92ec7f5ff0c18d352b6b35fd",
+    "bytes": 1345
+  },
+  "latency.json": {
+    "sha256": "1dca7bef873b2d70e35a9bd534f129a47e8e16a60fb441953d9526da3e084ee4",
+    "bytes": 12308
+  },
+  "latency_samples_c-qwen08-30k_cuda_full.jsonl": {
+    "sha256": "53b1bf02f815b97f0f3571edc60a9cf8f7c1d65fcd48332982aec5bf223c8f4d",
+    "bytes": 111170
+  },
+  "latency_samples_c-qwen08-30k_cuda_restricted.jsonl": {
+    "sha256": "4161dae1b00d4b258f583ca8f9be331a6f5860251fb9b59b44ef648905d93546",
+    "bytes": 111149
+  },
+  "prerequisites/results/pilot-restricted-qwen-20260927/analysis.json": {
+    "sha256": "1c57bf809a31542c1cb8d59f13d7cbfdabbcbe7b17b9775e8bb7b27b5dda2fe3",
+    "bytes": 569
+  },
+  "prerequisites/results/pilot-restricted-qwen-20260927/parity.json": {
+    "sha256": "42af9e1da336ebd7cb70ececb54273a7343b68abdb8fef35d09b64de9e77b78d",
+    "bytes": 4509
+  },
+  "prerequisites/runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/adapter/adapter_config.json": {
+    "sha256": "822abdd0056b86fd9a624832236ef34204dd14f8bf3b1bb0e0242323bdc7a827",
+    "bytes": 1273
+  },
+  "prerequisites/runs/student-artifacts-h200-20260927/runs/student-data/models/c-qwen08-30k/student.json": {
+    "sha256": "5b11179f1a825c9cad44bbd4156061490e66b753c1ca74eca8adea9398c38b6a",
+    "bytes": 1211
+  },
+  "registration.json": {
+    "sha256": "9aac990037f39e734d7d314dc6976c30e213ae2444826a38bd628407c7fe60d3",
+    "bytes": 4105
+  },
+  "restricted.log": {
+    "sha256": "ad1d5b4b5f404b682b5b9ad0e3a85843dac552accb85b4b1ece17427cb78d71b",
+    "bytes": 1201
+  }
+}

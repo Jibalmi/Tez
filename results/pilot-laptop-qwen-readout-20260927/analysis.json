@@ -1,0 +1,152 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T08:47:38.804798+00:00",
+  "registration_sha256": "9aac990037f39e734d7d314dc6976c30e213ae2444826a38bd628407c7fe60d3",
+  "analysis_source_sha256": "738b9856b6e39c847968f2906b06404f49dc1864ec7833f6dac05bbee170ac92",
+  "scores": {
+    "full": {
+      "sizes": {
+        "1": {
+          "n_questions": 1,
+          "reps": 40,
+          "p50_ms": 88.22,
+          "p95_ms": 144.5,
+          "mean_ms": 93.63,
+          "ms_per_question": 88.224
+        },
+        "5": {
+          "n_questions": 5,
+          "reps": 40,
+          "p50_ms": 112.67,
+          "p95_ms": 202.79,
+          "mean_ms": 124.71,
+          "ms_per_question": 22.535
+        },
+        "10": {
+          "n_questions": 10,
+          "reps": 40,
+          "p50_ms": 238.54,
+          "p95_ms": 298.79,
+          "mean_ms": 247.28,
+          "ms_per_question": 23.854
+        },
+        "50": {
+          "n_questions": 50,
+          "reps": 15,
+          "p50_ms": 1433.4,
+          "p95_ms": 1487.84,
+          "mean_ms": 1417.05,
+          "ms_per_question": 28.668
+        }
+      },
+      "eligibility": {
+        "eligible": false,
+        "cooldown_starts_passed": true,
+        "temperature_limit_exceeded": [
+          {
+            "at": "after n=50",
+            "temp_c": 73
+          }
+        ],
+        "hardware_or_software_thermal_slowdown_observed": false,
+        "foreign_processes_over_300_mb_before_load": [
+          {
+            "pid": 2612,
+            "name": "dwm",
+            "kind": "dedicated",
+            "mb": 667
+          }
+        ],
+        "reason": "Foreign dedicated GPU memory exceeds the unchanged 300 MB limit; recorded temperatures also exceed 70 C."
+      },
+      "raw_sha256": "53b1bf02f815b97f0f3571edc60a9cf8f7c1d65fcd48332982aec5bf223c8f4d",
+      "requests": 155,
+      "timed_requests": 135,
+      "timed_decisions": 1390,
+      "gate_pass": false
+    },
+    "restricted": {
+      "sizes": {
+        "1": {
+          "n_questions": 1,
+          "reps": 40,
+          "p50_ms": 90.1,
+          "p95_ms": 148.5,
+          "mean_ms": 103.42,
+          "ms_per_question": 90.105
+        },
+        "5": {
+          "n_questions": 5,
+          "reps": 40,
+          "p50_ms": 117.46,
+          "p95_ms": 172.87,
+          "mean_ms": 132.35,
+          "ms_per_question": 23.491
+        },
+        "10": {
+          "n_questions": 10,
+          "reps": 40,
+          "p50_ms": 234.23,
+          "p95_ms": 316.65,
+          "mean_ms": 242.95,
+          "ms_per_question": 23.423
+        },
+        "50": {
+          "n_questions": 50,
+          "reps": 15,
+          "p50_ms": 1373.36,
+          "p95_ms": 1410.01,
+          "mean_ms": 1361.54,
+          "ms_per_question": 27.467
+        }
+      },
+      "eligibility": {
+        "eligible": false,
+        "cooldown_starts_passed": true,
+        "temperature_limit_exceeded": [
+          {
+            "at": "after n=1",
+            "temp_c": 71
+          },
+          {
+            "at": "after n=5",
+            "temp_c": 71
+          },
+          {
+            "at": "after n=10",
+            "temp_c": 72
+          },
+          {
+            "at": "after n=50",
+            "temp_c": 76
+          }
+        ],
+        "hardware_or_software_thermal_slowdown_observed": false,
+        "foreign_processes_over_300_mb_before_load": [
+          {
+            "pid": 2612,
+            "name": "dwm",
+            "kind": "dedicated",
+            "mb": 667
+          }
+        ],
+        "reason": "Foreign dedicated GPU memory exceeds the unchanged 300 MB limit; recorded temperatures also exceed 70 C."
+      },
+      "raw_sha256": "4161dae1b00d4b258f583ca8f9be331a6f5860251fb9b59b44ef648905d93546",
+      "requests": 155,
+      "timed_requests": 135,
+      "timed_decisions": 1390,
+      "gate_pass": false
+    }
+  },
+  "readout_probability_diagnostic": {
+    "decisions_including_warmup": 1720,
+    "argmax_agreement": 1.0,
+    "max_probability_delta": 0.002561485238144312,
+    "mean_total_variation": 7.446212916778139e-06,
+    "scope": "Timing-ticket diagnostic only; the pre-existing frozen validation parity remains separate."
+  },
+  "conclusion": "Both executions completed, but neither is eligible for the unchanged laptop latency gate. No clean speedup is established.",
+  "telemetry_limit": "Temperatures were sampled at group boundaries, not continuously. The legacy throttled flag includes any reading over 70 C, even with both hardware flags false.",
+  "environment_limit": "model_info.kernels describes original H200 training, not this laptop's inference. Logs record current PyTorch fallback dispatch. The worker did not separately persist inference package versions or actual Torch thread count."
+}

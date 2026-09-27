@@ -1,5 +1,9 @@
 # Tev1 native probability probe
 
+**Completed:** all four native constrained-generation winners matched the complete option-logit
+readout. The [receipt](probe.json) records the prompts, probabilities, vocabulary option mass,
+model/source hashes and package versions. This establishes local interface compatibility only.
+
 The [registered interface check](../../experiments/small_model/tev1_probe_registration.json)
 uses four fixed non-benchmark decisions. Their state, question and options pass through the
 publisher's pinned request helper and the checkpoint's own chat template, with thinking off.

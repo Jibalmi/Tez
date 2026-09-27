@@ -1,0 +1,579 @@
+{
+ "c-qwen08-30k_cuda": {
+  "arm": "c-qwen08-30k",
+  "device": "cuda",
+  "readout": "full",
+  "weights_sha256": {
+   "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "model_info": {
+   "arm": "c-qwen08-30k",
+   "backbone": "Qwen/Qwen3.5-0.8B",
+   "lora": {
+    "r": 16,
+    "alpha": 32,
+    "targets": "all-linear"
+   },
+   "epochs": 1,
+   "steps": 1875,
+   "total_steps_planned": 1875,
+   "fraction_of_planned_steps": 1.0,
+   "segments": 1,
+   "stopped_early": false,
+   "train_seconds": 902.7,
+   "decisions_per_s": 33.23,
+   "train_tok_per_s": 9102.9,
+   "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+   "thermal_paused_s": 0.0,
+   "max_gpu_c": 47,
+   "lr": 0.0002,
+   "batch": 16,
+   "val_agreement_with_teacher": 0.7835,
+   "temperatures": {
+    "score": 0.5955,
+    "noul": 0.4788,
+    "choice": 0.6642,
+    "choice_many": 1.1461
+   },
+   "kernels": {
+    "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+    "packages": {
+     "torch": "2.8.0+cu128",
+     "transformers": "5.17.0",
+     "fla-core": "0.5.2",
+     "causal-conv1d": "1.7.0"
+    }
+   },
+   "train_summary": {
+    "states": 5998,
+    "decisions": 29990,
+    "sources": {
+     "fineweb": 3019,
+     "aya": 499,
+     "fineweb2": 2000,
+     "clinc": 145,
+     "gmmlu": 165,
+     "csqa": 170
+    },
+    "types": {
+     "choice": 11613,
+     "noul": 10428,
+     "score": 7949
+    },
+    "gold_decisions": 480,
+    "teacher_order_agreement": 0.9437812604201401
+   },
+   "peak_vram_gb": 6.39,
+   "lora_merged": false,
+   "cache_disabled": false
+  },
+  "raw_samples_file": "latency_samples_c-qwen08-30k_cuda_full.jsonl",
+  "raw_samples_sha256": "53b1bf02f815b97f0f3571edc60a9cf8f7c1d65fcd48332982aec5bf223c8f4d",
+  "gpu_name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "thermal": [
+   {
+    "at": "start",
+    "temp_c": 57,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2152,
+    "util_pct": 4,
+    "mem_mb": 2938,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=1",
+    "temp_c": 63,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2775,
+    "util_pct": 33,
+    "mem_mb": 2950
+   },
+   {
+    "at": "before n=5",
+    "temp_c": 63,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2775,
+    "util_pct": 33,
+    "mem_mb": 2950,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=5",
+    "temp_c": 67,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2130,
+    "util_pct": 87,
+    "mem_mb": 3201
+   },
+   {
+    "at": "before n=10",
+    "temp_c": 59,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 210,
+    "util_pct": 1,
+    "mem_mb": 3217,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=10",
+    "temp_c": 70,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1807,
+    "util_pct": 95,
+    "mem_mb": 3671
+   },
+   {
+    "at": "before n=50",
+    "temp_c": 62,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 180,
+    "util_pct": 0,
+    "mem_mb": 3638,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=50",
+    "temp_c": 73,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1395,
+    "util_pct": 98,
+    "mem_mb": 4366
+   }
+  ],
+  "throttled": true,
+  "threads": null,
+  "dtype": "bf16 autocast",
+  "load_s": 38.14,
+  "peak_vram_gb": 2.368,
+  "rss_gb": 2.0,
+  "cpu_load_before_pct": 15.8,
+  "protocol": "vs_laya_speed.fresh_state(i) + qs(n); warmup/reps as args",
+  "warmup": 5,
+  "reps": 40,
+  "reps50": 15,
+  "sizes": {
+   "1": {
+    "n_questions": 1,
+    "reps": 40,
+    "p50_ms": 88.22,
+    "p95_ms": 144.5,
+    "mean_ms": 93.63,
+    "ms_per_question": 88.224,
+    "thermal_after": {
+     "temp_c": 63,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 2775,
+     "util_pct": 33,
+     "mem_mb": 2950
+    }
+   },
+   "5": {
+    "n_questions": 5,
+    "reps": 40,
+    "p50_ms": 112.67,
+    "p95_ms": 202.79,
+    "mean_ms": 124.71,
+    "ms_per_question": 22.535,
+    "thermal_after": {
+     "temp_c": 67,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 2130,
+     "util_pct": 87,
+     "mem_mb": 3201
+    }
+   },
+   "10": {
+    "n_questions": 10,
+    "reps": 40,
+    "p50_ms": 238.54,
+    "p95_ms": 298.79,
+    "mean_ms": 247.28,
+    "ms_per_question": 23.854,
+    "thermal_after": {
+     "temp_c": 70,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1807,
+     "util_pct": 95,
+     "mem_mb": 3671
+    }
+   },
+   "50": {
+    "n_questions": 50,
+    "reps": 15,
+    "p50_ms": 1433.4,
+    "p95_ms": 1487.84,
+    "mean_ms": 1417.05,
+    "ms_per_question": 28.668,
+    "thermal_after": {
+     "temp_c": 73,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1395,
+     "util_pct": 98,
+     "mem_mb": 4366
+    }
+   }
+  },
+  "vram_before": {
+   "time": "2026-09-27T10:41:09+02:00",
+   "used_mb": 1107,
+   "total_mb": 16303,
+   "util_pct": 0,
+   "processes": [
+    {
+     "pid": 22372,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 195
+    },
+    {
+     "pid": 2612,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 667
+    },
+    {
+     "pid": 26960,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 145
+    }
+   ]
+  },
+  "vram_after": {
+   "time": "2026-09-27T10:43:02+02:00",
+   "used_mb": 4366,
+   "total_mb": 16303,
+   "util_pct": 19,
+   "processes": [
+    {
+     "pid": 11276,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3282
+    },
+    {
+     "pid": 22372,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 204
+    },
+    {
+     "pid": 2612,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 667
+    },
+    {
+     "pid": 26960,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 110
+    }
+   ]
+  },
+  "contaminated": true,
+  "time": "2026-09-27T10:43:02+02:00"
+ },
+ "c-qwen08-30k_cuda_restricted": {
+  "arm": "c-qwen08-30k",
+  "device": "cuda",
+  "readout": "restricted",
+  "weights_sha256": {
+   "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "model_info": {
+   "arm": "c-qwen08-30k",
+   "backbone": "Qwen/Qwen3.5-0.8B",
+   "lora": {
+    "r": 16,
+    "alpha": 32,
+    "targets": "all-linear"
+   },
+   "epochs": 1,
+   "steps": 1875,
+   "total_steps_planned": 1875,
+   "fraction_of_planned_steps": 1.0,
+   "segments": 1,
+   "stopped_early": false,
+   "train_seconds": 902.7,
+   "decisions_per_s": 33.23,
+   "train_tok_per_s": 9102.9,
+   "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+   "thermal_paused_s": 0.0,
+   "max_gpu_c": 47,
+   "lr": 0.0002,
+   "batch": 16,
+   "val_agreement_with_teacher": 0.7835,
+   "temperatures": {
+    "score": 0.5955,
+    "noul": 0.4788,
+    "choice": 0.6642,
+    "choice_many": 1.1461
+   },
+   "kernels": {
+    "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+    "packages": {
+     "torch": "2.8.0+cu128",
+     "transformers": "5.17.0",
+     "fla-core": "0.5.2",
+     "causal-conv1d": "1.7.0"
+    }
+   },
+   "train_summary": {
+    "states": 5998,
+    "decisions": 29990,
+    "sources": {
+     "fineweb": 3019,
+     "aya": 499,
+     "fineweb2": 2000,
+     "clinc": 145,
+     "gmmlu": 165,
+     "csqa": 170
+    },
+    "types": {
+     "choice": 11613,
+     "noul": 10428,
+     "score": 7949
+    },
+    "gold_decisions": 480,
+    "teacher_order_agreement": 0.9437812604201401
+   },
+   "peak_vram_gb": 6.39,
+   "lora_merged": false,
+   "cache_disabled": false,
+   "readout": "frozen option-letter projection; backbone, cache, LoRA and prompts unchanged",
+   "projected_vocabulary_rows": 26,
+   "original_vocabulary_rows": 248320
+  },
+  "raw_samples_file": "latency_samples_c-qwen08-30k_cuda_restricted.jsonl",
+  "raw_samples_sha256": "4161dae1b00d4b258f583ca8f9be331a6f5860251fb9b59b44ef648905d93546",
+  "gpu_name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "thermal": [
+   {
+    "at": "start",
+    "temp_c": 65,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 277,
+    "util_pct": 1,
+    "mem_mb": 2931,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=1",
+    "temp_c": 71,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2760,
+    "util_pct": 33,
+    "mem_mb": 2942
+   },
+   {
+    "at": "before n=5",
+    "temp_c": 64,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 210,
+    "util_pct": 0,
+    "mem_mb": 2942,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=5",
+    "temp_c": 71,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2010,
+    "util_pct": 85,
+    "mem_mb": 3184
+   },
+   {
+    "at": "before n=10",
+    "temp_c": 65,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 225,
+    "util_pct": 2,
+    "mem_mb": 3188,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=10",
+    "temp_c": 72,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1920,
+    "util_pct": 96,
+    "mem_mb": 3643
+   },
+   {
+    "at": "before n=50",
+    "temp_c": 65,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 202,
+    "util_pct": 0,
+    "mem_mb": 3655,
+    "waited_s": 10
+   },
+   {
+    "at": "after n=50",
+    "temp_c": 76,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1942,
+    "util_pct": 98,
+    "mem_mb": 4376
+   }
+  ],
+  "throttled": true,
+  "threads": null,
+  "dtype": "bf16 autocast",
+  "load_s": 7.57,
+  "peak_vram_gb": 2.368,
+  "rss_gb": 1.99,
+  "cpu_load_before_pct": 10.1,
+  "protocol": "vs_laya_speed.fresh_state(i) + qs(n); warmup/reps as args",
+  "warmup": 5,
+  "reps": 40,
+  "reps50": 15,
+  "sizes": {
+   "1": {
+    "n_questions": 1,
+    "reps": 40,
+    "p50_ms": 90.1,
+    "p95_ms": 148.5,
+    "mean_ms": 103.42,
+    "ms_per_question": 90.105,
+    "thermal_after": {
+     "temp_c": 71,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 2760,
+     "util_pct": 33,
+     "mem_mb": 2942
+    }
+   },
+   "5": {
+    "n_questions": 5,
+    "reps": 40,
+    "p50_ms": 117.46,
+    "p95_ms": 172.87,
+    "mean_ms": 132.35,
+    "ms_per_question": 23.491,
+    "thermal_after": {
+     "temp_c": 71,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 2010,
+     "util_pct": 85,
+     "mem_mb": 3184
+    }
+   },
+   "10": {
+    "n_questions": 10,
+    "reps": 40,
+    "p50_ms": 234.23,
+    "p95_ms": 316.65,
+    "mean_ms": 242.95,
+    "ms_per_question": 23.423,
+    "thermal_after": {
+     "temp_c": 72,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1920,
+     "util_pct": 96,
+     "mem_mb": 3643
+    }
+   },
+   "50": {
+    "n_questions": 50,
+    "reps": 15,
+    "p50_ms": 1373.36,
+    "p95_ms": 1410.01,
+    "mean_ms": 1361.54,
+    "ms_per_question": 27.467,
+    "thermal_after": {
+     "temp_c": 76,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1942,
+     "util_pct": 98,
+     "mem_mb": 4376
+    }
+   }
+  },
+  "vram_before": {
+   "time": "2026-09-27T10:43:07+02:00",
+   "used_mb": 1098,
+   "total_mb": 16303,
+   "util_pct": 1,
+   "processes": [
+    {
+     "pid": 22372,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 204
+    },
+    {
+     "pid": 2612,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 667
+    },
+    {
+     "pid": 26960,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 123
+    }
+   ]
+  },
+  "vram_after": {
+   "time": "2026-09-27T10:44:48+02:00",
+   "used_mb": 4376,
+   "total_mb": 16303,
+   "util_pct": 98,
+   "processes": [
+    {
+     "pid": 22372,
+     "name": "Code",
+     "kind": "dedicated",
+     "mb": 195
+    },
+    {
+     "pid": 2612,
+     "name": "dwm",
+     "kind": "dedicated",
+     "mb": 667
+    },
+    {
+     "pid": 26960,
+     "name": "chrome",
+     "kind": "dedicated",
+     "mb": 132
+    },
+    {
+     "pid": 38096,
+     "name": "python",
+     "kind": "dedicated",
+     "mb": 3282
+    }
+   ]
+  },
+  "contaminated": true,
+  "time": "2026-09-27T10:44:48+02:00"
+ }
+}
