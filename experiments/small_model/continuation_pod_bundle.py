@@ -1,6 +1,6 @@
 """Package the registered Qwen continuation for a RunPod GPU, with a checksum manifest (no credentials, no base model).
 
-The bundle is the committed tree (`git archive HEAD`) plus the ignored inputs the worker needs: the frozen teacher
+The bundle is the committed tree (working-copy bytes of `git ls-files`) plus the ignored inputs the worker needs: the frozen teacher
 directory, the original adapter, the training schedule, the verified resume checkpoint, and the three installed
 library files whose hashes the registration pins (kept at their registered `.venv-pilot/Lib/site-packages/...` paths
 so the pod can compare them with its own install). The base model is downloaded on the pod at the pinned revision.
@@ -9,7 +9,6 @@ so the pod can compare them with its own install). The base model is downloaded 
 """
 import argparse
 import hashlib
-import io
 import json
 from pathlib import Path
 import subprocess
@@ -53,15 +52,14 @@ def main() -> None:
     if bundle.exists():
         raise SystemExit("Bundle exists; remove it deliberately to rebuild")
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
-    tracked = subprocess.run(["git", "archive", "--format=tar", "HEAD"], cwd=ROOT, capture_output=True, check=True).stdout
+    # Working-copy bytes, not `git archive` output: the registration hashes the laptop's files as they are on disk,
+    # and on Windows those carry CRLF line endings that the repository stores as LF (attempt 11 failed on this).
+    tracked = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, check=True).stdout.decode().split("\0")
+    for name in filter(None, tracked):
+        if (ROOT / name).is_file():
+            files.setdefault(name, ROOT / name)
     manifest = {}
     with tarfile.open(bundle, "w") as out:
-        with tarfile.open(fileobj=io.BytesIO(tracked)) as src:
-            for member in src.getmembers():
-                if member.isfile():
-                    data = src.extractfile(member).read()
-                    manifest[member.name] = hashlib.sha256(data).hexdigest()
-                    out.addfile(member, io.BytesIO(data))
         for name, path in sorted(files.items()):
             manifest[name] = sha(path)
             out.add(path, arcname=name, recursive=False)
