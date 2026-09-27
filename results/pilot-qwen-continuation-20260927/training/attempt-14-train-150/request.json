@@ -1,0 +1,7 @@
+{
+  "operation": "train",
+  "target_step": 150,
+  "attempt": 14,
+  "checkpoint": "runs/pilot-qwen-continuation-20260927/training/attempt-13-step-125.pt",
+  "checkpoint_sha256": "eda7b02ec43f7f79823f5699d1cc4eac9388b60ca520a6d2ff03de8c6e637369"
+}

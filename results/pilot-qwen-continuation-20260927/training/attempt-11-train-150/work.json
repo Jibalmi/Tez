@@ -1,0 +1,14 @@
+{
+  "status": "failed",
+  "started_utc": "2026-09-27T14:22:33.757913+00:00",
+  "registration_sha256": "a70980ac4781b28ca742bb1a7560942b2370a65016f6bc06710f7ebac73971de",
+  "operation": "train",
+  "target_step": 150,
+  "source_files": {},
+  "checkpoints": [],
+  "updates": [],
+  "error_type": "ValueError",
+  "error": "Registered source changed",
+  "finished_utc": "2026-09-27T14:22:33.791420+00:00",
+  "elapsed_seconds": 0.026738855987787247
+}

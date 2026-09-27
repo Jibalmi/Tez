@@ -9,9 +9,13 @@ retains raw held-out predictions and inputs. Four bounded training segments are 
 successful checkpoint resumption. The [step-50 validation](attempt-05-validate-050/README.md)
 regressed on both registered metrics. The [step-100 validation](attempt-09-validate-100/README.md)
 recovered agreement (0.7906) but has the highest mean KL (0.1482); step zero (0.1401) still leads.
-The first segment toward step 150 stopped on the thermal guard after nine updates and is
-[preserved](attempt-10-train-150/README.md); its retry waits for a cool, quiet machine. No
-selected-checkpoint public-quality result is available yet.
+The first segment toward step 150 stopped on the laptop's thermal guard after nine updates and is
+[preserved](attempt-10-train-150/README.md). Under the recorded deviation below, steps 101-150 then ran
+on a RunPod H100: two Pod attempts stopped before loading a model on bundle defects
+([11](attempt-11-train-150/README.md), [12](attempt-12-train-150/README.md)), and
+[13](attempt-13-train-150/README.md) and [14](attempt-14-train-150/README.md) completed and verified all
+150 updates. The step-150 validation (attempt 15) runs on the laptop. No selected-checkpoint
+public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training

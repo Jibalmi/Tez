@@ -1,0 +1,9 @@
+{
+  "status": "failed_preserved",
+  "archived_utc": "2026-09-27T15:10:14.901724+00:00",
+  "source_files_verified": 0,
+  "registration_sha256": "a70980ac4781b28ca742bb1a7560942b2370a65016f6bc06710f7ebac73971de",
+  "error_type": "ValueError",
+  "error": "Registered source changed",
+  "scope": "Failure evidence only. No successful compatibility, quality, speed or release claim."
+}
