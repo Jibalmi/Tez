@@ -1,0 +1,22 @@
+{
+  "status": "complete",
+  "cpu_threads": 1,
+  "gpu_model_loaded": false,
+  "tasks": 21,
+  "primary_decisions": 6151,
+  "reversed_decisions": 1100,
+  "counts": {
+    "typed_primary": 2000,
+    "apps_primary": 2799,
+    "intent_primary": 1100,
+    "intent_reversed": 1100,
+    "semif_primary": 252
+  },
+  "max_input_tokens": 1803,
+  "total_input_tokens_including_reversed": 2113274,
+  "context_bound": 4096,
+  "truncated_decisions": 0,
+  "audit_sha256": "9d5738238ec0e54fea9aa301b6e9187c461c0d79827bd64477ab7979bb492a4b",
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "scope": "Complete token and prompt audit only; no public inference or scores."
+}

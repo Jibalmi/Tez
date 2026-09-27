@@ -29,6 +29,12 @@ training segments are now [complete and verified through step 50](training/attem
 checkpoint. The first trained checkpoint validation is queued. No trained validation improvement
 or release gate is claimed yet.
 
+The next [public comparison is registered](public_evaluation.md): a fresh unchanged-model control
+and the frozen selected checkpoint on the same laptop/backend, all original public decisions
+and reversed-option checks, with archived historical Decider and Tev1 results as context.
+The complete input preflight and five CPU integrity tests passed. Public inference waits for
+all four validations, selection, export and strict reload parity; no new accuracy result exists.
+
 A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) supports
 that driver. It saves only named trainable LoRA tensors, optimizer state, progress and
 random state; it refuses overwrite and verifies the registration, content hash and parameter

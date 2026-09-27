@@ -120,3 +120,9 @@ in the archived comparison. No model is promoted from this addition.
 All cloud pods from the trial are terminated. The elapsed-rate estimate is $9.1452 of the
 authorized $10 combined cap; this is not a final provider invoice. These follow-up comparisons
 used the local laptop and did not create another paid resource.
+
+The [next continuation comparison](../pilot-qwen-continuation-20260927/public_evaluation.md)
+is registered before selected-checkpoint public evaluation. It includes a fresh unchanged
+Qwen control on the same laptop/backend, so training effects can be distinguished from the
+earlier H200 runtime. The complete input audit passed; trained checkpoint selection and reload
+must finish before inference. No new quality or speed result is claimed from this preparation.
