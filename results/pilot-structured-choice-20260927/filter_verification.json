@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "registration_sha256": "374ec40f50dd8a0d5d977ace3e1db40c819c7f10c75dc2a0adcf619fe69280ae",
+  "retained_states": 1200,
+  "retained_decisions": 2400,
+  "filtered_train_sha256": "29c758c2602efb1e1f3e034f006e8dfce7710aa975259b063cf277358983056a",
+  "source_files_verified": 12,
+  "prerequisites_verified": 21,
+  "scope": "Source/receipt and retained-data integrity plus exact-label validation. Embeddings, MinHash searches and centroid fits were not rerun by this CPU verifier. Passing automated guards does not prove absence of all semantic overlap. No model has trained or been evaluated on this data."
+}
