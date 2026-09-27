@@ -1,0 +1,16 @@
+{
+ "created_utc": "2026-09-27T01:12:40.123538+00:00",
+ "script_sha256": "3cb9ccf8bdc70c7a2382b56b795102008906d54eb55595b60703b7bfa7b1f7ee",
+ "models": [
+  "c-qwen08-30k",
+  "decider08-native"
+ ],
+ "weights": [
+  0.5,
+  0.5
+ ],
+ "temperature": 1,
+ "selection": "One fixed blend, no test-label weight fitting or mixture search",
+ "scope": "Exploratory secondary analysis after inspecting individual public benchmark results",
+ "deployment": "No runtime promotion or speed claim; both models would need inference"
+}

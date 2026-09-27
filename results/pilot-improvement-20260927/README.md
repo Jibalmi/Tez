@@ -60,6 +60,13 @@ released-model baseline. Model selection and probability calibration need a sepa
 validation set; the existing public benchmark should remain a secondary regression check. Reusing
 the stronger released model is a valid outcome. The current small encoder is not ready to replace it.
 
+A subsequent [fixed equal-probability blend](ENSEMBLE.md) of the Qwen student and Decider scored
+53.00% on typed decisions, versus Decider's 53.40%. The paired state-bootstrap interval for the
+difference spans -1.85 to +0.95 points. MASSIVE-11 rose from 74.45% to 74.91%. This exploratory
+analysis does not establish a useful overall gain, and both models would still require inference.
+No serving change was made. The [paired structure diagnostic](../pilot-structure-probe-20260927/README.md)
+tests the training-coverage hypothesis using newly authored exact-answer records.
+
 ## Validation, artifacts, and cost
 
 Seven new complete evaluations each contain 6,151 decisions across 21 tasks: **43,057 validated
