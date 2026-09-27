@@ -1,0 +1,40 @@
+{
+  "status": "complete",
+  "cpu_threads": 1,
+  "gpu_model_loaded": false,
+  "states": 278,
+  "decisions": 1390,
+  "max_input_tokens": 1607,
+  "input_sha256": "a41f0da6188391609bf30b41f79f8ae89b4d71c17fac6ae9e571f685bb8ba1a9",
+  "plans": {
+    "1": {
+      "batches": 1390,
+      "real_decisions": 1390,
+      "dummy_rows": 0,
+      "batches_by_shape": {
+        "1x128": 37,
+        "1x256": 701,
+        "1x512": 546,
+        "1x1024": 95,
+        "1x2048": 11
+      },
+      "native_prefix_ids_and_masks_equal": true,
+      "native_final_positions_equal": true
+    },
+    "16": {
+      "batches": 87,
+      "real_decisions": 1390,
+      "dummy_rows": 0,
+      "batches_by_shape": {
+        "16x256": 12,
+        "16x512": 49,
+        "16x1024": 21,
+        "16x2048": 4,
+        "14x1024": 1
+      },
+      "native_prefix_ids_and_masks_equal": true,
+      "native_final_positions_equal": true
+    }
+  },
+  "scope": "Real tokenizer and input-position equality only; no Qwen inference or probability parity established."
+}

@@ -4,8 +4,21 @@ The [registered candidate](../../experiments/small_model/qwen_prefix_validation_
 follows the retained [left-padding graph failure](../pilot-qwen-graph-validation-20260927/batch-16/RESULTS.md).
 That earlier graph matched its identical uncaptured forward exactly, but the surrounding inference
 changes failed the original reference's mean-total-variation limit. This candidate changes how inputs
-fit a graph; it does not relax the reference or numerical thresholds. GPU results are pending and the
-batch-16 arm is queued under the shared laptop compute lock.
+fit a graph; it does not relax the reference or numerical thresholds. The
+[full batch-16 run](batch-16/RESULTS.md) is complete and independently verified: all 1,390 decisions
+pass the registered probability limits. Argmax agreement is 0.9971223021582734, maximum probability
+change is 0.034462194314461514, and mean total variation is 0.004043630383381474. The captured and
+identical uncaptured outputs match exactly. Five shapes and all 87 native batches, including the
+last 14-decision batch, were verified. The [1,347,853-byte archive](batch-16/artifact_receipt.json)
+contains 43 verified files. This is inference parity, not measured speed or a release gate.
+
+Before any prefix batch-one inference, its time allowance was
+[separately registered](../pilot-qwen-prefix-single-20260927/README.md) at 18 minutes soft and
+20 minutes hard. The earlier left-padding batch-one trial exhausted 12 minutes with 42 decisions
+still unmeasured. The new resource plan reuses this frozen worker, input plan and probability
+thresholds, changes no existing result, and starts a complete fresh validation. It replaces only
+the unexecuted batch-one resource plan from the parent registration. The single-question arm is
+queued; the original prefix batch-one directory is not launched.
 
 Each native batch is formed by the original prompt-character-length sort, including its short final
 batch. Its left-padded input IDs, masks and real-token positions remain unchanged. Extra masked tokens
