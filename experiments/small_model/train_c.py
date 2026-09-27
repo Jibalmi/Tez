@@ -13,6 +13,7 @@ Writes runs/pilot/models/<arm>/ (LoRA adapter, temperatures) and results/pilot/t
 from __future__ import annotations
 
 import argparse
+from importlib.metadata import PackageNotFoundError, version
 import json
 import random
 import time
@@ -27,6 +28,16 @@ from train_a import fit_type_temps
 
 BASE = "Qwen/Qwen3.5-0.8B"
 LETTERS = [chr(65 + i) for i in range(26)]
+
+
+def kernel_packages():
+    installed = {}
+    for name in ("torch", "transformers", "triton", "fla-core", "causal-conv1d", "tilelang"):
+        try:
+            installed[name] = version(name)
+        except PackageNotFoundError:
+            installed[name] = None
+    return installed
 
 
 def load_base(dtype=torch.bfloat16, device="cuda"):
@@ -127,7 +138,9 @@ def main() -> int:
         opt.load_state_dict(ck["opt"])
         sched.load_state_dict(ck["sched"])
         st = ck["state"]
-        torch.set_rng_state(ck["torch_rng"])
+        torch.set_rng_state(ck["torch_rng"].cpu())
+        if "cuda_rng" in ck:
+            torch.cuda.set_rng_state_all([state.cpu() for state in ck["cuda_rng"]])
         print(f"resumed at epoch {st['ep']} batch {st['b']} (step {st['step']})", flush=True)
     st["segments"] += 1
     t0 = time.time()
@@ -139,7 +152,8 @@ def main() -> int:
         st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
         tmp = ckpt_path.with_suffix(".pt.tmp")
         torch.save({"lora": {n: p.detach().clone() for n, p in trainable}, "opt": opt.state_dict(),
-                    "sched": sched.state_dict(), "state": st, "torch_rng": torch.get_rng_state()}, tmp)
+                    "sched": sched.state_dict(), "state": st, "torch_rng": torch.get_rng_state(),
+                    "cuda_rng": torch.cuda.get_rng_state_all()}, tmp)
         tmp.replace(ckpt_path)
 
     def guard():
@@ -213,16 +227,14 @@ def main() -> int:
             "train_tok_per_s_excluding_thermal_pauses": round(st["tokens"] / max(1e-9, st["train_s"] - st["paused_s"]), 1),
             "thermal_paused_s": round(st["paused_s"], 1), "max_gpu_c": st["max_gpu_c"], "lr": args.lr, "batch": args.batch,
             "val_agreement_with_teacher": round(float(np.mean(agree)), 4), "temperatures": temps,
-            "kernels": "transformers' reference PyTorch paths for gated delta rule and causal conv1d (fla and "
-                       "causal_conv1d not installed on Windows)",
+            "kernels": {"selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+                        "packages": kernel_packages()},
             "train_summary": summary(train), "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2)}
     (out / "student.json").write_text(json.dumps(info, indent=1), encoding="utf-8")
     dump(RESULTS / f"train_{args.arm}.json", info)
     print(json.dumps({k: v for k, v in info.items() if k != "train_summary"}, indent=1))
     if ckpt_path.exists():
         ckpt_path.unlink()
-    del model, opt
-    torch.cuda.empty_cache()
     return 0
 
 

@@ -1,0 +1,18 @@
+{
+  "jhu-clsp/mmBERT-base": {
+    "snapshot": "/workspace/hf-cache/hub/models--jhu-clsp--mmBERT-base/snapshots/c5955035435e2bf121cde7f3c8863ef52ff35d82",
+    "revision": "c5955035435e2bf121cde7f3c8863ef52ff35d82"
+  },
+  "jhu-clsp/mmBERT-small": {
+    "snapshot": "/workspace/hf-cache/hub/models--jhu-clsp--mmBERT-small/snapshots/abc32620dd4f6ab06f5fbe905dc25f310618e09f",
+    "revision": "abc32620dd4f6ab06f5fbe905dc25f310618e09f"
+  },
+  "Qwen/Qwen3.5-0.8B": {
+    "snapshot": "/workspace/hf-cache/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+    "revision": "2fc06364715b967f1860aea9cf38778875588b17"
+  },
+  "knowledgator/gliclass-x-base": {
+    "snapshot": "/workspace/hf-cache/hub/models--knowledgator--gliclass-x-base/snapshots/4599a431a1b25b4eb076b46ae97c9ba61f82f416",
+    "revision": "4599a431a1b25b4eb076b46ae97c9ba61f82f416"
+  }
+}

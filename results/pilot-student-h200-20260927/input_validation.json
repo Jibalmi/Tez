@@ -1,0 +1,63 @@
+{
+ "training": {
+  "states": 5998,
+  "decisions": 29990,
+  "sources": {
+   "fineweb": 3019,
+   "aya": 499,
+   "fineweb2": 2000,
+   "clinc": 145,
+   "gmmlu": 165,
+   "csqa": 170
+  },
+  "types": {
+   "choice": 11613,
+   "noul": 10428,
+   "score": 7949
+  },
+  "gold_decisions": 480,
+  "teacher_order_agreement": 0.9437812604201401
+ },
+ "learning_curve": {
+  "states": 2000,
+  "decisions": 10000,
+  "sources": {
+   "fineweb": 976,
+   "aya": 168,
+   "fineweb2": 686,
+   "clinc": 49,
+   "gmmlu": 51,
+   "csqa": 70
+  },
+  "types": {
+   "choice": 3864,
+   "noul": 3490,
+   "score": 2646
+  },
+  "gold_decisions": 170,
+  "teacher_order_agreement": 0.9421
+ },
+ "validation": {
+  "states": 278,
+  "decisions": 1390,
+  "sources": {
+   "fineweb2": 100,
+   "fineweb": 131,
+   "aya": 26,
+   "csqa": 5,
+   "clinc": 6,
+   "gmmlu": 10
+  },
+  "types": {
+   "score": 373,
+   "noul": 491,
+   "choice": 526
+  },
+  "gold_decisions": 21,
+  "teacher_order_agreement": 0.9388489208633094
+ },
+ "evaluation_decisions": 6151,
+ "exact_or_normalized_state_overlap": 0,
+ "dataset_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+ "eval_suites_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5"
+}

@@ -1,0 +1,533 @@
+{
+ "a-base-30k_cuda": {
+  "arm": "a-base-30k",
+  "device": "cuda",
+  "gpu_name": "NVIDIA H200",
+  "thermal": [
+   {
+    "at": "start",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 0,
+    "mem_mb": 1739,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=1",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 28,
+    "mem_mb": 2157
+   },
+   {
+    "at": "before n=5",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 28,
+    "mem_mb": 2157,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=5",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 30,
+    "mem_mb": 2159
+   },
+   {
+    "at": "before n=10",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 28,
+    "mem_mb": 2159,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=10",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 32,
+    "mem_mb": 2179
+   },
+   {
+    "at": "before n=50",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 32,
+    "mem_mb": 2179,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=50",
+    "temp_c": 31,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 55,
+    "mem_mb": 2223
+   }
+  ],
+  "throttled": false,
+  "threads": null,
+  "dtype": "bf16 autocast",
+  "load_s": 14.98,
+  "peak_vram_gb": 1.459,
+  "rss_gb": 1.55,
+  "cpu_load_before_pct": 24.7,
+  "protocol": "vs_laya_speed.fresh_state(i) + qs(n); warmup/reps as args",
+  "warmup": 5,
+  "reps": 40,
+  "reps50": 15,
+  "sizes": {
+   "1": {
+    "n_questions": 1,
+    "reps": 40,
+    "p50_ms": 12.45,
+    "p95_ms": 13.29,
+    "mean_ms": 12.68,
+    "ms_per_question": 12.447,
+    "thermal_after": {
+     "temp_c": 29,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 28,
+     "mem_mb": 2157
+    }
+   },
+   "5": {
+    "n_questions": 5,
+    "reps": 40,
+    "p50_ms": 12.54,
+    "p95_ms": 12.86,
+    "mean_ms": 12.55,
+    "ms_per_question": 2.509,
+    "thermal_after": {
+     "temp_c": 29,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 30,
+     "mem_mb": 2159
+    }
+   },
+   "10": {
+    "n_questions": 10,
+    "reps": 40,
+    "p50_ms": 12.97,
+    "p95_ms": 14.06,
+    "mean_ms": 13.97,
+    "ms_per_question": 1.297,
+    "thermal_after": {
+     "temp_c": 29,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 32,
+     "mem_mb": 2179
+    }
+   },
+   "50": {
+    "n_questions": 50,
+    "reps": 15,
+    "p50_ms": 13.74,
+    "p95_ms": 13.9,
+    "mean_ms": 13.73,
+    "ms_per_question": 0.275,
+    "thermal_after": {
+     "temp_c": 31,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 55,
+     "mem_mb": 2223
+    }
+   }
+  },
+  "vram_before": {
+   "source": "nvidia-smi compute applications",
+   "processes": []
+  },
+  "vram_after": {
+   "source": "nvidia-smi compute applications",
+   "processes": [
+    {
+     "pid": 15459,
+     "mb": 2214.0,
+     "name": "/workspace/tez-student/runs/student-venv/bin/python",
+     "kind": "Dedicated compute"
+    }
+   ]
+  },
+  "contaminated": false,
+  "time": "2026-09-26T23:59:25+00:00"
+ },
+ "a-small-30k_cuda": {
+  "arm": "a-small-30k",
+  "device": "cuda",
+  "gpu_name": "NVIDIA H200",
+  "thermal": [
+   {
+    "at": "start",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 0,
+    "mem_mb": 1079,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=1",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 33,
+    "mem_mb": 1357
+   },
+   {
+    "at": "before n=5",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 33,
+    "mem_mb": 1357,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=5",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 28,
+    "mem_mb": 1359
+   },
+   {
+    "at": "before n=10",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 28,
+    "mem_mb": 1359,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=10",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 20,
+    "mem_mb": 1379
+   },
+   {
+    "at": "before n=50",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 20,
+    "mem_mb": 1379,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=50",
+    "temp_c": 29,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 44,
+    "mem_mb": 1423
+   }
+  ],
+  "throttled": false,
+  "threads": null,
+  "dtype": "bf16 autocast",
+  "load_s": 14.73,
+  "peak_vram_gb": 0.666,
+  "rss_gb": 1.55,
+  "cpu_load_before_pct": 21.4,
+  "protocol": "vs_laya_speed.fresh_state(i) + qs(n); warmup/reps as args",
+  "warmup": 5,
+  "reps": 40,
+  "reps50": 15,
+  "sizes": {
+   "1": {
+    "n_questions": 1,
+    "reps": 40,
+    "p50_ms": 11.59,
+    "p95_ms": 18.44,
+    "mean_ms": 12.98,
+    "ms_per_question": 11.589,
+    "thermal_after": {
+     "temp_c": 28,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 33,
+     "mem_mb": 1357
+    }
+   },
+   "5": {
+    "n_questions": 5,
+    "reps": 40,
+    "p50_ms": 15.47,
+    "p95_ms": 19.08,
+    "mean_ms": 15.27,
+    "ms_per_question": 3.094,
+    "thermal_after": {
+     "temp_c": 28,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 28,
+     "mem_mb": 1359
+    }
+   },
+   "10": {
+    "n_questions": 10,
+    "reps": 40,
+    "p50_ms": 17.3,
+    "p95_ms": 19.65,
+    "mean_ms": 16.18,
+    "ms_per_question": 1.73,
+    "thermal_after": {
+     "temp_c": 29,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 20,
+     "mem_mb": 1379
+    }
+   },
+   "50": {
+    "n_questions": 50,
+    "reps": 15,
+    "p50_ms": 13.36,
+    "p95_ms": 13.54,
+    "mean_ms": 13.38,
+    "ms_per_question": 0.267,
+    "thermal_after": {
+     "temp_c": 29,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 44,
+     "mem_mb": 1423
+    }
+   }
+  },
+  "vram_before": {
+   "source": "nvidia-smi compute applications",
+   "processes": []
+  },
+  "vram_after": {
+   "source": "nvidia-smi compute applications",
+   "processes": [
+    {
+     "pid": 15510,
+     "mb": 1414.0,
+     "name": "/workspace/tez-student/runs/student-venv/bin/python",
+     "kind": "Dedicated compute"
+    }
+   ]
+  },
+  "contaminated": false,
+  "time": "2026-09-26T23:59:46+00:00"
+ },
+ "c-qwen08-30k_cuda": {
+  "arm": "c-qwen08-30k",
+  "device": "cuda",
+  "gpu_name": "NVIDIA H200",
+  "thermal": [
+   {
+    "at": "start",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 1,
+    "mem_mb": 2231,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=1",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 20,
+    "mem_mb": 2587
+   },
+   {
+    "at": "before n=5",
+    "temp_c": 28,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 20,
+    "mem_mb": 2587,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=5",
+    "temp_c": 30,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 30,
+    "mem_mb": 2843
+   },
+   {
+    "at": "before n=10",
+    "temp_c": 30,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 30,
+    "mem_mb": 2843,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=10",
+    "temp_c": 31,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 44,
+    "mem_mb": 2843
+   },
+   {
+    "at": "before n=50",
+    "temp_c": 31,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 44,
+    "mem_mb": 2843,
+    "waited_s": 0
+   },
+   {
+    "at": "after n=50",
+    "temp_c": 34,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1980,
+    "util_pct": 42,
+    "mem_mb": 2995
+   }
+  ],
+  "throttled": false,
+  "threads": null,
+  "dtype": "bf16 autocast",
+  "load_s": 17.45,
+  "peak_vram_gb": 2.12,
+  "rss_gb": 1.79,
+  "cpu_load_before_pct": 21.1,
+  "protocol": "vs_laya_speed.fresh_state(i) + qs(n); warmup/reps as args",
+  "warmup": 5,
+  "reps": 40,
+  "reps50": 15,
+  "sizes": {
+   "1": {
+    "n_questions": 1,
+    "reps": 40,
+    "p50_ms": 60.4,
+    "p95_ms": 92.8,
+    "mean_ms": 62.83,
+    "ms_per_question": 60.399,
+    "thermal_after": {
+     "temp_c": 28,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 20,
+     "mem_mb": 2587
+    }
+   },
+   "5": {
+    "n_questions": 5,
+    "reps": 40,
+    "p50_ms": 64.98,
+    "p95_ms": 68.54,
+    "mean_ms": 66.46,
+    "ms_per_question": 12.995,
+    "thermal_after": {
+     "temp_c": 30,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 30,
+     "mem_mb": 2843
+    }
+   },
+   "10": {
+    "n_questions": 10,
+    "reps": 40,
+    "p50_ms": 68.95,
+    "p95_ms": 100.36,
+    "mean_ms": 72.22,
+    "ms_per_question": 6.895,
+    "thermal_after": {
+     "temp_c": 31,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 44,
+     "mem_mb": 2843
+    }
+   },
+   "50": {
+    "n_questions": 50,
+    "reps": 15,
+    "p50_ms": 276.79,
+    "p95_ms": 307.23,
+    "mean_ms": 283.3,
+    "ms_per_question": 5.536,
+    "thermal_after": {
+     "temp_c": 34,
+     "sw_thermal": false,
+     "hw_thermal": false,
+     "sm_mhz": 1980,
+     "util_pct": 42,
+     "mem_mb": 2995
+    }
+   }
+  },
+  "vram_before": {
+   "source": "nvidia-smi compute applications",
+   "processes": []
+  },
+  "vram_after": {
+   "source": "nvidia-smi compute applications",
+   "processes": [
+    {
+     "pid": 15561,
+     "mb": 2986.0,
+     "name": "/workspace/tez-student/runs/student-venv/bin/python",
+     "kind": "Dedicated compute"
+    }
+   ]
+  },
+  "contaminated": false,
+  "time": "2026-09-27T00:00:27+00:00"
+ }
+}

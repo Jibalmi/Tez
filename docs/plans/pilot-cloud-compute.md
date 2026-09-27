@@ -2,9 +2,15 @@
 
 ## Current H200 trial
 
-The teacher export is complete, and the Pod was terminated after the downloaded artifacts were
-checksum-verified. Student training and evaluation remain pending. The authorized first-trial
-cap was $10 including storage. One H200 SXM was allocated at a verified $4.59/hour, with a one-hour
+The teacher export and student training/evaluation are complete. Four students and the GLiClass
+baseline were evaluated on 6,151 decisions each; the trained weights and prediction records were
+downloaded and checksum-verified. Both H200 Pods are terminated. The estimated combined cost is
+**$6.25**, including running storage, within the authorized **$10** cap; this is not a settled invoice.
+See the [student report](../../results/pilot-student-h200-20260927/README.md) for artifacts and results.
+The laptop latency gate remains pending because the shared compute queue was occupied; the H200
+timings are separate supplementary measurements.
+
+Each H200 SXM was allocated at a verified $4.59/hour, with a one-hour
 provider-stop watcher that was retired after cleanup. The bootstrap uses its own Python virtual
 environment because the container's system Python is externally managed. Direct SSH requires
 `supportPublicIp: true`; API requests identify the client with a User-Agent.
@@ -34,14 +40,22 @@ logits, and production/reference consistency before exporting the teacher shards
 temperature-adjusted option probabilities. Point `TEZ_PILOT_RUNS` at that new directory for
 later student training. Keep student results separate with `TEZ_PILOT_RESULTS`.
 
-The earlier proposals below document the preparation history; the linked H200 trial record is
-the authoritative execution result.
+Student execution uses `cloud_student.py prepare` to freeze the public inputs, teacher labels,
+evaluation rows, and source hashes, then `cloud_student_bootstrap.sh --minutes 50` on the Pod.
+Training and evaluation run sequentially with checkpoints and a bounded deadline. The bootstrap
+pins the optional FLA, causal-conv1d, and TileLang packages needed by the Qwen control on H200.
+Successful encoder stages were retained when the Qwen kernel and GLiClass wrapper failures were
+corrected; both failed attempts remain in the exported records.
+
+The earlier proposals below document the preparation history; the linked teacher and student
+reports are the authoritative execution results.
 
 ## Measured reason to move GPU work
 
 The local Gemma teacher's recovered segment completed 1,200 states in 1,587 seconds, including
 962.3696 seconds cooling (60.6% of elapsed time). This is from `runs/pilot/logs/teacher.log`;
-it is a laptop measurement, not a RunPod benchmark. Cloud throughput has not been measured.
+it is a laptop measurement, not a RunPod benchmark. Cloud throughput was unmeasured when this
+proposal was written; the completed H200 trial above now provides those measurements.
 
 The same machine successfully ran the GPU teacher alongside Codex labeling clients. On the
 160-state / 800-decision sample, four Codex workers took 50.03 seconds, eight took 35.85 seconds,
@@ -91,9 +105,9 @@ its volume disk is deleted with it. [Storage](https://docs.runpod.io/pods/storag
    and separate output directories; merge by ID with duplicate/conflict checks. Do not let two
    writers share `part-NNNN.jsonl` filenames. Stop renting compute when the bounded run ends.
 
-Deployment status: the portable teacher package and bounded launcher are implemented and offline
-tested. No Pod benchmark or cloud speedup claim exists yet. Provider account access, authenticated
-capacity/price checks, and a spending cap are still launch inputs.
+Status at proposal time: the portable teacher package and bounded launcher were implemented and
+offline tested. Provider access, authenticated capacity/price checks, and a spending cap were
+still launch inputs. The completed trials above supersede that status.
 
 ## Speed-focused trial prepared after the deployment request
 

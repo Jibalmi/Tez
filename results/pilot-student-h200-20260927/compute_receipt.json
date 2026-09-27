@@ -1,0 +1,31 @@
+{
+  "status": "terminated",
+  "created_utc": "2026-09-26T23:24:04.931645+00:00",
+  "gpu_quote": {
+    "id": "NVIDIA H200",
+    "displayName": "H200 SXM",
+    "memoryInGb": 141,
+    "securePrice": 4.59
+  },
+  "max_gpu_hourly_usd": 4.6,
+  "minutes": 60.0,
+  "stop_at_unix": 1790468644.931658,
+  "image": "runpod/pytorch@sha256:0ad20c96682da30fd04c2f130c13edb68aa5ebe3d370f2d5096eb1fcbbbfddad",
+  "storage_gb": 60,
+  "container_disk_gb": 20,
+  "storage_note": "Storage is additional and persists after GPU stop",
+  "pod_id": "a9lwhzg8p7yycv",
+  "actual_cost_per_hr": 4.59,
+  "watcher_pid": 68748,
+  "terminated_utc": "2026-09-27T00:04:17.050317+00:00",
+  "pod_absence_verified": true,
+  "watcher_stopped": true,
+  "allocated_elapsed_seconds": 2412.118672,
+  "estimated_gpu_usd": 3.0754513068000002,
+  "estimated_running_storage_usd": 0.0074448107160493835,
+  "estimated_total_usd": 3.0828961175160496,
+  "prior_teacher_estimated_total_usd": 3.1659039732141974,
+  "combined_estimated_total_usd": 6.248800090730247,
+  "authorized_combined_cap_usd": 10,
+  "cost_note": "Estimate from elapsed rental time and verified quote plus running storage; provider invoice may differ."
+}

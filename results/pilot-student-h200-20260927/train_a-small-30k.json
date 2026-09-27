@@ -1,0 +1,91 @@
+{
+ "arm": "a-small-30k",
+ "backbone": "jhu-clsp/mmBERT-small",
+ "data": "30k",
+ "params": 140789377,
+ "epochs_run": 3,
+ "steps": 834,
+ "segments": 1,
+ "train_seconds": 106.5,
+ "train_tokens": 10235759,
+ "train_tok_per_s": 96109.1,
+ "train_tok_per_s_excluding_thermal_pauses": 96109.1,
+ "thermal_paused_s": 0.0,
+ "max_gpu_c": 39,
+ "lr": 5e-05,
+ "head_lr": 0.001,
+ "budget_tokens": 16384,
+ "max_len": 2048,
+ "log": [
+  {
+   "epoch": 0,
+   "step": 278,
+   "val_agreement": 0.6719,
+   "val_kl": 0.2815,
+   "seconds": 36.3
+  },
+  {
+   "epoch": 1,
+   "step": 557,
+   "val_agreement": 0.736,
+   "val_kl": 0.2039,
+   "seconds": 71.6
+  },
+  {
+   "epoch": 2,
+   "step": 834,
+   "val_agreement": 0.7324,
+   "val_kl": 0.2034,
+   "seconds": 106.5
+  }
+ ],
+ "score_loss_order": "canonical_levels",
+ "seed": 13,
+ "val_agreement_with_teacher": 0.7324,
+ "val_kl": 0.2034,
+ "temperatures": {
+  "noul": 0.5955,
+  "choice": 0.7408,
+  "score": 0.6289,
+  "choice_many": 1.8728
+ },
+ "train_summary": {
+  "states": 5998,
+  "decisions": 29990,
+  "sources": {
+   "fineweb": 3019,
+   "aya": 499,
+   "fineweb2": 2000,
+   "clinc": 145,
+   "gmmlu": 165,
+   "csqa": 170
+  },
+  "types": {
+   "choice": 11613,
+   "noul": 10428,
+   "score": 7949
+  },
+  "gold_decisions": 480,
+  "teacher_order_agreement": 0.9437812604201401
+ },
+ "val_summary": {
+  "states": 278,
+  "decisions": 1390,
+  "sources": {
+   "fineweb2": 100,
+   "fineweb": 131,
+   "aya": 26,
+   "csqa": 5,
+   "clinc": 6,
+   "gmmlu": 10
+  },
+  "types": {
+   "score": 373,
+   "noul": 491,
+   "choice": 526
+  },
+  "gold_decisions": 21,
+  "teacher_order_agreement": 0.9388489208633094
+ },
+ "peak_vram_gb": 9.35
+}

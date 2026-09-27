@@ -1,9 +1,18 @@
 # A small, fast Tez model: research and build plan
 
-Plan, 2026-09-25. Nothing was trained and no GPU job was run for it. A number with a section mark comes from
+Original plan, 2026-09-25; no training had run when it was written. A number with a section mark comes from
 `BENCHMARKS.md`, and a path means a file in `results/`. Numbers labelled *estimate* are planning guesses that the
 pilot replaces with measurements. Laya's and dev-0.4b's figures are their own or come from the earlier study, and are
 marked as such.
+
+**Measured update, 2026-09-27:** the H200 teacher export, four student training runs, and held-out
+evaluations are complete; see the [pilot report](../../results/pilot-student-h200-20260927/README.md).
+The base encoder reaches 35.95% typed-decision accuracy and 52.73% MASSIVE-11 mean, below G1's
+quality targets. Qwen3.5-0.8B reaches 50.15% and 64.09%, respectively, clearing the 49.3% minimum
+typed-decision stop floor but remaining below the recorded 12B baseline. H200 single-question p50
+is 12.45 ms for the base encoder and 60.40 ms for Qwen. These timings do not replace the required
+laptop measurements, which remain pending. No arm is promoted to M2. The recommendations and
+compute estimates below are the original plan, not conclusions from the completed pilot.
 
 Contents: Summary · 1 Targets · 2 Where the others stand · 3 Options · 4 The student · 5 Data · 6 Evaluation ·
 7 Serving · 8 Milestones, gates, pilot, budget · 9 Risks · 10 Sources checked

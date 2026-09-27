@@ -1,0 +1,59 @@
+{
+ "arm": "c-qwen08-30k",
+ "backbone": "Qwen/Qwen3.5-0.8B",
+ "lora": {
+  "r": 16,
+  "alpha": 32,
+  "targets": "all-linear"
+ },
+ "epochs": 1,
+ "steps": 1875,
+ "total_steps_planned": 1875,
+ "fraction_of_planned_steps": 1.0,
+ "segments": 1,
+ "stopped_early": false,
+ "train_seconds": 902.7,
+ "decisions_per_s": 33.23,
+ "train_tok_per_s": 9102.9,
+ "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+ "thermal_paused_s": 0.0,
+ "max_gpu_c": 47,
+ "lr": 0.0002,
+ "batch": 16,
+ "val_agreement_with_teacher": 0.7835,
+ "temperatures": {
+  "score": 0.5955,
+  "noul": 0.4788,
+  "choice": 0.6642,
+  "choice_many": 1.1461
+ },
+ "kernels": {
+  "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+  "packages": {
+   "torch": "2.8.0+cu128",
+   "transformers": "5.17.0",
+   "fla-core": "0.5.2",
+   "causal-conv1d": "1.7.0"
+  }
+ },
+ "train_summary": {
+  "states": 5998,
+  "decisions": 29990,
+  "sources": {
+   "fineweb": 3019,
+   "aya": 499,
+   "fineweb2": 2000,
+   "clinc": 145,
+   "gmmlu": 165,
+   "csqa": 170
+  },
+  "types": {
+   "choice": 11613,
+   "noul": 10428,
+   "score": 7949
+  },
+  "gold_decisions": 480,
+  "teacher_order_agreement": 0.9437812604201401
+ },
+ "peak_vram_gb": 6.39
+}

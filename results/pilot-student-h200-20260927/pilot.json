@@ -1,0 +1,652 @@
+{
+ "title": "Small-model pilot (week 1): every arm, same rows as the 12B and Laya",
+ "g1_thresholds": {
+  "td_acc": 0.563,
+  "td_soft": 0.46,
+  "laya_best": {
+   "app_model_routing_domain": 0.659,
+   "app_guardrails_jailbreak": 0.805,
+   "app_moderation_toxicity": 0.535
+  },
+  "massive_macro": 0.7,
+  "km_min": 0.15,
+  "retention_gain_pts": 3.0,
+  "ms_1q": 30.0,
+  "ms_per_q_50": 2.8,
+  "ece": 0.15,
+  "stop_td": 0.493
+ },
+ "teacher_reference": {
+  "td_acc": 0.704,
+  "td_soft": 0.575
+ },
+ "g1_arm": "a-base-30k",
+ "g1": [
+  {
+   "criterion": "typed-decisions accuracy >= 0.563",
+   "value": 0.3595,
+   "pass": false
+  },
+  {
+   "criterion": "typed-decisions soft accuracy >= 0.46",
+   "value": 0.339,
+   "pass": false
+  },
+  {
+   "criterion": "above the best Laya checkpoint on >= 2 of 3 held-out workflows",
+   "value": {
+    "app_model_routing_domain": 0.5965,
+    "app_guardrails_jailbreak": 0.8925,
+    "app_moderation_toxicity": 0.5625
+   },
+   "pass": true,
+   "wins": 2
+  },
+  {
+   "criterion": "MASSIVE 11 languages macro >= 0.70",
+   "value": 0.5273,
+   "pass": false
+  },
+  {
+   "criterion": "MASSIVE km (unseen) > 0.15 (3x random)",
+   "value": 0.23,
+   "pass": true
+  },
+  {
+   "criterion": "retention at 30k >= retention at 10k + 3 points (mean over G1 suites)",
+   "value": {
+    "30k": 0.6311,
+    "10k": 0.5621,
+    "gain_points": 6.89,
+    "typed_decisions_gain_points": 4.91
+   },
+   "pass": true
+  },
+  {
+   "criterion": "<= 30 ms for one question (GPU, PyTorch)",
+   "value": null,
+   "pass": null,
+   "reason": "GPU latency not measured"
+  },
+  {
+   "criterion": "<= 2.8 ms per question at 50 (GPU, PyTorch)",
+   "value": null,
+   "pass": null,
+   "reason": "GPU latency not measured"
+  },
+  {
+   "criterion": "ECE-15 <= 0.15 as read (T = 1, mean over the G1 suites)",
+   "value": {
+    "as_read_t1": 0.1405,
+    "val_fitted_temps": 0.1736,
+    "typed_decisions_t1": 0.1262
+   },
+   "pass": true
+  }
+ ],
+ "g1_complete": false,
+ "g1_all_pass": null,
+ "decision": null,
+ "decision_status": "pending",
+ "decision_inputs": {
+  "missing_or_unusable": {
+   "a-base-30k_cuda": [
+    "GPU latency not measured"
+   ],
+   "c-qwen08-30k_cuda": [
+    "GPU latency not measured"
+   ]
+  }
+ },
+ "arms": {
+  "a-base-30k": {
+   "eval": {
+    "td_acc": 0.3595,
+    "td_soft": 0.339,
+    "td_retention": 0.5107,
+    "td_one_q_acc": 0.3825,
+    "packing_delta_points": -2.3,
+    "apps": {
+     "app_model_routing_domain": 0.5965,
+     "app_guardrails_jailbreak": 0.8925,
+     "app_moderation_toxicity": 0.5625,
+     "app_email_spam": 0.7875,
+     "app_phishing": 0.6325,
+     "app_rag_relevance": 0.5,
+     "app_support_triage": 0.3575
+    },
+    "massive": {
+     "en": 0.7,
+     "de": 0.51,
+     "fr": 0.55,
+     "es": 0.52,
+     "ja": 0.61,
+     "zh-CN": 0.59,
+     "ar": 0.51,
+     "hi": 0.51,
+     "th": 0.58,
+     "ko": 0.49,
+     "km": 0.23
+    },
+    "semif": {
+     "semif_authored144": 0.5004,
+     "semif_perturbations108": 0.4138
+    },
+    "flip20_massive_mean": 0.22363636363636366,
+    "massive_macro": 0.5272727272727273,
+    "mean_retention_g1_suites": 0.6310666666666666,
+    "ece_cal_mean": 0.17361333333333331,
+    "ece_t1_mean": 0.14049333333333333,
+    "ece_td_cal": 0.2055,
+    "ece_td_t1": 0.1262
+   },
+   "train": {
+    "arm": "a-base-30k",
+    "backbone": "jhu-clsp/mmBERT-base",
+    "data": "30k",
+    "params": 308120833,
+    "epochs_run": 3,
+    "steps": 834,
+    "segments": 1,
+    "train_seconds": 152.4,
+    "train_tokens": 10235759,
+    "train_tok_per_s": 67178.0,
+    "train_tok_per_s_excluding_thermal_pauses": 67178.0,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 44,
+    "lr": 3e-05,
+    "head_lr": 0.001,
+    "budget_tokens": 16384,
+    "max_len": 2048,
+    "log": [
+     {
+      "epoch": 0,
+      "step": 278,
+      "val_agreement": 0.7129,
+      "val_kl": 0.2188,
+      "seconds": 51.4
+     },
+     {
+      "epoch": 1,
+      "step": 557,
+      "val_agreement": 0.7482,
+      "val_kl": 0.1706,
+      "seconds": 102.1
+     },
+     {
+      "epoch": 2,
+      "step": 834,
+      "val_agreement": 0.7619,
+      "val_kl": 0.1622,
+      "seconds": 152.4
+     }
+    ],
+    "score_loss_order": "canonical_levels",
+    "seed": 13,
+    "val_agreement_with_teacher": 0.7619,
+    "val_kl": 0.1622,
+    "temperatures": {
+     "noul": 0.534,
+     "choice": 0.6642,
+     "score": 0.5955,
+     "choice_many": 1.3499
+    },
+    "train_summary": {
+     "states": 5998,
+     "decisions": 29990,
+     "sources": {
+      "fineweb": 3019,
+      "aya": 499,
+      "fineweb2": 2000,
+      "clinc": 145,
+      "gmmlu": 165,
+      "csqa": 170
+     },
+     "types": {
+      "choice": 11613,
+      "noul": 10428,
+      "score": 7949
+     },
+     "gold_decisions": 480,
+     "teacher_order_agreement": 0.9437812604201401
+    },
+    "val_summary": {
+     "states": 278,
+     "decisions": 1390,
+     "sources": {
+      "fineweb2": 100,
+      "fineweb": 131,
+      "aya": 26,
+      "csqa": 5,
+      "clinc": 6,
+      "gmmlu": 10
+     },
+     "types": {
+      "score": 373,
+      "noul": 491,
+      "choice": 526
+     },
+     "gold_decisions": 21,
+     "teacher_order_agreement": 0.9388489208633094
+    },
+    "peak_vram_gb": 15.1
+   },
+   "missing_measurements": []
+  },
+  "a-base-10k": {
+   "eval": {
+    "td_acc": 0.325,
+    "td_soft": 0.3384,
+    "td_retention": 0.4616,
+    "td_one_q_acc": 0.342,
+    "packing_delta_points": -1.7,
+    "apps": {
+     "app_model_routing_domain": 0.5789,
+     "app_guardrails_jailbreak": 0.7875,
+     "app_moderation_toxicity": 0.53,
+     "app_email_spam": 0.61,
+     "app_phishing": 0.44,
+     "app_rag_relevance": 0.5,
+     "app_support_triage": 0.3225
+    },
+    "massive": {
+     "en": 0.65,
+     "de": 0.43,
+     "fr": 0.52,
+     "es": 0.45,
+     "ja": 0.57,
+     "zh-CN": 0.55,
+     "ar": 0.4,
+     "hi": 0.38,
+     "th": 0.51,
+     "ko": 0.42,
+     "km": 0.21
+    },
+    "semif": {
+     "semif_authored144": 0.4696,
+     "semif_perturbations108": 0.4259
+    },
+    "flip20_massive_mean": 0.3509090909090909,
+    "massive_macro": 0.4627272727272727,
+    "mean_retention_g1_suites": 0.5621466666666667,
+    "ece_cal_mean": 0.14814666666666668,
+    "ece_t1_mean": 0.13319333333333333,
+    "ece_td_cal": 0.2591,
+    "ece_td_t1": 0.1833
+   },
+   "train": {
+    "arm": "a-base-10k",
+    "backbone": "jhu-clsp/mmBERT-base",
+    "data": "10k",
+    "params": 308120833,
+    "epochs_run": 3,
+    "steps": 284,
+    "segments": 1,
+    "train_seconds": 52.7,
+    "train_tokens": 3415496,
+    "train_tok_per_s": 64803.2,
+    "train_tok_per_s_excluding_thermal_pauses": 64803.2,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 43,
+    "lr": 3e-05,
+    "head_lr": 0.001,
+    "budget_tokens": 16384,
+    "max_len": 2048,
+    "log": [
+     {
+      "epoch": 0,
+      "step": 95,
+      "val_agreement": 0.6094,
+      "val_kl": 0.3195,
+      "seconds": 16.1
+     },
+     {
+      "epoch": 1,
+      "step": 188,
+      "val_agreement": 0.6597,
+      "val_kl": 0.2585,
+      "seconds": 31.1
+     },
+     {
+      "epoch": 2,
+      "step": 284,
+      "val_agreement": 0.7014,
+      "val_kl": 0.2319,
+      "seconds": 52.7
+     }
+    ],
+    "score_loss_order": "canonical_levels",
+    "seed": 13,
+    "val_agreement_with_teacher": 0.7014,
+    "val_kl": 0.2319,
+    "temperatures": {
+     "noul": 0.534,
+     "choice": 0.7408,
+     "score": 0.7014,
+     "choice_many": 0.7408
+    },
+    "train_summary": {
+     "states": 2000,
+     "decisions": 10000,
+     "sources": {
+      "fineweb": 976,
+      "aya": 168,
+      "fineweb2": 686,
+      "clinc": 49,
+      "gmmlu": 51,
+      "csqa": 70
+     },
+     "types": {
+      "choice": 3864,
+      "noul": 3490,
+      "score": 2646
+     },
+     "gold_decisions": 170,
+     "teacher_order_agreement": 0.9421
+    },
+    "val_summary": {
+     "states": 278,
+     "decisions": 1390,
+     "sources": {
+      "fineweb2": 100,
+      "fineweb": 131,
+      "aya": 26,
+      "csqa": 5,
+      "clinc": 6,
+      "gmmlu": 10
+     },
+     "types": {
+      "score": 373,
+      "noul": 491,
+      "choice": 526
+     },
+     "gold_decisions": 21,
+     "teacher_order_agreement": 0.9388489208633094
+    },
+    "peak_vram_gb": 14.9
+   },
+   "missing_measurements": []
+  },
+  "a-small-30k": {
+   "eval": {
+    "td_acc": 0.361,
+    "td_soft": 0.3363,
+    "td_retention": 0.5128,
+    "td_one_q_acc": 0.3585,
+    "packing_delta_points": 0.25,
+    "apps": {
+     "app_model_routing_domain": 0.5363,
+     "app_guardrails_jailbreak": 0.83,
+     "app_moderation_toxicity": 0.6225,
+     "app_email_spam": 0.695,
+     "app_phishing": 0.5175,
+     "app_rag_relevance": 0.4975,
+     "app_support_triage": 0.335
+    },
+    "massive": {
+     "en": 0.64,
+     "de": 0.42,
+     "fr": 0.46,
+     "es": 0.42,
+     "ja": 0.6,
+     "zh-CN": 0.55,
+     "ar": 0.35,
+     "hi": 0.36,
+     "th": 0.55,
+     "ko": 0.43,
+     "km": 0.11
+    },
+    "semif": {
+     "semif_authored144": 0.3521,
+     "semif_perturbations108": 0.4423
+    },
+    "flip20_massive_mean": 0.2845454545454545,
+    "massive_macro": 0.4445454545454545,
+    "mean_retention_g1_suites": 0.5583400000000001,
+    "ece_cal_mean": 0.21761333333333333,
+    "ece_t1_mean": 0.11791333333333334,
+    "ece_td_cal": 0.2093,
+    "ece_td_t1": 0.1426
+   },
+   "train": {
+    "arm": "a-small-30k",
+    "backbone": "jhu-clsp/mmBERT-small",
+    "data": "30k",
+    "params": 140789377,
+    "epochs_run": 3,
+    "steps": 834,
+    "segments": 1,
+    "train_seconds": 106.5,
+    "train_tokens": 10235759,
+    "train_tok_per_s": 96109.1,
+    "train_tok_per_s_excluding_thermal_pauses": 96109.1,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 39,
+    "lr": 5e-05,
+    "head_lr": 0.001,
+    "budget_tokens": 16384,
+    "max_len": 2048,
+    "log": [
+     {
+      "epoch": 0,
+      "step": 278,
+      "val_agreement": 0.6719,
+      "val_kl": 0.2815,
+      "seconds": 36.3
+     },
+     {
+      "epoch": 1,
+      "step": 557,
+      "val_agreement": 0.736,
+      "val_kl": 0.2039,
+      "seconds": 71.6
+     },
+     {
+      "epoch": 2,
+      "step": 834,
+      "val_agreement": 0.7324,
+      "val_kl": 0.2034,
+      "seconds": 106.5
+     }
+    ],
+    "score_loss_order": "canonical_levels",
+    "seed": 13,
+    "val_agreement_with_teacher": 0.7324,
+    "val_kl": 0.2034,
+    "temperatures": {
+     "noul": 0.5955,
+     "choice": 0.7408,
+     "score": 0.6289,
+     "choice_many": 1.8728
+    },
+    "train_summary": {
+     "states": 5998,
+     "decisions": 29990,
+     "sources": {
+      "fineweb": 3019,
+      "aya": 499,
+      "fineweb2": 2000,
+      "clinc": 145,
+      "gmmlu": 165,
+      "csqa": 170
+     },
+     "types": {
+      "choice": 11613,
+      "noul": 10428,
+      "score": 7949
+     },
+     "gold_decisions": 480,
+     "teacher_order_agreement": 0.9437812604201401
+    },
+    "val_summary": {
+     "states": 278,
+     "decisions": 1390,
+     "sources": {
+      "fineweb2": 100,
+      "fineweb": 131,
+      "aya": 26,
+      "csqa": 5,
+      "clinc": 6,
+      "gmmlu": 10
+     },
+     "types": {
+      "score": 373,
+      "noul": 491,
+      "choice": 526
+     },
+     "gold_decisions": 21,
+     "teacher_order_agreement": 0.9388489208633094
+    },
+    "peak_vram_gb": 9.35
+   },
+   "missing_measurements": []
+  },
+  "c-qwen08-30k": {
+   "eval": {
+    "td_acc": 0.5015,
+    "td_soft": 0.3867,
+    "td_retention": 0.7124,
+    "td_one_q_acc": null,
+    "packing_delta_points": null,
+    "apps": {
+     "app_model_routing_domain": 0.8922,
+     "app_guardrails_jailbreak": 0.8575,
+     "app_moderation_toxicity": 0.6025,
+     "app_email_spam": 0.8725,
+     "app_phishing": 0.7425,
+     "app_rag_relevance": 0.515,
+     "app_support_triage": 0.435
+    },
+    "massive": {
+     "en": 0.83,
+     "de": 0.68,
+     "fr": 0.69,
+     "es": 0.68,
+     "ja": 0.76,
+     "zh-CN": 0.8,
+     "ar": 0.51,
+     "hi": 0.51,
+     "th": 0.51,
+     "ko": 0.76,
+     "km": 0.32
+    },
+    "semif": {
+     "semif_authored144": 0.7052,
+     "semif_perturbations108": 0.5012
+    },
+    "flip20_massive_mean": 0.2672727272727273,
+    "massive_macro": 0.6409090909090909,
+    "mean_retention_g1_suites": 0.7595066666666668,
+    "ece_cal_mean": 0.12881333333333334,
+    "ece_t1_mean": 0.12564000000000003,
+    "ece_td_cal": 0.1254,
+    "ece_td_t1": 0.0612
+   },
+   "train": {
+    "arm": "c-qwen08-30k",
+    "backbone": "Qwen/Qwen3.5-0.8B",
+    "lora": {
+     "r": 16,
+     "alpha": 32,
+     "targets": "all-linear"
+    },
+    "epochs": 1,
+    "steps": 1875,
+    "total_steps_planned": 1875,
+    "fraction_of_planned_steps": 1.0,
+    "segments": 1,
+    "stopped_early": false,
+    "train_seconds": 902.7,
+    "decisions_per_s": 33.23,
+    "train_tok_per_s": 9102.9,
+    "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 47,
+    "lr": 0.0002,
+    "batch": 16,
+    "val_agreement_with_teacher": 0.7835,
+    "temperatures": {
+     "score": 0.5955,
+     "noul": 0.4788,
+     "choice": 0.6642,
+     "choice_many": 1.1461
+    },
+    "kernels": {
+     "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+     "packages": {
+      "torch": "2.8.0+cu128",
+      "transformers": "5.17.0",
+      "fla-core": "0.5.2",
+      "causal-conv1d": "1.7.0"
+     }
+    },
+    "train_summary": {
+     "states": 5998,
+     "decisions": 29990,
+     "sources": {
+      "fineweb": 3019,
+      "aya": 499,
+      "fineweb2": 2000,
+      "clinc": 145,
+      "gmmlu": 165,
+      "csqa": 170
+     },
+     "types": {
+      "choice": 11613,
+      "noul": 10428,
+      "score": 7949
+     },
+     "gold_decisions": 480,
+     "teacher_order_agreement": 0.9437812604201401
+    },
+    "peak_vram_gb": 6.39
+   },
+   "missing_measurements": []
+  },
+  "gliclass-x-base": {
+   "eval": {
+    "td_acc": 0.2735,
+    "td_soft": 0.3065,
+    "td_retention": 0.3885,
+    "td_one_q_acc": null,
+    "packing_delta_points": null,
+    "apps": {
+     "app_model_routing_domain": 0.2657,
+     "app_guardrails_jailbreak": 0.67,
+     "app_moderation_toxicity": 0.515,
+     "app_email_spam": 0.555,
+     "app_phishing": 0.6,
+     "app_rag_relevance": 0.515,
+     "app_support_triage": 0.345
+    },
+    "massive": {
+     "en": 0.39,
+     "de": 0.29,
+     "fr": 0.26,
+     "es": 0.25,
+     "ja": 0.32,
+     "zh-CN": 0.25,
+     "ar": 0.29,
+     "hi": 0.36,
+     "th": 0.34,
+     "ko": 0.34,
+     "km": 0.2
+    },
+    "semif": {
+     "semif_authored144": 0.4843,
+     "semif_perturbations108": 0.5494
+    },
+    "flip20_massive_mean": 0.2918181818181819,
+    "massive_macro": 0.2990909090909091,
+    "mean_retention_g1_suites": 0.39114,
+    "ece_cal_mean": 0.15128,
+    "ece_t1_mean": 0.15128,
+    "ece_td_cal": 0.3038,
+    "ece_td_t1": 0.3038
+   },
+   "train": null,
+   "missing_measurements": []
+  }
+ },
+ "latency": {}
+}

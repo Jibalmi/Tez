@@ -122,6 +122,16 @@ class ReportTests(unittest.TestCase):
         self.assertTrue(result["g1_all_pass"])
         self.assertEqual(result["decision"], "switch to C")
 
+    def test_accuracy_stop_does_not_require_missing_latency_or_learning_curve(self):
+        self.files["eval_a-base-30k.json"] = evaluation(accuracy=0.1)
+        self.files["eval_c-qwen08-30k.json"] = evaluation(accuracy=0.1)
+        del self.files["latency.json"]
+        del self.files["eval_a-base-10k.json"]
+        result = self.run_report()
+        self.assertFalse(result["g1_complete"])
+        self.assertEqual(result["decision"], "stop the zero-shot student; build per-schema students (D3)")
+        self.assertFalse(result["decision_inputs"]["latency_required_for_this_stop"])
+
     def test_nonfinite_metric_is_not_complete_evaluation(self):
         self.files["eval_a-base-30k.json"]["tasks"]["typed_decisions"]["t1"]["soft_accuracy"] = float("nan")
         result = self.run_report()

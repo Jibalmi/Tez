@@ -27,7 +27,7 @@ G1 = {"td_acc": 0.563, "td_soft": 0.46, "laya_best": {"app_model_routing_domain"
       "retention_gain_pts": 3.0, "ms_1q": 30.0, "ms_per_q_50": 2.8, "ece": 0.15, "stop_td": 0.493}
 TEACHER = {"td_acc": 0.704, "td_soft": 0.575}
 G1_TASKS = ["typed_decisions", "app_model_routing_domain", "app_guardrails_jailbreak", "app_moderation_toxicity"] + \
-    [f"massive_{l}" for l in MASSIVE11]
+    [f"massive_{lang}" for lang in MASSIVE11]
 
 
 def load(name):
@@ -82,10 +82,10 @@ def arm_view(ev: dict, key: str = "t1") -> dict:
          "td_one_q_acc": t["typed_decisions"].get("one_question_per_row", {}).get("t1", {}).get("accuracy"),
          "packing_delta_points": t["typed_decisions"].get("packing_delta_points"),
          "apps": {k: t[k][key]["accuracy"] for k in t if k.startswith("app_")},
-         "massive": {l: t[f"massive_{l}"][key]["accuracy"] for l in MASSIVE11 if f"massive_{l}" in t},
+         "massive": {lang: t[f"massive_{lang}"][key]["accuracy"] for lang in MASSIVE11 if f"massive_{lang}" in t},
          "semif": {k: t[k].get("semif", {}).get("mean_family_balanced_accuracy") for k in t if k.startswith("semif_")},
-         "flip20_massive_mean": float(np.mean([t[f"massive_{l}"]["order_flip_20"] for l in MASSIVE11
-                                               if "order_flip_20" in t.get(f"massive_{l}", {})] or [np.nan]))}
+         "flip20_massive_mean": float(np.mean([t[f"massive_{lang}"]["order_flip_20"] for lang in MASSIVE11
+                                               if "order_flip_20" in t.get(f"massive_{lang}", {})] or [np.nan]))}
     v["massive_macro"] = float(np.mean(list(v["massive"].values())))
     rets = [t[k]["retention_vs_12b"] for k in G1_TASKS if k in t and t[k].get("retention_vs_12b") is not None]
     v["mean_retention_g1_suites"] = float(np.mean(rets))
@@ -159,7 +159,14 @@ def main() -> None:
         if issues:
             missing[name] = issues
     decision, why = None, {"missing_or_unusable": missing}
-    if a and not missing:
+    # The predeclared quality stop is independent of latency and the learning curve.
+    # Timing cannot rescue two arms that both fail the minimum held-out accuracy.
+    if a and c and max(a["td_acc"], c["td_acc"]) < G1["stop_td"]:
+        decision = "stop the zero-shot student; build per-schema students (D3)"
+        why.update({"rule": "both evaluated arms below the predeclared accuracy floor",
+                    "best_typed_decisions_acc": round(max(a["td_acc"], c["td_acc"]), 4),
+                    "latency_required_for_this_stop": False})
+    elif a and not missing:
         c_better = bool(c) and (100 * (c["mean_retention_g1_suites"] - a["mean_retention_g1_suites"]) >= 5)
         lc = lat.get("c-qwen08-30k_cuda")
         c_fast = bool(lc) and lc["sizes"]["50"]["ms_per_question"] <= 10 and lc["sizes"]["1"]["p50_ms"] <= G1["ms_1q"]
@@ -240,8 +247,8 @@ def tables(arms: dict, lat: dict) -> None:
     lines.append("| ECE-15 typed-decisions (as read) | " +
                  " | ".join(fmt(acc(k, key, "typed_decisions", "ece")) for _, k, key in systems) + " |")
     out = ["# Small-model pilot: every system on the same rows", "",
-           "Accuracy as read (T = 1). 12B and Laya: existing rows (results/pilot/baselines.json). "
-           "Students and GLiClass: results/pilot/eval_<arm>.json.", ""] + lines
+           "Accuracy as read (T = 1). 12B and Laya: recorded reference rows summarized in baselines.json. "
+           "Students and GLiClass: eval_<arm>.json in this result directory.", ""] + lines
     lat_lines = ["", "## Latency (the 1b protocol: a new state per call; p50 ms per call, and per question at 50)", "",
                  "| arm | device | 1 q | 5 q | 10 q | 50 q | ms/q at 50 | timing validity |",
                  "|---|---|---:|---:|---:|---:|---:|---|"]

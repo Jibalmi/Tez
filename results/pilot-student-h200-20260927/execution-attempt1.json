@@ -1,0 +1,44 @@
+{
+ "started_utc": "2026-09-26T23:28:04.265246+00:00",
+ "status": "failed",
+ "input_manifest_sha256": "aefc4f81ec64d65f3630e7e4c18c416e01d241f471131a8be3fed1c4363811f8",
+ "stages": [
+  {
+   "name": "train_a-base-30k",
+   "returncode": 0,
+   "seconds": 186.77113922405988
+  },
+  {
+   "name": "eval_a-base-30k",
+   "returncode": 0,
+   "seconds": 35.696133533958346
+  },
+  {
+   "name": "train_a-base-10k",
+   "returncode": 0,
+   "seconds": 76.35329706314951
+  },
+  {
+   "name": "eval_a-base-10k",
+   "returncode": 0,
+   "seconds": 34.194046163000166
+  },
+  {
+   "name": "train_a-small-30k",
+   "returncode": 0,
+   "seconds": 133.75774829508737
+  },
+  {
+   "name": "eval_a-small-30k",
+   "returncode": 0,
+   "seconds": 32.68305512377992
+  },
+  {
+   "name": "train_c-qwen08-30k",
+   "returncode": 1,
+   "seconds": 77.49330482399091
+  }
+ ],
+ "deadline_minutes": 50.0,
+ "finished_utc": "2026-09-26T23:37:41.291597+00:00"
+}

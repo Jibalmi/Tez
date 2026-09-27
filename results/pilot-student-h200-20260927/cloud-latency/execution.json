@@ -1,0 +1,17 @@
+[
+  {
+    "arm": "a-base-30k",
+    "returncode": 0,
+    "seconds": 21.452938017901033
+  },
+  {
+    "arm": "a-small-30k",
+    "returncode": 0,
+    "seconds": 21.498777001164854
+  },
+  {
+    "arm": "c-qwen08-30k",
+    "returncode": 0,
+    "seconds": 41.93970006192103
+  }
+]

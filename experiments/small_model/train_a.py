@@ -40,7 +40,7 @@ def make_rows(exs, enc: Encoder, rng: random.Random, pack_all: float = 0.5):
             opts = [d.options[i] for i in perm]
             tgt = d.target[perm]
             gold = perm.index(d.gold) if d.gold is not None else None
-            items.append((Q(d.type, d.instructions, opts), tgt, gold, d.type))
+            items.append((Q(d.type, d.instructions, opts), tgt, gold, d.type, np.argsort(perm).tolist()))
         rng.shuffle(items)
         if rng.random() < pack_all or len(items) == 1:
             groups = [items]
@@ -53,7 +53,8 @@ def make_rows(exs, enc: Encoder, rng: random.Random, pack_all: float = 0.5):
         st_text = None
         for g in groups:
             row = enc.encode(e.state, [x[0] for x in g], st_text)
-            row.meta = {"targets": [x[1] for x in g], "gold": [x[2] for x in g], "types": [x[3] for x in g]}
+            row.meta = {"targets": [x[1] for x in g], "gold": [x[2] for x in g], "types": [x[3] for x in g],
+                        "canonical_order": [x[4] for x in g]}
             rows.append(row)
     return rows
 
@@ -95,6 +96,15 @@ def targets_tensor(rows, K, device):
     return f(tg), f(gold, torch.long), f(isscore, torch.bool), f(mask)
 
 
+def ordered_score_loss(logp, target, mask, rows):
+    """Restore semantic level order before comparing cumulative score probabilities."""
+    K = logp.shape[1]
+    orders = [list(order) + list(range(len(order), K))
+              for row in rows for order in row.meta["canonical_order"]]
+    index = torch.tensor(orders, dtype=torch.long, device=logp.device)
+    return ordinal_loss(logp.gather(1, index), target.gather(1, index), mask.gather(1, index))
+
+
 def step_loss(model, rows, device, ce_w=0.5, ord_w=1.0):
     batch = collate(rows, device)
     with torch.autocast("cuda", dtype=torch.bfloat16):
@@ -107,7 +117,7 @@ def step_loss(model, rows, device, ce_w=0.5, ord_w=1.0):
         ce = F.nll_loss(logp, gold, ignore_index=-100, reduction="sum") / max(1, int((gold >= 0).sum()))
         loss = loss + ce_w * ce * (gold >= 0).float().mean()
     if isscore.any():
-        loss = loss + ord_w * (ordinal_loss(logp, tgt, mask) * isscore.float()).mean()
+        loss = loss + ord_w * (ordered_score_loss(logp, tgt, mask, rows) * isscore.float()).mean()
     return loss, logp, tgt, mask
 
 
@@ -201,7 +211,9 @@ def main() -> int:
         opt.load_state_dict(ck["opt"])
         sched.load_state_dict(ck["sched"])
         st = ck["state"]
-        torch.set_rng_state(ck["torch_rng"])
+        torch.set_rng_state(ck["torch_rng"].cpu())
+        if dev.type == "cuda" and "cuda_rng" in ck:
+            torch.cuda.set_rng_state_all([state.cpu() for state in ck["cuda_rng"]])
         print(f"resumed at epoch {st['ep']} batch {st['b']} (step {st['step']})", flush=True)
     st["segments"] += 1
     t0 = time.time()
@@ -213,7 +225,8 @@ def main() -> int:
         st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
         tmp = ckpt_path.with_suffix(".pt.tmp")
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "state": st,
-                    "torch_rng": torch.get_rng_state()}, tmp)
+                    "torch_rng": torch.get_rng_state(),
+                    "cuda_rng": torch.cuda.get_rng_state_all() if dev.type == "cuda" else []}, tmp)
         tmp.replace(ckpt_path)
 
     def guard():
@@ -231,11 +244,15 @@ def main() -> int:
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
             sched.step()
+            if not torch.isfinite(loss):
+                raise RuntimeError("Non-finite training loss; refusing to publish a student")
             st["tokens"] += sum(len(r.ids) for r in bs[bi])
             st["step"] += 1
             st["b"] = bi + 1
+            if st["step"] % 250 == 0:
+                checkpoint()
             if st["step"] % 50 == 0:
-                el = st["train_s"] + time.time() - t0
+                el = prior_seconds + time.time() - t0
                 print(f"ep {st['ep']} step {st['step']}/{total} loss {loss.item():.4f} "
                       f"{st['tokens'] / el:.0f} tok/s {el:.0f} s", flush=True)
             if time.time() - t0 > args.minutes * 60 and st["b"] < len(bs):
@@ -245,12 +262,12 @@ def main() -> int:
             break
         agree, kl, _ = evaluate_val(model, val, enc, dev, args.budget, guard=guard)
         st["log"].append({"epoch": st["ep"], "step": st["step"], "val_agreement": round(agree, 4),
-                          "val_kl": round(kl, 4), "seconds": round(st["train_s"] + time.time() - t0, 1)})
+                          "val_kl": round(kl, 4), "seconds": round(prior_seconds + time.time() - t0, 1)})
         print(f"== epoch {st['ep']}: val agreement {agree:.4f} KL {kl:.4f}", flush=True)
         st["ep"] += 1
         st["b"] = 0
-    st["train_s"] += time.time() - t0
-    st["paused_s"] = st.get("paused_s", 0.0) + THERMAL["paused_s"]
+    st["train_s"] = prior_seconds + time.time() - t0
+    st["paused_s"] = prior_paused + THERMAL["paused_s"]
     st["max_gpu_c"] = max(st.get("max_gpu_c", 0), THERMAL["max_c"])
     if stopped:
         checkpoint()
@@ -268,6 +285,7 @@ def main() -> int:
             "train_tok_per_s_excluding_thermal_pauses": round(st["tokens"] / max(1e-9, st["train_s"] - st["paused_s"]), 1),
             "thermal_paused_s": round(st["paused_s"], 1), "max_gpu_c": st["max_gpu_c"], "lr": args.lr,
             "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": st["log"],
+            "score_loss_order": "canonical_levels", "seed": args.seed,
             "val_agreement_with_teacher": round(agree, 4), "val_kl": round(kl, 4), "temperatures": temps,
             "train_summary": summary(train), "val_summary": summary(val),
             "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2) if dev.type == "cuda" else None}
@@ -276,8 +294,6 @@ def main() -> int:
     print(json.dumps({k: v for k, v in info.items() if k not in ("log", "train_summary", "val_summary")}, indent=1))
     if ckpt_path.exists():
         ckpt_path.unlink()
-    del model, opt
-    torch.cuda.empty_cache()
     return 0
 
 

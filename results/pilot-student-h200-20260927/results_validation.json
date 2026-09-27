@@ -1,0 +1,33 @@
+{
+  "a-base-30k": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": true
+  },
+  "a-base-10k": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": true
+  },
+  "a-small-30k": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": true
+  },
+  "c-qwen08-30k": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": true
+  },
+  "gliclass-x-base": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Unmodified Hub baseline, recorded by revision and SHA; not part of the trained-model export."
+  }
+}

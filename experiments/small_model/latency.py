@@ -10,12 +10,13 @@ vs_laya_speed.qs(n) (Laya's choice and yes/no questions, alternating). Timed end
 forward pass and the per-question softmax (torch.cuda.synchronize on the GPU). Option A reads all n questions of a
 call packed after the state in ONE row; option C reads n question-first prompts (each with the state) in one batched
 forward. PyTorch, bf16 autocast on the GPU, fp32 on the CPU (as Laya's CPU table). Also cold load time and peak memory.
-GPU runs record a VRAM snapshot before and after (C:/temp/gpu_lock.py snapshot): another process holding more than
-300 MB of GPU memory marks the run as contaminated.
+GPU runs record a VRAM snapshot before and after (C:/temp/gpu_lock.py on Windows, nvidia-smi on Linux): another
+process holding more than 300 MB of GPU memory marks the run as contaminated.
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import json
 import subprocess
@@ -34,6 +35,13 @@ NS = [1, 5, 10, 50]
 
 def snapshot() -> dict:
     try:
+        if sys.platform != "win32":
+            output = subprocess.run(["nvidia-smi", "--query-compute-apps=pid,used_gpu_memory,process_name",
+                                     "--format=csv,noheader,nounits"], capture_output=True, text=True,
+                                    timeout=30, check=True).stdout
+            processes = [{"pid": int(pid.strip()), "mb": float(memory.strip()), "name": name.strip(),
+                          "kind": "Dedicated compute"} for pid, memory, name in csv.reader(output.splitlines())]
+            return {"source": "nvidia-smi compute applications", "processes": processes}
         out = subprocess.run([sys.executable, "C:/temp/gpu_lock.py", "snapshot"], capture_output=True, text=True,
                              timeout=60).stdout
         return json.loads(out)
@@ -154,7 +162,8 @@ def main() -> None:
     throttled = None
     if dev == "cuda":
         throttled = any(t.get("temp_c", 0) > 70 or t.get("sw_thermal") or t.get("hw_thermal") for t in thermals)
-    res = {"arm": args.arm, "device": dev, "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,
+    res = {"arm": args.arm, "device": dev, "gpu_name": torch.cuda.get_device_name(0) if dev == "cuda" else None,
+           "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,
            "dtype": "bf16 autocast" if dev == "cuda" else "fp32", "load_s": round(load_s, 2),
            "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 3) if dev == "cuda" else None,
            "rss_gb": round(psutil.Process().memory_info().rss / 2 ** 30, 2), "cpu_load_before_pct": cpu0,

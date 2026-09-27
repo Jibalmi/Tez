@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import time
 from collections import defaultdict
 
@@ -34,6 +35,10 @@ HELD_OUT_APPS = APPS[:3]
 # ------------------------------------------------------------------------------------------------ suites
 def suites() -> dict[str, list[dict]]:
     """task -> cases: {id, state, qtype, instructions, options [(key, desc)], gold, extra, workflow, group}"""
+    snapshot = os.environ.get("TEZ_PILOT_EVAL_SUITES")
+    if snapshot:
+        from pathlib import Path
+        return json.loads(Path(snapshot).read_text(encoding="utf-8"))
     import bench_h2h
     from tez.schema import parse_question, state_key
     out = {}
@@ -156,7 +161,7 @@ class PredictGLiClass:
         model = GLiClassModel.from_pretrained(path)
         tok = AutoTokenizer.from_pretrained(path, add_prefix_space=True)
         self.pipe = ZeroShotClassificationPipeline(model, tok, classification_type="single-label", device=f"{device}:0",
-                                                   progress_bar=False)
+                                                   progress_bar=False).pipe
         self.info = {"temperatures": {}}
         self.weights = {"model": file_sha256(f"{path}/model.safetensors")}
 
@@ -345,7 +350,8 @@ def main() -> None:
             del cases_ordered
         res["seconds"] = round(time.time() - t1, 1)
         out["tasks"][task] = res
-        write_jsonl(ROOT / "results" / "h2h" / f"rows_{task}_tez-s-{args.arm}.jsonl", recs)
+        rows_dir = RESULTS / "rows" if os.environ.get("TEZ_PILOT_RESULTS") else ROOT / "results" / "h2h"
+        write_jsonl(rows_dir / f"rows_{task}_tez-s-{args.arm}.jsonl", recs)
         print(f"{task:28s} acc {res['t1']['accuracy']:.4f} ece(t1) {res['t1']['ece']:.3f} ece(cal) {res['cal']['ece']:.3f}"
               f" retention {res.get('retention_vs_12b')} ({res['seconds']} s)", flush=True)
     out["seconds"] = round(time.time() - t0, 1)

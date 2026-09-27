@@ -1,0 +1,24 @@
+{
+ "started_utc": "2026-09-26T23:38:48.486572+00:00",
+ "status": "failed",
+ "input_manifest_sha256": "40ddbc2907f3e3f4a7e5e6b86bdf9dd0cb8eb60caa27e102f07d6216b406adc9",
+ "stages": [
+  {
+   "name": "train_c-qwen08-30k",
+   "returncode": 0,
+   "seconds": 974.0340285832062
+  },
+  {
+   "name": "eval_c-qwen08-30k",
+   "returncode": 0,
+   "seconds": 77.13787660514936
+  },
+  {
+   "name": "eval_gliclass-x-base",
+   "returncode": 1,
+   "seconds": 17.204183775931597
+  }
+ ],
+ "deadline_minutes": 38.0,
+ "finished_utc": "2026-09-26T23:56:36.896276+00:00"
+}

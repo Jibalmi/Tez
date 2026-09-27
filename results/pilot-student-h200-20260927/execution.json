@@ -1,0 +1,14 @@
+{
+ "started_utc": "2026-09-26T23:57:42.155404+00:00",
+ "status": "training_and_evaluation_complete",
+ "input_manifest_sha256": "430ca68f1db0a8d2944989245f17157c5c2147308ceb1e3f38e6c7879d03aaaa",
+ "stages": [
+  {
+   "name": "eval_gliclass-x-base",
+   "returncode": 0,
+   "seconds": 52.850426838267595
+  }
+ ],
+ "deadline_minutes": 10.0,
+ "finished_utc": "2026-09-26T23:58:35.019403+00:00"
+}

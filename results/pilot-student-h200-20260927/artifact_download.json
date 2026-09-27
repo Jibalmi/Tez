@@ -1,0 +1,9 @@
+{
+  "path": "/workspace/student-final-results.tar.gz",
+  "bytes": 5713220,
+  "sha256": "2529d5770ee09bb4d4d7d5d4d4ef7e9840f5d76a92d77ac95bf07cd7a716577d",
+  "files": 192,
+  "download_and_all_file_hashes_verified": true,
+  "repository_archive": "measurement-artifacts.tar.gz",
+  "contents_note": "Executed code, prediction rows, logs, manifests, and environment; no model weights or credentials."
+}
