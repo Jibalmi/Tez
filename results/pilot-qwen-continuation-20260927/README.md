@@ -30,8 +30,9 @@ checkpoint. The [step-50 validation](training/attempt-05-validate-050/README.md)
 independently verified. Teacher agreement declined from 78.9928% to 78.1295%, and mean KL rose
 from 0.14013744 to 0.14770741. This checkpoint does not improve the registered metrics. Two more
 bounded segments reached a [verified step-100 checkpoint](training/attempt-07-train-100/README.md),
-whose validation is queued; the original checkpoint remains eligible when all four validations
-are available. No release gate is claimed.
+whose [validation](training/attempt-09-validate-100/README.md) recovered agreement (0.7906) but
+raised mean KL to 0.1482. Step zero (KL 0.1401) still leads under the registered selector; the
+step-150 segment and validation follow. No release gate is claimed.
 
 The [descriptive validation breakdown](validation_diagnostics/step-050/README.md) shows worse
 teacher agreement and KL across choice, yes/no and score questions. Mean confidence declines

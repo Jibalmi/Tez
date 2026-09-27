@@ -7,8 +7,9 @@ equal the original checkpoint, and the optimizer has no prior update state. The 
 retains raw held-out predictions and inputs. Four bounded training segments are now
 [complete and independently verified through step 100](attempt-07-train-100/README.md), including
 successful checkpoint resumption. The [step-50 validation](attempt-05-validate-050/README.md)
-regressed on both registered metrics. The step-100 validation is queued; no selected-checkpoint
-public-quality result is available yet.
+regressed on both registered metrics. The [step-100 validation](attempt-09-validate-100/README.md)
+recovered agreement (0.7906) but has the highest mean KL (0.1482); step zero (0.1401) still leads.
+Training toward step 150 is queued; no selected-checkpoint public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training
@@ -87,7 +88,9 @@ all 1,390 decisions, teacher agreement 0.781294964028777 and mean KL 0.147707409
 Both are worse than step zero (agreement 0.7899280575539568 and KL 0.1401374435902039).
 Its checkpoint supplied attempt six, which completed another 25 updates. Attempt seven resumed
 from verified step 75 with the same validation history, optimizer and random states and
-[reached step 100](attempt-07-train-100/README.md); attempt eight validates that checkpoint.
+[reached step 100](attempt-07-train-100/README.md). Attempt eight's validation stopped on the
+worker's thermal guard after 1,296 of 1,390 decisions and is [preserved](attempt-08-validate-100/README.md);
+attempt nine completed it from the same checkpoint.
 The registered schedule and selection rule continue unchanged; this intermediate regression
 is retained. The [descriptive diagnostics](../validation_diagnostics/step-050/diagnostics.json)
 break down the regression by question type without changing training or checkpoint selection.
