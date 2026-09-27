@@ -1,0 +1,23 @@
+{
+  "status": "complete_read_only_process_defaults",
+  "recorded_utc": "2026-09-27T12:42:31.163270+00:00",
+  "torch": "2.10.0+cu130",
+  "cuda_build": "13.0",
+  "threads": 1,
+  "cuda_initialized": false,
+  "allow_bf16_reduced_precision_reduction": true,
+  "allow_fp16_reduced_precision_reduction": true,
+  "float32_matmul_precision": "highest",
+  "matmul_allow_tf32": false,
+  "cudnn_allow_tf32": true,
+  "math_sdpa_reduced_precision": false,
+  "sdpa_enabled": {
+    "flash": true,
+    "efficient": true,
+    "math": true,
+    "cudnn": true
+  },
+  "backend_source_sha256": "fc05b3d619e0e701cd1e7ede314c33ffa44ac92c676637c28ae238d99051ce39",
+  "reference": "https://docs.pytorch.org/docs/2.10/notes/numerical_accuracy.html",
+  "scope": "Fresh one-thread CPU process defaults, read only; no CUDA context, model or workload. Does not establish actual kernel selection, the settings in a different worker, causality of observed drift, or effects of disabling any option."
+}

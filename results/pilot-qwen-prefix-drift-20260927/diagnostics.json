@@ -1,0 +1,443 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T12:40:48.609413+00:00",
+  "cpu_threads": 1,
+  "gpu_model_loaded": false,
+  "archives_verified": {
+    "batch16": {
+      "sha256": "36143047e409f8efecf95b7916e2f9a7520ca4b126cbd34ef0d60ccf47f581c0",
+      "bytes": 1347853,
+      "files_verified": 43
+    },
+    "batch1": {
+      "sha256": "e327c0b127797b2d179af1afa1ec42801ab0e52815f6ca8f5d2b6df4fa874776",
+      "bytes": 1386691,
+      "files_verified": 45
+    }
+  },
+  "groups": {
+    "all": {
+      "reference_to_batch16": {
+        "decisions": 1390,
+        "mean_total_variation": 0.004043630383381474,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 4
+      },
+      "reference_to_batch1": {
+        "decisions": 1390,
+        "mean_total_variation": 0.006645812989476119,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 8
+      },
+      "batch16_to_batch1": {
+        "decisions": 1390,
+        "mean_total_variation": 0.006773052830590813,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 10
+      }
+    },
+    "native_left_pad/1-8": {
+      "reference_to_batch16": {
+        "decisions": 26,
+        "mean_total_variation": 0.006099060550451766,
+        "max_probability_delta": 0.020042424305218742,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 26,
+        "mean_total_variation": 0.005483637631779536,
+        "max_probability_delta": 0.0179325230241153,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 26,
+        "mean_total_variation": 0.005168167990072513,
+        "max_probability_delta": 0.021706055614701403,
+        "argmax_changes": 0
+      }
+    },
+    "native_left_pad/129+": {
+      "reference_to_batch16": {
+        "decisions": 757,
+        "mean_total_variation": 0.004292173651060801,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 2
+      },
+      "reference_to_batch1": {
+        "decisions": 757,
+        "mean_total_variation": 0.006591541470505629,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 3
+      },
+      "batch16_to_batch1": {
+        "decisions": 757,
+        "mean_total_variation": 0.006758455917216652,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 5
+      }
+    },
+    "native_left_pad/33-128": {
+      "reference_to_batch16": {
+        "decisions": 418,
+        "mean_total_variation": 0.0033993329385464516,
+        "max_probability_delta": 0.030994085579993502,
+        "argmax_changes": 2
+      },
+      "reference_to_batch1": {
+        "decisions": 418,
+        "mean_total_variation": 0.0065309655645712636,
+        "max_probability_delta": 0.03095654657477165,
+        "argmax_changes": 4
+      },
+      "batch16_to_batch1": {
+        "decisions": 418,
+        "mean_total_variation": 0.006685116328724184,
+        "max_probability_delta": 0.034137086251020854,
+        "argmax_changes": 4
+      }
+    },
+    "native_left_pad/9-32": {
+      "reference_to_batch16": {
+        "decisions": 97,
+        "mean_total_variation": 0.003615918665409874,
+        "max_probability_delta": 0.029825361090277447,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 97,
+        "mean_total_variation": 0.006580677442810319,
+        "max_probability_delta": 0.029912456941125987,
+        "argmax_changes": 1
+      },
+      "batch16_to_batch1": {
+        "decisions": 97,
+        "mean_total_variation": 0.0070236060328149035,
+        "max_probability_delta": 0.029912456941125987,
+        "argmax_changes": 1
+      }
+    },
+    "native_left_pad/zero": {
+      "reference_to_batch16": {
+        "decisions": 92,
+        "mean_total_variation": 0.004795977455198934,
+        "max_probability_delta": 0.02051121863364025,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 92,
+        "mean_total_variation": 0.008011296367710745,
+        "max_probability_delta": 0.031195592149901197,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 92,
+        "mean_total_variation": 0.0074820818136585344,
+        "max_probability_delta": 0.031195592149901197,
+        "argmax_changes": 0
+      }
+    },
+    "options/11+": {
+      "reference_to_batch16": {
+        "decisions": 6,
+        "mean_total_variation": 0.0009682038484828053,
+        "max_probability_delta": 0.004055770896383183,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 6,
+        "mean_total_variation": 0.005176243285541202,
+        "max_probability_delta": 0.028731102192514513,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 6,
+        "mean_total_variation": 0.005704146988520057,
+        "max_probability_delta": 0.028731102192514568,
+        "argmax_changes": 0
+      }
+    },
+    "options/2": {
+      "reference_to_batch16": {
+        "decisions": 497,
+        "mean_total_variation": 0.0019710306005259926,
+        "max_probability_delta": 0.022384874307062874,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 497,
+        "mean_total_variation": 0.003601357826169344,
+        "max_probability_delta": 0.019387709744191906,
+        "argmax_changes": 1
+      },
+      "batch16_to_batch1": {
+        "decisions": 497,
+        "mean_total_variation": 0.003451962689393444,
+        "max_probability_delta": 0.027231424678503147,
+        "argmax_changes": 1
+      }
+    },
+    "options/3-7": {
+      "reference_to_batch16": {
+        "decisions": 786,
+        "mean_total_variation": 0.005154990230277703,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 4
+      },
+      "reference_to_batch1": {
+        "decisions": 786,
+        "mean_total_variation": 0.007914436614366631,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 6
+      },
+      "batch16_to_batch1": {
+        "decisions": 786,
+        "mean_total_variation": 0.008237692978719499,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 8
+      }
+    },
+    "options/8-10": {
+      "reference_to_batch16": {
+        "decisions": 101,
+        "mean_total_variation": 0.005776361191580771,
+        "max_probability_delta": 0.030423463088928737,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 101,
+        "mean_total_variation": 0.011841589872873502,
+        "max_probability_delta": 0.0306976630187753,
+        "argmax_changes": 1
+      },
+      "batch16_to_batch1": {
+        "decisions": 101,
+        "mean_total_variation": 0.011780855590970713,
+        "max_probability_delta": 0.034137086251020854,
+        "argmax_changes": 1
+      }
+    },
+    "qtype/choice": {
+      "reference_to_batch16": {
+        "decisions": 526,
+        "mean_total_variation": 0.0048394198341694715,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 2
+      },
+      "reference_to_batch1": {
+        "decisions": 526,
+        "mean_total_variation": 0.008342999373396803,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 4
+      },
+      "batch16_to_batch1": {
+        "decisions": 526,
+        "mean_total_variation": 0.008413619433778411,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 4
+      }
+    },
+    "qtype/noul": {
+      "reference_to_batch16": {
+        "decisions": 491,
+        "mean_total_variation": 0.0019911878095832574,
+        "max_probability_delta": 0.022384874307062874,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 491,
+        "mean_total_variation": 0.0036336489402240095,
+        "max_probability_delta": 0.019387709744191906,
+        "argmax_changes": 1
+      },
+      "batch16_to_batch1": {
+        "decisions": 491,
+        "mean_total_variation": 0.0034831342213589352,
+        "max_probability_delta": 0.027231424678503147,
+        "argmax_changes": 1
+      }
+    },
+    "qtype/score": {
+      "reference_to_batch16": {
+        "decisions": 373,
+        "mean_total_variation": 0.005623158674589079,
+        "max_probability_delta": 0.03004373411684791,
+        "argmax_changes": 2
+      },
+      "reference_to_batch1": {
+        "decisions": 373,
+        "mean_total_variation": 0.0082175355370378,
+        "max_probability_delta": 0.031195592149901197,
+        "argmax_changes": 3
+      },
+      "batch16_to_batch1": {
+        "decisions": 373,
+        "mean_total_variation": 0.00879024318945455,
+        "max_probability_delta": 0.031195592149901197,
+        "argmax_changes": 5
+      }
+    },
+    "reference_confidence/0.5-0.8": {
+      "reference_to_batch16": {
+        "decisions": 522,
+        "mean_total_variation": 0.00455027038940615,
+        "max_probability_delta": 0.030994085579993502,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 522,
+        "mean_total_variation": 0.007414635705934969,
+        "max_probability_delta": 0.03095654657477165,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 522,
+        "mean_total_variation": 0.007454711976422372,
+        "max_probability_delta": 0.034137086251020854,
+        "argmax_changes": 0
+      }
+    },
+    "reference_confidence/<=0.5": {
+      "reference_to_batch16": {
+        "decisions": 365,
+        "mean_total_variation": 0.00632094022387593,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 4
+      },
+      "reference_to_batch1": {
+        "decisions": 365,
+        "mean_total_variation": 0.010200743290163478,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 8
+      },
+      "batch16_to_batch1": {
+        "decisions": 365,
+        "mean_total_variation": 0.010588360380032049,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 10
+      }
+    },
+    "reference_confidence/>0.8": {
+      "reference_to_batch16": {
+        "decisions": 503,
+        "mean_total_variation": 0.0018653318248817567,
+        "max_probability_delta": 0.020042424305218742,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 503,
+        "mean_total_variation": 0.003268327864739728,
+        "max_probability_delta": 0.015082968302715188,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 503,
+        "mean_total_variation": 0.0032970819962565676,
+        "max_probability_delta": 0.016574723361190258,
+        "argmax_changes": 0
+      }
+    },
+    "tokens/upper-1024": {
+      "reference_to_batch16": {
+        "decisions": 94,
+        "mean_total_variation": 0.005215807919617132,
+        "max_probability_delta": 0.03004373411684791,
+        "argmax_changes": 1
+      },
+      "reference_to_batch1": {
+        "decisions": 94,
+        "mean_total_variation": 0.005806414601120456,
+        "max_probability_delta": 0.029171232265962854,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 94,
+        "mean_total_variation": 0.006363413003732307,
+        "max_probability_delta": 0.025298760801438003,
+        "argmax_changes": 1
+      }
+    },
+    "tokens/upper-128": {
+      "reference_to_batch16": {
+        "decisions": 40,
+        "mean_total_variation": 0.0024703293825806398,
+        "max_probability_delta": 0.017986808317712932,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 40,
+        "mean_total_variation": 0.005364794701737272,
+        "max_probability_delta": 0.020972562872671685,
+        "argmax_changes": 1
+      },
+      "batch16_to_batch1": {
+        "decisions": 40,
+        "mean_total_variation": 0.0043948952745397315,
+        "max_probability_delta": 0.020972562872671685,
+        "argmax_changes": 1
+      }
+    },
+    "tokens/upper-2048": {
+      "reference_to_batch16": {
+        "decisions": 11,
+        "mean_total_variation": 0.005377018425532607,
+        "max_probability_delta": 0.014582645400938732,
+        "argmax_changes": 0
+      },
+      "reference_to_batch1": {
+        "decisions": 11,
+        "mean_total_variation": 0.005344242788330998,
+        "max_probability_delta": 0.014582645400938732,
+        "argmax_changes": 0
+      },
+      "batch16_to_batch1": {
+        "decisions": 11,
+        "mean_total_variation": 0.003979575938178542,
+        "max_probability_delta": 0.015617896523554109,
+        "argmax_changes": 0
+      }
+    },
+    "tokens/upper-256": {
+      "reference_to_batch16": {
+        "decisions": 700,
+        "mean_total_variation": 0.0032272182456966865,
+        "max_probability_delta": 0.034462194314461514,
+        "argmax_changes": 1
+      },
+      "reference_to_batch1": {
+        "decisions": 700,
+        "mean_total_variation": 0.006465047106853854,
+        "max_probability_delta": 0.031195592149901197,
+        "argmax_changes": 2
+      },
+      "batch16_to_batch1": {
+        "decisions": 700,
+        "mean_total_variation": 0.006753537887085627,
+        "max_probability_delta": 0.03989080512283788,
+        "argmax_changes": 3
+      }
+    },
+    "tokens/upper-512": {
+      "reference_to_batch16": {
+        "decisions": 545,
+        "mean_total_variation": 0.004978618602723804,
+        "max_probability_delta": 0.03118991207602917,
+        "argmax_changes": 2
+      },
+      "reference_to_batch1": {
+        "decisions": 545,
+        "mean_total_variation": 0.007143056237298448,
+        "max_probability_delta": 0.031232999811175166,
+        "argmax_changes": 5
+      },
+      "batch16_to_batch1": {
+        "decisions": 545,
+        "mean_total_variation": 0.007099697146621837,
+        "max_probability_delta": 0.034137086251020854,
+        "argmax_changes": 5
+      }
+    }
+  },
+  "rows_sha256": "de1396c0dea222b9b74a66b25d0b882e56457a5f81d18dc81d69e3a862150f2b",
+  "source_sha256": "5c5276239f9212439a46dfe2bc647260b86029ee3afc74cea245482019e83ea9",
+  "scope": "Post-hoc descriptive breakdown of complete already-observed validation predictions. No causal attribution, significance test, subgroup-based acceptance, threshold change, model inference, training or speed claim. The failed single-question candidate remains failed; a native full-head batch-one control is still needed."
+}
