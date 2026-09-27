@@ -1,0 +1,149 @@
+{
+  "retrieved_utc": "2026-09-27T03:02:41.072899+00:00",
+  "models": {
+    "togethercomputer/Tev1-0.8B-experimental": {
+      "revision": "6bb2dff14b38fea90ddb14d870166ccaf77374e9",
+      "gated": false,
+      "safetensors": {
+        "parameters": {
+          "F32": 2592,
+          "BF16": 873436192
+        },
+        "total": 873438784
+      },
+      "card_data": {
+        "base_model": "Qwen/Qwen3.5-0.8B",
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "tags": [
+          "together-ai",
+          "qwen3.5",
+          "decision-model",
+          "experimental"
+        ]
+      },
+      "metadata_sha256": "a7cc1923c89871f9cfa9ba684f1b672f860286fab97a1a6db3b6a11cd209aaa4",
+      "files": {
+        "README.md": {
+          "sha256": "be9b34191b3c4d419259d95743951069b1afe521664eda428d0c816296b4fcee",
+          "bytes": 2069
+        },
+        "config.json": {
+          "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+          "bytes": 2907
+        },
+        "chat_template.jinja": {
+          "sha256": "d78de6bee4c952ca3145eb161921560a6ede7b59a34e7e4be815f3c5386b4364",
+          "bytes": 7650
+        },
+        "tokenizer_config.json": {
+          "sha256": "4ed764fafae09ed7390f85ab1ddc28baa34a4805b4119048ba8d922abaaebcaf",
+          "bytes": 7117
+        },
+        "model.safetensors.index.json": {
+          "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+          "bytes": 50900
+        }
+      },
+      "weights": [
+        {
+          "rfilename": "model.safetensors-00001-of-00001.safetensors",
+          "blobId": "6d32794f5858f8a48bc241ef3b5906b4e7fc3e37",
+          "size": 1746942600,
+          "lfs": {
+            "sha256": "197de1eb141b93984a15e2def8a840726c5dd1349ea4e1b73b8e53abb9257408",
+            "size": 1746942600,
+            "pointerSize": 135
+          }
+        }
+      ]
+    },
+    "togethercomputer/Tev1-4B-experimental": {
+      "revision": "0b7becf017daa0e5eb222f8ce7483c8c8259c52f",
+      "gated": false,
+      "safetensors": {
+        "parameters": {
+          "BF16": 4659861248,
+          "F32": 3840
+        },
+        "total": 4659865088
+      },
+      "card_data": {
+        "base_model": "Qwen/Qwen3.5-4B",
+        "pipeline_tag": "text-generation",
+        "library_name": "transformers",
+        "tags": [
+          "together-ai",
+          "qwen3.5",
+          "decision-model",
+          "experimental"
+        ]
+      },
+      "metadata_sha256": "e577b97df64446f2c60aa88e0d520b9329d897113242439a73f3171d8fdc2b1d",
+      "files": {
+        "README.md": {
+          "sha256": "3984b6b90801471bdf1ad802852605c835720533d80fbb60c42cd5245527ee40",
+          "bytes": 3427
+        },
+        "config.json": {
+          "sha256": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+          "bytes": 3161
+        },
+        "chat_template.jinja": {
+          "sha256": "2424952d53b6b63c3aee1d9a7aad3c32b7def9fee6c27b5def9dea86f607dc7a",
+          "bytes": 7651
+        },
+        "tokenizer_config.json": {
+          "sha256": "4ed764fafae09ed7390f85ab1ddc28baa34a4805b4119048ba8d922abaaebcaf",
+          "bytes": 7117
+        },
+        "model.safetensors.index.json": {
+          "sha256": "cf3f798ee02ba45f9622aa8892a47369ab667d0afbf154ee7c2212de42e6302d",
+          "bytes": 76196
+        }
+      },
+      "weights": [
+        {
+          "rfilename": "model.safetensors-00001-of-00002.safetensors",
+          "blobId": "b2d626109b2f9e1aa3a7d5bc51da4349ed320c95",
+          "size": 5329398688,
+          "lfs": {
+            "sha256": "f0d45353a3fb917769ac28755bdb17d4405a36b659aadeac0000ac13cebc2514",
+            "size": 5329398688,
+            "pointerSize": 135
+          }
+        },
+        {
+          "rfilename": "model.safetensors-00002-of-00002.safetensors",
+          "blobId": "9c2be7cee99c184417abfa397a153e8410df9c40",
+          "size": 3990429408,
+          "lfs": {
+            "sha256": "f7a11c876fc9a119b46e25f113d9a48ac223dfabd55b0cfc34824fa512b0941b",
+            "size": 3990429408,
+            "pointerSize": 135
+          }
+        }
+      ]
+    }
+  },
+  "source_commit": "1dde7782382c9f49d627153759b8d1deab426ce0",
+  "source_hashes": {
+    "README.md": "a3086356491091f07479044e406af6d10d280572dd722c4bb8139f2834ddf715",
+    "DATA_SOURCES.md": "0d96ddce36f0373900f1079abd7895accfd5b7da5915a7796299a1fa5b4d0fb5",
+    "sources.lock.json": "ee57fc1250aa4fd82349462c4b6370f344c87230d7de0a233fa671776a8f665a",
+    "examples/decide.py": "d0bfb6add3a9b87475737568613c40f48c8f0bc927574351ce558da87db640bb",
+    "LICENSE": "78c317bb617d8048bdc3504d92fb728839940c1f30f76fb368d845b657299337"
+  },
+  "public_input_option_counts": {
+    "2": 2600,
+    "3": 252,
+    "4": 1100,
+    "5": 300,
+    "6": 399,
+    "10": 400,
+    "20": 1100
+  },
+  "public_cases_with_empty_descriptions": 0,
+  "status": "metadata_only_no_weights_or_inference",
+  "discovery_note": "Initial metadata fetch stopped on missing generation_config.json. The actual repository file listings are now used; no weights downloaded."
+}
