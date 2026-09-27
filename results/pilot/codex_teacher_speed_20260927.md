@@ -1,5 +1,8 @@
 # Codex Astra label throughput
 
+Latest assessment: [are the students competitive?](../pilot-improvement-20260927/COMPETITIVENESS.md)
+summarizes the matched quality comparisons, the fresh rule test, and the outstanding release gates.
+
 Continuation: the teacher and first student runs are documented in the
 [student pilot report](../pilot-student-h200-20260927/README.md). Current student quality comparisons
 with released alternatives are in the [matched comparison](../pilot-improvement-20260927/COMPARISON.md)
