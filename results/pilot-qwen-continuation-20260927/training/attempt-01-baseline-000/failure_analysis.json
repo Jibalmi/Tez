@@ -1,0 +1,9 @@
+{
+  "status": "failed_preserved",
+  "archived_utc": "2026-09-27T10:32:44.155991+00:00",
+  "source_files_verified": 24,
+  "registration_sha256": "2892f1544e509dbd47a4a53a68f6efbe025e3dfcf1f05be95cc7ae4037d8709c",
+  "error_type": "RuntimeError",
+  "error": "The size of tensor a (5) must match the size of tensor b (16) at non-singleton dimension 1",
+  "scope": "Failure evidence only. No successful compatibility, quality, speed or release claim."
+}

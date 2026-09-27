@@ -1,0 +1,14 @@
+{
+  "status": "registered_before_continuation_baseline_execution",
+  "registered_utc": "2026-09-27T10:28:05.496692+00:00",
+  "continuation_registration_sha256": "2892f1544e509dbd47a4a53a68f6efbe025e3dfcf1f05be95cc7ae4037d8709c",
+  "sources": {
+    "experiments/small_model/verify_qwen_continuation.py": "06e1d8b25dcc4c0ad078e42a532757e36c65713f5fc0a001ebb112d6e7db5bc0",
+    "experiments/small_model/test_verify_qwen_continuation.py": "f0e852887768b19e4db96038054e9b7a2c0599cd1f1579d952c197229a971a81",
+    "experiments/small_model/parity_evidence.py": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "experiments/small_model/qwen_continuation_selection.py": "d0b733c04d72e39f471d4bfe8a9071b50bc5a09d29d209b85ef7561f16d2790b",
+    "experiments/small_model/test_qwen_continuation_selection.py": "64117ab104b22a042bf61bb3e756dbe9b76c99af340bf9770f9e8fc5fe19bb48"
+  },
+  "scope": "Independent CPU source, checkpoint, optimizer, progress and validation-probability checks for every completed continuation operation. Step zero must equal the original adapter; validation metrics and frozen-reference parity are recomputed. Archive receipts and held-out evidence only, never weights or training examples. This is not GPU replay or a quality/speed promotion."
+}

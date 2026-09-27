@@ -1,4 +1,4 @@
-"""Retain a terminal failed local probe, its receipts, logs and verified executed sources."""
+"""Retain a terminal failed local job, its receipts, logs and verified executed sources."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -11,7 +11,7 @@ from structure_probe import digest, write_json
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def main(directory):
+def main(directory, receipt_name="probe.json"):
     directory = directory.resolve()
     if not directory.is_relative_to((ROOT / "results").resolve()):
         raise ValueError("Archive only an explicitly selected results directory")
@@ -19,7 +19,7 @@ def main(directory):
     if archive.exists() or (directory / "artifact_receipt.json").exists():
         raise ValueError("Preserve prior archives")
     execution = json.loads((directory / "execution.json").read_text(encoding="utf-8"))
-    probe = json.loads((directory / "probe.json").read_text(encoding="utf-8"))
+    probe = json.loads((directory / receipt_name).read_text(encoding="utf-8"))
     spec_path = directory / "registration.json"
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     if (execution["status"] != "failed" or execution["returncode"] == 0 or probe["status"] != "failed"
@@ -60,4 +60,6 @@ def main(directory):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", type=Path)
-    main(parser.parse_args().directory)
+    parser.add_argument("--receipt", choices=("probe.json", "work.json"), default="probe.json")
+    args = parser.parse_args()
+    main(args.directory, args.receipt)

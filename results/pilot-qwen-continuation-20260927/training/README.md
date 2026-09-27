@@ -27,6 +27,19 @@ checkpoint replay and validation selection. The one-step [GPU feasibility probe]
 passed, but full GPU continuation and checkpoint replay have not yet been exercised. A
 registration or queued step-zero evaluation is not a completed training result or a release.
 
+The [first baseline attempt](attempt-01-baseline-000/README.md) failed before saving any
+prediction or checkpoint because the validation mask omitted the per-row broadcast dimension.
+The amended registration adds a tested readout helper; tests compare mixed-size batches with
+independent unpadded decisions, including the equal-dimension case that could silently mask
+the wrong axis. Attempt two uses the corrected code with all experimental settings unchanged.
+The original failed source, protocol and preflight are archived separately.
+
 After all four validations, independently verify the saved rows and selected checkpoint before
 evaluating the chosen candidate. Existing public tests have informed the research direction;
 later public gains remain exploratory. All original quality/speed gates remain unchanged.
+
+The [registered independent verifier](../../../experiments/small_model/qwen_continuation_analysis_registration.json)
+checks source and input hashes, checkpoint tensors and optimizer progress, validation history,
+every held-out probability vector and step-zero identity. CPU tests reject changed initial
+weights, optimizer drift, malformed moments and inconsistent progress. Verification remains
+pending until an operation completes; these tests do not establish GPU checkpoint replay.

@@ -5,6 +5,9 @@
   "validation_decisions": 1390,
   "max_training_tokens": 1650,
   "max_validation_tokens": 1607,
-  "source_sha256": "5be4686e75113f3ebc5f11b26845e812dc6e2585372f9ebd513dc2dac3b7af4c",
-  "scope": "CPU one-thread tokenizer and input reconstruction only; no model loading, inference or training."
+  "source_sha256": "da25b35009e11bdadd381d15b25ebfcf957484a7834bc05dc780445845cec618",
+  "scope": "CPU one-thread tokenizer and input reconstruction only; no model loading, inference or training.",
+  "previous_preflight_sha256": "35bf6b0b59af35cded8f17bcd9a6cb530c044dbfc7a2a7f58dc0e99f95a365af",
+  "input_function_ast_sha256": "64f1b96dffc80c8adef12d717a28ea649d7eaa1315fe62c5b3a63c517094efa3",
+  "repair_verification": "The earlier complete CPU tokenization preflight is preserved in the failed-attempt archive. The data_for function AST is exactly unchanged after repairing only the validation readout; the prepared input lengths and hashes remain applicable."
 }

@@ -1,4 +1,5 @@
 *.log
 **/*.log
 **/validation_rows.jsonl
+**/validation_inputs.jsonl
 **/executed_source/

@@ -1,0 +1,146 @@
+{
+  "README.md": {
+    "sha256": "27d574b84f21268df13668bedabba5de5af83a754baa828d099b408d165745f7",
+    "bytes": 809
+  },
+  "archive_source/archive_failed_probe.py": {
+    "sha256": "f98aa3bc6f5fbd92264357be9e067c66b8d07da30e23c2a94faad0d45cef04ae",
+    "bytes": 3809
+  },
+  "archive_source/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/peft/peft_model.py": {
+    "sha256": "6c455a0709a96fbfd51434b922b4db383edbc342b6a33188439efaf9e39974f7",
+    "bytes": 173832
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/peft/tuners/lora/layer.py": {
+    "sha256": "052d8fbd12774150315a4043ed66ef1648fb5ceabd0cbde3fced8fc718502c1b",
+    "bytes": 126148
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py": {
+    "sha256": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    "bytes": 95685
+  },
+  "executed_source/experiments/small_model/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/experiments/small_model/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/experiments/small_model/dataset.py": {
+    "sha256": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "bytes": 4168
+  },
+  "executed_source/experiments/small_model/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/experiments/small_model/parity_evidence.py": {
+    "sha256": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "bytes": 2139
+  },
+  "executed_source/experiments/small_model/qwen_checkpoint.py": {
+    "sha256": "50a06b71cd506e70c491df1a957fbdf9407183c2017af81c8921496ac8d267f6",
+    "bytes": 3511
+  },
+  "executed_source/experiments/small_model/qwen_continuation.py": {
+    "sha256": "5be4686e75113f3ebc5f11b26845e812dc6e2585372f9ebd513dc2dac3b7af4c",
+    "bytes": 18835
+  },
+  "executed_source/experiments/small_model/qwen_continuation_loss.py": {
+    "sha256": "43e2148b901670511e0062415fd144548a19bf3befdb1b4677007b6b8893655f",
+    "bytes": 1202
+  },
+  "executed_source/experiments/small_model/qwen_continuation_selection.py": {
+    "sha256": "d0b733c04d72e39f471d4bfe8a9071b50bc5a09d29d209b85ef7561f16d2790b",
+    "bytes": 1151
+  },
+  "executed_source/experiments/small_model/qwen_trainability_probe.py": {
+    "sha256": "b12dfc45a37a6bbc8ed3265e4ec7de188b18cf1ce994bd1f1675b2392fa384c1",
+    "bytes": 9225
+  },
+  "executed_source/experiments/small_model/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/experiments/small_model/student.py": {
+    "sha256": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "bytes": 8032
+  },
+  "executed_source/experiments/small_model/test_parity_evidence.py": {
+    "sha256": "a724107d67b4cfea1361a48c91b40ee749f1bedd798fe990719db448a4e6e4a5",
+    "bytes": 2950
+  },
+  "executed_source/experiments/small_model/test_qwen_checkpoint.py": {
+    "sha256": "aa86f9d42876fc1992673cc13a3feea3079489c68b4201e3f9d02120efd0552d",
+    "bytes": 3766
+  },
+  "executed_source/experiments/small_model/test_qwen_continuation_loss.py": {
+    "sha256": "bc12989171b7c17f88264cf3549dbe6e7d56198622d3328e732fc819b11f4db6",
+    "bytes": 3334
+  },
+  "executed_source/experiments/small_model/test_qwen_continuation_selection.py": {
+    "sha256": "64117ab104b22a042bf61bb3e756dbe9b76c99af340bf9770f9e8fc5fe19bb48",
+    "bytes": 1527
+  },
+  "executed_source/experiments/small_model/train_a.py": {
+    "sha256": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "bytes": 14540
+  },
+  "executed_source/experiments/small_model/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "executed_source/tez/errors.py": {
+    "sha256": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "bytes": 1777
+  },
+  "executed_source/tez/prompt.py": {
+    "sha256": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "bytes": 9953
+  },
+  "executed_source/tez/schema.py": {
+    "sha256": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "bytes": 18988
+  },
+  "execution.json": {
+    "sha256": "5c7d4d779a7e41b8f3a6b4ad67c033de349cf15d22f7a71d0e6d286251bb8ed0",
+    "bytes": 279
+  },
+  "failure_analysis.json": {
+    "sha256": "6e45088059e9bf4141238937b2fc044b4487f499e90c6f9c750fc8a03bc34ffe",
+    "bytes": 458
+  },
+  "prior_analysis_registration.json": {
+    "sha256": "ce6c515783ef3864234e5a0aa8da05d7a7c4453ee6fa4cfa8917861d483627e0",
+    "bytes": 1397
+  },
+  "prior_driver_preflight.json": {
+    "sha256": "35bf6b0b59af35cded8f17bcd9a6cb530c044dbfc7a2a7f58dc0e99f95a365af",
+    "bytes": 388
+  },
+  "registration.json": {
+    "sha256": "2892f1544e509dbd47a4a53a68f6efbe025e3dfcf1f05be95cc7ae4037d8709c",
+    "bytes": 8596
+  },
+  "request.json": {
+    "sha256": "30de791ebd9870c8ff19235990681f00a1d0e4bb394589c2389b81946dc09eca",
+    "bytes": 124
+  },
+  "validation_rows.jsonl": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "work.json": {
+    "sha256": "f5596743564f0323ee6d04ee897fdcb9089c7956af207b6301651931f20a4a61",
+    "bytes": 3748
+  },
+  "work.log": {
+    "sha256": "ac9a732af195581f8a8cfce7b22a64180f74d28a6f318df2e26ff8070e0c7c4b",
+    "bytes": 2239
+  }
+}

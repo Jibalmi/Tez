@@ -70,8 +70,8 @@ def data_for(tokenizer, spec):
 
 def validate(model, tokenizer, letters, cases, directory, spec, guard, started):
     import torch
-    import torch.nn.functional as F
     from parity_evidence import read_rows
+    from qwen_continuation_readout import option_logp
     model.gradient_checkpointing_disable()
     model.eval()
     model.config.use_cache = True
@@ -88,11 +88,9 @@ def validate(model, tokenizer, letters, cases, directory, spec, guard, started):
                             padding_side="left", truncation=False, return_tensors="pt").to("cuda")
             if enc["input_ids"].shape[1] > spec["context_bound"]:
                 raise ValueError("Validation input exceeds the safety bound")
-            k = max(x["k"] for x in batch)
             with torch.autocast("cuda", dtype=torch.bfloat16):
-                logits = model(**enc, logits_to_keep=1).logits[:, -1, letters[:k]].float()
-                mask = torch.arange(k, device="cuda")[None, :] < torch.tensor([x["k"] for x in batch], device="cuda")
-                logp = F.log_softmax(torch.where(mask, logits, torch.full_like(logits, -1e4)), dim=-1).cpu().tolist()
+                logits = model(**enc, logits_to_keep=1).logits[:, -1, :]
+                logp = option_logp(logits, letters, [x["k"] for x in batch]).cpu().tolist()
             for case, values in zip(batch, logp, strict=True):
                 values = values[:case["k"]]
                 p = [math.exp(v - max(values)) for v in values]
