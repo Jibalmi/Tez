@@ -1,0 +1,233 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T11:13:57.064400+00:00",
+  "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "operation": "train",
+  "target_step": 50,
+  "source_files": {
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "experiments/small_model/train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "experiments/small_model/competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "experiments/small_model/student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "experiments/small_model/dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "experiments/small_model/train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "experiments/small_model/qwen_trainability_probe.py": "b12dfc45a37a6bbc8ed3265e4ec7de188b18cf1ce994bd1f1675b2392fa384c1",
+    "experiments/small_model/qwen_continuation.py": "da25b35009e11bdadd381d15b25ebfcf957484a7834bc05dc780445845cec618",
+    "experiments/small_model/qwen_continuation_loss.py": "43e2148b901670511e0062415fd144548a19bf3befdb1b4677007b6b8893655f",
+    "experiments/small_model/test_qwen_continuation_loss.py": "bc12989171b7c17f88264cf3549dbe6e7d56198622d3328e732fc819b11f4db6",
+    "experiments/small_model/qwen_checkpoint.py": "50a06b71cd506e70c491df1a957fbdf9407183c2017af81c8921496ac8d267f6",
+    "experiments/small_model/test_qwen_checkpoint.py": "aa86f9d42876fc1992673cc13a3feea3079489c68b4201e3f9d02120efd0552d",
+    "experiments/small_model/qwen_continuation_selection.py": "d0b733c04d72e39f471d4bfe8a9071b50bc5a09d29d209b85ef7561f16d2790b",
+    "experiments/small_model/test_qwen_continuation_selection.py": "64117ab104b22a042bf61bb3e756dbe9b76c99af340bf9770f9e8fc5fe19bb48",
+    "experiments/small_model/parity_evidence.py": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "experiments/small_model/test_parity_evidence.py": "a724107d67b4cfea1361a48c91b40ee749f1bedd798fe990719db448a4e6e4a5",
+    ".venv-pilot/Lib/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    ".venv-pilot/Lib/site-packages/peft/peft_model.py": "6c455a0709a96fbfd51434b922b4db383edbc342b6a33188439efaf9e39974f7",
+    ".venv-pilot/Lib/site-packages/peft/tuners/lora/layer.py": "052d8fbd12774150315a4043ed66ef1648fb5ceabd0cbde3fced8fc718502c1b",
+    "experiments/small_model/qwen_continuation_readout.py": "693095db3c3479638d879272ba46ba41dc0db50f472338c2b82a35d9e92deea5",
+    "experiments/small_model/test_qwen_continuation_readout.py": "6d2bc0d9c20bf0b90e6e398202639736f29ab8f927ee5af83dd079170ed6b23a"
+  },
+  "checkpoints": [
+    {
+      "sha256": "fa63631de5a89e9cc849e6d3e8961bac04fa0f5cf5280bb22075e48b8bbfe9de",
+      "bytes": 130343493,
+      "path": "runs/pilot-qwen-continuation-20260927/training/attempt-04-step-030.pt",
+      "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da"
+    },
+    {
+      "sha256": "93e3677033b7e6fa2101c6001f770d0d922d19535ec84955ba4270e28073d898",
+      "bytes": 130343493,
+      "path": "runs/pilot-qwen-continuation-20260927/training/attempt-04-step-040.pt",
+      "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da"
+    },
+    {
+      "sha256": "c4f103b93bf1df2c7ee09732b8a3885c753080b26c1c618552c7fcf46f4ae919",
+      "bytes": 130343493,
+      "path": "runs/pilot-qwen-continuation-20260927/training/attempt-04-step-050.pt",
+      "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da"
+    }
+  ],
+  "updates": [
+    {
+      "step": 26,
+      "mean_loss": 0.21513844991568476,
+      "gradient_norm_before_clip": 2.6011176109313965,
+      "elapsed_seconds": 12.542446200000086
+    },
+    {
+      "step": 27,
+      "mean_loss": 0.07892335153883323,
+      "gradient_norm_before_clip": 1.2168461084365845,
+      "elapsed_seconds": 11.96163340000021
+    },
+    {
+      "step": 28,
+      "mean_loss": 0.10824728736406541,
+      "gradient_norm_before_clip": 2.15583872795105,
+      "elapsed_seconds": 23.093863399999464
+    },
+    {
+      "step": 29,
+      "mean_loss": 0.03624510910594836,
+      "gradient_norm_before_clip": 1.2389262914657593,
+      "elapsed_seconds": 21.714260300000205
+    },
+    {
+      "step": 30,
+      "mean_loss": 0.01323336799396202,
+      "gradient_norm_before_clip": 0.539645791053772,
+      "elapsed_seconds": 20.51096200000029
+    },
+    {
+      "step": 31,
+      "mean_loss": 0.12051222443915321,
+      "gradient_norm_before_clip": 2.1274046897888184,
+      "elapsed_seconds": 18.977430699999786
+    },
+    {
+      "step": 32,
+      "mean_loss": 0.06691799690452171,
+      "gradient_norm_before_clip": 1.591497778892517,
+      "elapsed_seconds": 22.793481300001076
+    },
+    {
+      "step": 33,
+      "mean_loss": 0.09649769868701696,
+      "gradient_norm_before_clip": 1.9102404117584229,
+      "elapsed_seconds": 37.1793533
+    },
+    {
+      "step": 34,
+      "mean_loss": 0.040832237515132874,
+      "gradient_norm_before_clip": 0.8754577040672302,
+      "elapsed_seconds": 28.32205419999991
+    },
+    {
+      "step": 35,
+      "mean_loss": 0.06966236821608618,
+      "gradient_norm_before_clip": 1.8756102323532104,
+      "elapsed_seconds": 25.017586300000403
+    },
+    {
+      "step": 36,
+      "mean_loss": 0.07270485890330747,
+      "gradient_norm_before_clip": 1.1421736478805542,
+      "elapsed_seconds": 30.353840199999468
+    },
+    {
+      "step": 37,
+      "mean_loss": 0.06463439797516912,
+      "gradient_norm_before_clip": 1.5580745935440063,
+      "elapsed_seconds": 21.11072359999889
+    },
+    {
+      "step": 38,
+      "mean_loss": 0.027353920420864597,
+      "gradient_norm_before_clip": 0.932404637336731,
+      "elapsed_seconds": 15.915138399999705
+    },
+    {
+      "step": 39,
+      "mean_loss": 0.06205808058439288,
+      "gradient_norm_before_clip": 1.5370242595672607,
+      "elapsed_seconds": 18.792988700000933
+    },
+    {
+      "step": 40,
+      "mean_loss": 0.11796385927300435,
+      "gradient_norm_before_clip": 1.6670349836349487,
+      "elapsed_seconds": 15.361698000000615
+    },
+    {
+      "step": 41,
+      "mean_loss": 0.08578985265921801,
+      "gradient_norm_before_clip": 2.21271014213562,
+      "elapsed_seconds": 24.498124999998254
+    },
+    {
+      "step": 42,
+      "mean_loss": 0.11440136469900608,
+      "gradient_norm_before_clip": 1.7463366985321045,
+      "elapsed_seconds": 54.293889199998375
+    },
+    {
+      "step": 43,
+      "mean_loss": 0.04649309609158081,
+      "gradient_norm_before_clip": 0.60933917760849,
+      "elapsed_seconds": 35.58996819999993
+    },
+    {
+      "step": 44,
+      "mean_loss": 0.06329812674084678,
+      "gradient_norm_before_clip": 1.5083674192428589,
+      "elapsed_seconds": 28.591593799999828
+    },
+    {
+      "step": 45,
+      "mean_loss": 0.14465837826719508,
+      "gradient_norm_before_clip": 2.880563497543335,
+      "elapsed_seconds": 22.798756199999843
+    },
+    {
+      "step": 46,
+      "mean_loss": 0.12363978834764566,
+      "gradient_norm_before_clip": 1.8443397283554077,
+      "elapsed_seconds": 27.387291499999264
+    },
+    {
+      "step": 47,
+      "mean_loss": 0.058525094951619394,
+      "gradient_norm_before_clip": 1.3303501605987549,
+      "elapsed_seconds": 19.37925990000076
+    },
+    {
+      "step": 48,
+      "mean_loss": 0.08140941909368848,
+      "gradient_norm_before_clip": 1.244823932647705,
+      "elapsed_seconds": 23.253269999999247
+    },
+    {
+      "step": 49,
+      "mean_loss": 0.11589520479901694,
+      "gradient_norm_before_clip": 1.6660562753677368,
+      "elapsed_seconds": 20.046690500001205
+    },
+    {
+      "step": 50,
+      "mean_loss": 0.08589984200079925,
+      "gradient_norm_before_clip": 1.951181173324585,
+      "elapsed_seconds": 20.9801310999992
+    }
+  ],
+  "input_checkpoint": {
+    "path": "runs/pilot-qwen-continuation-20260927/training/attempt-03-step-025.pt",
+    "sha256": "86efb12b93b02859dbe7cf46df313aa766bd85f7949fd9b64bc021f36becddb0"
+  },
+  "initial_step": 25,
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0"
+  },
+  "attention_implementation": "sdpa",
+  "trainable_parameters": 10822656,
+  "completed_step": 50,
+  "interval_complete": true,
+  "peak_vram_gb": 2.0689010620117188,
+  "scope": "Original training-only continuation with complete inputs. Validation is teacher agreement, not broad gold accuracy. No public test fitting, quality promotion or speed claim.",
+  "thermal_governor": {
+    "checks": 693,
+    "pauses": 194,
+    "paused_s": 284.7053407000012,
+    "max_c": 82
+  },
+  "finished_utc": "2026-09-27T11:24:16.249245+00:00",
+  "elapsed_seconds": 619.1828003999999
+}

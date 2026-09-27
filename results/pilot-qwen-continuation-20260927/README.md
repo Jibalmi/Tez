@@ -23,10 +23,11 @@ The [registered continuation](training/README.md) retains the unchanged checkpoi
 and selects only from original validation data. Its optimizer, checkpoint selection, input
 reconstruction and resumable driver are implemented. Complete step-zero validation is now
 [independently verified](training/attempt-02-baseline-000/verification.json): all 1,390 predictions
-match the frozen reference, and all 372 saved adapter tensors equal the originals. The first
-[training segment is complete and verified](training/attempt-03-train-050/verification.json):
-25 updates, 400 training decisions, and a saved optimizer checkpoint. The next segment is queued
-from that checkpoint toward step 50. No trained validation improvement or release gate is claimed yet.
+match the frozen reference, and all 372 saved adapter tensors equal the originals. Two bounded
+training segments are now [complete and verified through step 50](training/attempt-04-train-050/README.md):
+800 original training decisions, with successful resumption from the first segment's saved optimizer
+checkpoint. The first trained checkpoint validation is queued. No trained validation improvement
+or release gate is claimed yet.
 
 A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) supports
 that driver. It saves only named trainable LoRA tensors, optimizer state, progress and
@@ -34,7 +35,8 @@ random state; it refuses overwrite and verifies the registration, content hash a
 layout on resume. A one-thread CPU toy test reproduces three subsequent AdamW updates and
 the random sequence exactly after restoring a checkpoint. Separate checks reject wrong hashes,
 registrations, optimizer parameter order and non-finite adapter values. This tests the persistence
-mechanism only; Qwen GPU training and interruption recovery have not yet been verified.
+mechanism's numerical replay on CPU. Qwen's second segment has now successfully resumed a trained
+GPU checkpoint; comparison with an uninterrupted GPU trajectory remains unmeasured.
 
 The [single-decision loss helper](../../experiments/small_model/qwen_continuation_loss.py)
 preserves the original teacher KL plus 0.5 gold CE. Each accumulated decision must be divided

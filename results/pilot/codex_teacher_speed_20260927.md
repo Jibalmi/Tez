@@ -4,10 +4,12 @@ Latest assessment: [are the students competitive?](../pilot-improvement-20260927
 summarizes the matched quality comparisons, the fresh rule test, and the outstanding release gates.
 
 Current improvement work: [Qwen continuation](../pilot-qwen-continuation-20260927/training/README.md)
-has completed its first verified training segment and resumed from its checkpoint. The batch-16
+has completed two verified segments through step 50; its first trained validation is queued. The batch-16
 [full CUDA graph validation](../pilot-qwen-graph-validation-20260927/README.md) failed the probability
 limit despite exact graph-versus-uncaptured agreement. The single-question arm is queued.
-Neither establishes a new quality or speed gain yet.
+A separate [native-prefix graph candidate](../pilot-qwen-prefix-validation-20260927/README.md)
+preserves token positions and is registered and queued after its full-input CPU check.
+None establishes a new quality or speed gain yet.
 
 Continuation: the teacher and first student runs are documented in the
 [student pilot report](../pilot-student-h200-20260927/README.md). Current student quality comparisons

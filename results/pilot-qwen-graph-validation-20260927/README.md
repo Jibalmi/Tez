@@ -18,7 +18,9 @@ The failed arm will not advance to timing. The next candidate should retain the 
 composition and real-token positions, add trailing padding only after each native batch, and read
 the last real token rather than the padded end. That requires a separate tested implementation
 and registration; it is not a demonstrated repair. Probability limits remain unchanged. The
-existing batch-one arm continues with its original frozen source and protocol.
+existing batch-one arm continues with its original frozen source and protocol. The separate
+[native-prefix candidate](../pilot-qwen-prefix-validation-20260927/README.md) is now implemented,
+CPU-checked on all validation inputs, registered and queued at batch 16. GPU parity remains unproven.
 
 The one-thread [input preflight](preflight.json) verified all 278 states and 1,390 decisions
 against the frozen reference membership, with complete prompts up to 1,607 tokens. The candidate
