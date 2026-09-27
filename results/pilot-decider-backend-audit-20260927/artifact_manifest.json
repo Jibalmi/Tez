@@ -1,0 +1,38 @@
+{
+  "audit.json": {
+    "sha256": "296c3e9e3cd518f33b9c2801291a3e468c57286fdecf144249dc348efd320b6d",
+    "bytes": 2279
+  },
+  "pilot/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "upstream/LICENSE": {
+    "sha256": "c009ef334016c5754a713754f6178e14ad3488c377bb7c11aaade057404f3a02",
+    "bytes": 10935
+  },
+  "upstream/decider/engine.py": {
+    "sha256": "91c8447520d66d97cb5c6b43f0830368692042f25e80aae3c00d6e5d0235f1b2",
+    "bytes": 12370
+  },
+  "upstream/decider/engine_v2.py": {
+    "sha256": "a3c94452b552bfffebc662a3211a710446c7f9162c13746e7fa21972f2f1ee91",
+    "bytes": 12248
+  },
+  "upstream/decider/infer.py": {
+    "sha256": "4a4bec51c626cb3c95478493f418cc2250ac52f49330d0544111d577376d48d1",
+    "bytes": 22764
+  },
+  "upstream/decider/model.py": {
+    "sha256": "165f18b7fb897a1fa744edf8c2b5f4120e0f6ca940501d010626b31f68b47dc1",
+    "bytes": 2917
+  },
+  "upstream/decider/serve.py": {
+    "sha256": "44900a7bf5f025b1ea6ca934c8d99cb43c3c2bf8e22b89eb5e06a183367ae778",
+    "bytes": 33102
+  },
+  "upstream/tests/test_engine_v2_cuda.py": {
+    "sha256": "5834125cac5e3a9a2a75c54dffa0fea1fb7f751f8bdab19fa49270956cd35879",
+    "bytes": 9278
+  }
+}

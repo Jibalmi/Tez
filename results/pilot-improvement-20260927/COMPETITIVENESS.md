@@ -52,7 +52,11 @@ their shared errors or use a stronger fallback.
 On the H200, native eager Decider measured 30.53 ms for one fresh question and 82.61 ms for 50,
 compared with Qwen's 43.42 ms and 200.12 ms. These are the recorded implementations on that
 hardware; optimized competitor servers were not tested. H200 results cannot satisfy the laptop
-latency gate. The latest [laptop full/restricted-readout runs](../pilot-laptop-qwen-readout-20260927/RESULTS.md)
+latency gate. A [source audit of Decider's backends](../pilot-decider-backend-audit-20260927/README.md)
+confirms that its Python library and HTTP server both support CUDA graphs, with different
+compilation defaults. Our explicitly eager adapter does not measure those optimized paths.
+A future optimized Qwen comparison therefore needs an equally explicit matched Decider backend.
+The latest [laptop full/restricted-readout runs](../pilot-laptop-qwen-readout-20260927/RESULTS.md)
 completed with all raw requests retained, but exceeded the registered temperature ceiling and
 foreign GPU-memory limit. They establish no clean speedup or laptop gate pass. Earlier cooling
 failures also remain preserved.
