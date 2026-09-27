@@ -26,8 +26,11 @@ reconstruction and resumable driver are implemented. Complete step-zero validati
 match the frozen reference, and all 372 saved adapter tensors equal the originals. Two bounded
 training segments are now [complete and verified through step 50](training/attempt-04-train-050/README.md):
 800 original training decisions, with successful resumption from the first segment's saved optimizer
-checkpoint. The first trained checkpoint validation is queued. No trained validation improvement
-or release gate is claimed yet.
+checkpoint. The [step-50 validation](training/attempt-05-validate-050/README.md) is complete and
+independently verified. Teacher agreement declined from 78.9928% to 78.1295%, and mean KL rose
+from 0.14013744 to 0.14770741. This checkpoint does not improve the registered metrics. The next
+bounded training segment is queued toward step 100; the original checkpoint remains eligible
+when all four validations are available. No release gate is claimed.
 
 The next [public comparison is registered](public_evaluation.md): a fresh unchanged-model control
 and the frozen selected checkpoint on the same laptop/backend, all original public decisions

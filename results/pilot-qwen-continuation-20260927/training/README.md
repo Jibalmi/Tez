@@ -80,3 +80,10 @@ The independent report recomputes both probability parity and the saved validati
 Three CPU tests verify that it rejects a different chosen step, changed registration, missing
 validation, or an inconsistent unchanged-model flag. GPU reload is not launched until selection
 and export finish; these tests do not establish model parity. Completed failures will be retained.
+
+The [first trained validation](attempt-05-validate-050/README.md) is now complete and verified:
+all 1,390 decisions, teacher agreement 0.781294964028777 and mean KL 0.14770740977013652.
+Both are worse than step zero (agreement 0.7899280575539568 and KL 0.1401374435902039).
+The new checkpoint carries this validation history and is the input to queued attempt six,
+targeting step 100 with the unchanged 25-update segment cap. The registered schedule and
+selection rule continue unchanged; this intermediate regression is retained.

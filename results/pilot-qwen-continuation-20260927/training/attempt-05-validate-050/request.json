@@ -1,0 +1,7 @@
+{
+  "operation": "validate",
+  "target_step": 50,
+  "attempt": 5,
+  "checkpoint": "runs/pilot-qwen-continuation-20260927/training/attempt-04-step-050.pt",
+  "checkpoint_sha256": "c4f103b93bf1df2c7ee09732b8a3885c753080b26c1c618552c7fcf46f4ae919"
+}
