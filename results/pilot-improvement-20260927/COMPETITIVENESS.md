@@ -76,6 +76,13 @@ the original attention kernels. Neither experiment establishes a measured speedu
 but have not been measured here and would be a different size/cost class. Published JevBench
 or DecisionIndex scores use different protocols and cannot be inserted into this table.
 
+The next matched candidates are [GLiNER's English and multilingual decision checkpoints](../pilot-gliner2-eval-attempt2-20260927/README.md)
+and [Together's Tev1 0.8B](../pilot-tev1-discovery-20260927/README.md). They have no completed
+public score in this report yet. GLiNER's initial batch smoke exposed an input-guard mismatch
+with native punctuation handling; that failure is archived and the corrected check is registered.
+Tev1's pinned weights are staged and its native probability check is registered. Availability
+and published development scores are not treated as measured wins.
+
 All cloud pods from the trial are terminated. The elapsed-rate estimate is $9.1452 of the
 authorized $10 combined cap; this is not a final provider invoice. These follow-up comparisons
 used the local laptop and did not create another paid resource.

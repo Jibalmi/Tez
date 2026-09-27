@@ -25,3 +25,8 @@ verifies each remote object and leaves baseline packages unchanged. No benchmark
 The 4B release is metadata-only and has no download or inference job. The cards say the fine-tuned
 weight license is still being finalized; discovery does not treat it as a deployment-ready release.
 No paid endpoint, training upload, weight redistribution or cloud resource is involved.
+
+Preparation completed: all 11 downloaded files match their pinned remote objects, and baseline
+package versions are unchanged. See [preparation evidence](preparation.json). The next step is
+the [four-case native probability check](../pilot-tev1-probe-20260927/README.md), before any
+full benchmark. The discovery source archive contains metadata and licensed source only.

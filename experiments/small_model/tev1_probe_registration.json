@@ -1,0 +1,104 @@
+{
+  "status": "registered_before_native_probe",
+  "registered_utc": "2026-09-27T03:09:20.676243+00:00",
+  "preparation": "results/pilot-tev1-discovery-20260927/preparation.json",
+  "preparation_sha256": "171f46619edc68dc7be1278551b4be53e5a9ea2985f683e0c8e5f9c668866536",
+  "native_helper": "runs/research/tev1-discovery-20260927/source/examples/decide.py",
+  "source_files": {
+    "experiments/small_model/tev1_native_probe.py": "9b8430f7db3774b6de7d2eea83aa052bd509b705e2a89ac3164388d9c875ec11",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "runs/research/tev1-discovery-20260927/source/examples/decide.py": "d0bfb6add3a9b87475737568613c40f48c8f0bc927574351ce558da87db640bb",
+    "runs/research/tev1-discovery-20260927/source/LICENSE": "78c317bb617d8048bdc3504d92fb728839940c1f30f76fb368d845b657299337"
+  },
+  "cases": [
+    {
+      "state": {
+        "message": "Please replace my damaged headphones (order 17)."
+      },
+      "instructions": "Which team should handle this request (choose one)?",
+      "options": [
+        [
+          "support",
+          "Repairs and replacements"
+        ],
+        [
+          "sales",
+          "New purchases"
+        ],
+        [
+          "billing",
+          "Invoices and payments"
+        ]
+      ]
+    },
+    {
+      "state": {
+        "message": "Meine Kopfhörer sind beschädigt. Bitte senden Sie einen Ersatz."
+      },
+      "instructions": "Which team should handle this request?",
+      "options": [
+        [
+          "support",
+          "Repairs and replacements"
+        ],
+        [
+          "sales",
+          "New purchases"
+        ],
+        [
+          "billing",
+          "Invoices and payments"
+        ]
+      ]
+    },
+    {
+      "state": {
+        "message": "The door is locked and the key is missing."
+      },
+      "instructions": "Is the door unlocked?",
+      "options": [
+        [
+          "true",
+          "yes"
+        ],
+        [
+          "false",
+          "no"
+        ]
+      ]
+    },
+    {
+      "state": {
+        "message": "The service was acceptable; neither excellent nor awful."
+      },
+      "instructions": "Rate the expressed satisfaction.",
+      "options": [
+        [
+          "0",
+          "Very dissatisfied"
+        ],
+        [
+          "1",
+          "Dissatisfied"
+        ],
+        [
+          "2",
+          "Neutral (mixed)"
+        ],
+        [
+          "3",
+          "Satisfied"
+        ],
+        [
+          "4",
+          "Very satisfied"
+        ]
+      ]
+    }
+  ],
+  "inference": "Full released multimodal checkpoint loaded locally with Qwen3_5ForConditionalGeneration, BF16, eager attention, native chat template and system/JSON rendering, thinking disabled, no truncation, one case at a time, final-position logits.",
+  "verification": "All option letters must be unique single tokens. Recover T=1 softmax over their complete logits and require exact winner agreement with one-token native greedy generation constrained to the same letters. Record unrestricted vocabulary mass on options. These are probabilities conditional on the supplied options, not self-reported JSON confidence.",
+  "scope": "Four existing non-benchmark interface cases only; no accuracy, calibration, latency or production claim and no benchmark-driven configuration selection. This does not establish parity with Together hosted inference.",
+  "compute": "Local run_heavy lock, four threads, original thermal rules, five-minute worker deadline. No paid endpoint or cloud resource."
+}
