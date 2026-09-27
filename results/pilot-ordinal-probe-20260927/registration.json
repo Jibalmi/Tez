@@ -1,0 +1,60 @@
+{
+  "round": "ordinal-cue-diagnostic-after-structure-probe-20260927",
+  "status": "prepared_before_inference",
+  "scope": "Secondary diagnostic after observing constant middle-band predictions; not fresh certification or a promotion gate.",
+  "purpose": "Separate score-type cues and answer-position preferences from failure to apply numeric rules before investing in further training.",
+  "source_cases": "results/pilot-structure-probe-20260927/cases.json",
+  "source_cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "models": [
+    "a-base-12ep",
+    "c-qwen08-30k"
+  ],
+  "model_policy": "Same frozen registered weight hashes and original predictor settings. No training, calibration, instruction editing or model selection.",
+  "states": "All 144 records, nested representation only",
+  "questions": "Only the ordinal band question, one question per group in every condition. Recompute the unmodified baseline in this same single-question protocol; do not attribute a difference from the earlier packed encoder run to type or order.",
+  "conditions": {
+    "question_type": [
+      "score",
+      "choice"
+    ],
+    "semantic_option_order": [
+      [
+        "0",
+        "1",
+        "2"
+      ],
+      [
+        "1",
+        "2",
+        "0"
+      ],
+      [
+        "2",
+        "0",
+        "1"
+      ]
+    ]
+  },
+  "invariants": "Preserve each state, instruction, option key/description pair, and semantic gold label. Only declared question type and option presentation order vary; remap gold and probabilities to canonical semantic keys.",
+  "execution": "Fixed round-robin conditions per state; deterministic state order from the registered source. Record model/source hashes, every normalized probability vector and all failures.",
+  "primary": "Accuracy and semantic prediction distribution per condition; paired within-state differences from score/original-order condition.",
+  "secondary": "Semantic prediction invariance across cyclic option orders within each question type.",
+  "uncertainty": "Exploratory paired state bootstrap, 2000 resamples, seed 13; no multiplicity-adjusted claim.",
+  "limits": "Repeated synthetic rules in four English settings. This diagnostic cannot be a training or checkpoint-selection set. Any implementation change still needs separate representative validation and fresh confirmation.",
+  "compute": "Laptop only through C:/temp/run_heavy.py, at most 12 minutes including load and thermal pauses, unchanged thermal governor, no valid latency claim. No new RunPod resources or spending. Preserve and stop on a thermal failure.",
+  "prepared_utc": "2026-09-27T01:25:14.665035+00:00",
+  "input_sha256": "9b4d11be12539b08796e419f66fde1b895e13d7802fa283581720512dc803ec3",
+  "original_registration_sha256": "7460509732648859bcc37cfc7b000e8e9748d05d270f02968b3059f62c122e8d",
+  "preparation_source_sha256": "0aff17533b0d26c540ec04cdb43e9671a8d20db4948270ddd1a325f19d0906e6",
+  "weights_sha256": {
+    "a-base-12ep": {
+      "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+      "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+    },
+    "c-qwen08-30k": {
+      "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+    }
+  },
+  "groups_per_chunk": 48,
+  "decisions_per_model": 864
+}
