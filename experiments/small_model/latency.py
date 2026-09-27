@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
+import hashlib
 import json
 import subprocess
 import sys
@@ -108,6 +109,7 @@ def main() -> None:
     ap.add_argument("--reps", type=int, default=100)
     ap.add_argument("--reps50", type=int, default=30)
     ap.add_argument("--cooldown-seconds", type=int, default=900)
+    ap.add_argument("--readout", choices=("full", "restricted"), default="full")
     args = ap.parse_args()
     import vs_laya_speed as V
     from tez.schema import parse_question
@@ -120,9 +122,16 @@ def main() -> None:
     from competitor_models import predictor
     from eval_arms import PredictA
     pred = predictor(args.arm, device=dev)
+    if args.readout == "restricted":
+        if args.arm != "c-qwen08-30k" or dev != "cuda":
+            raise ValueError("Restricted timing is registered only for the frozen CUDA Qwen control")
+        from restricted_qwen import RestrictedQwen
+        pred = RestrictedQwen(pred)
     if dev == "cpu" and isinstance(pred, PredictA):
         pred.model.float()
     load_s = time.perf_counter() - t_load
+    trace_path = RESULTS / f"latency_samples_{args.arm}_{dev}_{args.readout}.jsonl"
+    trace = trace_path.open("x", encoding="utf-8")
 
     def cases(i, n):
         st = V.fresh_state(i)
@@ -132,7 +141,7 @@ def main() -> None:
             out.append({"state": st, "qtype": q.type, "instructions": q.instructions_text, "options": q.options()})
         return out
 
-    def call(i, n):
+    def call(i, n, phase="timed"):
         cs = cases(i, n)
         if dev == "cuda":
             torch.cuda.synchronize()
@@ -143,7 +152,11 @@ def main() -> None:
             res = pred.groups([cs])
         if dev == "cuda":
             torch.cuda.synchronize()
-        return (time.perf_counter() - t) * 1000, res
+        ms = (time.perf_counter() - t) * 1000
+        trace.write(json.dumps({"request": i, "n_questions": n, "phase": phase, "ms": ms,
+                                "log_probabilities": res}, default=lambda value: value.tolist(), allow_nan=False) + "\n")
+        trace.flush()
+        return ms, res
 
     if dev == "cuda":
         torch.cuda.reset_peak_memory_stats()
@@ -156,7 +169,7 @@ def main() -> None:
         reps = args.reps50 if n == 50 else args.reps
         for _ in range(args.warmup):
             counter += 1
-            call(counter, n)
+            call(counter, n, phase="warmup")
         ts = []
         for _ in range(reps):
             counter += 1
@@ -169,14 +182,17 @@ def main() -> None:
             thermals.append({"at": f"after n={n}", **th})
         print(f"{args.arm} {dev} n={n}: p50 {sizes[str(n)]['p50_ms']} ms, {sizes[str(n)]['ms_per_question']} ms/q", flush=True)
     after = snapshot() if dev == "cuda" else None
+    trace.close()
     contaminated = None
     if dev == "cuda":
         import os
-        contaminated = contamination(after, os.getpid())
+        readings = [contamination(reading, os.getpid()) for reading in (before, after)]
+        contaminated = True if True in readings else (None if None in readings else False)
     throttled = None
     if dev == "cuda":
         throttled = throttling(thermals)
-    res = {"arm": args.arm, "device": dev, "weights_sha256": pred.weights, "model_info": pred.info,
+    res = {"arm": args.arm, "device": dev, "readout": args.readout, "weights_sha256": pred.weights, "model_info": pred.info,
+           "raw_samples_file": trace_path.name, "raw_samples_sha256": hashlib.sha256(trace_path.read_bytes()).hexdigest(),
            "gpu_name": torch.cuda.get_device_name(0) if dev == "cuda" else None,
            "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,
            "dtype": "bf16 autocast" if dev == "cuda" else "fp32", "load_s": round(load_s, 2),
@@ -186,6 +202,8 @@ def main() -> None:
            "reps": args.reps, "reps50": args.reps50, "sizes": sizes, "vram_before": before, "vram_after": after,
            "contaminated": contaminated, "time": dt.datetime.now().astimezone().isoformat(timespec="seconds")}
     tag = f"{args.arm}_{dev}" + (f"{args.threads}t" if dev == "cpu" else "")
+    if args.readout == "restricted":
+        tag += "_restricted"
     path = RESULTS / "latency.json"
     allr = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
     allr[tag] = res
