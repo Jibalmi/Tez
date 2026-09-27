@@ -35,6 +35,13 @@ families recur in the encoder's added training. The competitor extension was reg
 the encoder confirmation result was observed. It is a useful independent set of states, not a
 new public benchmark or evidence of general reasoning mastery.
 
+A [shared-error audit](OVERLAP.md) found that Qwen and Decider both miss 709 of the 2,000 typed
+decisions. Even a selector that knew the correct answer could reach only 64.55% by choosing
+between their predictions, below the 12B teacher's 70.40%. That oracle uses test labels and is
+not deployable. The earlier fixed equal-probability ensemble scored 53.00%, versus Decider's
+53.40%. Combining the two may have room to help, but it does not remove the need to improve
+their shared errors or use a stronger fallback.
+
 ## Speed and release status
 
 On the H200, native eager Decider measured 30.53 ms for one fresh question and 82.61 ms for 50,
