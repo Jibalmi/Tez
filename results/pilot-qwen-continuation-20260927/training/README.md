@@ -4,10 +4,11 @@ Step-zero validation is [complete and independently verified](attempt-02-baselin
 All 1,390 argmax predictions match the frozen reference; maximum probability difference is
 4.44e-16. Teacher agreement is 78.9928% and mean KL is 0.14013744. All 372 saved adapter tensors
 equal the original checkpoint, and the optimizer has no prior update state. The evidence archive
-retains raw held-out predictions and inputs. Two bounded training segments are now
-[complete and independently verified through step 50](attempt-04-train-050/README.md), including
-successful resumption from the first segment. Step-50 validation is queued; no trained-candidate
-validation or public-quality result is available yet.
+retains raw held-out predictions and inputs. Three bounded training segments are now
+[complete and independently verified through step 75](attempt-06-train-100/README.md), including
+successful checkpoint resumption. The [step-50 validation](attempt-05-validate-050/README.md)
+regressed on both registered metrics. Training to step 100 is queued; no selected-checkpoint
+public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training
@@ -33,7 +34,7 @@ They remain under ignored `runs/`; reports record their hashes, without committi
 The [input preflight](../driver_preflight.json) reconstructs all scheduled training prompts
 and validation prompts without truncation. CPU checks verify loss/gradient accumulation,
 checkpoint replay and validation selection. The one-step [GPU feasibility probe](../trainability/README.md)
-passed, and two bounded GPU segments have completed. Resumption from a trained GPU checkpoint
+passed, and three bounded GPU segments have completed. Resumption from a trained GPU checkpoint
 succeeded, but equivalence to an uninterrupted GPU trajectory is unmeasured. The full continuation
 remains unfinished. A partial training run is not a quality result or release.
 
@@ -84,6 +85,8 @@ and export finish; these tests do not establish model parity. Completed failures
 The [first trained validation](attempt-05-validate-050/README.md) is now complete and verified:
 all 1,390 decisions, teacher agreement 0.781294964028777 and mean KL 0.14770740977013652.
 Both are worse than step zero (agreement 0.7899280575539568 and KL 0.1401374435902039).
-The new checkpoint carries this validation history and is the input to queued attempt six,
-targeting step 100 with the unchanged 25-update segment cap. The registered schedule and
-selection rule continue unchanged; this intermediate regression is retained.
+Its checkpoint supplied attempt six, which completed another 25 updates. Attempt seven now
+starts from verified step 75 with the same validation history, optimizer and random states.
+The registered schedule and selection rule continue unchanged; this intermediate regression
+is retained. The [descriptive diagnostics](../validation_diagnostics/step-050/diagnostics.json)
+break down the regression by question type without changing training or checkpoint selection.

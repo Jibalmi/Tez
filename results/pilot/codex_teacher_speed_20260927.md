@@ -4,12 +4,14 @@ Latest assessment: [are the students competitive?](../pilot-improvement-20260927
 summarizes the matched quality comparisons, the fresh rule test, and the outstanding release gates.
 
 Current improvement work: [Qwen continuation](../pilot-qwen-continuation-20260927/training/README.md)
-has completed two verified segments through step 50; its first trained validation is queued. The batch-16
-[full CUDA graph validation](../pilot-qwen-graph-validation-20260927/README.md) failed the probability
-limit despite exact graph-versus-uncaptured agreement. The single-question arm is queued.
-A separate [native-prefix graph candidate](../pilot-qwen-prefix-validation-20260927/README.md)
-preserves token positions and is registered and queued after its full-input CPU check.
-None establishes a new quality or speed gain yet.
+has reached verified step 75. Its step-50 validation regressed; steps 100 and 150 remain required
+before the fixed checkpoint selection. The original checkpoint remains eligible.
+The [native-prefix graph candidate](../pilot-qwen-prefix-validation-20260927/README.md) passes
+all 1,390 batch-16 validation decisions; its separately registered single-question check is running.
+Earlier [graph failures](../pilot-qwen-graph-validation-20260927/README.md) remain archived.
+The [GPU telemetry check](../pilot-windows-gpu-telemetry-20260927/README.md) confirms that current
+desktop GPU allocations exceed the unchanged clean-timing limit. No new quality or speed gain
+is established yet, and no additional cloud resource has been launched.
 
 Continuation: the teacher and first student runs are documented in the
 [student pilot report](../pilot-student-h200-20260927/README.md). Current student quality comparisons
