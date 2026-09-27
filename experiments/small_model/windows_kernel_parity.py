@@ -77,6 +77,13 @@ def worker():
             if digest(overlay / name) != expected:
                 raise ValueError("Staged kernel file changed")
         receipt["overlay_files_verified"] = len(preparation["installed_file_hashes"])
+        if "compiler" in spec:
+            compiler = ROOT / spec["compiler"]
+            if (digest(compiler) != spec["compiler_sha256"] or os.environ.get("CC") != str(compiler)
+                    or os.environ.get("CUDA_PATH") != str(ROOT / spec["cuda_directory"])):
+                raise ValueError("Registered isolated toolchain is not active")
+            receipt["toolchain"] = {"compiler": str(compiler), "compiler_sha256": digest(compiler),
+                                    "cuda_directory": os.environ["CUDA_PATH"]}
         receipt["packages"] = {name: version(name) for name in spec["packages"]}
         if receipt["packages"] != spec["packages"]:
             raise ValueError("Kernel/backend versions changed")
@@ -94,7 +101,7 @@ def worker():
             raise ValueError("Reference was not completed")
         source_dir = DIRECTORY / "executed_source"
         source_dir.mkdir(exist_ok=False)
-        for name in ("windows_kernel_parity.py", "windows_kernel_registration.json", "parity_evidence.py", "train_c.py", "train_a.py",
+        for name in ("windows_kernel_parity.py", REGISTRATION.name, "parity_evidence.py", "train_c.py", "train_a.py",
                      "dataset.py", "student.py", "common.py", "eval_arms.py", "competitor_models.py"):
             source = Path(__file__).with_name(name)
             if name in reference["sources"] and digest(source) != reference["sources"][name]:
@@ -200,10 +207,16 @@ def driver():
     env["PYTHONPATH"] = str(ROOT / preparation["overlay"]) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     env["TRITON_CACHE_DIR"] = str(ROOT / "runs/pilot-windows-kernels-20260927/triton-cache")
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    if "compiler" in spec:
+        compiler = ROOT / spec["compiler"]
+        if digest(compiler) != spec["compiler_sha256"]:
+            raise ValueError("Registered compiler changed")
+        env["CC"] = str(compiler)
+        env["CUDA_PATH"] = str(ROOT / spec["cuda_directory"])
     receipt = {"status": "running", "started_utc": datetime.now(timezone.utc).isoformat(), "timeout_seconds": 720}
     write_json(path, receipt)
     with (DIRECTORY / "parity.log").open("x", encoding="utf-8") as log:
-        proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--worker"], cwd=ROOT,
+        proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--worker", "--attempt", str(spec.get("attempt", 1))], cwd=ROOT,
                                 env=env, stdout=log, stderr=subprocess.STDOUT)
         try:
             code = proc.wait(timeout=720)
@@ -226,7 +239,11 @@ def driver():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
+    if args.attempt == 2:
+        DIRECTORY = ROOT / "results/pilot-fla-qwen-attempt2-20260927"
+        REGISTRATION = Path(__file__).with_name("windows_kernel_registration_attempt2.json")
     if "RUN_HEAVY_THREADS" not in os.environ:
         raise RuntimeError("Use C:/temp/run_heavy.py")
     raise SystemExit(worker() if args.worker else driver())

@@ -1,5 +1,14 @@
 # Isolated FLA attention parity
 
+The first attempt failed before producing candidate probabilities: Triton could not find a C
+compiler. The bundled TinyCC exists in the overlay, but the default discovery uses the baseline
+environment's `sysconfig` package path. FLA dispatch was selected and invoked; kernel compilation
+failed. This is an incomplete parity test, not a failed numerical-parity verdict.
+
+A [second attempt](../pilot-fla-qwen-attempt2-20260927/README.md) explicitly selects the existing,
+hash-verified compiler and CUDA bundle through child-process environment variables. No baseline
+packages, trained weights, inputs or probability thresholds change. The original failure is retained.
+
 This [registered experiment](../../experiments/small_model/windows_kernel_registration.json)
 compares the original Qwen student with the same checkpoint using the staged Windows FLA kernels.
 It retains the full output projection, unmerged LoRA, prompts, option order, batch size 16, cache

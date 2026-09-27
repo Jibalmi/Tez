@@ -1,0 +1,36 @@
+{
+  "status": "registered_before_gpu_execution",
+  "candidate": "c-qwen08-fla-windows",
+  "reference": "c-qwen08-30k",
+  "hypothesis": "The staged FLA CUDA kernels may accelerate the existing Qwen attention path. Actual dispatch, compilation, and numerical parity must first be verified; speed is not measured here.",
+  "change": "Only per-process optional-package dispatch changes through the pinned isolated overlay. Original full-vocabulary output projection, unmerged LoRA, prompts, cache, padding, batch size 16 and T=1 remain unchanged. Hub kernels are disabled; calls to the selected FLA implementation are counted. Restricted letter projection is not combined with this experiment.",
+  "validation": "All 278 original teacher-validation states and 1390 decisions. No public test or authored confirmation labels participate in parity.",
+  "teacher_directory": "runs/pilot-cloud-h200-20260927",
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "base_sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696",
+  "adapter_sha256": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482",
+  "argmax_agreement_min": 0.99,
+  "max_probability_delta_max": 0.04,
+  "mean_total_variation_max": 0.005,
+  "compute": "Laptop only under run_heavy.py with four threads and unchanged thermal rules; worker deadline 12 minutes including compilation. No cloud spending or baseline environment changes.",
+  "promotion": "Parity is necessary, not sufficient. Require separately measured improved latency under the original target-laptop temperature and contamination protocol. A warm/contaminated diagnostic cannot satisfy the speed gate. If parity fails, preserve the failure and do not relax thresholds. No runtime integration in this experiment.",
+  "references": [
+    "https://github.com/triton-lang/triton-windows",
+    "https://github.com/fla-org/flash-linear-attention/blob/main/INSTALL.md"
+  ],
+  "implementation_evidence": "Transformers 5.17.0 selects FLA through use_kernel_func_from_hub_with_fallback. Require a closure bound to fla.ops.gated_delta_rule and nonzero observed CUDA calls; reject silent fallback. Archive executed dependency sources and the pinned wheel/file hashes.",
+  "preparation": "results/pilot-windows-kernels-20260927/preparation.json",
+  "preparation_sha256": "d8d96cef02621c02be6d6e829137985d7ef27cb8f594fc046008b2443b204f89",
+  "reference_receipt": "results/pilot-restricted-qwen-20260927/parity.json",
+  "reference_receipt_sha256": "42af9e1da336ebd7cb70ececb54273a7343b68abdb8fef35d09b64de9e77b78d",
+  "reference_rows": "results/pilot-restricted-qwen-20260927/reference_rows.jsonl",
+  "reference_rows_sha256": "e353d17b87329541e191a14004e710ba57b292cad0a01a0ea860e80c1c0042e3",
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "triton-windows": "3.6.0.post26",
+    "fla-core": "0.5.2",
+    "einops": "0.8.2"
+  }
+}
