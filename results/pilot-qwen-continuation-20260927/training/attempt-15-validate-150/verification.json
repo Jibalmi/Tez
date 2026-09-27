@@ -1,0 +1,24 @@
+{
+  "status": "complete",
+  "verified_utc": "2026-09-27T15:52:54.747447+00:00",
+  "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "verifier_sha256": "06e1d8b25dcc4c0ad078e42a532757e36c65713f5fc0a001ebb112d6e7db5bc0",
+  "analysis_registration_sha256": "5f465e963cdf206ac2e19041bb33b41113a1f22b1defe4e167ee620a3643ed48",
+  "operation": "validate",
+  "completed_step": 150,
+  "checkpoints": [
+    {
+      "step": 150,
+      "adapter_tensors": 372,
+      "changed_from_original": 372,
+      "tokens": 646383,
+      "sha256": "14514e6bb17f3b7b2f0ec2cb08ef2366b451f41b5fd0b1b68a0e33be873849d3"
+    }
+  ],
+  "validation": {
+    "n": 1390,
+    "mean_kl": 0.14848698115125392,
+    "teacher_agreement": 0.7683453237410072
+  },
+  "scope": "One-thread CPU integrity and arithmetic checks, including saved adapter/optimizer values. No GPU numerical replay, throughput or new quality result; original release gates remain unchanged."
+}
