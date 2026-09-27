@@ -1,0 +1,112 @@
+{
+  "created_utc": "2026-09-27T01:09:17.991771+00:00",
+  "seed": 2719,
+  "states": 144,
+  "paired_decisions": 720,
+  "representations": [
+    "flat",
+    "nested"
+  ],
+  "domains": [
+    "observatory",
+    "greenhouse",
+    "ceramics",
+    "theater"
+  ],
+  "generator_sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+  "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "distributions": {
+    "lookup": {
+      "gold_option_positions": {
+        "2": 46,
+        "1": 44,
+        "0": 54
+      },
+      "gold_keys": {
+        "clear": 12,
+        "soak": 12,
+        "spot": 12,
+        "glaze": 12,
+        "amber": 12,
+        "anneal": 12,
+        "flood": 12,
+        "mist": 12,
+        "bisque": 12,
+        "drip": 12,
+        "wash": 12,
+        "violet": 12
+      }
+    },
+    "threshold": {
+      "gold_option_positions": {
+        "0": 78,
+        "1": 66
+      },
+      "gold_keys": {
+        "true": 96,
+        "false": 48
+      }
+    },
+    "conjunction": {
+      "gold_option_positions": {
+        "1": 68,
+        "0": 76
+      },
+      "gold_keys": {
+        "false": 96,
+        "true": 48
+      }
+    },
+    "band": {
+      "gold_option_positions": {
+        "1": 48,
+        "2": 48,
+        "0": 48
+      },
+      "gold_keys": {
+        "1": 48,
+        "2": 48,
+        "0": 48
+      }
+    },
+    "missing": {
+      "gold_option_positions": {
+        "3": 33,
+        "0": 27,
+        "1": 46,
+        "2": 38
+      },
+      "gold_keys": {
+        "north": 36,
+        "south": 36,
+        "__none__": 36,
+        "central": 36
+      }
+    }
+  },
+  "scope": "Fresh English synthetic diagnostic; fixed repeated rule families, not generalization certification.",
+  "isolation": "Generated without reading training or public benchmark records. Evaluation only; never fit or select on it.",
+  "primary": "Paired nested-minus-flat accuracy and label-flip rate; per-operation accuracy diagnoses content difficulty.",
+  "uncertainty": "2000 bootstrap resamples of whole states, seed 13; unadjusted exploratory percentile intervals.",
+  "interpretation": "A nesting effect supports serialization sensitivity. Low accuracy in both forms suggests content difficulty. Neither establishes a training intervention will help.",
+  "models": [
+    "a-base-30k",
+    "a-base-12ep",
+    "c-qwen08-30k"
+  ],
+  "weights_sha256": {
+    "a-base-30k": {
+      "encoder": "738d16f5b200ae110fbf4d705c2c34a16807c0c80dd3725192ffa3766210d948",
+      "head": "2544f844a2a86a2c748e89bf4fd37c2aa8076fd396b63ffc512d77121faef299"
+    },
+    "a-base-12ep": {
+      "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+      "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+    },
+    "c-qwen08-30k": {
+      "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+    }
+  },
+  "execution": "Original frozen weights, T=1, original predictor batch settings; 8 groups per chunk, interleaved formats. No tuning. Laptop through shared run_heavy lock, no RunPod spending.",
+  "not_measured": "No new latency claim, training, probability calibration or release promotion."
+}
