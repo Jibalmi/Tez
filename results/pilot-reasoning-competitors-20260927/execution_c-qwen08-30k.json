@@ -1,0 +1,109 @@
+{
+  "status": "complete",
+  "arm": "c-qwen08-30k",
+  "started_utc": "2026-09-27T02:19:28.927754+00:00",
+  "source_sha256": "ba22078cd8101275ae65acd6517a23eea87abe20969b0959299fdeb8ca1e272c",
+  "registration_sha256": "b40d1178721bf33cef45a74df8470717009480835bbf58a9c40223852c5fbb6e",
+  "source_files": {
+    "eval_reasoning_competitors.py": "73102a2c335277b087f9e0ef139f9e827aff1ea08724e89e7a3d02e1df72a31f",
+    "reasoning_competitor_registration.json": "b40d1178721bf33cef45a74df8470717009480835bbf58a9c40223852c5fbb6e",
+    "eval_reasoning_confirmation.py": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5"
+  },
+  "rows": 1800,
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "weights": {
+    "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "model_info": {
+    "arm": "c-qwen08-30k",
+    "backbone": "Qwen/Qwen3.5-0.8B",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "targets": "all-linear"
+    },
+    "epochs": 1,
+    "steps": 1875,
+    "total_steps_planned": 1875,
+    "fraction_of_planned_steps": 1.0,
+    "segments": 1,
+    "stopped_early": false,
+    "train_seconds": 902.7,
+    "decisions_per_s": 33.23,
+    "train_tok_per_s": 9102.9,
+    "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 47,
+    "lr": 0.0002,
+    "batch": 16,
+    "val_agreement_with_teacher": 0.7835,
+    "temperatures": {
+      "score": 0.5955,
+      "noul": 0.4788,
+      "choice": 0.6642,
+      "choice_many": 1.1461
+    },
+    "kernels": {
+      "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+      "packages": {
+        "torch": "2.8.0+cu128",
+        "transformers": "5.17.0",
+        "fla-core": "0.5.2",
+        "causal-conv1d": "1.7.0"
+      }
+    },
+    "train_summary": {
+      "states": 5998,
+      "decisions": 29990,
+      "sources": {
+        "fineweb": 3019,
+        "aya": 499,
+        "fineweb2": 2000,
+        "clinc": 145,
+        "gmmlu": 165,
+        "csqa": 170
+      },
+      "types": {
+        "choice": 11613,
+        "noul": 10428,
+        "score": 7949
+      },
+      "gold_decisions": 480,
+      "teacher_order_agreement": 0.9437812604201401
+    },
+    "peak_vram_gb": 6.39,
+    "lora_merged": false,
+    "cache_disabled": false
+  },
+  "base_weights": {
+    "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+  },
+  "token_audit": {
+    "max_tokens": 196,
+    "limit": 4096,
+    "untruncated_prompts_checked": 1800
+  },
+  "rows_sha256": "347456bfc845512ebf45703463f8869ac16dc36c125c68912e695d480720e274",
+  "finished_utc": "2026-09-27T02:20:22.683667+00:00",
+  "elapsed_seconds": 53.72960360000434,
+  "thermal_governor": {
+    "checks": 48,
+    "pauses": 1,
+    "paused_s": 1.105494199990062,
+    "max_c": 86
+  }
+}

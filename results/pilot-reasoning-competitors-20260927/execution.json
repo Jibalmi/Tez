@@ -1,0 +1,15 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:19:26.451129+00:00",
+  "stages": [
+    {
+      "arm": "c-qwen08-30k",
+      "returncode": 0
+    },
+    {
+      "arm": "decider08-native",
+      "returncode": 0
+    }
+  ],
+  "finished_utc": "2026-09-27T02:21:54.997030+00:00"
+}

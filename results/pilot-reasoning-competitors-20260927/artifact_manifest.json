@@ -1,0 +1,438 @@
+{
+  ".gitignore": {
+    "sha256": "c8b1fb169d931d2a24c67cd75f1c8132c24cdfdcd2fc67b7aceba422a303e044",
+    "bytes": 36
+  },
+  "RESULTS.md": {
+    "sha256": "fff123708cf695faf7815618c505b85985440afd954641c2e2c7fa340d58b774",
+    "bytes": 2022
+  },
+  "analysis_source/report_reasoning_competitors.py": {
+    "sha256": "7fbb78e0acd50ed5b53edd3f4acd13269267a8974362c9cef77129039766ab8b",
+    "bytes": 8746
+  },
+  "c-qwen08-30k.log": {
+    "sha256": "956e6dcfb93dd19730920fb095a62665ced92a5ad1373b63a33fd4d7f8d8bd15",
+    "bytes": 1124
+  },
+  "decider08-native.log": {
+    "sha256": "1d6d63b7fa3cafa73b48a6f5733896505ce9bcc236159dd26d59be9d6cd94b63",
+    "bytes": 1112
+  },
+  "executed_source/c-qwen08-30k/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/c-qwen08-30k/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/c-qwen08-30k/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/c-qwen08-30k/eval_reasoning_competitors.py": {
+    "sha256": "73102a2c335277b087f9e0ef139f9e827aff1ea08724e89e7a3d02e1df72a31f",
+    "bytes": 8846
+  },
+  "executed_source/c-qwen08-30k/eval_reasoning_confirmation.py": {
+    "sha256": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+    "bytes": 10385
+  },
+  "executed_source/c-qwen08-30k/reasoning_competitor_registration.json": {
+    "sha256": "b40d1178721bf33cef45a74df8470717009480835bbf58a9c40223852c5fbb6e",
+    "bytes": 1790
+  },
+  "executed_source/c-qwen08-30k/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/c-qwen08-30k/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "executed_source/decider08-native/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/decider08-native/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/decider08-native/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/decider08-native/eval_reasoning_competitors.py": {
+    "sha256": "73102a2c335277b087f9e0ef139f9e827aff1ea08724e89e7a3d02e1df72a31f",
+    "bytes": 8846
+  },
+  "executed_source/decider08-native/eval_reasoning_confirmation.py": {
+    "sha256": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+    "bytes": 10385
+  },
+  "executed_source/decider08-native/native/LICENSE": {
+    "sha256": "c009ef334016c5754a713754f6178e14ad3488c377bb7c11aaade057404f3a02",
+    "bytes": 10935
+  },
+  "executed_source/decider08-native/native/decider/__init__.py": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "executed_source/decider08-native/native/decider/batching.py": {
+    "sha256": "b5b02f7d03174501b20706be35859c8f241a3d25b550ceab3f0d0e2c414f2419",
+    "bytes": 5147
+  },
+  "executed_source/decider08-native/native/decider/bench/__init__.py": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "executed_source/decider08-native/native/decider/bench/eager_reference.py": {
+    "sha256": "b069b15e309dd3ec617a36d459b7f3c8842bb869b5536331f04e9a9fc67f59b0",
+    "bytes": 4368
+  },
+  "executed_source/decider08-native/native/decider/bench/engine.py": {
+    "sha256": "6aa61f3c57faa17314b3f6f48e1b8a4a35a1d6734d60953d35962691b1b08ec2",
+    "bytes": 3484
+  },
+  "executed_source/decider08-native/native/decider/bench/latency.py": {
+    "sha256": "9950398ff213a69aed481ecaf3e2c7d6226a8274838ff3df4605d37271299b50",
+    "bytes": 1685
+  },
+  "executed_source/decider08-native/native/decider/bench/loadtest.py": {
+    "sha256": "99c32bdf4d95a0f66b32dea297ccc9f8b4990c4a608f3bf981e0925c1bdb6f46",
+    "bytes": 3316
+  },
+  "executed_source/decider08-native/native/decider/bench/mps.py": {
+    "sha256": "334459fdc21b61407f55976b1eae4f0ced280087f6cee6942a2d22ef1ee8a612",
+    "bytes": 4137
+  },
+  "executed_source/decider08-native/native/decider/bench/probe_cache_split.py": {
+    "sha256": "0173423d9388707e54be29f5c2fa1aae3a0898ca2f8de09c1c84752e01d119bc",
+    "bytes": 4099
+  },
+  "executed_source/decider08-native/native/decider/bench/public_suite.py": {
+    "sha256": "59512f386b8c84317fd3c10a2493ec59bfed8ed5450dbcc1c28fa1fcfab3b459",
+    "bytes": 4533
+  },
+  "executed_source/decider08-native/native/decider/bench/replay_systemone.py": {
+    "sha256": "cacd81679bae9328406d15d2ed5bf8e4ef0c8c36c87d412f7c25649502967caf",
+    "bytes": 9613
+  },
+  "executed_source/decider08-native/native/decider/bench/run_serving_matrix.py": {
+    "sha256": "66a34017c1de5ef4ec0a676933b3eff3d414c02ccddd4114fdd65810bbf81c57",
+    "bytes": 4621
+  },
+  "executed_source/decider08-native/native/decider/bench/schema.py": {
+    "sha256": "822973f201ff915027c752075406f48328e547cd2f26f0211c2c4676ce6ebd0a",
+    "bytes": 4557
+  },
+  "executed_source/decider08-native/native/decider/bench/verify_engine_v2.py": {
+    "sha256": "d094fa647354c8e66db31eab3de3cf43b49e28daeef69aac4e8b44565589bd5c",
+    "bytes": 5857
+  },
+  "executed_source/decider08-native/native/decider/calibrate.py": {
+    "sha256": "2078c26e9b776f8244c91b9139130e4ec275e9fbbb761b2e2a1ded33ecfa0d10",
+    "bytes": 12181
+  },
+  "executed_source/decider08-native/native/decider/card_table.py": {
+    "sha256": "b98285bae73113877dce0ebf18a47047aae5e88c2166992abef7f2388d94f9b2",
+    "bytes": 1934
+  },
+  "executed_source/decider08-native/native/decider/data/__init__.py": {
+    "sha256": "9e12c38e40e9cc79ab0728b372608515517f74d984486cbdeadb87f5ff960851",
+    "bytes": 1158
+  },
+  "executed_source/decider08-native/native/decider/data/augment.py": {
+    "sha256": "494d8ed150b86409ee43fe07830f8a0d45c39d39d2128858abb627350200b23c",
+    "bytes": 15904
+  },
+  "executed_source/decider08-native/native/decider/data/core.py": {
+    "sha256": "56b3ae3f2994d11cfa3c2732170445a4b829eca975adcd048eeaade715fbc127",
+    "bytes": 31697
+  },
+  "executed_source/decider08-native/native/decider/data/mixture.py": {
+    "sha256": "f9d8c6de73282f528396127050630ce08c824ed4a36d04a3c71dd2c1424f87d6",
+    "bytes": 17775
+  },
+  "executed_source/decider08-native/native/decider/data/rules.py": {
+    "sha256": "a73fa82a0ba00c846f894adb7a39a9138a0d7f81ea7f9d914d726024a215767e",
+    "bytes": 30103
+  },
+  "executed_source/decider08-native/native/decider/data/tasks_agents.py": {
+    "sha256": "8321baf94d4be7b7b06f86d881d295eb05534810044757758a9842d68dec40ce",
+    "bytes": 6878
+  },
+  "executed_source/decider08-native/native/decider/data/tasks_extended.py": {
+    "sha256": "1164f82906583b2aa33a2ca5c23c8e906c6499591ff6d5a6b6279369129f9b57",
+    "bytes": 21971
+  },
+  "executed_source/decider08-native/native/decider/data/tasks_heldout.py": {
+    "sha256": "06a354a7fe43ba358dac69b18decca10a0514499966f92061d6e0cbb6f7eca58",
+    "bytes": 4559
+  },
+  "executed_source/decider08-native/native/decider/data/teacher_contrastive.py": {
+    "sha256": "df0c1187bbd66d0ee6de46d9ed6401003f46fda3d9ac9fd970fb7532ffc1ee0b",
+    "bytes": 15770
+  },
+  "executed_source/decider08-native/native/decider/data/teacher_labels.py": {
+    "sha256": "123600d37ada8c703dfe414735b7e12e2f9342a59dc264d531267c0333934e52",
+    "bytes": 4430
+  },
+  "executed_source/decider08-native/native/decider/data/teacher_questions.py": {
+    "sha256": "5d13a6b9983b7fc6f228071937dab877b402332c6301956674355b165d9100b2",
+    "bytes": 22464
+  },
+  "executed_source/decider08-native/native/decider/data/teacher_situations.py": {
+    "sha256": "f3dd83713634d5bdda189e72b8075dab2c6db5dad7d329bf55aebdb4c81e11ff",
+    "bytes": 5360
+  },
+  "executed_source/decider08-native/native/decider/engine.py": {
+    "sha256": "91c8447520d66d97cb5c6b43f0830368692042f25e80aae3c00d6e5d0235f1b2",
+    "bytes": 12370
+  },
+  "executed_source/decider08-native/native/decider/engine_v2.py": {
+    "sha256": "a3c94452b552bfffebc662a3211a710446c7f9162c13746e7fa21972f2f1ee91",
+    "bytes": 12248
+  },
+  "executed_source/decider08-native/native/decider/evaluate.py": {
+    "sha256": "2e536b54c38e03cbd2fec3576e07df777aa8d73fd3b8c97abb149650b9f43c1d",
+    "bytes": 6170
+  },
+  "executed_source/decider08-native/native/decider/fp8.py": {
+    "sha256": "f9a2826130c46a57d5bdf343e7279469dc1245028e966f095e59ba32984dad4a",
+    "bytes": 2647
+  },
+  "executed_source/decider08-native/native/decider/games/__init__.py": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "executed_source/decider08-native/native/decider/games/envs.py": {
+    "sha256": "3d357cdd49286ce5d90848fab4686d527c7c356b545fa0dfb4fed356b39ce604",
+    "bytes": 16022
+  },
+  "executed_source/decider08-native/native/decider/games/frames_dagger.py": {
+    "sha256": "6f7786be8fe049948807383aacc5aa9f53abd94a668f3d818eba2f5ad0bf7316",
+    "bytes": 2508
+  },
+  "executed_source/decider08-native/native/decider/games/frames_data.py": {
+    "sha256": "bda246306a959791354d68f02c3c8835e595a69aaf769367b0cb927489a8d38e",
+    "bytes": 3622
+  },
+  "executed_source/decider08-native/native/decider/games/mario.py": {
+    "sha256": "88fb54aafefc04fc71dceaf6cf04b1dabac8804c988b150ec631159435ec7772",
+    "bytes": 10150
+  },
+  "executed_source/decider08-native/native/decider/games/mario_data.py": {
+    "sha256": "213c8d5c68e01695f600aa632951d35763bd81d7f08427ed148704e2337640b7",
+    "bytes": 4051
+  },
+  "executed_source/decider08-native/native/decider/games/mario_rl.py": {
+    "sha256": "d6c7732bc924596e861de29680d6d4445467983618363f3af269f875d13566ec",
+    "bytes": 10019
+  },
+  "executed_source/decider08-native/native/decider/games/montage.py": {
+    "sha256": "1fff664ea5558de52b24a4e7b1916acfa0c1b781f0a0399ba6a37bfda60f5026",
+    "bytes": 4075
+  },
+  "executed_source/decider08-native/native/decider/games/pixels.py": {
+    "sha256": "4e937ac075ce953c98a8a4ac126c6692b5f6ace70508aac8e910ad0bb5f6a950",
+    "bytes": 2970
+  },
+  "executed_source/decider08-native/native/decider/games/play.py": {
+    "sha256": "fb17520f062c38fa12c69082327ef3fc6df127cb92f1001d7bf86a218d1a3e8e",
+    "bytes": 1781
+  },
+  "executed_source/decider08-native/native/decider/games/rl.py": {
+    "sha256": "8153e6fdb70a5610823f0f9094eaea2565457f201d11e1bfb2de07ae7ea6c52d",
+    "bytes": 9322
+  },
+  "executed_source/decider08-native/native/decider/games/table.py": {
+    "sha256": "b12b05fe22d4562719bf421c86a68dc3324e6ca48923e2c7f0001817f2feaeb4",
+    "bytes": 731
+  },
+  "executed_source/decider08-native/native/decider/infer.py": {
+    "sha256": "4a4bec51c626cb3c95478493f418cc2250ac52f49330d0544111d577376d48d1",
+    "bytes": 22764
+  },
+  "executed_source/decider08-native/native/decider/metrics.py": {
+    "sha256": "c84dd9492e63c2858c8de90628c3831c662aa45592b3b94c622ceb7bae5519f9",
+    "bytes": 1680
+  },
+  "executed_source/decider08-native/native/decider/model.py": {
+    "sha256": "165f18b7fb897a1fa744edf8c2b5f4120e0f6ca940501d010626b31f68b47dc1",
+    "bytes": 2917
+  },
+  "executed_source/decider08-native/native/decider/mps_moe.py": {
+    "sha256": "0ba405b5474399d34997d00595e8e83809a1cf0d9f46110db1969f507c6ba4e9",
+    "bytes": 5333
+  },
+  "executed_source/decider08-native/native/decider/mps_ops.py": {
+    "sha256": "411f7d31bca2153a47db9f878975e583ce04387fa430aaa3e66651712e04d96a",
+    "bytes": 11868
+  },
+  "executed_source/decider08-native/native/decider/probes/__init__.py": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "executed_source/decider08-native/native/decider/probes/applications.py": {
+    "sha256": "b7560384b201183ca3549c62ead13cda82bcbd801f5bb26032e1fcf814ff8a14",
+    "bytes": 15205
+  },
+  "executed_source/decider08-native/native/decider/probes/batteries.py": {
+    "sha256": "d2291d7e2cc77ce14be765291a68ac821088964e355d1b99395de1850ddcbf85",
+    "bytes": 15410
+  },
+  "executed_source/decider08-native/native/decider/probes/cua_s1_forms.py": {
+    "sha256": "97b9615b6c82c992c70ae8c7ee33e5746595a0bfdaa51d540b0d8564f097b2f6",
+    "bytes": 4389
+  },
+  "executed_source/decider08-native/native/decider/probes/independence.py": {
+    "sha256": "75d90d200408fb776cb0f799a091a2f34e24f286d858378bfc7845f7ffd82629",
+    "bytes": 3709
+  },
+  "executed_source/decider08-native/native/decider/probes/isolated.py": {
+    "sha256": "9577b3dbaa1969ab7bb4c63d968f3af737e26be9be27e1d83377d6eb1d714fe4",
+    "bytes": 4118
+  },
+  "executed_source/decider08-native/native/decider/prompt.py": {
+    "sha256": "d8856e0d0dbc2e50a055b4037efb9bdff932eed7b2fd413ebf1e0eefd138935e",
+    "bytes": 16135
+  },
+  "executed_source/decider08-native/native/decider/prompt_fast.py": {
+    "sha256": "66662f8bd6bd04d4ee9a8d735ca484af03fb41154957fa46f6828bd1a63023a3",
+    "bytes": 4669
+  },
+  "executed_source/decider08-native/native/decider/report.py": {
+    "sha256": "64937b12c6f9fe7d1f216e5655e2c60e0212ea1e3f711c82d57985b28381a41b",
+    "bytes": 3044
+  },
+  "executed_source/decider08-native/native/decider/schema_engine.py": {
+    "sha256": "45f47d80c189ea79062a230a6877ec1b2e9de47620037f130166b59bfb418455",
+    "bytes": 10692
+  },
+  "executed_source/decider08-native/native/decider/serve.py": {
+    "sha256": "44900a7bf5f025b1ea6ca934c8d99cb43c3c2bf8e22b89eb5e06a183367ae778",
+    "bytes": 33102
+  },
+  "executed_source/decider08-native/native/decider/serve_v1.py": {
+    "sha256": "59af8f91eca7ec54203752027013cf0873fdb2faa7d7de367e1e047c1afadaa9",
+    "bytes": 16886
+  },
+  "executed_source/decider08-native/native/decider/serve_vllm.py": {
+    "sha256": "a8fb4f3d977c0922f446074d71ccc8edb93fd321fdee8d5297d66c0d454ed51a",
+    "bytes": 18943
+  },
+  "executed_source/decider08-native/native/decider/shared_prefix.py": {
+    "sha256": "4d4af26fd234b4faa0bfb208b7298266314e8c24b5817d4ca12f8b23f8aa223f",
+    "bytes": 10027
+  },
+  "executed_source/decider08-native/native/decider/systemone.py": {
+    "sha256": "2b7e9fbfc520b77a18040ece9355f8e1e9f285ec01e735e5597362ea802526c7",
+    "bytes": 10575
+  },
+  "executed_source/decider08-native/native/decider/temperature.py": {
+    "sha256": "ba71f43b2ec9ff4a941edeb415fc5f3918dbb837c7d789dc4520f4bc0ce04353",
+    "bytes": 7438
+  },
+  "executed_source/decider08-native/native/decider/train.py": {
+    "sha256": "fc883c96e6dff1a03bba2d4bbbc84031a0c16247fbc57c1cff8d428b28b7c646",
+    "bytes": 7749
+  },
+  "executed_source/decider08-native/native/decider/vision/__init__.py": {
+    "sha256": "0d949fdb44d746ba17aa6e349dcaad578e67d1a721307006f959b54b62a96055",
+    "bytes": 393
+  },
+  "executed_source/decider08-native/native/decider/vision/data.py": {
+    "sha256": "c8456c85051847a03ec2198c276744c8a59be1addec8668dda3e1df914e04da8",
+    "bytes": 4101
+  },
+  "executed_source/decider08-native/native/decider/vision/mixture.py": {
+    "sha256": "cdda750ff4194bfe6ca43eb4f0c85640fabe734124ed955e3a609d8f50ccf31c",
+    "bytes": 1940
+  },
+  "executed_source/decider08-native/native/decider/vision/model.py": {
+    "sha256": "606ca3253b6202b19b35519088914876722525024c466fb690becd98d7381579",
+    "bytes": 4969
+  },
+  "executed_source/decider08-native/native/decider/vision/train.py": {
+    "sha256": "c6a97067279116812c197e85220e703c82ef78623c99453963008b4afba47f36",
+    "bytes": 5282
+  },
+  "executed_source/decider08-native/native/decider/vision/transplant.py": {
+    "sha256": "02f3bad65d27ca303db79b5a75210e77e13adee95cf26fd5d3b96c25e7190e9f",
+    "bytes": 1171
+  },
+  "executed_source/decider08-native/native/decider/vllm_worker.py": {
+    "sha256": "0186a83eb3953d5ed968fa0d6de236602c5ae64565d44e398d8ba49f7461b6b4",
+    "bytes": 2687
+  },
+  "executed_source/decider08-native/reasoning_competitor_registration.json": {
+    "sha256": "b40d1178721bf33cef45a74df8470717009480835bbf58a9c40223852c5fbb6e",
+    "bytes": 1790
+  },
+  "executed_source/decider08-native/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/decider08-native/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "execution.json": {
+    "sha256": "e4a95fbb04e3db1e7a312363940e2ec085cb4b7c70e9c38d1d8eda915d93ec96",
+    "bytes": 299
+  },
+  "execution_c-qwen08-30k.json": {
+    "sha256": "06ad97838008d84224071a448b17d0198eb3f6f4ddbac33f72791585edfe7c08",
+    "bytes": 3588
+  },
+  "execution_decider08-native.json": {
+    "sha256": "d7c317671c8477ef6c6a79a42be175e466f842259f0d1623378dd9f0ee7e72e6",
+    "bytes": 10416
+  },
+  "inputs/confirmation.json": {
+    "sha256": "ba22078cd8101275ae65acd6517a23eea87abe20969b0959299fdeb8ca1e272c",
+    "bytes": 1231519
+  },
+  "reference/receipt_a-base-12ep.json": {
+    "sha256": "652fb3dbbd73e1cd1f7c29a20a2eba8e7ee1e2675600be9376c172b9450ae2ca",
+    "bytes": 5512
+  },
+  "reference/receipt_a-base-replay150.json": {
+    "sha256": "cdb4aca71f8df9451606989ba840667fe449c82a28fb06f872986f1be3817f7e",
+    "bytes": 2975
+  },
+  "reference/receipt_a-base-rules150.json": {
+    "sha256": "6b9584b329d735e45a934dc4c9aa0a2e5345d2ee31d7a3b8375c7beee90aa3e4",
+    "bytes": 2968
+  },
+  "reference/rows_a-base-12ep.jsonl": {
+    "sha256": "a2f6b5471e6e06b55e51d09b730e30eb832f3c937407f68527bd6aba938520ba",
+    "bytes": 490493
+  },
+  "reference/rows_a-base-replay150.jsonl": {
+    "sha256": "727cc74aeebcd6cf7f630f681bb4332bc00b29effdaf56185d06f39cde8db016",
+    "bytes": 490492
+  },
+  "reference/rows_a-base-rules150.jsonl": {
+    "sha256": "c868ac9d2d0e6137c784f6ca8124e05d20f64827b535ce8c36014b5173facf23",
+    "bytes": 490637
+  },
+  "registration.json": {
+    "sha256": "b40d1178721bf33cef45a74df8470717009480835bbf58a9c40223852c5fbb6e",
+    "bytes": 1790
+  },
+  "rows_c-qwen08-30k.jsonl": {
+    "sha256": "347456bfc845512ebf45703463f8869ac16dc36c125c68912e695d480720e274",
+    "bytes": 608493
+  },
+  "rows_decider08-native.jsonl": {
+    "sha256": "9b67568bafb2bb3b33f1f28dd7ae8bbb576ba5349a5cbd1a96d56c2d29e0e798",
+    "bytes": 588629
+  },
+  "summary.json": {
+    "sha256": "3ef76baa78a9a6e967c3428c906dc880a2363c6c2ae89daacc291e7f6d1ca4c5",
+    "bytes": 33761
+  }
+}
