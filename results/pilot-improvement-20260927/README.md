@@ -64,8 +64,13 @@ A subsequent [fixed equal-probability blend](ENSEMBLE.md) of the Qwen student an
 53.00% on typed decisions, versus Decider's 53.40%. The paired state-bootstrap interval for the
 difference spans -1.85 to +0.95 points. MASSIVE-11 rose from 74.45% to 74.91%. This exploratory
 analysis does not establish a useful overall gain, and both models would still require inference.
-No serving change was made. The [paired structure diagnostic](../pilot-structure-probe-20260927/README.md)
-tests the training-coverage hypothesis using newly authored exact-answer records.
+No serving change was made. The completed [paired structure diagnostic](../pilot-structure-probe-20260927/README.md)
+weakens nesting alone as an explanation: both encoders improved on nested versions of identical facts,
+while Qwen lost 1.67 points. All three models always chose the middle ordinal band, scoring 33.33%,
+and Qwen always answered true to the numeric threshold question. Qwen's lookup and explicit
+missing-value accuracy were both 100%. The next diagnosis should distinguish answer-position and
+score-type cues from missing reasoning coverage before investing in another training run. These
+synthetic diagnostic scores do not replace the original gates or establish generalization.
 
 ## Validation, artifacts, and cost
 

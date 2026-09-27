@@ -66,7 +66,8 @@ def main():
         if args.arm.startswith("c-"):
             from huggingface_hub import snapshot_download
             from train_c import BASE
-            base = Path(snapshot_download(BASE, revision=model_revision(BASE), local_files_only=True))
+            base = Path(snapshot_download(BASE, revision=model_revision(BASE),
+                                          allow_patterns=["*.safetensors"], local_files_only=True))
             receipt["base"] = {"revision": model_revision(BASE),
                                "weights": {p.name: digest(p) for p in base.glob("*.safetensors")}}
         groups, metadata = [], []

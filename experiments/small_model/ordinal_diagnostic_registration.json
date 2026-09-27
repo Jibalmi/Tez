@@ -1,0 +1,23 @@
+{
+  "round": "ordinal-cue-diagnostic-after-structure-probe-20260927",
+  "status": "registered_not_started",
+  "scope": "Secondary diagnostic after observing constant middle-band predictions; not fresh certification or a promotion gate.",
+  "purpose": "Separate score-type cues and answer-position preferences from failure to apply numeric rules before investing in further training.",
+  "source_cases": "results/pilot-structure-probe-20260927/cases.json",
+  "source_cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "models": ["a-base-12ep", "c-qwen08-30k"],
+  "model_policy": "Same frozen registered weight hashes and original predictor settings. No training, calibration, instruction editing or model selection.",
+  "states": "All 144 records, nested representation only",
+  "questions": "Only the ordinal band question, one question per group in every condition. Recompute the unmodified baseline in this same single-question protocol; do not attribute a difference from the earlier packed encoder run to type or order.",
+  "conditions": {
+    "question_type": ["score", "choice"],
+    "semantic_option_order": [["0", "1", "2"], ["1", "2", "0"], ["2", "0", "1"]]
+  },
+  "invariants": "Preserve each state, instruction, option key/description pair, and semantic gold label. Only declared question type and option presentation order vary; remap gold and probabilities to canonical semantic keys.",
+  "execution": "Fixed round-robin conditions per state; deterministic state order from the registered source. Record model/source hashes, every normalized probability vector and all failures.",
+  "primary": "Accuracy and semantic prediction distribution per condition; paired within-state differences from score/original-order condition.",
+  "secondary": "Semantic prediction invariance across cyclic option orders within each question type.",
+  "uncertainty": "Exploratory paired state bootstrap, 2000 resamples, seed 13; no multiplicity-adjusted claim.",
+  "limits": "Repeated synthetic rules in four English settings. This diagnostic cannot be a training or checkpoint-selection set. Any implementation change still needs separate representative validation and fresh confirmation.",
+  "compute": "Laptop only through C:/temp/run_heavy.py, at most 12 minutes including load and thermal pauses, unchanged thermal governor, no valid latency claim. No new RunPod resources or spending. Preserve and stop on a thermal failure."
+}

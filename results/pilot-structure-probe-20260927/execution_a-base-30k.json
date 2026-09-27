@@ -1,0 +1,157 @@
+{
+  "status": "complete",
+  "arm": "a-base-30k",
+  "started_utc": "2026-09-27T01:15:13.314051+00:00",
+  "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "registration_sha256": "9152ffb28f03f48a30d300d3107d41a51bceb49d72a17edc754f659c6bbddc64",
+  "runner_sha256": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+  "threads": 4,
+  "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "thermal_start": {
+    "temp_c": 79,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1725,
+    "util_pct": 10,
+    "mem_mb": 1819
+  },
+  "purpose": "Quality diagnostic only; no usable latency measurement",
+  "rows": 1440,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "source_hashes": {
+    "run_structure_probe.py": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+  },
+  "weights": {
+    "encoder": "738d16f5b200ae110fbf4d705c2c34a16807c0c80dd3725192ffa3766210d948",
+    "head": "2544f844a2a86a2c748e89bf4fd37c2aa8076fd396b63ffc512d77121faef299"
+  },
+  "model_info": {
+    "arm": "a-base-30k",
+    "backbone": "jhu-clsp/mmBERT-base",
+    "data": "30k",
+    "params": 308120833,
+    "epochs_run": 3,
+    "steps": 834,
+    "segments": 1,
+    "train_seconds": 152.4,
+    "train_tokens": 10235759,
+    "train_tok_per_s": 67178.0,
+    "train_tok_per_s_excluding_thermal_pauses": 67178.0,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 44,
+    "lr": 3e-05,
+    "head_lr": 0.001,
+    "budget_tokens": 16384,
+    "max_len": 2048,
+    "log": [
+      {
+        "epoch": 0,
+        "step": 278,
+        "val_agreement": 0.7129,
+        "val_kl": 0.2188,
+        "seconds": 51.4
+      },
+      {
+        "epoch": 1,
+        "step": 557,
+        "val_agreement": 0.7482,
+        "val_kl": 0.1706,
+        "seconds": 102.1
+      },
+      {
+        "epoch": 2,
+        "step": 834,
+        "val_agreement": 0.7619,
+        "val_kl": 0.1622,
+        "seconds": 152.4
+      }
+    ],
+    "score_loss_order": "canonical_levels",
+    "seed": 13,
+    "val_agreement_with_teacher": 0.7619,
+    "val_kl": 0.1622,
+    "temperatures": {
+      "noul": 0.534,
+      "choice": 0.6642,
+      "score": 0.5955,
+      "choice_many": 1.3499
+    },
+    "train_summary": {
+      "states": 5998,
+      "decisions": 29990,
+      "sources": {
+        "fineweb": 3019,
+        "aya": 499,
+        "fineweb2": 2000,
+        "clinc": 145,
+        "gmmlu": 165,
+        "csqa": 170
+      },
+      "types": {
+        "choice": 11613,
+        "noul": 10428,
+        "score": 7949
+      },
+      "gold_decisions": 480,
+      "teacher_order_agreement": 0.9437812604201401
+    },
+    "val_summary": {
+      "states": 278,
+      "decisions": 1390,
+      "sources": {
+        "fineweb2": 100,
+        "fineweb": 131,
+        "aya": 26,
+        "csqa": 5,
+        "clinc": 6,
+        "gmmlu": 10
+      },
+      "types": {
+        "score": 373,
+        "noul": 491,
+        "choice": 526
+      },
+      "gold_decisions": 21,
+      "teacher_order_agreement": 0.9388489208633094
+    },
+    "peak_vram_gb": 15.1
+  },
+  "token_audit": {
+    "max_tokens": 314,
+    "context_limit": 8192,
+    "clipped_questions_or_options": 0
+  },
+  "groups_completed": 288,
+  "rows_sha256": "d578b64d489b70be071f23e1dfcfec2b7b0e6c25613c473820a052329df9a717",
+  "finished_utc": "2026-09-27T01:15:28.236824+00:00",
+  "elapsed_seconds": 14.767897500001709,
+  "thermal_end": {
+    "temp_c": 84,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 2325,
+    "util_pct": 29,
+    "mem_mb": 3572
+  },
+  "thermal_governor": {
+    "checks": 37,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 83
+  }
+}

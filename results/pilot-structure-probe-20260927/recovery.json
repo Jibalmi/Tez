@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-09-27T01:20:51.347657+00:00",
+  "status": "all_registered_predictions_complete_and_validated",
+  "changed_source_files": [
+    "run_structure_probe.py"
+  ],
+  "fix": "Restrict offline base-model snapshot audit to safetensors files; inference settings unchanged.",
+  "first_attempt_rows": 0,
+  "retry_rows": 1440,
+  "model_and_input_identity_verified": true,
+  "outer_powershell_exit_code_observed": 1,
+  "outer_status_note": "Tool reported exit code 1; complete model receipt and raw prediction hash verified. Do not claim a clean shell exit.",
+  "lock_release_evidence": "Retry log ends with released; gpu_lock.py status showed no owner after completion.",
+  "retry_rows_sha256": "7969c0c47ceab108e48208b861baeb2e32dec6edf17150d98583eedb216624f6"
+}

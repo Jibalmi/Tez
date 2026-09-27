@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-09-27T01:20:52.251953+00:00",
+  "archive_sha256": "353b90dd4fe74338aabd36aa1f747d54f1f8e56ec7d9f43c53927aa0c03c5635",
+  "bytes": 306231,
+  "files_verified": 63,
+  "prediction_rows_validated": 4320,
+  "all_source_hashes_verified": true,
+  "archive_member_hashes_verified": true,
+  "note": "Includes registered inputs, raw predictions, executed source, receipts, logs, failed metadata audit and unexecuted preparation."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "partial_failure",
+  "started_utc": "2026-09-27T01:15:10.070812+00:00",
+  "pid": 57692,
+  "stages": [
+    {
+      "arm": "a-base-30k",
+      "returncode": 0,
+      "seconds": 19.563785499994992
+    },
+    {
+      "arm": "a-base-12ep",
+      "returncode": 0,
+      "seconds": 20.442935800005216
+    },
+    {
+      "arm": "c-qwen08-30k",
+      "returncode": 1,
+      "seconds": 13.19540810000035
+    }
+  ],
+  "finished_utc": "2026-09-27T01:16:03.275413+00:00"
+}

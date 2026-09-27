@@ -1,0 +1,132 @@
+{
+  "status": "complete",
+  "arm": "c-qwen08-30k",
+  "started_utc": "2026-09-27T01:17:09.694494+00:00",
+  "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "registration_sha256": "9152ffb28f03f48a30d300d3107d41a51bceb49d72a17edc754f659c6bbddc64",
+  "runner_sha256": "8370f680790fec438e860eb377bba7265472420b998e688398eb0d737d68846b",
+  "threads": 4,
+  "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "thermal_start": {
+    "temp_c": 78,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1320,
+    "util_pct": 7,
+    "mem_mb": 1826
+  },
+  "purpose": "Quality diagnostic only; no usable latency measurement",
+  "rows": 1440,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "source_hashes": {
+    "run_structure_probe.py": "8370f680790fec438e860eb377bba7265472420b998e688398eb0d737d68846b",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+  },
+  "weights": {
+    "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "model_info": {
+    "arm": "c-qwen08-30k",
+    "backbone": "Qwen/Qwen3.5-0.8B",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "targets": "all-linear"
+    },
+    "epochs": 1,
+    "steps": 1875,
+    "total_steps_planned": 1875,
+    "fraction_of_planned_steps": 1.0,
+    "segments": 1,
+    "stopped_early": false,
+    "train_seconds": 902.7,
+    "decisions_per_s": 33.23,
+    "train_tok_per_s": 9102.9,
+    "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 47,
+    "lr": 0.0002,
+    "batch": 16,
+    "val_agreement_with_teacher": 0.7835,
+    "temperatures": {
+      "score": 0.5955,
+      "noul": 0.4788,
+      "choice": 0.6642,
+      "choice_many": 1.1461
+    },
+    "kernels": {
+      "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+      "packages": {
+        "torch": "2.8.0+cu128",
+        "transformers": "5.17.0",
+        "fla-core": "0.5.2",
+        "causal-conv1d": "1.7.0"
+      }
+    },
+    "train_summary": {
+      "states": 5998,
+      "decisions": 29990,
+      "sources": {
+        "fineweb": 3019,
+        "aya": 499,
+        "fineweb2": 2000,
+        "clinc": 145,
+        "gmmlu": 165,
+        "csqa": 170
+      },
+      "types": {
+        "choice": 11613,
+        "noul": 10428,
+        "score": 7949
+      },
+      "gold_decisions": 480,
+      "teacher_order_agreement": 0.9437812604201401
+    },
+    "peak_vram_gb": 6.39,
+    "lora_merged": false,
+    "cache_disabled": false
+  },
+  "base": {
+    "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+    "weights": {
+      "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+    }
+  },
+  "token_audit": {
+    "max_tokens": 201,
+    "context_limit": 4096,
+    "clipped_questions_or_options": 0
+  },
+  "groups_completed": 288,
+  "rows_sha256": "7969c0c47ceab108e48208b861baeb2e32dec6edf17150d98583eedb216624f6",
+  "finished_utc": "2026-09-27T01:18:12.736810+00:00",
+  "elapsed_seconds": 62.829879199998686,
+  "thermal_end": {
+    "temp_c": 86,
+    "sw_thermal": false,
+    "hw_thermal": false,
+    "sm_mhz": 1927,
+    "util_pct": 86,
+    "mem_mb": 4490
+  },
+  "thermal_governor": {
+    "checks": 54,
+    "pauses": 16,
+    "paused_s": 17.28244770002493,
+    "max_c": 87
+  }
+}

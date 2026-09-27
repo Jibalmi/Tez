@@ -2,3 +2,4 @@ cases.json
 rows_*.jsonl
 *.log
 executed_source/
+failed_attempts/

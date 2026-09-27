@@ -1,0 +1,837 @@
+{
+  "registration": {
+    "created_utc": "2026-09-27T01:09:17.991771+00:00",
+    "seed": 2719,
+    "states": 144,
+    "paired_decisions": 720,
+    "representations": [
+      "flat",
+      "nested"
+    ],
+    "domains": [
+      "observatory",
+      "greenhouse",
+      "ceramics",
+      "theater"
+    ],
+    "generator_sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+    "distributions": {
+      "lookup": {
+        "gold_option_positions": {
+          "2": 46,
+          "1": 44,
+          "0": 54
+        },
+        "gold_keys": {
+          "clear": 12,
+          "soak": 12,
+          "spot": 12,
+          "glaze": 12,
+          "amber": 12,
+          "anneal": 12,
+          "flood": 12,
+          "mist": 12,
+          "bisque": 12,
+          "drip": 12,
+          "wash": 12,
+          "violet": 12
+        }
+      },
+      "threshold": {
+        "gold_option_positions": {
+          "0": 78,
+          "1": 66
+        },
+        "gold_keys": {
+          "true": 96,
+          "false": 48
+        }
+      },
+      "conjunction": {
+        "gold_option_positions": {
+          "1": 68,
+          "0": 76
+        },
+        "gold_keys": {
+          "false": 96,
+          "true": 48
+        }
+      },
+      "band": {
+        "gold_option_positions": {
+          "1": 48,
+          "2": 48,
+          "0": 48
+        },
+        "gold_keys": {
+          "1": 48,
+          "2": 48,
+          "0": 48
+        }
+      },
+      "missing": {
+        "gold_option_positions": {
+          "3": 33,
+          "0": 27,
+          "1": 46,
+          "2": 38
+        },
+        "gold_keys": {
+          "north": 36,
+          "south": 36,
+          "__none__": 36,
+          "central": 36
+        }
+      }
+    },
+    "scope": "Fresh English synthetic diagnostic; fixed repeated rule families, not generalization certification.",
+    "isolation": "Generated without reading training or public benchmark records. Evaluation only; never fit or select on it.",
+    "primary": "Paired nested-minus-flat accuracy and label-flip rate; per-operation accuracy diagnoses content difficulty.",
+    "uncertainty": "2000 bootstrap resamples of whole states, seed 13; unadjusted exploratory percentile intervals.",
+    "interpretation": "A nesting effect supports serialization sensitivity. Low accuracy in both forms suggests content difficulty. Neither establishes a training intervention will help.",
+    "models": [
+      "a-base-30k",
+      "a-base-12ep",
+      "c-qwen08-30k"
+    ],
+    "weights_sha256": {
+      "a-base-30k": {
+        "encoder": "738d16f5b200ae110fbf4d705c2c34a16807c0c80dd3725192ffa3766210d948",
+        "head": "2544f844a2a86a2c748e89bf4fd37c2aa8076fd396b63ffc512d77121faef299"
+      },
+      "a-base-12ep": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+      },
+      "c-qwen08-30k": {
+        "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+      }
+    },
+    "execution": "Original frozen weights, T=1, original predictor batch settings; 8 groups per chunk, interleaved formats. No tuning. Laptop through shared run_heavy lock, no RunPod spending.",
+    "not_measured": "No new latency claim, training, probability calibration or release promotion."
+  },
+  "models": {
+    "a-base-30k": {
+      "rows_validated": 1440,
+      "accuracy": {
+        "flat": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.5138888888888888
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 0.9722222222222222
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.3888888888888889
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.5069444444444444
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 0.3680555555555556
+          }
+        },
+        "nested": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.5222222222222223
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 1.0
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.4791666666666667
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 0.4652777777777778
+          }
+        }
+      },
+      "nested_minus_flat_points": 0.8333333333333331,
+      "paired_state_bootstrap_ci95_points": [
+        -1.666666666666667,
+        3.4722222222222223
+      ],
+      "prediction_flip_fraction": 0.14166666666666666,
+      "mean_total_variation": 0.05315901463384069,
+      "per_domain_delta_points": {
+        "observatory": 8.88888888888889,
+        "greenhouse": -3.888888888888889,
+        "theater": -2.7777777777777777,
+        "ceramics": 1.1111111111111112
+      },
+      "receipt": {
+        "status": "complete",
+        "arm": "a-base-30k",
+        "started_utc": "2026-09-27T01:15:13.314051+00:00",
+        "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+        "registration_sha256": "9152ffb28f03f48a30d300d3107d41a51bceb49d72a17edc754f659c6bbddc64",
+        "runner_sha256": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+        "threads": 4,
+        "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "thermal_start": {
+          "temp_c": 79,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1725,
+          "util_pct": 10,
+          "mem_mb": 1819
+        },
+        "purpose": "Quality diagnostic only; no usable latency measurement",
+        "rows": 1440,
+        "packages": {
+          "torch": "2.10.0+cu130",
+          "transformers": "5.17.0",
+          "triton": null,
+          "fla-core": null,
+          "causal-conv1d": null,
+          "tilelang": null
+        },
+        "source_hashes": {
+          "run_structure_probe.py": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+          "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+          "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+          "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+          "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+          "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+          "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+          "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+          "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+        },
+        "weights": {
+          "encoder": "738d16f5b200ae110fbf4d705c2c34a16807c0c80dd3725192ffa3766210d948",
+          "head": "2544f844a2a86a2c748e89bf4fd37c2aa8076fd396b63ffc512d77121faef299"
+        },
+        "model_info": {
+          "arm": "a-base-30k",
+          "backbone": "jhu-clsp/mmBERT-base",
+          "data": "30k",
+          "params": 308120833,
+          "epochs_run": 3,
+          "steps": 834,
+          "segments": 1,
+          "train_seconds": 152.4,
+          "train_tokens": 10235759,
+          "train_tok_per_s": 67178.0,
+          "train_tok_per_s_excluding_thermal_pauses": 67178.0,
+          "thermal_paused_s": 0.0,
+          "max_gpu_c": 44,
+          "lr": 3e-05,
+          "head_lr": 0.001,
+          "budget_tokens": 16384,
+          "max_len": 2048,
+          "log": [
+            {
+              "epoch": 0,
+              "step": 278,
+              "val_agreement": 0.7129,
+              "val_kl": 0.2188,
+              "seconds": 51.4
+            },
+            {
+              "epoch": 1,
+              "step": 557,
+              "val_agreement": 0.7482,
+              "val_kl": 0.1706,
+              "seconds": 102.1
+            },
+            {
+              "epoch": 2,
+              "step": 834,
+              "val_agreement": 0.7619,
+              "val_kl": 0.1622,
+              "seconds": 152.4
+            }
+          ],
+          "score_loss_order": "canonical_levels",
+          "seed": 13,
+          "val_agreement_with_teacher": 0.7619,
+          "val_kl": 0.1622,
+          "temperatures": {
+            "noul": 0.534,
+            "choice": 0.6642,
+            "score": 0.5955,
+            "choice_many": 1.3499
+          },
+          "train_summary": {
+            "states": 5998,
+            "decisions": 29990,
+            "sources": {
+              "fineweb": 3019,
+              "aya": 499,
+              "fineweb2": 2000,
+              "clinc": 145,
+              "gmmlu": 165,
+              "csqa": 170
+            },
+            "types": {
+              "choice": 11613,
+              "noul": 10428,
+              "score": 7949
+            },
+            "gold_decisions": 480,
+            "teacher_order_agreement": 0.9437812604201401
+          },
+          "val_summary": {
+            "states": 278,
+            "decisions": 1390,
+            "sources": {
+              "fineweb2": 100,
+              "fineweb": 131,
+              "aya": 26,
+              "csqa": 5,
+              "clinc": 6,
+              "gmmlu": 10
+            },
+            "types": {
+              "score": 373,
+              "noul": 491,
+              "choice": 526
+            },
+            "gold_decisions": 21,
+            "teacher_order_agreement": 0.9388489208633094
+          },
+          "peak_vram_gb": 15.1
+        },
+        "token_audit": {
+          "max_tokens": 314,
+          "context_limit": 8192,
+          "clipped_questions_or_options": 0
+        },
+        "groups_completed": 288,
+        "rows_sha256": "d578b64d489b70be071f23e1dfcfec2b7b0e6c25613c473820a052329df9a717",
+        "finished_utc": "2026-09-27T01:15:28.236824+00:00",
+        "elapsed_seconds": 14.767897500001709,
+        "thermal_end": {
+          "temp_c": 84,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 2325,
+          "util_pct": 29,
+          "mem_mb": 3572
+        },
+        "thermal_governor": {
+          "checks": 37,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 83
+        }
+      }
+    },
+    "a-base-12ep": {
+      "rows_validated": 1440,
+      "accuracy": {
+        "flat": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.6055555555555555
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 0.9513888888888888
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.4652777777777778
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.5694444444444444
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 0.7083333333333334
+          }
+        },
+        "nested": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.6513888888888889
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 0.9930555555555556
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.5277777777777778
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.5625
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 0.8402777777777778
+          }
+        }
+      },
+      "nested_minus_flat_points": 4.583333333333333,
+      "paired_state_bootstrap_ci95_points": [
+        2.2187500000000004,
+        7.083333333333333
+      ],
+      "prediction_flip_fraction": 0.11805555555555555,
+      "mean_total_variation": 0.07427929575017653,
+      "per_domain_delta_points": {
+        "observatory": 5.0,
+        "greenhouse": 0.0,
+        "theater": 0.0,
+        "ceramics": 13.333333333333334
+      },
+      "receipt": {
+        "status": "complete",
+        "arm": "a-base-12ep",
+        "started_utc": "2026-09-27T01:15:32.137959+00:00",
+        "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+        "registration_sha256": "9152ffb28f03f48a30d300d3107d41a51bceb49d72a17edc754f659c6bbddc64",
+        "runner_sha256": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+        "threads": 4,
+        "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "thermal_start": {
+          "temp_c": 80,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1462,
+          "util_pct": 7,
+          "mem_mb": 1820
+        },
+        "purpose": "Quality diagnostic only; no usable latency measurement",
+        "rows": 1440,
+        "packages": {
+          "torch": "2.10.0+cu130",
+          "transformers": "5.17.0",
+          "triton": null,
+          "fla-core": null,
+          "causal-conv1d": null,
+          "tilelang": null
+        },
+        "source_hashes": {
+          "run_structure_probe.py": "50bf080845e645368a520da971f38a9318882f35aadb34ecf8c0cb4afe408d77",
+          "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+          "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+          "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+          "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+          "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+          "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+          "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+          "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+        },
+        "weights": {
+          "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+          "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+        },
+        "model_info": {
+          "arm": "a-base-12ep",
+          "backbone": "/workspace/hf-cache/hub/models--jhu-clsp--mmBERT-base/snapshots/c5955035435e2bf121cde7f3c8863ef52ff35d82",
+          "data": "30k",
+          "params": 308120833,
+          "epochs_run": 12,
+          "steps": 3348,
+          "segments": 1,
+          "train_seconds": 572.6,
+          "train_tokens": 40871945,
+          "train_tok_per_s": 71376.2,
+          "train_tok_per_s_excluding_thermal_pauses": 71376.2,
+          "thermal_paused_s": 0.0,
+          "max_gpu_c": 49,
+          "lr": 3e-05,
+          "head_lr": 0.001,
+          "budget_tokens": 16384,
+          "max_len": 2048,
+          "log": [
+            {
+              "epoch": 0,
+              "step": 278,
+              "val_agreement": 0.7014,
+              "val_kl": 0.2372,
+              "seconds": 46.5
+            },
+            {
+              "epoch": 1,
+              "step": 557,
+              "val_agreement": 0.7381,
+              "val_kl": 0.1854,
+              "seconds": 94.6
+            },
+            {
+              "epoch": 2,
+              "step": 834,
+              "val_agreement": 0.7568,
+              "val_kl": 0.165,
+              "seconds": 143.4
+            },
+            {
+              "epoch": 3,
+              "step": 1111,
+              "val_agreement": 0.7669,
+              "val_kl": 0.1685,
+              "seconds": 190.7
+            },
+            {
+              "epoch": 4,
+              "step": 1387,
+              "val_agreement": 0.7799,
+              "val_kl": 0.1646,
+              "seconds": 234.7
+            },
+            {
+              "epoch": 5,
+              "step": 1666,
+              "val_agreement": 0.7791,
+              "val_kl": 0.1595,
+              "seconds": 281.3
+            },
+            {
+              "epoch": 6,
+              "step": 1947,
+              "val_agreement": 0.7791,
+              "val_kl": 0.1552,
+              "seconds": 328.2
+            },
+            {
+              "epoch": 7,
+              "step": 2228,
+              "val_agreement": 0.7777,
+              "val_kl": 0.1528,
+              "seconds": 375.4
+            },
+            {
+              "epoch": 8,
+              "step": 2508,
+              "val_agreement": 0.7906,
+              "val_kl": 0.1481,
+              "seconds": 429.2
+            },
+            {
+              "epoch": 9,
+              "step": 2789,
+              "val_agreement": 0.7899,
+              "val_kl": 0.1438,
+              "seconds": 477.2
+            },
+            {
+              "epoch": 10,
+              "step": 3066,
+              "val_agreement": 0.7957,
+              "val_kl": 0.1452,
+              "seconds": 525.3
+            },
+            {
+              "epoch": 11,
+              "step": 3348,
+              "val_agreement": 0.7928,
+              "val_kl": 0.1446,
+              "seconds": 572.6
+            }
+          ],
+          "score_loss_order": "canonical_levels",
+          "seed": 13,
+          "selected_by": "minimum validation KL",
+          "selected_epoch": 10,
+          "val_agreement_with_teacher": 0.7899,
+          "val_kl": 0.1438,
+          "temperatures": {
+            "noul": 0.5056,
+            "choice": 0.6289,
+            "score": 0.5639,
+            "choice_many": 1.6792
+          },
+          "train_summary": {
+            "states": 5998,
+            "decisions": 29990,
+            "sources": {
+              "fineweb": 3019,
+              "aya": 499,
+              "fineweb2": 2000,
+              "clinc": 145,
+              "gmmlu": 165,
+              "csqa": 170
+            },
+            "types": {
+              "choice": 11613,
+              "noul": 10428,
+              "score": 7949
+            },
+            "gold_decisions": 480,
+            "teacher_order_agreement": 0.9437812604201401
+          },
+          "val_summary": {
+            "states": 278,
+            "decisions": 1390,
+            "sources": {
+              "fineweb2": 100,
+              "fineweb": 131,
+              "aya": 26,
+              "csqa": 5,
+              "clinc": 6,
+              "gmmlu": 10
+            },
+            "types": {
+              "score": 373,
+              "noul": 491,
+              "choice": 526
+            },
+            "gold_decisions": 21,
+            "teacher_order_agreement": 0.9388489208633094
+          },
+          "peak_vram_gb": 15.16
+        },
+        "token_audit": {
+          "max_tokens": 314,
+          "context_limit": 8192,
+          "clipped_questions_or_options": 0
+        },
+        "groups_completed": 288,
+        "rows_sha256": "a91cc303b6acb88416e0087706e7d46e41feb0b1863e4b6b92b7a73d2392950f",
+        "finished_utc": "2026-09-27T01:15:48.459163+00:00",
+        "elapsed_seconds": 16.201722300000256,
+        "thermal_end": {
+          "temp_c": 81,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 2265,
+          "util_pct": 17,
+          "mem_mb": 3561
+        },
+        "thermal_governor": {
+          "checks": 37,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 83
+        }
+      }
+    },
+    "c-qwen08-30k": {
+      "rows_validated": 1440,
+      "accuracy": {
+        "flat": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.7125
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 1.0
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.6666666666666666
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.5625
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 1.0
+          }
+        },
+        "nested": {
+          "all": {
+            "n": 720,
+            "accuracy": 0.6958333333333333
+          },
+          "lookup": {
+            "n": 144,
+            "accuracy": 1.0
+          },
+          "threshold": {
+            "n": 144,
+            "accuracy": 0.6666666666666666
+          },
+          "conjunction": {
+            "n": 144,
+            "accuracy": 0.4791666666666667
+          },
+          "band": {
+            "n": 144,
+            "accuracy": 0.3333333333333333
+          },
+          "missing": {
+            "n": 144,
+            "accuracy": 1.0
+          }
+        }
+      },
+      "nested_minus_flat_points": -1.666666666666667,
+      "paired_state_bootstrap_ci95_points": [
+        -2.6388888888888893,
+        -0.8333333333333335
+      ],
+      "prediction_flip_fraction": 0.016666666666666666,
+      "mean_total_variation": 0.03156550864902033,
+      "per_domain_delta_points": {
+        "observatory": -1.6666666666666667,
+        "greenhouse": 0.0,
+        "theater": -1.6666666666666667,
+        "ceramics": -3.3333333333333335
+      },
+      "receipt": {
+        "status": "complete",
+        "arm": "c-qwen08-30k",
+        "started_utc": "2026-09-27T01:17:09.694494+00:00",
+        "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+        "registration_sha256": "9152ffb28f03f48a30d300d3107d41a51bceb49d72a17edc754f659c6bbddc64",
+        "runner_sha256": "8370f680790fec438e860eb377bba7265472420b998e688398eb0d737d68846b",
+        "threads": 4,
+        "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "thermal_start": {
+          "temp_c": 78,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1320,
+          "util_pct": 7,
+          "mem_mb": 1826
+        },
+        "purpose": "Quality diagnostic only; no usable latency measurement",
+        "rows": 1440,
+        "packages": {
+          "torch": "2.10.0+cu130",
+          "transformers": "5.17.0",
+          "triton": null,
+          "fla-core": null,
+          "causal-conv1d": null,
+          "tilelang": null
+        },
+        "source_hashes": {
+          "run_structure_probe.py": "8370f680790fec438e860eb377bba7265472420b998e688398eb0d737d68846b",
+          "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+          "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+          "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+          "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+          "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+          "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+          "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+          "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+        },
+        "weights": {
+          "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+        },
+        "model_info": {
+          "arm": "c-qwen08-30k",
+          "backbone": "Qwen/Qwen3.5-0.8B",
+          "lora": {
+            "r": 16,
+            "alpha": 32,
+            "targets": "all-linear"
+          },
+          "epochs": 1,
+          "steps": 1875,
+          "total_steps_planned": 1875,
+          "fraction_of_planned_steps": 1.0,
+          "segments": 1,
+          "stopped_early": false,
+          "train_seconds": 902.7,
+          "decisions_per_s": 33.23,
+          "train_tok_per_s": 9102.9,
+          "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+          "thermal_paused_s": 0.0,
+          "max_gpu_c": 47,
+          "lr": 0.0002,
+          "batch": 16,
+          "val_agreement_with_teacher": 0.7835,
+          "temperatures": {
+            "score": 0.5955,
+            "noul": 0.4788,
+            "choice": 0.6642,
+            "choice_many": 1.1461
+          },
+          "kernels": {
+            "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+            "packages": {
+              "torch": "2.8.0+cu128",
+              "transformers": "5.17.0",
+              "fla-core": "0.5.2",
+              "causal-conv1d": "1.7.0"
+            }
+          },
+          "train_summary": {
+            "states": 5998,
+            "decisions": 29990,
+            "sources": {
+              "fineweb": 3019,
+              "aya": 499,
+              "fineweb2": 2000,
+              "clinc": 145,
+              "gmmlu": 165,
+              "csqa": 170
+            },
+            "types": {
+              "choice": 11613,
+              "noul": 10428,
+              "score": 7949
+            },
+            "gold_decisions": 480,
+            "teacher_order_agreement": 0.9437812604201401
+          },
+          "peak_vram_gb": 6.39,
+          "lora_merged": false,
+          "cache_disabled": false
+        },
+        "base": {
+          "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+          "weights": {
+            "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+          }
+        },
+        "token_audit": {
+          "max_tokens": 201,
+          "context_limit": 4096,
+          "clipped_questions_or_options": 0
+        },
+        "groups_completed": 288,
+        "rows_sha256": "7969c0c47ceab108e48208b861baeb2e32dec6edf17150d98583eedb216624f6",
+        "finished_utc": "2026-09-27T01:18:12.736810+00:00",
+        "elapsed_seconds": 62.829879199998686,
+        "thermal_end": {
+          "temp_c": 86,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1927,
+          "util_pct": 86,
+          "mem_mb": 4490
+        },
+        "thermal_governor": {
+          "checks": 54,
+          "pauses": 16,
+          "paused_s": 17.28244770002493,
+          "max_c": 87
+        }
+      }
+    }
+  }
+}

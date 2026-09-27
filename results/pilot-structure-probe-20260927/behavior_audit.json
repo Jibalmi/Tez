@@ -1,0 +1,118 @@
+{
+  "source_sha256": "c4b80dca90e1a05e7e4c737be1e7e3188f9dd9406fdad2b7aeaaabcce1836abd",
+  "cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+  "a-base-30k": {
+    "flat": {
+      "threshold": {
+        "false": 128,
+        "true": 16
+      },
+      "conjunction": {
+        "false": 25,
+        "true": 119
+      },
+      "band": {
+        "1": 144
+      }
+    },
+    "nested": {
+      "threshold": {
+        "true": 73,
+        "false": 71
+      },
+      "conjunction": {
+        "true": 144
+      },
+      "band": {
+        "1": 144
+      }
+    }
+  },
+  "a-base-12ep": {
+    "flat": {
+      "threshold": {
+        "false": 113,
+        "true": 31
+      },
+      "conjunction": {
+        "true": 110,
+        "false": 34
+      },
+      "band": {
+        "1": 144
+      }
+    },
+    "nested": {
+      "threshold": {
+        "true": 82,
+        "false": 62
+      },
+      "conjunction": {
+        "true": 111,
+        "false": 33
+      },
+      "band": {
+        "1": 144
+      }
+    }
+  },
+  "c-qwen08-30k": {
+    "flat": {
+      "threshold": {
+        "true": 144
+      },
+      "conjunction": {
+        "true": 111,
+        "false": 33
+      },
+      "band": {
+        "1": 144
+      }
+    },
+    "nested": {
+      "threshold": {
+        "true": 144
+      },
+      "conjunction": {
+        "true": 123,
+        "false": 21
+      },
+      "band": {
+        "1": 144
+      }
+    }
+  },
+  "rendered_score_example": {
+    "id": "structure-v1/observatory/04",
+    "state": {
+      "filter_mode": "clear",
+      "exposure_seconds": 29,
+      "operator_ready": false,
+      "mount": "north",
+      "lower_limit": 22,
+      "upper_limit": 29,
+      "inspection_note": "Routine record; apply the listed rules."
+    },
+    "question": {
+      "operation": "band",
+      "qtype": "score",
+      "instructions": "Classify exposure_seconds using lower_limit and upper_limit. Boundaries belong to the middle band.",
+      "options": [
+        [
+          "0",
+          "Below lower_limit"
+        ],
+        [
+          "1",
+          "At least lower_limit and at most upper_limit"
+        ],
+        [
+          "2",
+          "Above upper_limit"
+        ]
+      ],
+      "gold": 1
+    },
+    "qwen_prompt": "<|im_start|>user\nYou are a decision engine. Read the question and the options, then look at the input and answer with the single letter of the best option. Answer with the letter only.\n\nQuestion (score): Classify exposure_seconds using lower_limit and upper_limit. Boundaries belong to the middle band.\n\nOptions:\nA. 0: Below lower_limit\nB. 1: At least lower_limit and at most upper_limit\nC. 2: Above upper_limit\n\nInput:\n{\"filter_mode\": \"clear\", \"exposure_seconds\": 29, \"operator_ready\": false, \"mount\": \"north\", \"lower_limit\": 22, \"upper_limit\": 29, \"inspection_note\": \"Routine record; apply the listed rules.\"}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  }
+}
