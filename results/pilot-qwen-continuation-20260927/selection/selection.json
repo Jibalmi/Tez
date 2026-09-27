@@ -1,0 +1,88 @@
+{
+  "status": "complete",
+  "completed_utc": "2026-09-27T15:53:42.460588+00:00",
+  "export_registration_sha256": "4d815507035761406fef3a572d7fd513045ebee873cc76db8b8f7fde98b22bec",
+  "continuation_registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "selected_step": 0,
+  "eligible_steps": [
+    0,
+    50,
+    100
+  ],
+  "teacher_agreement_floor": 0.7799280575539568,
+  "selection": "Minimum original-validation mean KL among checkpoints losing at most 0.01 teacher agreement versus step zero; exact ties prefer the earlier step. All public and authored confirmation data are excluded.",
+  "validation_metrics": {
+    "0": {
+      "n": 1390,
+      "mean_kl": 0.1401374435902039,
+      "teacher_agreement": 0.7899280575539568
+    },
+    "50": {
+      "n": 1390,
+      "mean_kl": 0.14770740977013652,
+      "teacher_agreement": 0.781294964028777
+    },
+    "100": {
+      "n": 1390,
+      "mean_kl": 0.14817777051879652,
+      "teacher_agreement": 0.7906474820143885
+    },
+    "150": {
+      "n": 1390,
+      "mean_kl": 0.14848698115125392,
+      "teacher_agreement": 0.7683453237410072
+    }
+  },
+  "retained_original_weights": true,
+  "selected_checkpoint": {
+    "sha256": "0b7f750f846fc2e2886b9ed3921635e6e72297a62b351bb853b3d4cd27bf4b10",
+    "bytes": 43434835,
+    "path": "runs/pilot-qwen-continuation-20260927/training/attempt-02-step-000.pt",
+    "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da"
+  },
+  "model_directory": "runs/pilot-qwen-continuation-20260927/export/models/c-qwen08-continuation",
+  "student_sha256": "168355945465c7a97518014d2a4107fa1198218a6c00fe5e9dfe3e41485a2f3b",
+  "export": {
+    "adapter_sha256": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482",
+    "adapter_bytes": 43340856,
+    "config_sha256": "822abdd0056b86fd9a624832236ef34204dd14f8bf3b1bb0e0242323bdc7a827",
+    "tensors_verified": 372,
+    "parameters_verified": 10822656,
+    "scope": "Exact CPU tensor and config serialization check; no Qwen inference or GPU parity claim."
+  },
+  "validation_evidence": {
+    "0": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-02-baseline-000",
+      "artifact": {
+        "sha256": "8f7d49a970bfbf5df3bf3d92ad920e30cdc1c10f96df8bba1f7aafbd77ce2747",
+        "bytes": 889697,
+        "files_verified": 44
+      }
+    },
+    "50": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-05-validate-050",
+      "artifact": {
+        "sha256": "a966d9388ab2b590beb5c8003401742a1257b5df88a85d5a44f6688b906c2372",
+        "bytes": 889021,
+        "files_verified": 44
+      }
+    },
+    "100": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-09-validate-100",
+      "artifact": {
+        "sha256": "2f8333ca090ddb762789ca2d9afdda94e10a8e90399fc674aecf507fb3abda1f",
+        "bytes": 888425,
+        "files_verified": 44
+      }
+    },
+    "150": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-15-validate-150",
+      "artifact": {
+        "sha256": "188488f98d21c6d29c1b93bbbc020ed8bebd105c7a6009dba7f23888ce927e14",
+        "bytes": 889396,
+        "files_verified": 44
+      }
+    }
+  },
+  "scope": "Serialization is not Qwen inference parity, public accuracy or release readiness. Reloaded Qwen must match the selected validation predictions before public evaluation. If step zero wins, report no continuation gain; do not choose another checkpoint using public results."
+}

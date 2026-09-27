@@ -1,0 +1,28 @@
+{
+  "status": "registered_before_any_trained_checkpoint_validation",
+  "registered_utc": "2026-09-27T10:57:14.733456+00:00",
+  "continuation_registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "analysis_registration_sha256": "5f465e963cdf206ac2e19041bb33b41113a1f22b1defe4e167ee620a3643ed48",
+  "sources": {
+    "experiments/small_model/export_qwen_continuation.py": "6fdb17377ba606a8b0a047d1241d34162da1d15223684668f6eaad3130681f92",
+    "experiments/small_model/test_export_qwen_continuation.py": "80312d92754cadb44aca0090df0fe1d98ab9bd02732edf6eac40245f6204ec1a",
+    "experiments/small_model/qwen_continuation_selection.py": "d0b733c04d72e39f471d4bfe8a9071b50bc5a09d29d209b85ef7561f16d2790b",
+    "experiments/small_model/test_qwen_continuation_selection.py": "64117ab104b22a042bf61bb3e756dbe9b76c99af340bf9770f9e8fc5fe19bb48",
+    "experiments/small_model/verify_qwen_continuation.py": "06e1d8b25dcc4c0ad078e42a532757e36c65713f5fc0a001ebb112d6e7db5bc0",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    ".venv-pilot/Lib/site-packages/peft/utils/save_and_load.py": "6ff4246aac5a352d88c29bc389645f1dc44de39800b9b1bbc1ac1bda35457d1d"
+  },
+  "prerequisites": {
+    "results/pilot-qwen-continuation-20260927/export_preflight.json": "dcb6033ff7bd78cb8fc67b992a77607af21876b0e5a478322d452d776e1acb27"
+  },
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "peft": "0.21.0",
+    "safetensors": "0.8.0"
+  },
+  "selection": "Use the already frozen choose_checkpoint function on all four complete verified original-validation results. Step zero stays eligible. No public or authored test scores enter the selector.",
+  "export": "Verify all four evidence archives, recompute validation metrics, and require a single complete checkpoint validation history. Export only the selected checkpoint's complete unmerged float32 LoRA layout, dropping the default adapter-name segment. Preserve original adapter config byte-for-byte. Safetensors reload must preserve each tensor exactly. New student metadata declares T1 and provenance; it does not inherit historical performance or fitted temperatures.",
+  "compute": "One CPU thread, no GPU model, no paid resource. Private adapter export only; no weights or training rows in public evidence.",
+  "scope": "Serialization is not Qwen inference parity, public accuracy or release readiness. Reloaded Qwen must match the selected validation predictions before public evaluation. If step zero wins, report no continuation gain; do not choose another checkpoint using public results.",
+  "reference": "https://huggingface.co/docs/peft/developer_guides/checkpoint"
+}

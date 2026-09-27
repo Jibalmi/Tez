@@ -1,5 +1,15 @@
 # Qwen continuation preparation
 
+**Outcome (2026-09-27): no continuation gain.** All 150 registered updates completed and all four
+validations are verified. Mean KL rose at every step (0.1401 at step 0; 0.1477, 0.1482 and 0.1485 at
+steps 50, 100 and 150), and step 150 also lost 0.0216 teacher agreement, beyond the 0.01 allowance. The
+frozen [selector](selection/selection.json) retained the unchanged step-zero adapter; its export is
+byte-identical to the original (SHA-256 `fee3b3fe...`, 372 tensors). As registered, public scores cannot
+choose another checkpoint, so the continuation's public comparison would pit the unchanged model against
+itself and is not run. Steps 101-150 were trained on a RunPod H100 under a
+[recorded deviation](training/README.md#recorded-deviation-steps-101-150-trained-on-a-runpod-gpu); every
+validation ran on the laptop.
+
 The CPU-only [preparation](preparation.json) verifies the 35 frozen teacher files and creates
 a deterministic schedule of 150 full batches, 16 decisions each. Its 2,400 decisions come
 from 2,017 original training states: 873 choice, 848 yes/no and 679 score decisions. No
