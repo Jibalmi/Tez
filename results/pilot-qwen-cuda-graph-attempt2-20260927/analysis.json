@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "passed": true,
+  "metrics": {
+    "argmax_agreement": 1.0,
+    "max_probability_delta": 0.0,
+    "mean_total_variation": 0.0,
+    "max_graph_vs_uncaptured_delta": 0.0
+  },
+  "probability_vectors_validated": 36,
+  "registration_sha256": "568bdb69a951a8684e17a51d0c01524c38d8ce624345d149fd688a40ec0f292e",
+  "analysis_source_sha256": "57154e3df858458cb973bb513cf0743951d7c741a2897b2a79987ab2ae924660",
+  "scope": "Four non-benchmark cases in three batch orders only. Exact probability agreement here does not establish full-validation parity, variable-length serving, latency or a release gate. Broader validation must precede timing or promotion."
+}

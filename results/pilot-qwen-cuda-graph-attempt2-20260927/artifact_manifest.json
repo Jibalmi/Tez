@@ -1,0 +1,106 @@
+{
+  "README.md": {
+    "sha256": "d7e235f17babacad65dd3bfa250a5e77c805813c989895d5634157f274f742fe",
+    "bytes": 690
+  },
+  "RESULTS.md": {
+    "sha256": "ca1ecf8ff23a22d579fb786bc9e6f7df63fad4a27e37880d7f9ff1b2132f9392",
+    "bytes": 766
+  },
+  "analysis.json": {
+    "sha256": "a1e2e040167525dadcf02e0eec28366669b82e7746b31c9bf3c831d142c12502",
+    "bytes": 692
+  },
+  "analysis_source/parity_evidence.py": {
+    "sha256": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "bytes": 2139
+  },
+  "analysis_source/report_qwen_graph_probe.py": {
+    "sha256": "57154e3df858458cb973bb513cf0743951d7c741a2897b2a79987ab2ae924660",
+    "bytes": 6402
+  },
+  "analysis_source/test_parity_evidence.py": {
+    "sha256": "a724107d67b4cfea1361a48c91b40ee749f1bedd798fe990719db448a4e6e4a5",
+    "bytes": 2950
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/masking_utils.py": {
+    "sha256": "50a737f63d8c778a5597fa34ac139049af921f44958205e3e1c29fe2bae77254",
+    "bytes": 80403
+  },
+  "executed_source/.venv-pilot/Lib/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py": {
+    "sha256": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    "bytes": 95685
+  },
+  "executed_source/experiments/small_model/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "executed_source/experiments/small_model/competitor_models.py": {
+    "sha256": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "bytes": 7754
+  },
+  "executed_source/experiments/small_model/dataset.py": {
+    "sha256": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "bytes": 4168
+  },
+  "executed_source/experiments/small_model/eval_arms.py": {
+    "sha256": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "bytes": 19293
+  },
+  "executed_source/experiments/small_model/qwen_cuda_graph_attempt2.py": {
+    "sha256": "af54fc45cfb4a11912484553035c5f68ad689298e9083987b58ae29644267cd8",
+    "bytes": 11262
+  },
+  "executed_source/experiments/small_model/qwen_cuda_graph_probe.py": {
+    "sha256": "120901b86a86afe0a1eb03bc2365b36d77fc6531b96f98ae71a5289939081f13",
+    "bytes": 11447
+  },
+  "executed_source/experiments/small_model/restricted_qwen.py": {
+    "sha256": "f3af23a8e3fa6b20396d433033d6c51f6bf9da07e1019883c877469c44a81021",
+    "bytes": 4090
+  },
+  "executed_source/experiments/small_model/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "executed_source/experiments/small_model/student.py": {
+    "sha256": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "bytes": 8032
+  },
+  "executed_source/experiments/small_model/train_a.py": {
+    "sha256": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "bytes": 14540
+  },
+  "executed_source/experiments/small_model/train_c.py": {
+    "sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "bytes": 11388
+  },
+  "executed_source/tez/errors.py": {
+    "sha256": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "bytes": 1777
+  },
+  "executed_source/tez/prompt.py": {
+    "sha256": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "bytes": 9953
+  },
+  "executed_source/tez/schema.py": {
+    "sha256": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "bytes": 18988
+  },
+  "execution.json": {
+    "sha256": "da562cc68c8669035cb1f69c3d861b639c5ff20cc88fd3e6e04b940831ef7bb4",
+    "bytes": 280
+  },
+  "probe.json": {
+    "sha256": "8d90470b816808320fe6c2d44dfada5465771ec1a649ae5188080440c6e6c5ac",
+    "bytes": 9446
+  },
+  "probe.log": {
+    "sha256": "9e155a5f85a2e6071a46df3aff24909af5a6a31f3e3fad7f41201833349b5ae0",
+    "bytes": 987
+  },
+  "registration.json": {
+    "sha256": "568bdb69a951a8684e17a51d0c01524c38d8ce624345d149fd688a40ec0f292e",
+    "bytes": 7356
+  }
+}
