@@ -38,7 +38,8 @@ plan. The worker recorded 1,006.4496441 operational seconds, including 299 therm
 totaling 483.5501875 seconds. These are execution accounting, not latency. The failure combines
 native batch-size differences versus the batch-16 reference with the surrounding graph-input
 changes. Exact captured/uncaptured agreement does not isolate those other causes. A separate
-native full-head batch-one control is needed before selecting another inference change.
+[native full-head batch-one control](../pilot-qwen-native-single-20260927/README.md) is now
+registered and queued before selecting another inference change.
 
 The proposed multi-graph request cache remains unregistered and unexecuted because it requires
 both full-validation arms to pass. Its CPU preflight does not override this failed requirement.
