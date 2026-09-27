@@ -14,6 +14,7 @@ not a pooled leaderboard score. Native rendering is retained for released compet
 |---|---:|---:|---:|---:|---:|---:|
 | Gemma 12B teacher | 70.40 | 88.45 | 96.99 | 86.50 | 71.25 | Not measured |
 | Decider 0.8B | 53.40 | 74.45 | 84.46 | 92.50 | 75.25 | 76.33 |
+| Tev1 0.8B experimental | 51.45 | 63.91 | 78.45 | 86.75 | 69.75 | Not measured |
 | Our Qwen 0.8B student | 50.15 | 64.09 | 89.22 | 85.75 | 60.25 | 70.50 |
 | Kev 0.8B | 49.10 | 61.27 | 84.96 | 89.00 | 64.25 | Not measured |
 | GLiNER2.5-Decide, English | 40.30 | 41.55 | 60.90 | 76.00 | 45.75 | Not measured |
@@ -24,7 +25,8 @@ not a pooled leaderboard score. Native rendering is retained for released compet
 Sources: [full public comparison, including all 16 configurations](COMPARISON.md),
 [encoder continuation](../pilot-reasoning-round2-20260927/RESULTS.md), and
 [fresh rule comparison](../pilot-reasoning-competitors-20260927/RESULTS.md), and
-[complete native GLiNER comparison](../pilot-gliner2-comparison-20260927/RESULTS.md).
+[complete native GLiNER comparison](../pilot-gliner2-comparison-20260927/RESULTS.md), and
+[complete native Tev1 comparison](../pilot-tev1-eval-20260927/RESULTS.md).
 Each source links measurement receipts and archived raw predictions.
 
 Decider leads our Qwen student on six of seven application tasks; Qwen leads on routing.
@@ -93,9 +95,23 @@ retain every task, including those favoring the competitors. Earlier input-guard
 the English memory-driven cancellation and interrupted multilingual runs remain archived.
 Windows recorded a hypervisor bugcheck during the second multilingual attempt; causality is
 unresolved. The separate batch-one recovery with conservative thermal pacing completed.
-[Together's Tev1 0.8B](../pilot-tev1-eval-20260927/README.md) passed its four-case native probability
-check and has started the full matched evaluation. It has no completed public score here yet.
-Availability, interface compatibility and published development scores are not measured quality wins.
+[Together's Tev1 0.8B](../pilot-tev1-eval-20260927/RESULTS.md) is now verified on all 6,151 original
+decisions and 1,100 option-order checks. Its typed accuracy is 51.45%, versus Qwen's 50.15% and
+Decider's 53.40%. The [exploratory paired state intervals](../pilot-tev1-paired-20260927/RESULTS.md)
+are wide: Tev1 minus Qwen is +1.30 points, 95% interval [-1.30, +3.95]; Tev1 minus Decider is
+-1.95 points, interval [-4.30, +0.35]. These intervals have no multiplicity correction;
+neither Tev1 pairwise interval excludes zero.
+
+Tev1 beats Qwen on jailbreak, toxicity and RAG relevance, while Qwen leads on the other four
+application tasks. Decider leads Tev1 on all seven. Tev1 is the stronger measured reference of
+these three on the official SemIf family-balanced metrics: 78.92% authored and 76.05%
+perturbations, versus Decider's 75.61% and 69.75%, and Qwen's 70.52% and 50.12%.
+These small, already-observed reasoning sets do not establish broad reasoning superiority.
+Tev1's typed ECE is 8.64 points, and its 34.55% intent option-order flip rate exceeds the later
+10% limit. No Tev1 latency or fresh rule-test score was measured. The inspected weight card
+said its fine-tuned license was still being finalized; evaluation does not establish deployment
+readiness or equivalence to a hosted endpoint. Native formats and all unfavorable results remain
+in the archived comparison. No model is promoted from this addition.
 
 All cloud pods from the trial are terminated. The elapsed-rate estimate is $9.1452 of the
 authorized $10 combined cap; this is not a final provider invoice. These follow-up comparisons

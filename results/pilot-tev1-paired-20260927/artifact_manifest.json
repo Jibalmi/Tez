@@ -1,0 +1,62 @@
+{
+  "RESULTS.md": {
+    "sha256": "14ad08806b15421f4b3b7f8553820cd1a1593f75fbb3369c0284bf9565e27a10",
+    "bytes": 722
+  },
+  "inputs/artifact_receipt.json": {
+    "sha256": "53a482240f929e55d4c58d838a65bd04f102f5f2490e9da2537db5e3798f7422",
+    "bytes": 205
+  },
+  "inputs/comparison.json": {
+    "sha256": "ad30e680df77e79ca8a177c2ce12c876a9706ae47be561fcc0073b41e5dd742d",
+    "bytes": 88886
+  },
+  "inputs/eval-suites.json": {
+    "sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+    "bytes": 10633204
+  },
+  "inputs/registration.json": {
+    "sha256": "b3b59dafeae3955255ab15ecb3c4b2c962ca991ff45f8d8f90f0f1d755878c67",
+    "bytes": 4501
+  },
+  "paired.json": {
+    "sha256": "84a5ea9d52b08e34f835fb732dd426119022c7f6ac1e0e72baf8d7d3715925c1",
+    "bytes": 1346
+  },
+  "rows_decider.jsonl": {
+    "sha256": "17aa49196a9708ccedace3fa869e8bc7e43747f443b5b7d3f861577ade9d43c1",
+    "bytes": 884432
+  },
+  "rows_qwen.jsonl": {
+    "sha256": "d888d0b779bbc902ed8aee1d090a1488f2b96df5ad02ba314aea3dba90b646a9",
+    "bytes": 910364
+  },
+  "rows_tev1.jsonl": {
+    "sha256": "20acc72d38fcbf663426dd7e2a5274d10173cc9b80a0ccbcc7bd3ee1b6a3c190",
+    "bytes": 2947779
+  },
+  "source/common.py": {
+    "sha256": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "bytes": 10481
+  },
+  "source/compare_round1.py": {
+    "sha256": "9e444e36c7a3c008084fff9ab2f9c0464107ff9dc24f5f9eb2e5a3145c5cf8d5",
+    "bytes": 11267
+  },
+  "source/compare_tev1_paired.py": {
+    "sha256": "003f305b2a9ae5907856e0b56666dc0f71e84c3b35f0ef9a4f74c43ad22ffb1c",
+    "bytes": 6641
+  },
+  "source/competitor_overlap.py": {
+    "sha256": "bb22ede11cfdbb4f4b828fef38c39f2339e38be618e85e7dd32b3ee884a78000",
+    "bytes": 5490
+  },
+  "source/structure_probe.py": {
+    "sha256": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bytes": 13565
+  },
+  "source/test_compare_round1.py": {
+    "sha256": "4c90e7cb499378905606dfc1ac5d26a8c0f8ca78e8e54333d6639ffd2e446093",
+    "bytes": 1122
+  }
+}

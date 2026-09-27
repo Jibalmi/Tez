@@ -1,5 +1,12 @@
 # Tev1 matched public comparison
 
+Completed and independently verified: [all task results](RESULTS.md), [full analysis](comparison.json),
+and [archive receipt](artifact_receipt.json). The archive verifies 18,453 primary rows across
+Tev1/Qwen/Decider, plus 1,100 Tev1 reversed-option rows. The separate
+[paired typed analysis](../pilot-tev1-paired-20260927/RESULTS.md) preserves state clusters when
+estimating uncertainty. This completion notice was added after archiving; the archive remains
+the unchanged measurement snapshot. No speed or release result is claimed.
+
 The [frozen protocol](../../experiments/small_model/tev1_registration.json) evaluates the pinned
 Tev1 0.8B experimental checkpoint on the same 6,151 public decisions as Qwen and Decider, plus
 1,100 reversed-option intent cases. Execution uses the shared local compute queue; a registration

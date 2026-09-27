@@ -1,0 +1,34 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T10:05:38.747371+00:00",
+  "comparison_sha256": "ad30e680df77e79ca8a177c2ce12c876a9706ae47be561fcc0073b41e5dd742d",
+  "measurement_archive_sha256": "161ee818fe3943e177d13a94027c2bfcdf7f90d4857102f9fe1092ed03ba32ac",
+  "analysis_source_sha256": "003f305b2a9ae5907856e0b56666dc0f71e84c3b35f0ef9a4f74c43ad22ffb1c",
+  "tev1_minus_reference": {
+    "qwen": {
+      "accuracy_delta_points": 1.3,
+      "ci95_points": [
+        -1.3,
+        3.95
+      ],
+      "states": 400,
+      "decisions": 2000,
+      "bootstrap_reps": 2000,
+      "seed": 13,
+      "note": "Exploratory paired state-cluster percentile interval; no multiplicity correction."
+    },
+    "decider": {
+      "accuracy_delta_points": -1.95,
+      "ci95_points": [
+        -4.3,
+        0.35000000000000003
+      ],
+      "states": 400,
+      "decisions": 2000,
+      "bootstrap_reps": 2000,
+      "seed": 13,
+      "note": "Exploratory paired state-cluster percentile interval; no multiplicity correction."
+    }
+  },
+  "scope": "Post-hoc exploratory state-cluster intervals using 2000 resamples and seed 13, as in the earlier matched comparison. No multiplicity correction, fitting, checkpoint selection, release-gate change or new benchmark. Differing training exposures remain unresolved."
+}

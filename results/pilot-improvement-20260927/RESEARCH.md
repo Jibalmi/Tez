@@ -42,7 +42,11 @@ A later [discovery audit](../pilot-gliner2-discovery-20260927/README.md) adds GL
 the candidates for measurement and distinguishes the LocalJev bridge and Ollaya runtime from
 trained checkpoint alternatives. No unmeasured candidate is assigned a score or rank.
 Both native GLiNER checkpoints now have a [complete matched comparison](../pilot-gliner2-comparison-20260927/RESULTS.md).
-The [current assessment](COMPETITIVENESS.md) includes those results and qualifies the pending Tev1 run.
+The [current assessment](COMPETITIVENESS.md) includes those results and the
+[complete native Tev1 comparison](../pilot-tev1-eval-20260927/RESULTS.md).
+Tev1 does better than Qwen on the measured SemIf reasoning tasks, while Decider remains stronger
+across the seven application tasks. Its small typed-accuracy differences have wide exploratory
+paired state intervals. No latency, hosted-service parity or release promotion follows from that run.
 
 [JevBench](https://github.com/fstandhartinger/jevbench) is a useful external check and discovery source.
 Its composite rankings are not directly comparable with typed-decision accuracy or these latency
