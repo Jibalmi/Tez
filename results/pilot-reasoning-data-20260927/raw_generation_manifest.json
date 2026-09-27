@@ -1,0 +1,120 @@
+{
+  "version": "reasoning-v1",
+  "generator_sha256": "eeaac02d79a31082c28f0d63ec592c26a3ca9efdece68ca3bd5d74cc5c6cc55a",
+  "source": "Deterministically authored fixtures; no benchmark, probe or teacher file is read by the generator.",
+  "supervision": "Exact rule-derived labels; not model probabilities or teacher logits.",
+  "status": "unfiltered_do_not_train",
+  "seed_scheme": "SHA256 of fresh-rule-v1/split/domain, first 64 bits; shuffle seed 713",
+  "split_policy": "Disjoint domains and field-name-specific schemas. The generic largest-rack schema and all five logical operations recur across splits; do not claim logic-family or complete schema holdout.",
+  "training_permission": "Training loader must require a completed leakage-filter receipt. Validation and confirmation never enter training.",
+  "splits": {
+    "train": {
+      "states": 1800,
+      "decisions": 9000,
+      "sha256": "92db58897dd9a746190d4059e244da3af95d742a29cd4616c9a13056654ae252",
+      "domains": [
+        "bicycle rentals",
+        "event badges",
+        "library allocations",
+        "maker reservations",
+        "media downloads",
+        "parcel lockers"
+      ],
+      "semantic_label_counts": {
+        "compare": {
+          "false": 900,
+          "true": 900
+        },
+        "combined": {
+          "true": 882,
+          "false": 918
+        },
+        "policy": {
+          "pause_cycle": 900,
+          "buffer_cycle": 300,
+          "dispatch_cycle": 600
+        },
+        "count": {
+          "1": 600,
+          "2": 600,
+          "0": 600
+        },
+        "largest": {
+          "rack_fir": 598,
+          "rack_elm": 629,
+          "rack_oak": 573
+        }
+      }
+    },
+    "validation": {
+      "states": 240,
+      "decisions": 1200,
+      "sha256": "b15f068c4fff7462292a0f7421f86766458c177eb44533df74a3f94a7abb48ce",
+      "domains": [
+        "repair intake",
+        "supply inventory"
+      ],
+      "semantic_label_counts": {
+        "compare": {
+          "false": 120,
+          "true": 120
+        },
+        "combined": {
+          "false": 120,
+          "true": 120
+        },
+        "policy": {
+          "dispatch_cycle": 80,
+          "pause_cycle": 120,
+          "buffer_cycle": 40
+        },
+        "count": {
+          "0": 80,
+          "1": 80,
+          "2": 80
+        },
+        "largest": {
+          "rack_fir": 89,
+          "rack_elm": 76,
+          "rack_oak": 75
+        }
+      }
+    },
+    "confirmation": {
+      "states": 360,
+      "decisions": 1800,
+      "sha256": "ba22078cd8101275ae65acd6517a23eea87abe20969b0959299fdeb8ca1e272c",
+      "domains": [
+        "community swimming",
+        "music lending"
+      ],
+      "semantic_label_counts": {
+        "compare": {
+          "false": 180,
+          "true": 180
+        },
+        "combined": {
+          "true": 174,
+          "false": 186
+        },
+        "policy": {
+          "dispatch_cycle": 120,
+          "pause_cycle": 180,
+          "buffer_cycle": 60
+        },
+        "count": {
+          "0": 120,
+          "2": 120,
+          "1": 120
+        },
+        "largest": {
+          "rack_elm": 126,
+          "rack_fir": 115,
+          "rack_oak": 119
+        }
+      }
+    }
+  },
+  "initial_generator_sha256": "f493c2175c3eed8d3aea343521281dbb4254b73de5b9e73b6e9f7e0925693274",
+  "preparation_note": "Docstring clarified the shared ranking schema and choice labels; regenerated records are identical."
+}

@@ -71,6 +71,9 @@ and Qwen always answered true to the numeric threshold question. Qwen's lookup a
 missing-value accuracy were both 100%. The next diagnosis should distinguish answer-position and
 score-type cues from missing reasoning coverage before investing in another training run. These
 synthetic diagnostic scores do not replace the original gates or establish generalization.
+The completed [ordinal cue test](../pilot-ordinal-probe-20260927/README.md) found no convincing
+question-type or answer-order fix. A [matched continuation](../pilot-reasoning-round2-20260927/README.md)
+now tests filtered exact-rule supervision against replay, with selection confined to validation.
 
 ## Validation, artifacts, and cost
 
