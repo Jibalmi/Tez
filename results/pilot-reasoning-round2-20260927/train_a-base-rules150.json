@@ -1,0 +1,158 @@
+{
+  "status": "complete",
+  "arm": "a-base-rules150",
+  "started_utc": "2026-09-27T01:53:03.065728+00:00",
+  "specification_sha256": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313",
+  "sources": {
+    "train_reasoning_round2.py": "4d44db8cf859fdee3e2508e0a644c52693bd953fd7f3949799cb8cc1f928cb57",
+    "reasoning_round2.json": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "reasoning_data.py": "eeaac02d79a31082c28f0d63ec592c26a3ca9efdece68ca3bd5d74cc5c6cc55a",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5"
+  },
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "step": 150,
+  "validation": [
+    {
+      "step": 0,
+      "original": {
+        "agreement": 0.7899280575539568,
+        "kl": 0.14380787715383658
+      },
+      "new": {
+        "agreement": 0.3775,
+        "kl": 1.0152447402353089
+      },
+      "eligible": true,
+      "selection_key": 0.27677648581842973
+    },
+    {
+      "step": 50,
+      "original": {
+        "agreement": 0.7899280575539568,
+        "kl": 0.14345757837551554
+      },
+      "new": {
+        "agreement": 0.46416666666666667,
+        "kl": 0.8895349024236202
+      },
+      "eligible": true,
+      "selection_key": 0.25729814209011753
+    },
+    {
+      "step": 100,
+      "original": {
+        "agreement": 0.7920863309352518,
+        "kl": 0.14580451241361045
+      },
+      "new": {
+        "agreement": 0.5058333333333334,
+        "kl": 0.8482747076824307
+      },
+      "eligible": true,
+      "selection_key": 0.2529912616210597
+    },
+    {
+      "step": 150,
+      "original": {
+        "agreement": 0.7920863309352518,
+        "kl": 0.14464614373855708
+      },
+      "new": {
+        "agreement": 0.52,
+        "kl": 0.8338491420137385
+      },
+      "eligible": true,
+      "selection_key": 0.2498085113759117
+    }
+  ],
+  "selected_step": 150,
+  "training_tokens": 1023222,
+  "training_decisions": 9663,
+  "training": {
+    "states": 7798,
+    "decisions": 35390,
+    "sources": {
+      "fineweb": 3019,
+      "aya": 499,
+      "fineweb2": 2000,
+      "clinc": 145,
+      "gmmlu": 165,
+      "csqa": 170,
+      "authored_exact_rules": 1800
+    },
+    "types": {
+      "choice": 11613,
+      "noul": 14028,
+      "score": 9749
+    },
+    "gold_decisions": 5880,
+    "teacher_order_agreement": 0.9523594235659791
+  },
+  "original_validation": {
+    "states": 278,
+    "decisions": 1390,
+    "sources": {
+      "fineweb2": 100,
+      "fineweb": 131,
+      "aya": 26,
+      "csqa": 5,
+      "clinc": 6,
+      "gmmlu": 10
+    },
+    "types": {
+      "score": 373,
+      "noul": 491,
+      "choice": 526
+    },
+    "gold_decisions": 21,
+    "teacher_order_agreement": 0.9388489208633094
+  },
+  "new_validation": {
+    "states": 240,
+    "decisions": 1200,
+    "sources": {
+      "authored_exact_rules": 240
+    },
+    "types": {
+      "noul": 480,
+      "choice": 480,
+      "score": 240
+    },
+    "gold_decisions": 1200,
+    "teacher_order_agreement": 1.0
+  },
+  "new_validation_weight": 0.15258547612319864,
+  "data_manifest_sha256": "ab294993958981511c8d434f84fab852c7806e5cc44dfb4806de212eba9d2d03",
+  "filter_receipt_sha256": "ce792410ca7778d751d1bca810a1e5ae6e474023fe3e8f1b626e713f9d340692",
+  "original_teacher_files_verified": 35,
+  "base_weights": {
+    "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+    "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+  },
+  "available_batches": 562,
+  "last_loss": 0.013239085674285889,
+  "weights": {
+    "encoder": "b657d8bb8d81b71ffee2256a776286d057582f5f9b3778469fe37dfe1661302a",
+    "head": "6b3074cc07529d0087f3adca94a1a3fcb06fbb2b8c71930a796169b4fcd11fb5"
+  },
+  "peak_allocated_vram_gb": 8.620625495910645,
+  "finished_utc": "2026-09-27T01:56:36.350933+00:00",
+  "elapsed_seconds": 213.27526029999717,
+  "thermal_governor": {
+    "checks": 369,
+    "pauses": 106,
+    "paused_s": 113.57132059996366,
+    "max_c": 89
+  }
+}

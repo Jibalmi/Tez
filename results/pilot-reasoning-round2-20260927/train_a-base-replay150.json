@@ -1,0 +1,157 @@
+{
+  "status": "complete",
+  "arm": "a-base-replay150",
+  "started_utc": "2026-09-27T01:48:56.604744+00:00",
+  "specification_sha256": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313",
+  "sources": {
+    "train_reasoning_round2.py": "4d44db8cf859fdee3e2508e0a644c52693bd953fd7f3949799cb8cc1f928cb57",
+    "reasoning_round2.json": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "reasoning_data.py": "eeaac02d79a31082c28f0d63ec592c26a3ca9efdece68ca3bd5d74cc5c6cc55a",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5"
+  },
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "step": 150,
+  "validation": [
+    {
+      "step": 0,
+      "original": {
+        "agreement": 0.7899280575539568,
+        "kl": 0.14380787715383658
+      },
+      "new": {
+        "agreement": 0.3775,
+        "kl": 1.0152446469540397
+      },
+      "eligible": true,
+      "selection_key": 0.27677647158506286
+    },
+    {
+      "step": 50,
+      "original": {
+        "agreement": 0.7913669064748201,
+        "kl": 0.1448897202113847
+      },
+      "new": {
+        "agreement": 0.38166666666666665,
+        "kl": 1.0159299885978301
+      },
+      "eligible": true,
+      "selection_key": 0.2777978142856092
+    },
+    {
+      "step": 100,
+      "original": {
+        "agreement": 0.7935251798561151,
+        "kl": 0.14656047381099696
+      },
+      "new": {
+        "agreement": 0.3775,
+        "kl": 1.0197534254938363
+      },
+      "eligible": true,
+      "selection_key": 0.2797970360909442
+    },
+    {
+      "step": 150,
+      "original": {
+        "agreement": 0.7913669064748201,
+        "kl": 0.14704560693756472
+      },
+      "new": {
+        "agreement": 0.3825,
+        "kl": 1.0187052974229058
+      },
+      "eligible": true,
+      "selection_key": 0.2800482158276705
+    }
+  ],
+  "selected_step": 0,
+  "training_tokens": 1006210,
+  "training_decisions": 8591,
+  "training": {
+    "states": 7798,
+    "decisions": 35390,
+    "sources": {
+      "fineweb": 3982,
+      "aya": 636,
+      "fineweb2": 2566,
+      "clinc": 184,
+      "gmmlu": 210,
+      "csqa": 220
+    },
+    "types": {
+      "choice": 13721,
+      "noul": 12303,
+      "score": 9366
+    },
+    "gold_decisions": 555,
+    "teacher_order_agreement": 0.9440519920881605
+  },
+  "original_validation": {
+    "states": 278,
+    "decisions": 1390,
+    "sources": {
+      "fineweb2": 100,
+      "fineweb": 131,
+      "aya": 26,
+      "csqa": 5,
+      "clinc": 6,
+      "gmmlu": 10
+    },
+    "types": {
+      "score": 373,
+      "noul": 491,
+      "choice": 526
+    },
+    "gold_decisions": 21,
+    "teacher_order_agreement": 0.9388489208633094
+  },
+  "new_validation": {
+    "states": 240,
+    "decisions": 1200,
+    "sources": {
+      "authored_exact_rules": 240
+    },
+    "types": {
+      "noul": 480,
+      "choice": 480,
+      "score": 240
+    },
+    "gold_decisions": 1200,
+    "teacher_order_agreement": 1.0
+  },
+  "new_validation_weight": 0.15258547612319864,
+  "data_manifest_sha256": "ab294993958981511c8d434f84fab852c7806e5cc44dfb4806de212eba9d2d03",
+  "filter_receipt_sha256": "ce792410ca7778d751d1bca810a1e5ae6e474023fe3e8f1b626e713f9d340692",
+  "original_teacher_files_verified": 35,
+  "base_weights": {
+    "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+    "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+  },
+  "available_batches": 601,
+  "last_loss": 0.013646715320646763,
+  "weights": {
+    "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+    "head": "66942edf47256f1be4e8c4d99a7c2f210515177ffddba25544beaf00bbc0530d"
+  },
+  "peak_allocated_vram_gb": 8.783055782318115,
+  "finished_utc": "2026-09-27T01:51:59.401479+00:00",
+  "elapsed_seconds": 182.78605229999812,
+  "thermal_governor": {
+    "checks": 340,
+    "pauses": 64,
+    "paused_s": 82.54671089997282,
+    "max_c": 89
+  }
+}

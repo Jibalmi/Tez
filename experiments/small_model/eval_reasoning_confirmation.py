@@ -6,6 +6,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 import json
 import os
+from pathlib import Path
+import shutil
 import time
 
 from structure_probe import WEIGHTS, digest, write_json
@@ -69,6 +71,14 @@ def evaluate(arm):
     receipt = {"status": "running", "arm": arm, "started_utc": datetime.now(timezone.utc).isoformat(),
                "confirmation_sha256": digest(source), "source_sha256": digest(__file__), "rows": 0,
                "packages": kernel_packages(), "gpu": torch.cuda.get_device_name(), "threads": torch.get_num_threads()}
+    source_dir = RESULTS / "executed_source" / "confirmation" / arm
+    source_dir.mkdir(parents=True, exist_ok=False)
+    receipt["source_files"] = {}
+    for name in ("eval_reasoning_confirmation.py", "eval_arms.py", "student.py", "competitor_models.py", "common.py",
+                 "train_a.py", "train_c.py", "structure_probe.py"):
+        source_file = Path(__file__).with_name(name)
+        shutil.copy2(source_file, source_dir / name)
+        receipt["source_files"][name] = digest(source_file)
     write_json(receipt_path, receipt)
     started = time.monotonic()
     try:
@@ -77,6 +87,15 @@ def evaluate(arm):
         if pred.weights != expected_weights:
             raise ValueError("Selected model differs from its completed training receipt")
         receipt.update(weights=pred.weights, model_info=pred.info)
+        from student import Q, option_text
+        lengths = [len(pred.enc.encode(group[0]["state"], [Q(c["qtype"], c["instructions"], c["options"]) for c in group]).ids)
+                   for group in groups]
+        clipped = sum(len(pred.enc.ids(f" ({c['qtype']}) {c['instructions']}")) > 160
+                      or any(len(pred.enc.ids(" " + option_text(k, d))) > 48 for k, d in c["options"])
+                      for group in groups for c in group)
+        receipt["token_audit"] = {"max_tokens": max(lengths), "context_limit": 8192, "clipped_question_parts": clipped}
+        if max(lengths) >= 8192 or clipped:
+            raise ValueError("Confirmation input would be truncated")
         with path.open("x", encoding="utf-8") as output:
             for offset in range(0, len(groups), 8):
                 if time.monotonic() - started > 6 * 60:
