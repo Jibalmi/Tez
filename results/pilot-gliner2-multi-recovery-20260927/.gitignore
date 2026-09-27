@@ -1,0 +1,3 @@
+*.log
+*/rows_*.jsonl
+*/executed_source/

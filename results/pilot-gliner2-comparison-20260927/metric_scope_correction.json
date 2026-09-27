@@ -1,0 +1,7 @@
+{
+  "recorded_utc": "2026-09-27T08:41:59.392587+00:00",
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "finding": "Worker macro_f1 uses option-position integers. MASSIVE English has 100 distinct option-key orders in 100 cases and 52 distinct keys at position zero. Position indices do not represent consistent classes.",
+  "action": "Retain that metric only as an explicitly named diagnostic. Supplemental app/intent macro-F1 maps positions to semantic option keys. Leave frozen inference sources and raw worker receipts unchanged.",
+  "selection_effect": "None: no calibration, model fitting, checkpoint selection or gate depended on the position-index F1. Accuracy, ECE, NLL, Brier, soft accuracy and official SemIf results are unchanged."
+}

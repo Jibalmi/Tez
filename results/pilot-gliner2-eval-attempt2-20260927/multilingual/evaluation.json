@@ -1,0 +1,99 @@
+{
+  "status": "running",
+  "arm": "multilingual",
+  "started_utc": "2026-09-27T03:24:00.945022+00:00",
+  "registration_sha256": "78dc69d13647175330edce0ad64911958c3ab036523b943bab0c2a5d2f506cce",
+  "source_files": {
+    "experiments/small_model/eval_gliner2.py": "937bc9c7c1326a29bef642b4775597defcb497973e8d947152bcf7a128f31983",
+    "experiments/small_model/gliner2_adapter.py": "3e91679ff0e4bd2058d779886b55736fdbea43123a625bc33f9ec5025e421177",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "data/semif/evaluate.py": "99d78df9d59b28ea2f0e58a2c6bab1eddce9e4835aad137c0118e40ac6802beb",
+    "data/semif/authored144.jsonl": "356f9728ef7280bebb792ac2ed0f49466cc4ec318a11f3ebd237d91f0a05815e",
+    "data/semif/perturbations108.jsonl": "91559297efc30dde4daa9ae174ecfc3aa2886e7774b587587dceeff574fb5bad"
+  },
+  "tasks": {
+    "typed_decisions": {
+      "t1": {
+        "n": 2000,
+        "accuracy": 0.39,
+        "ece": 0.15044760421101147,
+        "nll": 1.2043860626242626,
+        "brier": 0.7007986407741453,
+        "macro_f1": 0.38624809538285987,
+        "soft_accuracy": 0.35464705854975187
+      },
+      "row_file": {
+        "sha256": "8aa860c63488a63f6cb683536f570a3cd3763662a3b2d087356e52f6d528c479",
+        "rows": 2000
+      }
+    },
+    "app_model_routing_domain": {
+      "t1": {
+        "n": 399,
+        "accuracy": 0.506265664160401,
+        "ece": 0.22375080018409058,
+        "nll": 1.3735049668721138,
+        "brier": 0.7037006425651999,
+        "macro_f1": 0.24081775102194336
+      },
+      "row_file": {
+        "sha256": "c0a403d31965c8866aca4e68c1cb48a63c56c48a24c58882941a2dd0c6cd4a70",
+        "rows": 399
+      }
+    },
+    "app_guardrails_jailbreak": {
+      "t1": {
+        "n": 400,
+        "accuracy": 0.7475,
+        "ece": 0.1731108138285301,
+        "nll": 0.5888751905574449,
+        "brier": 0.39761579015868853,
+        "macro_f1": 0.5746249012898131
+      },
+      "row_file": {
+        "sha256": "9645418dbda427e20f15d67986191ffd3d6d33ba1933fb0c955d9d4c7b34c35d",
+        "rows": 400
+      }
+    },
+    "app_moderation_toxicity": {
+      "t1": {
+        "n": 400,
+        "accuracy": 0.5425,
+        "ece": 0.07987463774708495,
+        "nll": 0.7016685324843447,
+        "brier": 0.5073177401329433,
+        "macro_f1": 0.4912108764101174
+      },
+      "row_file": {
+        "sha256": "c03fddd216825c029c59db293747e3a6110bb1421f34e0b52b103d3f10265717",
+        "rows": 400
+      }
+    }
+  },
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "4.57.6",
+    "gliner2": "2.0.0",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "model": "fastino/GLiNER2.5-multi-Decide",
+  "revision": "6bc1d43d201b0691e733626389af8c57eea3ea68",
+  "weights": "9efe0f88c99f2aa794452e9559dc60e98d60d9fa2bf1b60cf2710411b6da5b4e",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "probe_sha256": "f64a792df2b2ff623791fc9a36797aa40c43d5b8a744d734035c47b76806078c",
+  "batch_smoke": {
+    "max_probability_delta": 1.0065997627928258e-06,
+    "all_native_labels_match": true
+  },
+  "current": {
+    "task": "app_email_spam",
+    "completed_rows": 128
+  }
+}

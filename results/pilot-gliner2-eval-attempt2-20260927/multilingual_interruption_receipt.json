@@ -1,0 +1,13 @@
+{
+  "sha256": "0d0f27ea37143f10867836744a183eb0da69c935c08748ad6ee0362f378d220a",
+  "bytes": 471179,
+  "files_verified": 20,
+  "partial_rows_verified": {
+    "app_email_spam": 128,
+    "app_guardrails_jailbreak": 400,
+    "app_model_routing_domain": 399,
+    "app_moderation_toxicity": 400,
+    "typed_decisions": 2000
+  },
+  "complete_public_benchmark": false
+}

@@ -1,0 +1,21 @@
+{
+  "observed_utc": "2026-09-27T08:40:50.126238+00:00",
+  "previous_session_id": 75191,
+  "previous_wrapper_pid": 47892,
+  "tool_handle_state": "unknown_process_id",
+  "matching_os_workers": [],
+  "last_progress": {
+    "task": "app_email_spam",
+    "completed_rows": 128
+  },
+  "last_receipt_modified_utc": "2026-09-27T03:27:03.518373+00:00",
+  "conclusion": "Interrupted; neither its former session handle nor any matching OS worker is live. Exact cause is unrecorded. Original running receipts are retained as last-written progress, not evidence of current liveness.",
+  "partial_rows_verified": {
+    "app_email_spam": 128,
+    "app_guardrails_jailbreak": 400,
+    "app_model_routing_domain": 399,
+    "app_moderation_toxicity": 400,
+    "typed_decisions": 2000
+  },
+  "complete_public_benchmark": false
+}

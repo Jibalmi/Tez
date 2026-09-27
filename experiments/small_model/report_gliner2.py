@@ -21,6 +21,22 @@ def close_metrics(actual, expected):
         raise ValueError("Saved metric differs from the raw rows")
 
 
+def semantic_macro_f1(cases, rows):
+    pairs = [(case["options"][case["gold"]][0], case["options"][rows[case["id"]]["pred"]][0]) for case in cases]
+    labels = {label for pair in pairs for label in pair}
+    return fmean(2 * sum(gold == label == predicted for gold, predicted in pairs)
+                 / max(1, sum((gold == label) + (predicted == label) for gold, predicted in pairs)) for label in labels)
+
+
+def scoped_metrics(task, cases, rows):
+    measured = raw_metrics(list(rows.values()))
+    measured["option_index_macro_f1_diagnostic"] = measured.pop("macro_f1")
+    # Typed decisions mix label meanings; SemIf has its own official per-family metrics.
+    if task.startswith(("app_", "massive_")):
+        measured["semantic_macro_f1"] = semantic_macro_f1(cases, rows)
+    return measured
+
+
 def main():
     archive = DIRECTORY / "measurement-artifacts.tar.gz"
     if archive.exists():
@@ -72,6 +88,7 @@ def main():
             measured = raw_metrics(list(rows.values()))
             recorded = receipt["tasks"][task]
             close_metrics(measured, recorded["t1"])
+            measured = scoped_metrics(task, cases, rows)
             if digest(path) != recorded["row_file"]["sha256"] or len(rows) != recorded["row_file"]["rows"]:
                 raise ValueError("Primary row receipt differs")
             for case in cases:
@@ -112,12 +129,13 @@ def main():
         for task, cases in suite.items():
             path = ROOT / directory / f"rows_{task}_tez-s-{candidate}.jsonl"
             rows = read_checked(path, cases)
-            scores[name][task], rows_by_model[name][task] = raw_metrics(list(rows.values())), rows
+            scores[name][task], rows_by_model[name][task] = scoped_metrics(task, cases, rows), rows
             hashes[path.relative_to(ROOT).as_posix()] = digest(path)
             files[f"reference/{name}/{path.name}"] = path
     summary = {"status": "complete", "analyzed_utc": datetime.now(timezone.utc).isoformat(),
                "registration_sha256": digest(REGISTRATION), "suite_sha256": digest(suite_path),
                "analysis_source_sha256": digest(__file__), "prediction_hashes": hashes, "scores": scores,
+               "metric_scope": "The worker macro_f1 used option-position integers and is relabeled option_index_macro_f1_diagnostic. Supplemental semantic_macro_f1 maps positions to actual option keys for app and MASSIVE taxonomies. Neither affects fitting, model selection or release gates; typed decisions mix taxonomies, and SemIf retains its official evaluator.",
                "scope": "Exploratory comparison of native frozen checkpoints on already-observed public cases; training exposure differs. No fitting, routing selection, latency claim or runtime promotion."}
     for name, tasks in scores.items():
         languages = [values for task, values in tasks.items() if task.startswith("massive_")]
@@ -126,7 +144,7 @@ def main():
             summary["massive_11"][name]["order_flip"] = fmean(values["order_flip"] for values in languages)
         typed = rows_by_model[name]["typed_decisions"]
         summary.setdefault("typed_by_question_type", {})[name] = {
-            kind: raw_metrics([typed[c["id"]] for c in suite["typed_decisions"] if c["qtype"] == kind])
+            kind: scoped_metrics("typed_decisions", [], {c["id"]: typed[c["id"]] for c in suite["typed_decisions"] if c["qtype"] == kind})
             for kind in sorted({c["qtype"] for c in suite["typed_decisions"]})}
     write_json(DIRECTORY / "comparison.json", summary)
     names = ("english", "multilingual", "qwen", "decider")
@@ -134,7 +152,7 @@ def main():
              "GLiNER additionally has 1,100 reversed-option intent decisions per model. Raw T=1 probabilities; no calibration fitting.",
              "The GLiNER arms use original FP32 native eager inference; Qwen and Decider use their previously frozen implementations.",
              ("English uses batch size one after a preserved batch-four resource cancellation; multilingual retains its registered batch four."
-              if spec.get("reuse_arms") else "Both GLiNER arms use the registered batch size four."),
+              if spec.get("reuse_arms") else f"Both GLiNER arms use the registered batch size {spec['batch_size']}."),
              "These are utility comparisons across different training exposures, not controlled architecture or new held-out confirmation tests.", "",
              "| Accuracy, % | GLiNER English | GLiNER multilingual | Qwen student | Decider 0.8B |",
              "|---|---:|---:|---:|---:|"]
@@ -153,6 +171,8 @@ def main():
                      f"{scores[name]['semif_authored144']['semif_mean_family_balanced_accuracy']:.4f} | "
                      f"{scores[name]['semif_perturbations108']['semif_mean_family_balanced_accuracy']:.4f} |")
     lines += ["", "Job elapsed time includes loading, input audits and thermal pauses; it is not a latency result.",
+              "The worker's option-index F1 is retained as a diagnostic only. Supplemental app/intent macro-F1 uses semantic option keys;",
+              "these metrics are not used for fitting, checkpoint selection or release gates. Typed tasks mix label meanings; SemIf keeps its official evaluator.",
               "No gates were relaxed and no runtime was changed. Competitor training membership is unknown.",
               f"[Full measurements and hashes](comparison.json), [frozen protocol](../../experiments/small_model/{REGISTRATION.name}),",
               "[broader comparison and release requirements](../pilot-improvement-20260927/COMPETITIVENESS.md).", ""]
@@ -164,7 +184,7 @@ def main():
     files["inputs/preparation.json"] = ROOT / spec["preparation"]
     for name, selected in spec["models"].items():
         files[f"inputs/probe_{name}.json"] = ROOT / selected["probe"]
-    for name in ("report_gliner2.py", "competitor_overlap.py", "test_gliner2_metrics.py"):
+    for name in ("report_gliner2.py", "competitor_overlap.py", "test_gliner2_metrics.py", "test_gliner2_report.py"):
         files["analysis_source/" + name] = Path(__file__).with_name(name)
     expected = {name: {"sha256": digest(path), "bytes": path.stat().st_size} for name, path in sorted(files.items())}
     with tarfile.open(archive, "w:gz") as bundle:
@@ -188,7 +208,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--attempt", type=int, choices=(1, 2, 3), default=1)
+    parser.add_argument("--attempt", type=int, choices=(1, 2, 3, 4), default=1)
     args = parser.parse_args()
     if args.attempt == 2:
         DIRECTORY = ROOT / "results/pilot-gliner2-eval-attempt2-20260927"
@@ -196,4 +216,7 @@ if __name__ == "__main__":
     elif args.attempt == 3:
         DIRECTORY = ROOT / "results/pilot-gliner2-eval-serial-20260927"
         REGISTRATION = Path(__file__).with_name("gliner2_registration_serial.json")
+    elif args.attempt == 4:
+        DIRECTORY = ROOT / "results/pilot-gliner2-comparison-20260927"
+        REGISTRATION = Path(__file__).with_name("gliner2_comparison_registration.json")
     main()
