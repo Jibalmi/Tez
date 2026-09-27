@@ -1,0 +1,69 @@
+{
+  "checked_utc": "2026-09-27T09:38:06.780956+00:00",
+  "scope": "Metadata only; no downloads of wheels, install, GPU work or compatibility claim.",
+  "packages": {
+    "tilelang==0.1.9": {
+      "url": "https://pypi.org/pypi/tilelang/0.1.9/json",
+      "metadata_sha256": "a0a3f19c242d68af09137dfba62a59f4509a2092e5c717397b4deb5e9eb4c9f6",
+      "compatible_wheels": [],
+      "requires_dist": [
+        "apache-tvm-ffi>=0.1.2,~=0.1.0",
+        "torch-c-dlpack-ext; python_version < \"3.14\"",
+        "cloudpickle",
+        "ml-dtypes",
+        "numpy>=1.23.5",
+        "psutil",
+        "torch",
+        "torch>=2.4; platform_system == \"Darwin\"",
+        "setuptools; platform_system == \"Darwin\"",
+        "tqdm>=4.62.3",
+        "typing-extensions>=4.10.0",
+        "z3-solver<4.15.5,>=4.13.0",
+        "ml-dtypes>=0.5.1; extra == \"fp4\"",
+        "matplotlib; extra == \"vis\"",
+        "nvidia-cuda-nvcc>=13.0.48; extra == \"nvcc\"",
+        "nvidia-cuda-cccl>=13.0.50; extra == \"nvcc\""
+      ]
+    },
+    "apache-tvm-ffi==0.1.9": {
+      "url": "https://pypi.org/pypi/apache-tvm-ffi/0.1.9/json",
+      "metadata_sha256": "c1a39240767c940e1a5dfe9fa16cf4603ca1c0863d1a2c01e0de4f00040dff78",
+      "compatible_wheels": [
+        {
+          "filename": "apache_tvm_ffi-0.1.9-cp312-abi3-win_amd64.whl",
+          "size": 1973200,
+          "digests": {
+            "blake2b_256": "b5231b7dc5f0807f83098183a57db6ee85b2c93b646d74a6e03781c9208aaeb0",
+            "md5": "1a0a4492a41fe3c9d060d1443a4acf7e",
+            "sha256": "d1dcf4c041d5ec05e3da1d545800c33cdbb95c113baa7705085ff79fa262752b"
+          },
+          "yanked": false
+        }
+      ],
+      "requires_dist": [
+        "typing-extensions>=4.5",
+        "ninja; extra == \"cpp\""
+      ]
+    },
+    "apache-tvm-ffi==0.1.11": {
+      "url": "https://pypi.org/pypi/apache-tvm-ffi/0.1.11/json",
+      "metadata_sha256": "cedf16b78fb390a468dc22740070cc14d176985349c0d0bd3fe981f7c5fe8397",
+      "compatible_wheels": [
+        {
+          "filename": "apache_tvm_ffi-0.1.11-cp312-abi3-win_amd64.whl",
+          "size": 2365545,
+          "digests": {
+            "blake2b_256": "dc99f352cf1cce8f6f05584c4adf11de9eca07e6d217229bad6af35fb372926c",
+            "md5": "098ff342706a1b38e78ea9f9a3a28e3e",
+            "sha256": "bd67e03759d25ff59f4e0ed9c8630a16872afc9dd8792f46ac3c927554015e60"
+          },
+          "yanked": false
+        }
+      ],
+      "requires_dist": [
+        "typing-extensions>=4.5",
+        "ninja; extra == \"cpp\""
+      ]
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T09:37:32.625821+00:00",
+  "source_sha256": "d41b32f39cb84e6cd6c3b1b77f2e680e1023a05d6eb322d49e592456b4c99ca2",
+  "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+  "requests": {
+    "flashqla_commit.json": {
+      "url": "https://api.github.com/repos/QwenLM/FlashQLA/commits/main",
+      "bytes": 10513,
+      "sha256": "b0d230ef1c72438e2c136cf7edcdbc4d11697d4e756247e243fef99ccb6fa643"
+    },
+    "flashqla_README.md": {
+      "url": "https://raw.githubusercontent.com/QwenLM/FlashQLA/cdfcb99061daa61d78aa07bb254a6cf9ddfa8450/README.md",
+      "bytes": 5577,
+      "sha256": "64b02582dab5cac34e856ed90c78290185b95b071dc3d43941b3817b7ee1fd19"
+    },
+    "flashqla_setup.py": {
+      "url": "https://raw.githubusercontent.com/QwenLM/FlashQLA/cdfcb99061daa61d78aa07bb254a6cf9ddfa8450/setup.py",
+      "bytes": 977,
+      "sha256": "831b3298ebf48e1e0d7bd5edc326ec99694432523e6d5d17a13073d8d263266e"
+    },
+    "flashqla_LICENSE": {
+      "url": "https://raw.githubusercontent.com/QwenLM/FlashQLA/cdfcb99061daa61d78aa07bb254a6cf9ddfa8450/LICENSE",
+      "bytes": 1070,
+      "sha256": "d0b7a111f48dc0207c7e057c810ae0e2fdbc807ba654eb669ade998b2cdc3438"
+    },
+    "flash-qla.json": {
+      "url": "https://pypi.org/pypi/flash-qla/json",
+      "bytes": 9251,
+      "sha256": "9340429581874695351fbef966ce9b472c9e03b30d5d37d016151d98d790a88b"
+    },
+    "tilelang.json": {
+      "url": "https://pypi.org/pypi/tilelang/0.1.12/json",
+      "bytes": 20412,
+      "sha256": "f638d76e5b20e34a5c9f73d06b3f754670d47e406acfe8d3ebb11e2da7aebdc5"
+    }
+  },
+  "packages": {
+    "flash-qla": {
+      "version": "0.1.2",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "torch>=2.8",
+        "tilelang==0.1.9",
+        "apache-tvm-ffi==0.1.9"
+      ],
+      "wheels": [
+        {
+          "filename": "flash_qla-0.1.2-py3-none-any.whl",
+          "bytes": 85860,
+          "sha256": "fb9dfa8607df9c545cd583dd8c0248ac9b0b673a8fb0af042ba9ef07bbc30446",
+          "compatible_tags": true,
+          "yanked": false
+        }
+      ]
+    },
+    "tilelang": {
+      "version": "0.1.12",
+      "requires_python": ">=3.10",
+      "requires_dist": [
+        "apache-tvm-ffi<=0.1.11,>=0.1.10",
+        "torch-c-dlpack-ext; python_version < \"3.14\"",
+        "cloudpickle",
+        "ml-dtypes",
+        "numpy>=1.23.5",
+        "psutil",
+        "torch",
+        "torch>=2.4; platform_system == \"Darwin\"",
+        "setuptools; platform_system == \"Darwin\"",
+        "tqdm>=4.62.3",
+        "typing-extensions>=4.10.0",
+        "z3-solver<4.15.5,>=4.13.0",
+        "ml-dtypes>=0.5.1; extra == \"fp4\"",
+        "matplotlib; extra == \"vis\"",
+        "torch; extra == \"nvcc\"",
+        "nvidia-cuda-nvcc>=13.0.48; extra == \"nvcc\"",
+        "nvidia-cuda-cccl>=13.0.50; extra == \"nvcc\"",
+        "nvidia-cuda-nvrtc>=13; platform_system == \"Windows\" and extra == \"nvcc\"",
+        "nvidia-curand>=10.4; platform_system == \"Windows\" and extra == \"nvcc\""
+      ],
+      "wheels": [
+        {
+          "filename": "tilelang-0.1.12-cp38-abi3-macosx_11_0_arm64.whl",
+          "bytes": 38347295,
+          "sha256": "8741d6cd519782645d55c17abd8986402c62948bc2122d3417c445d11de5dd16",
+          "compatible_tags": false,
+          "yanked": false
+        },
+        {
+          "filename": "tilelang-0.1.12-cp38-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+          "bytes": 50501074,
+          "sha256": "bbeb5573cbe2544a51a5c9a6cc737c5e3b5c2d95411caa3687fd9b08eb9d5f97",
+          "compatible_tags": false,
+          "yanked": false
+        },
+        {
+          "filename": "tilelang-0.1.12-cp38-abi3-manylinux_2_34_aarch64.whl",
+          "bytes": 46281933,
+          "sha256": "a1701eba4ad603d73f1b128b88f6a2350f1b1161729e5b2d1e540a1ec7a82d52",
+          "compatible_tags": false,
+          "yanked": false
+        },
+        {
+          "filename": "tilelang-0.1.12-cp38-abi3-win_amd64.whl",
+          "bytes": 34020025,
+          "sha256": "daeb3d529ab9e7665adb94c4bf0d47732294709aa9b8b9bd673fa48001385422",
+          "compatible_tags": true,
+          "yanked": false
+        }
+      ]
+    }
+  },
+  "flashqla_commit": "cdfcb99061daa61d78aa07bb254a6cf9ddfa8450",
+  "scope": "Metadata and local wheel-tag comparison only. No install, model loading, GPU execution, compatibility success, probability parity or speed measurement.",
+  "finished_utc": "2026-09-27T09:37:34.876513+00:00"
+}

@@ -41,6 +41,8 @@ benchmark contamination. Parameter counts of adapter-only repositories exclude t
 A later [discovery audit](../pilot-gliner2-discovery-20260927/README.md) adds GLiNER2.5-Decide to
 the candidates for measurement and distinguishes the LocalJev bridge and Ollaya runtime from
 trained checkpoint alternatives. No unmeasured candidate is assigned a score or rank.
+Both native GLiNER checkpoints now have a [complete matched comparison](../pilot-gliner2-comparison-20260927/RESULTS.md).
+The [current assessment](COMPETITIVENESS.md) includes those results and qualifies the pending Tev1 run.
 
 [JevBench](https://github.com/fstandhartinger/jevbench) is a useful external check and discovery source.
 Its composite rankings are not directly comparable with typed-decision accuracy or these latency
@@ -118,3 +120,13 @@ examples, versus nested dictionaries/lists in all 400 typed-decision test states
 a coverage gap worth testing with newly authored structured training states; it does not prove
 that nesting causes the accuracy gap. Increasing context length would not address a measured
 truncation issue in these suites, because none was found.
+
+The separate [Qwen training-context audit](../pilot-qwen-context-audit-20260927/README.md) found
+historical clipping in 20 of 29,990 training decisions and five validation decisions. The
+[continuation preparation](../pilot-qwen-continuation-20260927/README.md) retains complete inputs;
+the limited incidence does not establish a cause of the broad quality gap.
+
+An [additional kernel audit](../pilot-kernel-discovery-20260927/README.md) records FlashQLA's
+current SM120 path and the difference between its released and source dependency requirements.
+This metadata is separate from measured performance. The queued FLA precision probe uses the
+existing isolated FLA/Triton files and keeps its original numerical acceptance limits.
