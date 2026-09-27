@@ -51,3 +51,19 @@ checks source and input hashes, checkpoint tensors and optimizer progress, valid
 every held-out probability vector and step-zero identity. CPU tests reject changed initial
 weights, optimizer drift, malformed moments and inconsistent progress. Verification remains
 pending until an operation completes; these tests do not establish GPU checkpoint replay.
+
+The [selection and export implementation](../../../experiments/small_model/export_qwen_continuation.py)
+is now [registered](../../../experiments/small_model/qwen_continuation_export_registration.json)
+before any trained checkpoint validation. It requires all four verified validation archives,
+recomputes their metrics, checks the checkpoint validation histories, and uses the frozen selector.
+It exports only the chosen unmerged adapter under ignored `runs/`. The original adapter layout
+and config must be preserved, and every serialized tensor must reload exactly. New metadata uses
+temperature one and records provenance without copying historical timings or calibration values.
+
+Six one-thread CPU tests passed, including a real tiny PEFT model whose tensors and forward outputs
+match exactly after export and reload. Other cases reject incomplete or changed tensor layouts,
+non-finite values, modified validation inputs and incomplete selection inputs. The
+[integration preflight](../export_preflight.json) also reread the existing unchanged-baseline archive
+and reproduced its validation metrics. No trained checkpoint was selected or exported. A selected
+Qwen export must still pass its own GPU reload check before public evaluation. The format follows
+the [PEFT checkpoint documentation](https://huggingface.co/docs/peft/developer_guides/checkpoint).

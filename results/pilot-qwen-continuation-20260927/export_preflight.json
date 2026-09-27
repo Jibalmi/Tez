@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "cpu_threads": 1,
+  "baseline_directory": "results/pilot-qwen-continuation-20260927/training/attempt-02-baseline-000",
+  "baseline_artifact": {
+    "sha256": "8f7d49a970bfbf5df3bf3d92ad920e30cdc1c10f96df8bba1f7aafbd77ce2747",
+    "bytes": 889697,
+    "files_verified": 44
+  },
+  "validation_metrics": {
+    "n": 1390,
+    "mean_kl": 0.1401374435902039,
+    "teacher_agreement": 0.7899280575539568
+  },
+  "selection_performed": false,
+  "model_exported": false,
+  "scope": "Existing baseline archive and metric-reader integration only; no trained validation or selection."
+}
