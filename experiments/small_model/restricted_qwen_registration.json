@@ -1,0 +1,19 @@
+{
+  "status": "registered_before_gpu_execution",
+  "candidate": "c-qwen08-restricted",
+  "reference": "c-qwen08-30k",
+  "hypothesis": "Projecting the frozen final hidden state only onto the 26 answer-letter vocabulary rows may reduce output-layer work while preserving probabilities. No measured speedup is claimed by this registration.",
+  "change": "Share the reference backbone with its original unmerged LoRA; preserve tokenization, left padding, attention mask, cache configuration, sorting and batch size 16. Restrict only the frozen output linear layer to the 26 answer letters. No weights, prompts, temperature, option orders or thresholds are fitted.",
+  "validation": "All 278 original teacher-validation states and 1390 decisions. No public test or authored confirmation labels participate in parity.",
+  "teacher_directory": "runs/pilot-cloud-h200-20260927",
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "base_sha256": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696",
+  "adapter_sha256": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482",
+  "argmax_agreement_min": 0.99,
+  "max_probability_delta_max": 0.04,
+  "mean_total_variation_max": 0.005,
+  "compute": "Laptop only under run_heavy.py with four CPU threads and unchanged thermal rules; at most eight minutes for parity including preparation. No additional cloud spend.",
+  "promotion": "Parity is necessary, not sufficient. Require separately measured improved latency under the original target-laptop temperature and contamination protocol. A warm/contaminated diagnostic cannot satisfy the speed gate. If parity fails, preserve the failure and do not relax thresholds. No runtime integration in this experiment.",
+  "references": ["https://huggingface.co/docs/peft/package_reference/peft_model#get_base_model", "https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.linear.html"],
+  "implementation_evidence": "Installed Transformers 5.17.0 Qwen3_5ForCausalLM.forward calls its model with the attention mask then applies lm_head to the final hidden positions. Executed dependency sources and package versions will be recorded."
+}
