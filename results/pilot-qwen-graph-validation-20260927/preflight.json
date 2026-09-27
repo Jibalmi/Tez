@@ -1,0 +1,36 @@
+{
+  "status": "complete",
+  "cpu_threads": 1,
+  "gpu_model_loaded": false,
+  "states": 278,
+  "decisions": 1390,
+  "max_input_tokens": 1607,
+  "total_input_tokens": 405647,
+  "input_sha256": "a41f0da6188391609bf30b41f79f8ae89b4d71c17fac6ae9e571f685bb8ba1a9",
+  "plans": {
+    "1": {
+      "batches": 1390,
+      "batches_by_length": {
+        "128": 37,
+        "256": 701,
+        "512": 546,
+        "1024": 95,
+        "2048": 11
+      },
+      "dummy_rows": 0,
+      "real_decisions": 1390
+    },
+    "16": {
+      "batches": 89,
+      "batches_by_length": {
+        "128": 3,
+        "256": 44,
+        "512": 35,
+        "1024": 6,
+        "2048": 1
+      },
+      "dummy_rows": 34,
+      "real_decisions": 1390
+    }
+  }
+}
