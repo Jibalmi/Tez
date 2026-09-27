@@ -1,0 +1,8 @@
+{
+  "status": "failed_preparation",
+  "observed_utc": "2026-09-27T09:16:50.853787+00:00",
+  "source_sha256": "49115ea104f03351fbd79d1c97449a36abad1f8ab3913a60bd9d5db79764b946",
+  "exit_code": 1,
+  "error": "The proposed unchanged training context would truncate an input",
+  "meaning": "At least one selected training or validation prompt exceeds 1536 tokens. Exact counts and lengths were not saved by the first attempt; audit them before training. No model weights were loaded or updated."
+}

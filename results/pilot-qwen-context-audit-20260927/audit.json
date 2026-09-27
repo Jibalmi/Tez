@@ -1,0 +1,76 @@
+{
+  "status": "complete",
+  "audited_utc": "2026-09-27T09:18:26.858140+00:00",
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "sources": {
+    "experiments/small_model/audit_qwen_context.py": "fd839d22d1e97f9a06c7511307e757a816fc0215fd6e2af8045bc6ac1bb184c0",
+    "experiments/small_model/train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "experiments/small_model/dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "experiments/small_model/train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "experiments/small_model/student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58"
+  },
+  "groups": {
+    "training_epoch0": {
+      "decisions": 29990,
+      "over_1536": 20,
+      "over_4096": 0,
+      "assistant_footer_not_intact": 20,
+      "max_tokens": 1987,
+      "mean_tokens": 274.0088696232077,
+      "affected_fraction": 0.0006668889629876625,
+      "affected_qtypes": {
+        "choice": 7,
+        "score": 8,
+        "noul": 5
+      },
+      "affected_sources": {
+        "gmmlu": 4,
+        "aya": 16
+      }
+    },
+    "training_validation": {
+      "decisions": 1390,
+      "over_1536": 5,
+      "over_4096": 0,
+      "assistant_footer_not_intact": 5,
+      "max_tokens": 1607,
+      "mean_tokens": 291.83237410071945,
+      "affected_fraction": 0.0035971223021582736,
+      "affected_qtypes": {
+        "score": 3,
+        "noul": 1,
+        "choice": 1
+      },
+      "affected_sources": {
+        "aya": 5
+      }
+    },
+    "current_validation_original_order": {
+      "decisions": 1390,
+      "over_1536": 5,
+      "over_4096": 0,
+      "assistant_footer_not_intact": 5,
+      "max_tokens": 1607,
+      "mean_tokens": 291.83237410071945,
+      "affected_fraction": 0.0035971223021582736,
+      "affected_qtypes": {
+        "score": 3,
+        "noul": 1,
+        "choice": 1
+      },
+      "affected_sources": {
+        "aya": 5
+      }
+    }
+  },
+  "tokenizer_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "truncation_side": "right",
+  "raw_metadata_sha256": "12506791d1d3d8501bd0c41085a62aac3fe6f00318c7b3b2dddec4fb9f45ef06",
+  "torch_threads": 1,
+  "scope": "Descriptive reconstruction from frozen training data and pinned prompt/tokenizer code. Historical train uses option-shuffle seed 13000, validation seed 0; current validation is unshuffled. No inference or fitting, and no causal accuracy effect is established. Metadata rows omit prompt text, targets and model weights."
+}

@@ -1,0 +1,45 @@
+{
+  "status": "complete",
+  "prepared_utc": "2026-09-27T09:19:24.580203+00:00",
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "teacher_files_verified": 35,
+  "schedule_sha256": "0153cc8b208004e0776ab7846c36cfde90495b98db73d6b9920bf1519573dc63",
+  "schedule": "runs/pilot-qwen-continuation-20260927/schedule.json",
+  "training_decisions": 2400,
+  "training_states": 2017,
+  "training_types": {
+    "noul": 848,
+    "choice": 873,
+    "score": 679
+  },
+  "training_sources": {
+    "fineweb": 1152,
+    "fineweb2": 818,
+    "aya": 209,
+    "gmmlu": 86,
+    "csqa": 74,
+    "clinc": 61
+  },
+  "training_tokens": 646383,
+  "max_training_tokens": 1650,
+  "max_validation_tokens": 1607,
+  "context_bound": 2048,
+  "training_over_original_1536": 3,
+  "validation_over_original_1536": 5,
+  "validation_states": 278,
+  "validation_decisions": 1390,
+  "torch_threads": 1,
+  "sources": {
+    "experiments/small_model/prepare_qwen_continuation.py": "54061c8e9654c4148bc8332a66caa6bd4dc8de24ec1f2030ba5f7592e86cbf76",
+    "experiments/small_model/train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "experiments/small_model/dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "experiments/small_model/train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "experiments/small_model/student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58"
+  },
+  "scope": "Training schedule only. All selected decisions belong to the original frozen training split; no validation or public-test labels select training examples. Seed and complete batches chosen before any continuation. No new teacher labels, training, inference or GPU work performed."
+}

@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "verified_utc": "2026-09-27T09:19:58.364162+00:00",
+  "audit_sha256": "f32b035f0261a4d562df70d59e78b2f14ed17996e359d7d459a1c36103d117b9",
+  "historical_source_sha256": "a7c1410a0ec89a03d1e6a825fd556ae6425a05838916959d2dc2c5d8c375d796",
+  "current_source_sha256": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+  "driver_sha256": "95d1e569baffbf3d587aa1c2933d371c2790b024b2e8da25bf180244520734ab",
+  "identical_function_asts": {
+    "letter_logp": true,
+    "prompt_for": true,
+    "items": true,
+    "epoch_batches": true
+  },
+  "historical_default_seed": 13,
+  "driver_overrides_seed": false,
+  "verification_source_sha256": "642d29c7959cd032a86bc8d2fb1b82efd69f93dcfbe6e8e1c2f30c95504cc1b6",
+  "scope": "Archived training code and driver agree with the reconstruction's relevant functions and seed. This is a source/data reconstruction, not retained historical token tensors or a causal accuracy experiment."
+}
