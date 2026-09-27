@@ -1,0 +1,50 @@
+{
+  "action": "terminate_owned_english_worker_tree_for_resource_pressure",
+  "requested_utc": "2026-09-27T03:23:16.519196+00:00",
+  "wrapper_pid": 45436,
+  "workers": [
+    {
+      "pid": 26740,
+      "parent_pid": 56644,
+      "command": [
+        "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\.venv-pilot\\Scripts\\python.exe",
+        "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\experiments\\small_model\\eval_gliner2.py",
+        "--arm",
+        "english",
+        "--worker",
+        "--attempt",
+        "2"
+      ],
+      "created_utc": "2026-09-27T03:13:07.396543+00:00"
+    },
+    {
+      "pid": 33976,
+      "parent_pid": 26740,
+      "command": [
+        "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\.venv-pilot\\Scripts\\python.exe",
+        "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\experiments\\small_model\\eval_gliner2.py",
+        "--arm",
+        "english",
+        "--worker",
+        "--attempt",
+        "2"
+      ],
+      "created_utc": "2026-09-27T03:13:07.408935+00:00"
+    }
+  ],
+  "gpu_observation_csv": "87, 100, 15943, 16303, Not Active",
+  "gpu_fields": [
+    "temperature_c",
+    "utilization_percent",
+    "memory_used_MiB",
+    "memory_total_MiB",
+    "hw_thermal_slowdown"
+  ],
+  "reason": "Repeated total GPU memory readings near 15944/16303 MiB while progress slowed on long email batches. Preserve partial predictions and repeat English in original FP32 with batch size one. Resource-driven cancellation, not an observation timeout or numerical failure.",
+  "completed_before_cancel": {
+    "task": "app_email_spam",
+    "completed_rows": 256
+  },
+  "worker_terminated_utc": "2026-09-27T03:23:16.985121+00:00",
+  "remaining_live_worker_pids": []
+}

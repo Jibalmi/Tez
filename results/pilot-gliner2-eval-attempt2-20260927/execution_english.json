@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "arm": "english",
+  "started_utc": "2026-09-27T03:13:07.383574+00:00",
+  "registration_sha256": "78dc69d13647175330edce0ad64911958c3ab036523b943bab0c2a5d2f506cce",
+  "timeout_seconds": 1800,
+  "returncode": 15,
+  "finished_utc": "2026-09-27T03:23:16.530076+00:00"
+}

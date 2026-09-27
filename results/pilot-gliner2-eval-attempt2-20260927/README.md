@@ -15,3 +15,9 @@ Both arms must repeat the frozen four-case batch smoke before the full 6,151 pri
 and 1,100 reversed-option intent checks. Local compute uses the shared lock, four threads and
 unchanged thermal rules, with a 30-minute worker bound. No latency or release claim follows
 from job elapsed time. No new cloud spending is involved.
+
+English passed the batch smoke, then was [explicitly cancelled for resource pressure](cancellation_english.json)
+after four complete tasks and a partial email task. Total GPU memory was repeatedly near
+15,943 of 16,303 MiB; that is about 15.6 of 15.9 GiB. The driver is terminal with exit 15;
+the worker's last progress receipt is retained unchanged. The [batch-one English retry](../pilot-gliner2-eval-serial-20260927/README.md)
+is separately registered. Multilingual retains this attempt's original source and batch size.

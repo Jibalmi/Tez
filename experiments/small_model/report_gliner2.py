@@ -32,24 +32,40 @@ def main():
     suite = json.loads(suite_path.read_text(encoding="utf-8"))
     hashes, scores, rows_by_model, files = {}, {}, {}, {}
     for arm in ("english", "multilingual"):
-        folder = DIRECTORY / arm
+        arm_root, arm_spec = DIRECTORY, spec
+        if arm in spec.get("reuse_arms", {}):
+            reused = spec["reuse_arms"][arm]
+            arm_root = ROOT / reused["directory"]
+            arm_registration = arm_root / arm / "registration.json"
+            if digest(arm_registration) != reused["registration_sha256"]:
+                raise ValueError("Reused arm registration differs")
+            arm_spec = json.loads(arm_registration.read_text(encoding="utf-8"))
+            if arm_spec["suite_sha256"] != spec["suite_sha256"] or arm_spec["preparation_sha256"] != spec["preparation_sha256"]:
+                raise ValueError("Reused arm has different inputs or preparation")
+        folder = arm_root / arm
+        registered_hash = digest(folder / "registration.json")
         receipt = json.loads((folder / "evaluation.json").read_text(encoding="utf-8"))
-        execution = json.loads((DIRECTORY / f"execution_{arm}.json").read_text(encoding="utf-8"))
+        execution = json.loads((arm_root / f"execution_{arm}.json").read_text(encoding="utf-8"))
         if (receipt["status"] != "complete" or execution["status"] != "complete" or execution["returncode"] != 0
-                or receipt["registration_sha256"] != digest(REGISTRATION)
-                or digest(folder / "registration.json") != digest(REGISTRATION)
+                or receipt["registration_sha256"] != registered_hash or execution["registration_sha256"] != registered_hash
+                or (arm_root == DIRECTORY and registered_hash != digest(REGISTRATION))
                 or set(receipt["tasks"]) != set(suite) or receipt["primary_decisions"] != 6151
                 or receipt["reversed_decisions"] != 1100 or receipt["input_audit"]["records_checked"] != 7255):
             raise ValueError("Both registered arms must complete before comparison")
-        for relative, expected in spec["inference_sources"].items():
+        for relative, expected in arm_spec["inference_sources"].items():
             if receipt["source_files"][relative] != expected or digest(folder / "executed_source" / relative) != expected:
                 raise ValueError("Executed source differs from registration")
-        selected = spec["models"][arm]
+        selected = arm_spec["models"][arm]
         if receipt["probe_sha256"] != selected["probe_sha256"] or receipt["preparation_sha256"] != spec["preparation_sha256"]:
             raise ValueError("Frozen eligibility evidence differs")
         if not receipt["batch_smoke"]["all_native_labels_match"] or receipt["batch_smoke"]["max_probability_delta"] > 1e-5:
             raise ValueError("Batched smoke did not pass")
         scores[arm], rows_by_model[arm] = {}, {}
+        if arm_root != DIRECTORY:
+            files.update({arm + "/" + p.relative_to(folder).as_posix(): p for p in folder.rglob("*")
+                          if p.is_file() and "__pycache__" not in p.parts})
+            for name in (f"execution_{arm}.json", f"{arm}.log"):
+                files[name] = arm_root / name
         for task, cases in suite.items():
             path = folder / f"rows_{task}.jsonl"
             rows = read_checked(path, cases)
@@ -117,6 +133,8 @@ def main():
     lines = ["# Native GLiNER comparison", "", "Complete, matched inputs: 6,151 original public decisions per model.",
              "GLiNER additionally has 1,100 reversed-option intent decisions per model. Raw T=1 probabilities; no calibration fitting.",
              "The GLiNER arms use original FP32 native eager inference; Qwen and Decider use their previously frozen implementations.",
+             ("English uses batch size one after a preserved batch-four resource cancellation; multilingual retains its registered batch four."
+              if spec.get("reuse_arms") else "Both GLiNER arms use the registered batch size four."),
              "These are utility comparisons across different training exposures, not controlled architecture or new held-out confirmation tests.", "",
              "| Accuracy, % | GLiNER English | GLiNER multilingual | Qwen student | Decider 0.8B |",
              "|---|---:|---:|---:|---:|"]
@@ -170,9 +188,12 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
+    parser.add_argument("--attempt", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
     if args.attempt == 2:
         DIRECTORY = ROOT / "results/pilot-gliner2-eval-attempt2-20260927"
         REGISTRATION = Path(__file__).with_name("gliner2_registration_attempt2.json")
+    elif args.attempt == 3:
+        DIRECTORY = ROOT / "results/pilot-gliner2-eval-serial-20260927"
+        REGISTRATION = Path(__file__).with_name("gliner2_registration_serial.json")
     main()
