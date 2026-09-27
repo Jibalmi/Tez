@@ -28,9 +28,10 @@ training segments are now [complete and verified through step 50](training/attem
 800 original training decisions, with successful resumption from the first segment's saved optimizer
 checkpoint. The [step-50 validation](training/attempt-05-validate-050/README.md) is complete and
 independently verified. Teacher agreement declined from 78.9928% to 78.1295%, and mean KL rose
-from 0.14013744 to 0.14770741. This checkpoint does not improve the registered metrics. The next
-bounded training segment is queued toward step 100; the original checkpoint remains eligible
-when all four validations are available. No release gate is claimed.
+from 0.14013744 to 0.14770741. This checkpoint does not improve the registered metrics. Two more
+bounded segments reached a [verified step-100 checkpoint](training/attempt-07-train-100/README.md),
+whose validation is queued; the original checkpoint remains eligible when all four validations
+are available. No release gate is claimed.
 
 The [descriptive validation breakdown](validation_diagnostics/step-050/README.md) shows worse
 teacher agreement and KL across choice, yes/no and score questions. Mean confidence declines

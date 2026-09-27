@@ -4,10 +4,10 @@ Step-zero validation is [complete and independently verified](attempt-02-baselin
 All 1,390 argmax predictions match the frozen reference; maximum probability difference is
 4.44e-16. Teacher agreement is 78.9928% and mean KL is 0.14013744. All 372 saved adapter tensors
 equal the original checkpoint, and the optimizer has no prior update state. The evidence archive
-retains raw held-out predictions and inputs. Three bounded training segments are now
-[complete and independently verified through step 75](attempt-06-train-100/README.md), including
+retains raw held-out predictions and inputs. Four bounded training segments are now
+[complete and independently verified through step 100](attempt-07-train-100/README.md), including
 successful checkpoint resumption. The [step-50 validation](attempt-05-validate-050/README.md)
-regressed on both registered metrics. Training to step 100 is queued; no selected-checkpoint
+regressed on both registered metrics. The step-100 validation is queued; no selected-checkpoint
 public-quality result is available yet.
 
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
@@ -85,8 +85,9 @@ and export finish; these tests do not establish model parity. Completed failures
 The [first trained validation](attempt-05-validate-050/README.md) is now complete and verified:
 all 1,390 decisions, teacher agreement 0.781294964028777 and mean KL 0.14770740977013652.
 Both are worse than step zero (agreement 0.7899280575539568 and KL 0.1401374435902039).
-Its checkpoint supplied attempt six, which completed another 25 updates. Attempt seven now
-starts from verified step 75 with the same validation history, optimizer and random states.
+Its checkpoint supplied attempt six, which completed another 25 updates. Attempt seven resumed
+from verified step 75 with the same validation history, optimizer and random states and
+[reached step 100](attempt-07-train-100/README.md); attempt eight validates that checkpoint.
 The registered schedule and selection rule continue unchanged; this intermediate regression
 is retained. The [descriptive diagnostics](../validation_diagnostics/step-050/diagnostics.json)
 break down the regression by question type without changing training or checkpoint selection.
