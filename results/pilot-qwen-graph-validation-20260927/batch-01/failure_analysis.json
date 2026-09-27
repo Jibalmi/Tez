@@ -1,0 +1,9 @@
+{
+  "status": "failed_preserved",
+  "archived_utc": "2026-09-27T11:44:57.251564+00:00",
+  "source_files_verified": 26,
+  "registration_sha256": "ee08a198b79dc81ce7b6e9b63ee7fa9ad382a320eca897118517eaaffef1c9ee",
+  "error_type": "TimeoutError",
+  "error": "Preserve partial rows; incomplete validation is ineligible",
+  "scope": "Failure evidence only. No successful compatibility, quality, speed or release claim."
+}

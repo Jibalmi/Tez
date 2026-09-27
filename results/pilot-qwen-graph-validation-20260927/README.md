@@ -3,8 +3,11 @@
 The [registered experiment](../../experiments/small_model/qwen_graph_validation_registration.json)
 extends the successful [four-case compatibility check](../pilot-qwen-cuda-graph-attempt2-20260927/RESULTS.md)
 to all original teacher-validation inputs. The [batch-16 result](batch-16/RESULTS.md) is complete
-and independently verified: it fails the unchanged mean-total-variation limit. The batch-one arm
-is queued separately under the shared laptop compute lock. No speed result is established.
+and independently verified: it fails the unchanged mean-total-variation limit. The
+[batch-one arm](batch-01/README.md) reached its registered soft deadline after 1,348 of 1,390
+decisions. Its partial outputs and terminal failure are retained; incomplete coverage cannot
+establish a parity pass. Its [failure archive](batch-01/artifact_receipt.json) contains 37 verified
+files in 1,275,191 bytes. No speed result is established.
 
 Across all 1,390 decisions, batch 16 has 99.5683% reference argmax agreement and maximum probability
 change 0.03596536, both within their limits. Mean total variation is 0.00623822, exceeding 0.005.
@@ -18,7 +21,7 @@ The failed arm will not advance to timing. The next candidate should retain the 
 composition and real-token positions, add trailing padding only after each native batch, and read
 the last real token rather than the padded end. That requires a separate tested implementation
 and registration; it is not a demonstrated repair. Probability limits remain unchanged. The
-existing batch-one arm continues with its original frozen source and protocol. The separate
+existing batch-one arm ended at its original frozen deadline, without a restart. The separate
 [native-prefix candidate](../pilot-qwen-prefix-validation-20260927/README.md) is now implemented,
 CPU-checked on all validation inputs, registered and queued at batch 16. GPU parity remains unproven.
 

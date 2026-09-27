@@ -83,6 +83,9 @@ the original attention kernels. The [full batch-16 graph trial](../pilot-qwen-gr
 also fails its mean-total-variation limit: 0.00623822 versus the required 0.005. Its graph outputs
 exactly match the identical uncaptured path, so capture itself adds no observed drift; surrounding
 padding and batching changes still need isolation. The failed candidate is not timed or promoted.
+Its [single-question arm](../pilot-qwen-graph-validation-20260927/batch-01/README.md) reached the
+registered soft deadline after 1,348 of 1,390 decisions; the partial outputs are archived and
+cannot establish full parity. The separately registered native-prefix candidate remains queued.
 None of these inference experiments establishes a measured speedup. Larger Decider releases may be useful quality references,
 but have not been measured here and would be a different size/cost class. Published JevBench
 or DecisionIndex scores use different protocols and cannot be inserted into this table.
