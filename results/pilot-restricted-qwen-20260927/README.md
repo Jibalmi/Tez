@@ -1,5 +1,9 @@
 # Restricted option-letter projection trial
 
+Completed: [all 1,390 validation decisions passed the registered probability check](RESULTS.md).
+Argmax agreement was 100%; maximum probability change was 0.00364906 and mean total variation
+was 0.0000026252. This establishes numerical parity on the validation set, not a measured speedup.
+
 The Qwen student currently computes final-position scores for the full vocabulary before selecting
 the option letters. This registered experiment projects the same frozen hidden state directly onto
 those letter rows. It keeps the original unmerged adapter, prompt, attention mask, padding, cache
@@ -18,4 +22,4 @@ No cloud resource is created.
 
 Passing parity alone cannot promote the candidate. It must also improve measured latency under
 the original target-laptop temperature and contamination requirements. A failed parity check is
-preserved, and the thresholds are not relaxed. No speedup or completed parity result is claimed yet.
+preserved, and the thresholds are not relaxed. No speedup is claimed.

@@ -1,0 +1,123 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:25:54.786710+00:00",
+  "registration_sha256": "de0fa57f772da9276001f8cc224c22146d265a8c4204541ff72110fd1d236acc",
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "sources": {
+    "restricted_qwen.py": "f3af23a8e3fa6b20396d433033d6c51f6bf9da07e1019883c877469c44a81021",
+    "restricted_qwen_parity.py": "4da0c2d0b2b9643f73b85853f7c4253b69ce3bcfaec4e745b1100be3a4db38cd",
+    "restricted_qwen_registration.json": "de0fa57f772da9276001f8cc224c22146d265a8c4204541ff72110fd1d236acc",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "dependency_peft_model.py": "6c455a0709a96fbfd51434b922b4db383edbc342b6a33188439efaf9e39974f7",
+    "dependency_modeling_qwen3_5.py": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b"
+  },
+  "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+  "teacher_files_verified": 35,
+  "weights": {
+    "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "base_weights": {
+    "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+  },
+  "model_info": {
+    "arm": "c-qwen08-30k",
+    "backbone": "Qwen/Qwen3.5-0.8B",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "targets": "all-linear"
+    },
+    "epochs": 1,
+    "steps": 1875,
+    "total_steps_planned": 1875,
+    "fraction_of_planned_steps": 1.0,
+    "segments": 1,
+    "stopped_early": false,
+    "train_seconds": 902.7,
+    "decisions_per_s": 33.23,
+    "train_tok_per_s": 9102.9,
+    "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 47,
+    "lr": 0.0002,
+    "batch": 16,
+    "val_agreement_with_teacher": 0.7835,
+    "temperatures": {
+      "score": 0.5955,
+      "noul": 0.4788,
+      "choice": 0.6642,
+      "choice_many": 1.1461
+    },
+    "kernels": {
+      "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+      "packages": {
+        "torch": "2.8.0+cu128",
+        "transformers": "5.17.0",
+        "fla-core": "0.5.2",
+        "causal-conv1d": "1.7.0"
+      }
+    },
+    "train_summary": {
+      "states": 5998,
+      "decisions": 29990,
+      "sources": {
+        "fineweb": 3019,
+        "aya": 499,
+        "fineweb2": 2000,
+        "clinc": 145,
+        "gmmlu": 165,
+        "csqa": 170
+      },
+      "types": {
+        "choice": 11613,
+        "noul": 10428,
+        "score": 7949
+      },
+      "gold_decisions": 480,
+      "teacher_order_agreement": 0.9437812604201401
+    },
+    "peak_vram_gb": 6.39,
+    "lora_merged": false,
+    "cache_disabled": false,
+    "readout": "frozen option-letter projection; backbone, cache, LoRA and prompts unchanged",
+    "projected_vocabulary_rows": 26,
+    "original_vocabulary_rows": 248320
+  },
+  "original_cache_setting": true,
+  "states": 278,
+  "decisions": 1390,
+  "token_audit": {
+    "max_tokens": 1607,
+    "context_limit": 4096
+  },
+  "reference_rows_sha256": "e353d17b87329541e191a14004e710ba57b292cad0a01a0ea860e80c1c0042e3",
+  "restricted_rows_sha256": "93a73e0c72d9156fd70c1be58255f3cd80099035057a3f25d444835592bb26d5",
+  "argmax_agreement": 1.0,
+  "max_probability_delta": 0.003649061148147552,
+  "mean_total_variation": 2.6252238475882043e-06,
+  "passed": true,
+  "promotion": "Not promoted; valid improved target-laptop latency remains separately required",
+  "finished_utc": "2026-09-27T02:30:12.829948+00:00",
+  "elapsed_seconds": 258.01765019999584,
+  "thermal_governor": {
+    "checks": 174,
+    "pauses": 68,
+    "paused_s": 83.36218300003384,
+    "max_c": 88
+  }
+}

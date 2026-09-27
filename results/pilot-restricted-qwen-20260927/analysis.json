@@ -1,0 +1,12 @@
+{
+  "argmax_agreement": 1.0,
+  "max_probability_delta": 0.003649061148147552,
+  "mean_total_variation": 2.6252238475882043e-06,
+  "decisions_validated": 1390,
+  "passed": true,
+  "validation_inputs_sha256": "616274d8175cd0fb28e39244938a413dea0eaa172ec5b63971dd741c3cd6f4ec",
+  "reference_rows_sha256": "e353d17b87329541e191a14004e710ba57b292cad0a01a0ea860e80c1c0042e3",
+  "candidate_rows_sha256": "93a73e0c72d9156fd70c1be58255f3cd80099035057a3f25d444835592bb26d5",
+  "executed_sources_verified": true,
+  "analyzed_utc": "2026-09-27T02:30:25.143271+00:00"
+}
