@@ -1,0 +1,5 @@
+{
+  "cpu_weights_match_evaluated_student": true,
+  "cpu_complete": true,
+  "gpu_gate": "pending; all three GPU attempts failed cooldown before timing"
+}

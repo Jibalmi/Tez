@@ -1,0 +1,17 @@
+{
+ "states": 278,
+ "decisions": 1390,
+ "weights_sha256": {
+  "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+ },
+ "scope": "teacher-validation split only",
+ "argmax_agreement": 0.99568345323741,
+ "max_probability_delta": 0.04955593878530817,
+ "mean_total_variation": 0.006599387688689183,
+ "thresholds": {
+  "argmax_agreement_min": 0.99,
+  "max_probability_delta_max": 0.04,
+  "mean_total_variation_max": 0.005
+ },
+ "passed": false
+}

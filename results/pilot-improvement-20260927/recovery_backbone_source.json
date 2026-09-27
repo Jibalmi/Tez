@@ -1,0 +1,7 @@
+{
+ "model": "jhu-clsp/mmBERT-base",
+ "revision": "c5955035435e2bf121cde7f3c8863ef52ff35d82",
+ "weights": {
+  "pytorch_model.bin": "8ea64ec1ea4eb8fca0fc14b69a2ae571de6bfbc25fd214bb932dd4aba6a3a04e"
+ }
+}

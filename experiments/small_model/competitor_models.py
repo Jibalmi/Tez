@@ -16,6 +16,7 @@ REVISIONS = {
     "knowledgator/gliclass-instruct-edge-v1.0": "727be8a417f6a7718e591b025e07054c146d8139",
     "Qwen/Qwen3.5-0.8B": "2fc06364715b967f1860aea9cf38778875588b17",
     "jaredpalmer/kev-0.8b": "9a45d25eb2ab761841196625383fa1dff0e56c1e",
+    "Mapika/decider-0.8b": "a0a01d6f8135298f400a8c856b355793012ae971",
 }
 
 
@@ -90,14 +91,70 @@ class PredictKev:
         return result
 
 
+def decider_probabilities(case, answer):
+    if case["qtype"] == "noul":
+        values = {"true": answer["noul"], "false": 1 - answer["noul"]}
+        probabilities = [values[k] for k, _ in case["options"]]
+    elif case["qtype"] == "score":
+        probabilities = [answer["probabilities"][str(i)] for i in range(len(case["options"]))]
+    else:
+        probabilities = [answer["probabilities"][k] for k, _ in case["options"]]
+    probabilities = np.asarray(probabilities, dtype=float)
+    if not np.all(np.isfinite(probabilities)) or np.any(probabilities < 0) or probabilities.sum() <= 0:
+        raise ValueError("Invalid native Decider probability distribution")
+    # The public API rounds to four decimals; preserve its distribution apart from normalising this rounding.
+    return probabilities / probabilities.sum()
+
+
+class PredictDecider:
+    def __init__(self, device="cuda"):
+        from huggingface_hub import snapshot_download
+        sys.path.insert(0, str(ROOT / "runs/research/decider"))
+        from decider.infer import Decider
+        name = "Mapika/decider-0.8b"
+        path = Path(snapshot_download(name, revision=model_revision(name),
+                                     allow_patterns=["*.json", "*.safetensors", "*.jinja"]))
+        self.pred = Decider(str(path), device=device, dtype=torch.bfloat16, temperature=1.0, use_graphs=False)
+        self.device = device
+        self.weights = {p.name: file_sha256(p) for p in path.glob("*.safetensors")}
+        self.info = {"temperatures": {}, "model": name, "revision": model_revision(name),
+                     "code_commit": (ROOT / "runs/research/decider-commit.txt").read_text().strip(),
+                     "dtype": "bf16", "use_graphs": False, "temperature": 1.0,
+                     "isolated_levels": self.pred.isolated_levels, "layout": self.pred.layout,
+                     "readout": "Native public system_one; four-decimal probabilities normalised after rounding",
+                     "calibration_note": "T=1 only; applying temperature after isolated-level aggregation is not native calibration"}
+
+    @torch.no_grad()
+    def groups(self, groups):
+        result = []
+        for group in groups:
+            thermal_guard()
+            record, _ = kev_request(group)
+            questions = {k: {field: value for field, value in question.items() if field not in ("src", "label")}
+                         for k, question in record["questions"].items()}
+            prediction = self.pred.system_one(record["state"], questions, independent=True, max_state_tokens=8192)
+            result.append([np.log(np.maximum(decider_probabilities(case, prediction["answers"][str(i)]), 1e-30))
+                           for i, case in enumerate(group)])
+        return result
+
+
 def predictor(arm, device="cuda"):
     from eval_arms import PredictA, PredictC, PredictGLiClass
     if arm == "qwen08-frozen":
         return PredictFrozenQwen(device)
     if arm == "kev08-native":
         return PredictKev(device)
+    if arm == "decider08-native":
+        return PredictDecider(device)
     if arm == "c-qwen08-merged":
         return PredictC("c-qwen08-30k", device, merge=True)
+    if arm == "c-qwen08-cacheoff":
+        return PredictC("c-qwen08-30k", device, disable_cache=True)
+    if arm == "c-qwen08-batch64":
+        pred = PredictC("c-qwen08-30k", device)
+        pred.batch_size = 64
+        pred.info = {**pred.info, "inference_batch_size": 64}
+        return pred
     if arm.startswith("c-"):
         return PredictC(arm, device)
     if arm.startswith("gliclass"):

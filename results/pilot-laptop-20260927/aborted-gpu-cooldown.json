@@ -1,0 +1,10 @@
+{
+  "time": "2026-09-27T02:33:01.409340+02:00",
+  "reason": "GPU 78C above 65C cooldown target; Windows dedicated memory inspection found desktop process >300MB. Restarting with bounded cooling and CPU first.",
+  "owned_worker_pids": [
+    27676,
+    19080,
+    27896,
+    6272
+  ]
+}

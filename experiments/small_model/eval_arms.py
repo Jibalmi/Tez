@@ -115,7 +115,7 @@ class PredictA:
 
 
 class PredictC:
-    def __init__(self, arm: str, device: str = "cuda", merge: bool = False):
+    def __init__(self, arm: str, device: str = "cuda", merge: bool = False, disable_cache: bool = False):
         from peft import PeftModel
         from train_c import load_base
         d = RUNS / "models" / arm
@@ -126,14 +126,17 @@ class PredictC:
         self.model = PeftModel.from_pretrained(base, d / "adapter").to(device).eval()
         if merge:
             self.model = self.model.merge_and_unload(safe_merge=True).eval()
+        if merge or disable_cache:
             self.model.config.use_cache = False
-        self.info = {**self.info, "lora_merged": merge, "cache_disabled": merge}
+        self.info = {**self.info, "lora_merged": merge, "cache_disabled": merge or disable_cache}
+        self.batch_size = 16
         self.device = device
         self.weights = {"adapter": file_sha256(d / "adapter" / "adapter_model.safetensors")}
 
     @torch.no_grad()
-    def groups(self, groups: list[list[dict]], batch: int = 16) -> list[list[np.ndarray]]:
+    def groups(self, groups: list[list[dict]], batch: int | None = None) -> list[list[np.ndarray]]:
         from train_c import letter_logp, prompt_for
+        batch = batch if batch is not None else getattr(self, "batch_size", 16)
         flat = [(gi, c) for gi, g in enumerate(groups) for c in g]
         prompts = [prompt_for(c["qtype"], c["instructions"], list(c["options"]), c["state"]) for _, c in flat]
         order = sorted(range(len(flat)), key=lambda i: len(prompts[i]))
@@ -310,12 +313,15 @@ def main() -> None:
     args = ap.parse_args()
     t0 = time.time()
     from competitor_models import predictor
+    from eval_arms import PredictA as EncoderPredictor
     pred = predictor(args.arm)
     temps = pred.info.get("temperatures", {})
     S = suites()
     if args.tasks != "all":
         S = {k: v for k, v in S.items() if k in args.tasks.split(",")}
     out = {"arm": args.arm, "weights_sha256": pred.weights, "temperatures": temps, "model_info": pred.info, "tasks": {}}
+    progress_path = RESULTS / f"progress_eval_{args.arm}.json"
+    dump(progress_path, {**out, "status": "running", "expected_tasks": list(S)})
     for task, cases in S.items():
         t1 = time.time()
         if task == "typed_decisions":
@@ -327,7 +333,7 @@ def main() -> None:
             flat_cases = [c for g in glist for c in g]
             flat_lp = [x for g in lp_packed for x in g]
             res, recs = score_task(task, flat_cases, flat_lp, temps, args.arm)
-            if isinstance(pred, PredictA):
+            if isinstance(pred, EncoderPredictor):
                 single = pred.groups([[c] for c in flat_cases])
                 res1, _ = score_task(task, flat_cases, [g[0] for g in single], temps, args.arm)
                 res["one_question_per_row"] = {"t1": res1["t1"], "retention_vs_12b": res1.get("retention_vs_12b")}
@@ -354,11 +360,13 @@ def main() -> None:
         out["tasks"][task] = res
         rows_dir = RESULTS / "rows" if os.environ.get("TEZ_PILOT_RESULTS") else ROOT / "results" / "h2h"
         write_jsonl(rows_dir / f"rows_{task}_tez-s-{args.arm}.jsonl", recs)
+        dump(progress_path, {**out, "status": "running", "expected_tasks": list(S)})
         print(f"{task:28s} acc {res['t1']['accuracy']:.4f} ece(t1) {res['t1']['ece']:.3f} ece(cal) {res['cal']['ece']:.3f}"
               f" retention {res.get('retention_vs_12b')} ({res['seconds']} s)", flush=True)
     out["seconds"] = round(time.time() - t0, 1)
     out["thermal"] = dict(THERMAL)
     dump(RESULTS / f"eval_{args.arm}.json", out)
+    dump(progress_path, {**out, "status": "complete", "expected_tasks": list(S)})
 
 
 if __name__ == "__main__":

@@ -46,7 +46,7 @@ The student Pod was allocated for **40.20 minutes**, at a verified GPU quote of 
 
 ## H200 inference timings
 
-These measurements use the published fresh-state/1, 5, 10, and 50-question protocol, with five warmups, 40 timed calls at 1/5/10 questions, and 15 at 50. They ran after training and evaluation, with GPU telemetry recorded. The shared laptop compute queue was occupied; laptop GPU and CPU latency remain unmeasured for these weights.
+These measurements use the published fresh-state/1, 5, 10, and 50-question protocol, with five warmups, 40 timed calls at 1/5/10 questions, and 15 at 50. They ran after training and evaluation, with GPU telemetry recorded. The [laptop follow-up](../pilot-laptop-20260927/README.md) subsequently measured the small encoder on four CPU threads: 136.80 ms for one question and 1644.39 ms for a 50-question request. All three laptop GPU attempts failed the cooling requirement before timing, so the GPU gate remains pending. H200 results are supplementary.
 
 | Arm | 1 question p50 | 50 questions p50 | ms/question at 50 | Contaminated | Throttled |
 |---|---:|---:|---:|---|---|

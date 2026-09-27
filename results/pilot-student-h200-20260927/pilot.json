@@ -648,5 +648,49 @@
    "missing_measurements": []
   }
  },
- "latency": {}
+ "latency": {
+  "a-small-30k_cpu4t": {
+   "device": "cpu",
+   "threads": 4,
+   "sizes": {
+    "1": {
+     "n_questions": 1,
+     "reps": 40,
+     "p50_ms": 136.8,
+     "p95_ms": 166.6,
+     "mean_ms": 134.58,
+     "ms_per_question": 136.796
+    },
+    "5": {
+     "n_questions": 5,
+     "reps": 40,
+     "p50_ms": 251.23,
+     "p95_ms": 268.93,
+     "mean_ms": 242.6,
+     "ms_per_question": 50.246
+    },
+    "10": {
+     "n_questions": 10,
+     "reps": 40,
+     "p50_ms": 400.92,
+     "p95_ms": 414.43,
+     "mean_ms": 380.79,
+     "ms_per_question": 40.092
+    },
+    "50": {
+     "n_questions": 50,
+     "reps": 15,
+     "p50_ms": 1644.39,
+     "p95_ms": 1795.94,
+     "mean_ms": 1657.61,
+     "ms_per_question": 32.888
+    }
+   },
+   "load_s": 10.49,
+   "peak_vram_gb": null,
+   "contaminated": null,
+   "throttled": null,
+   "thermal": []
+  }
+ }
 }

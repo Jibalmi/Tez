@@ -1,0 +1,17 @@
+{
+ "started_utc": "2026-09-27T00:34:17.461088+00:00",
+ "status": "complete",
+ "stages": [
+  {
+   "name": "cacheoff_parity",
+   "returncode": 0,
+   "seconds": 38.22198829613626
+  },
+  {
+   "name": "latency_c-qwen08-cacheoff",
+   "returncode": 0,
+   "seconds": 34.96690829191357
+  }
+ ],
+ "finished_utc": "2026-09-27T00:47:50.879262+00:00"
+}

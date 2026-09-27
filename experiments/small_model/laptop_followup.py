@@ -20,15 +20,16 @@ def main():
               "weights_source": "runs/student-artifacts-h200-20260927/runs/student-data/models",
               "note": "Separate laptop measurements; do not substitute H200 latency into this record."}
     deadline = time.monotonic() + 18 * 60
-    stages = [(arm, "cuda") for arm in ("a-base-30k", "a-small-30k", "c-qwen08-30k")]
-    stages += [("a-small-30k", "cpu")]
+    stages = [("a-small-30k", "cpu")]
+    stages += [(arm, "cuda") for arm in ("a-base-30k", "a-small-30k", "c-qwen08-30k")]
     for arm, device in stages:
         left = deadline - time.monotonic()
         if left < 60:
             record["status"] = "time_limit"
             break
         cmd = [sys.executable, str(root / "experiments/small_model/latency.py"), "--arm", arm,
-               "--device", device, "--threads", "4", "--warmup", "5", "--reps", "40", "--reps50", "15"]
+               "--device", device, "--threads", "4", "--warmup", "5", "--reps", "40", "--reps50", "15",
+               "--cooldown-seconds", "90"]
         started = time.monotonic()
         with (results / f"{arm}_{device}.log").open("w", encoding="utf-8") as log:
             process = subprocess.Popen(cmd, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT)

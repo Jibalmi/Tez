@@ -1,0 +1,14 @@
+{
+  "arm": "decider08-native",
+  "model": "Mapika/decider-0.8b",
+  "revision": "a0a01d6f8135298f400a8c856b355793012ae971",
+  "code_repository": "https://github.com/Mapika/decider",
+  "code_commit": "a5120cce45b9ff70964fac54ea6e8c1ac5b08c7f",
+  "reason": "Complete direct same-size competitor coverage requested by the user",
+  "protocol": "Native system_one, independent questions, released isolated-score setting, bf16, temperature 1, eager execution",
+  "readout": "Public API probabilities rounded to four decimals, then renormalised; no pilot fitting",
+  "calibration": "No secondary calibration; temperature must act before isolated-score aggregation",
+  "data": "Original frozen 6151 decisions; upstream benchmark overlap unknown",
+  "latency": "Native eager path for Kev and Decider, same hardware/protocol; not a claim about their optimized servers",
+  "budget": "Only within existing Pod deadline after registered recovery/cache tasks; partial work is labelled incomplete"
+}

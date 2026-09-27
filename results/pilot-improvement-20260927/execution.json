@@ -1,0 +1,63 @@
+{
+ "started_utc": "2026-09-27T00:24:05.706160+00:00",
+ "status": "partial_failure",
+ "stages": [
+  {
+   "name": "eval_qwen08-frozen",
+   "returncode": 0,
+   "seconds": 151.111427212134
+  },
+  {
+   "name": "eval_gliclass-multilang-mini",
+   "returncode": 0,
+   "seconds": 43.938516434282064
+  },
+  {
+   "name": "merge_parity",
+   "returncode": 2,
+   "seconds": 44.78803073242307
+  },
+  {
+   "name": "train_a-base-12ep",
+   "returncode": 1,
+   "seconds": 16.8442745488137
+  },
+  {
+   "name": "eval_gliclass-instruct-base-v1.0",
+   "returncode": 0,
+   "seconds": 60.56512732990086
+  },
+  {
+   "name": "eval_gliclass-instruct-edge-v1.0",
+   "returncode": 0,
+   "seconds": 36.47709268191829
+  },
+  {
+   "name": "eval_kev08-native",
+   "returncode": 0,
+   "seconds": 234.84914721827954
+  },
+  {
+   "name": "latency_c-qwen08-30k",
+   "returncode": 0,
+   "seconds": 33.96795652015135
+  },
+  {
+   "name": "latency_c-qwen08-merged",
+   "returncode": 0,
+   "seconds": 28.60945315286517
+  },
+  {
+   "name": "latency_gliclass-multilang-mini",
+   "returncode": 0,
+   "seconds": 19.596195850055665
+  },
+  {
+   "name": "latency_gliclass-instruct-edge-v1.0",
+   "returncode": 0,
+   "seconds": 18.896004479844123
+  }
+ ],
+ "spec_sha256": "7f6bf728fb7fd2d5c3d4a7cddc165d9514ffa26778f74471f1b1cc285a84a581",
+ "finished_utc": "2026-09-27T00:35:37.208602+00:00"
+}

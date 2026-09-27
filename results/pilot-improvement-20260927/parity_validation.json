@@ -1,0 +1,12 @@
+{
+  "cacheoff": {
+    "decisions": 1390,
+    "metrics_recomputed_from_saved_distributions": true,
+    "passed": true
+  },
+  "batch64": {
+    "decisions": 1390,
+    "metrics_recomputed_from_saved_distributions": true,
+    "passed": false
+  }
+}

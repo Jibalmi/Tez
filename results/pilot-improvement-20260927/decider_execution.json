@@ -1,0 +1,24 @@
+{
+ "started_utc": "2026-09-27T00:36:35.605156+00:00",
+ "status": "complete",
+ "stages": [
+  {
+   "name": "eval_decider08-native",
+   "returncode": 0,
+   "seconds": 219.5853372598067
+  },
+  {
+   "name": "latency_kev08-native",
+   "returncode": 0,
+   "seconds": 31.56215630704537
+  },
+  {
+   "name": "latency_decider08-native",
+   "returncode": 0,
+   "seconds": 28.010728714987636
+  }
+ ],
+ "registration_sha256": "2c1dfcc8b2ac4443ce4454ec79d3fb1d89d7042695ec2cbba5299fd6f3706c3e",
+ "stop_deadline_unix": 1790470564.6581569,
+ "finished_utc": "2026-09-27T00:52:32.960127+00:00"
+}

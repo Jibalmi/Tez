@@ -1,0 +1,22 @@
+{
+  "files": {
+    "results/pilot-laptop-20260927/a-base-30k_cuda-aborted-cooldown.log": "6314456c3ac05d9827c831c742ca3301e05356ededadfbe0e0a15e73ad6677f6",
+    "results/pilot-laptop-20260927/a-base-30k_cuda.log": "e10bc0191a4815c0ec0a34c00fc15c2ac89f465704598463f205e5b2bd8dd054",
+    "results/pilot-laptop-20260927/a-small-30k_cpu.log": "3a5aec1cb4e9fc8484ae2a55c19b5ad812be2e7831d73436dacf439efe703b00",
+    "results/pilot-laptop-20260927/a-small-30k_cuda.log": "1093eca6247dc2d3eb122fd28b32dd466ac9d0a27bbb8b9658f90c9a1e3aebf5",
+    "results/pilot-laptop-20260927/aborted-gpu-cooldown.json": "8fae51509077fa07e3578d993d3ecf50a470b0a6c5a9146cea760cdf2d90097c",
+    "results/pilot-laptop-20260927/c-qwen08-30k_cuda.log": "3c26ec019ebf87e6efa21a2f5a5d5e875535e6bb042e33f00ed0097b19e9777b",
+    "results/pilot-laptop-20260927/cpu.json": "71fe1fdaeba0dec9d3c15aa8db5d524bdad8dd403de2759772a0ce9a44245361",
+    "results/pilot-laptop-20260927/execution.json": "23c1b6de661b28a72f9056d42f3839c93537a3e2769bb6e0e2112589df5ec021",
+    "results/pilot-laptop-20260927/latency.json": "ce1f7e9f9b2c6e568ea002a2ee8dbd69d65ac44feee808baf0777a7fd7b71399",
+    "results/pilot-laptop-20260927/README.md": "1af4158a08c25112031fece75f93c1bfbdd296db37e8aa5527f86dc5dded0b00",
+    "results/pilot-laptop-20260927/validation.json": "1d7ffb539fdb51fbd41e0f4d3014bd51785fee41e64fc9b0e0b12e9f1c4c0eef",
+    "runs/pilot/laptop-followup-20260927-attempt2.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runs/pilot/laptop-followup-20260927-attempt2.log": "60937d0faf570d0800f09ae936c5ae2e1ab83f3674888e47ff76eb72c32f79b3",
+    "runs/pilot/laptop-followup-20260927-attempt3.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runs/pilot/laptop-followup-20260927-attempt3.log": "2f8e273fe3932e016e51af5cc91704693ea1f52702b4c5a68b0771cf49a60540",
+    "runs/pilot/laptop-followup-20260927.err.log": "23e8d569487e6150827a1499ac9aa180bfa04767c76a67ddcdb36d08a0ce5362",
+    "runs/pilot/laptop-followup-20260927.log": "372edc027918676eb8c3eacabc8e9da06cba7373aaa36b4eb416b9b603fbb13e"
+  },
+  "note": "Timing records and failure logs. Current reproduction code is in experiments/small_model; no model weights included."
+}

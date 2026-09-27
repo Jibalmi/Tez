@@ -33,3 +33,4 @@ Accuracy as read (T = 1). 12B and Laya: recorded reference rows summarized in ba
 
 | arm | device | 1 q | 5 q | 10 q | 50 q | ms/q at 50 | timing validity |
 |---|---|---:|---:|---:|---:|---:|---|
+| a-small-30k | cpu 4 threads | 136.8 | 251.2 | 400.9 | 1644.4 | 32.89 | n/a (CPU) |

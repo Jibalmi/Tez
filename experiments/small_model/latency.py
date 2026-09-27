@@ -71,6 +71,8 @@ def cool_down(limit_c: int = 65, max_wait_s: int = 900) -> dict:
         time.sleep(10)
         th = thermal()
     th["waited_s"] = round(time.time() - t0)
+    if "error" in th or th.get("temp_c", limit_c + 1) > limit_c:
+        raise RuntimeError(f"GPU did not meet the {limit_c} C cooldown requirement: {th}")
     return th
 
 
@@ -79,6 +81,21 @@ def stats(ts, n):
     p50 = float(np.percentile(ts, 50))
     return {"n_questions": n, "reps": len(ts), "p50_ms": round(p50, 2), "p95_ms": round(float(np.percentile(ts, 95)), 2),
             "mean_ms": round(float(ts.mean()), 2), "ms_per_question": round(p50 / n, 3)}
+
+
+def contamination(reading, own_pid):
+    if not isinstance(reading, dict) or "processes" not in reading:
+        return None
+    return any(p["pid"] != own_pid and p["mb"] > 300 and p["kind"].lower().startswith("dedicated")
+               for p in reading["processes"])
+
+
+def throttling(samples):
+    if any(t.get("temp_c", 0) > 70 or t.get("sw_thermal") or t.get("hw_thermal") for t in samples):
+        return True
+    if not samples or any(not {"temp_c", "sw_thermal", "hw_thermal"}.issubset(t) for t in samples):
+        return None
+    return False
 
 
 def main() -> None:
@@ -90,6 +107,7 @@ def main() -> None:
     ap.add_argument("--warmup", type=int, default=10)
     ap.add_argument("--reps", type=int, default=100)
     ap.add_argument("--reps50", type=int, default=30)
+    ap.add_argument("--cooldown-seconds", type=int, default=900)
     args = ap.parse_args()
     import vs_laya_speed as V
     from tez.schema import parse_question
@@ -131,10 +149,10 @@ def main() -> None:
         torch.cuda.reset_peak_memory_stats()
     sizes, counter, thermals = {}, 0, []
     if dev == "cuda":
-        thermals.append({"at": "start", **cool_down()})
+        thermals.append({"at": "start", **cool_down(max_wait_s=args.cooldown_seconds)})
     for n in NS:
         if dev == "cuda" and n != NS[0]:
-            thermals.append({"at": f"before n={n}", **cool_down()})
+            thermals.append({"at": f"before n={n}", **cool_down(max_wait_s=args.cooldown_seconds)})
         reps = args.reps50 if n == 50 else args.reps
         for _ in range(args.warmup):
             counter += 1
@@ -152,13 +170,12 @@ def main() -> None:
         print(f"{args.arm} {dev} n={n}: p50 {sizes[str(n)]['p50_ms']} ms, {sizes[str(n)]['ms_per_question']} ms/q", flush=True)
     after = snapshot() if dev == "cuda" else None
     contaminated = None
-    if dev == "cuda" and isinstance(after, dict) and "processes" in after:
+    if dev == "cuda":
         import os
-        others = [p for p in after["processes"] if p["pid"] != os.getpid() and p["mb"] > 300 and p["kind"].startswith("Dedicated")]
-        contaminated = bool(others)
+        contaminated = contamination(after, os.getpid())
     throttled = None
     if dev == "cuda":
-        throttled = any(t.get("temp_c", 0) > 70 or t.get("sw_thermal") or t.get("hw_thermal") for t in thermals)
+        throttled = throttling(thermals)
     res = {"arm": args.arm, "device": dev, "weights_sha256": pred.weights, "model_info": pred.info,
            "gpu_name": torch.cuda.get_device_name(0) if dev == "cuda" else None,
            "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,

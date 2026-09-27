@@ -1,5 +1,10 @@
 # Codex Astra label throughput
 
+Continuation: the teacher and first student runs are documented in the
+[student pilot report](../pilot-student-h200-20260927/README.md). Current student quality comparisons
+with released alternatives are in the [matched comparison](../pilot-improvement-20260927/COMPARISON.md)
+and [research record](../pilot-improvement-20260927/RESEARCH.md).
+
 Started 2026-09-26T22:01:35.864221+00:00, with codex-cli 0.156.1, `gpt-6-astra`, low reasoning effort.
 32 saved states, 160 decisions, 8 states per request. Both worker counts received identical inputs.
 Independent Codex processes used the existing ChatGPT login. No GPU work was launched for Codex.
@@ -44,6 +49,6 @@ The sample balances sources, rather than matching training prevalence. It contai
 - Manifest and per-batch measurements: [codex_teacher_speed_20260927.json](codex_teacher_speed_20260927.json)
 - Ignored raw prompts, answers, events, and sample: `runs\pilot\codex_teacher_speed_20260927`
 - Harness: `experiments/small_model/teacher_speed.py`; offline validator tests: `test_teacher_speed.py`.
-- All generated labels remain separate from training shards. The existing GPU teacher continues.
+- All generated labels remain separate from training shards. The later teacher and student runs are linked above.
 
 Runner uses [Codex non-interactive structured output](https://learn.chatgpt.com/docs/non-interactive-mode).

@@ -1,0 +1,14 @@
+{
+ "arm": "a-base-12ep",
+ "decisions": 2000,
+ "weights_sha256": {
+  "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+  "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+ },
+ "before_sha256": "2eb4f6f9d37a0245bf250da3fbfb3c5109eb3630037eea1e957840ab0f3ac8b8",
+ "after_sha256": "a6a355c6fff0d8849923e5b6db9fa92d5abad2beb798c4b9c51e80036f7f061a",
+ "seconds": 4.062960747163743,
+ "reason": "Predictor factory imports eval_arms while its command runs as __main__; class identity skipped the diagnostic",
+ "primary_predictions_unchanged": true,
+ "packing_delta_points": 0.15
+}

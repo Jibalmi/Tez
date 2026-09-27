@@ -1,0 +1,11 @@
+{
+  "candidate": "c-qwen08-batch64",
+  "change": "Increase inference batch size from 16 to 64; original weights and cache setting remain",
+  "reason": "The 50-question protocol currently needs four forwards despite unused GPU memory",
+  "validation": "All 1390 original teacher-validation decisions, no test labels",
+  "argmax_agreement_min": 0.99,
+  "max_probability_delta_max": 0.04,
+  "mean_total_variation_max": 0.005,
+  "promotion": "Only if parity passes and throughput improves; laptop latency/VRAM require a separate measurement",
+  "budget": "Existing Pod deadline only, after the direct competitor comparison"
+}

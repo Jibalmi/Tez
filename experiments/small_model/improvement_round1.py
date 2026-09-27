@@ -22,7 +22,7 @@ def main():
     from huggingface_hub import snapshot_download
     enc = spec["encoder"]
     backbone = snapshot_download(enc["backbone"], revision=enc["revision"],
-                                 allow_patterns=["*.json", "*.safetensors", "*.model", "*.txt"])
+                                 allow_patterns=["*.json", "*.safetensors", "*.bin", "*.model", "*.txt"])
     stages = [("eval_qwen08-frozen", "eval_arms.py", ["--arm", "qwen08-frozen"], 300),
               ("eval_gliclass-multilang-mini", "eval_arms.py", ["--arm", "gliclass-multilang-mini"], 240),
               ("merge_parity", "merge_parity.py", [], 180),

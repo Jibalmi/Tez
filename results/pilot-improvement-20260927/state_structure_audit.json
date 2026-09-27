@@ -1,0 +1,310 @@
+{
+ "scope": "Descriptive distribution comparison; no inference, fitting, or evaluation labels used",
+ "teacher_manifest_sha256": "8e3f7cf23f7b14c80203eca42eab9bb7e7108f8c7aab67abd9d9b136f7cfb807",
+ "eval_suites_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+ "train": {
+  "states": 5998,
+  "container_depth": {
+   "1": 5998
+  },
+  "root_type": {
+   "dict": 5998
+  },
+  "top_level_dictionary_fields": {
+   "1": 5499,
+   "2": 499
+  },
+  "nested_container_states": 0
+ },
+ "validation": {
+  "states": 278,
+  "container_depth": {
+   "1": 278
+  },
+  "root_type": {
+   "dict": 278
+  },
+  "top_level_dictionary_fields": {
+   "1": 252,
+   "2": 26
+  },
+  "nested_container_states": 0
+ },
+ "evaluation": {
+  "typed_decisions": {
+   "states": 400,
+   "container_depth": {
+    "2": 100,
+    "3": 200,
+    "4": 100
+   },
+   "root_type": {
+    "dict": 400
+   },
+   "top_level_dictionary_fields": {
+    "4": 200,
+    "2": 50,
+    "3": 50,
+    "5": 100
+   },
+   "nested_container_states": 400
+  },
+  "app_model_routing_domain": {
+   "states": 399,
+   "container_depth": {
+    "1": 399
+   },
+   "root_type": {
+    "dict": 399
+   },
+   "top_level_dictionary_fields": {
+    "1": 399
+   },
+   "nested_container_states": 0
+  },
+  "app_guardrails_jailbreak": {
+   "states": 398,
+   "container_depth": {
+    "1": 398
+   },
+   "root_type": {
+    "dict": 398
+   },
+   "top_level_dictionary_fields": {
+    "1": 398
+   },
+   "nested_container_states": 0
+  },
+  "app_moderation_toxicity": {
+   "states": 400,
+   "container_depth": {
+    "1": 400
+   },
+   "root_type": {
+    "dict": 400
+   },
+   "top_level_dictionary_fields": {
+    "1": 400
+   },
+   "nested_container_states": 0
+  },
+  "app_email_spam": {
+   "states": 399,
+   "container_depth": {
+    "1": 399
+   },
+   "root_type": {
+    "dict": 399
+   },
+   "top_level_dictionary_fields": {
+    "2": 399
+   },
+   "nested_container_states": 0
+  },
+  "app_phishing": {
+   "states": 388,
+   "container_depth": {
+    "1": 388
+   },
+   "root_type": {
+    "dict": 388
+   },
+   "top_level_dictionary_fields": {
+    "1": 388
+   },
+   "nested_container_states": 0
+  },
+  "app_rag_relevance": {
+   "states": 400,
+   "container_depth": {
+    "1": 400
+   },
+   "root_type": {
+    "dict": 400
+   },
+   "top_level_dictionary_fields": {
+    "2": 400
+   },
+   "nested_container_states": 0
+  },
+  "app_support_triage": {
+   "states": 400,
+   "container_depth": {
+    "1": 400
+   },
+   "root_type": {
+    "dict": 400
+   },
+   "top_level_dictionary_fields": {
+    "2": 400
+   },
+   "nested_container_states": 0
+  },
+  "massive_en": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_de": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_fr": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_es": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_ja": {
+   "states": 98,
+   "container_depth": {
+    "1": 98
+   },
+   "root_type": {
+    "dict": 98
+   },
+   "top_level_dictionary_fields": {
+    "1": 98
+   },
+   "nested_container_states": 0
+  },
+  "massive_zh-CN": {
+   "states": 99,
+   "container_depth": {
+    "1": 99
+   },
+   "root_type": {
+    "dict": 99
+   },
+   "top_level_dictionary_fields": {
+    "1": 99
+   },
+   "nested_container_states": 0
+  },
+  "massive_ar": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_hi": {
+   "states": 100,
+   "container_depth": {
+    "1": 100
+   },
+   "root_type": {
+    "dict": 100
+   },
+   "top_level_dictionary_fields": {
+    "1": 100
+   },
+   "nested_container_states": 0
+  },
+  "massive_th": {
+   "states": 98,
+   "container_depth": {
+    "1": 98
+   },
+   "root_type": {
+    "dict": 98
+   },
+   "top_level_dictionary_fields": {
+    "1": 98
+   },
+   "nested_container_states": 0
+  },
+  "massive_ko": {
+   "states": 97,
+   "container_depth": {
+    "1": 97
+   },
+   "root_type": {
+    "dict": 97
+   },
+   "top_level_dictionary_fields": {
+    "1": 97
+   },
+   "nested_container_states": 0
+  },
+  "massive_km": {
+   "states": 99,
+   "container_depth": {
+    "1": 99
+   },
+   "root_type": {
+    "dict": 99
+   },
+   "top_level_dictionary_fields": {
+    "1": 99
+   },
+   "nested_container_states": 0
+  },
+  "semif_authored144": {
+   "states": 108,
+   "container_depth": {
+    "0": 108
+   },
+   "root_type": {
+    "str": 108
+   },
+   "top_level_dictionary_fields": {},
+   "nested_container_states": 0
+  },
+  "semif_perturbations108": {
+   "states": 72,
+   "container_depth": {
+    "0": 72
+   },
+   "root_type": {
+    "str": 72
+   },
+   "top_level_dictionary_fields": {},
+   "nested_container_states": 0
+  }
+ },
+ "interpretation": "A shape mismatch is a transfer hypothesis; it does not establish the cause of accuracy differences"
+}

@@ -1,0 +1,25 @@
+{
+ "started_utc": "2026-09-27T00:35:41.211899+00:00",
+ "status": "complete",
+ "stages": [
+  {
+   "name": "train_a-base-12ep_retry",
+   "returncode": 0,
+   "seconds": 600.6101347878575
+  },
+  {
+   "name": "eval_a-base-12ep",
+   "returncode": 0,
+   "seconds": 30.61111948126927
+  },
+  {
+   "name": "latency_a-base-12ep",
+   "returncode": 0,
+   "seconds": 20.849308932665735
+  }
+ ],
+ "reason": "Original training failed before gradients: pinned model uses .bin, omitted from download filter",
+ "selection": "lowest teacher-validation KL across epochs; no test-based checkpoint selection",
+ "stop_deadline_unix": 1790470564.6581569,
+ "finished_utc": "2026-09-27T00:46:33.302212+00:00"
+}

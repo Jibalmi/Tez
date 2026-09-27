@@ -1,0 +1,51 @@
+{
+  "a-base-12ep": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": true,
+    "weight_note": "Exported trained encoder"
+  },
+  "decider08-native": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  },
+  "gliclass-instruct-base-v1.0": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  },
+  "gliclass-instruct-edge-v1.0": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  },
+  "gliclass-multilang-mini": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  },
+  "kev08-native": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  },
+  "qwen08-frozen": {
+    "decisions": 6151,
+    "tasks": 21,
+    "ids_gold_probabilities_accuracy_verified": true,
+    "downloaded_weights_match_evaluated_weights": null,
+    "weight_note": "Pinned released model; recorded hash and revision"
+  }
+}

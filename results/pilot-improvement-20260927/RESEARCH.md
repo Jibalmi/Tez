@@ -67,3 +67,50 @@ Published competitor claims remain separate from our own measurements, including
 Success means meeting the predeclared quality/speed gates and demonstrating useful performance
 against the best relevant measured alternatives, not merely improving over our first attempt.
 If a released competitor performs better, reusing it is a valid outcome of the research.
+
+## Follow-up execution notes
+
+The [matched comparison](COMPARISON.md) is generated from recorded metrics and raw prediction rows.
+It includes paired state-cluster bootstrap intervals: all five questions about a typed-decision state
+stay together when resampling. These exploratory intervals do not adjust for multiple comparisons.
+
+The initial encoder attempt failed before training because the pinned mmBERT revision contains
+`pytorch_model.bin`, which the download allowlist omitted. The recovery adds that file extension
+and retains the original seed, data, hyperparameters, and validation-only checkpoint selection.
+Its source-weight hash and execution are recorded separately; the failed attempt remains in the log.
+
+Merging the Qwen adapter into bf16 weights failed the registered probability check: argmax agreement
+was 99.568%, but maximum probability change was 0.04956 (limit 0.04) and mean total variation was
+0.006599 (limit 0.005). Its timing is diagnostic; this candidate is not promoted. The subsequent
+[cache-only registration](../../experiments/small_model/cacheoff_registration.json) keeps the unmerged
+weights and applies the same thresholds before any speed-based promotion.
+
+A [Decider addition](../../experiments/small_model/decider_registration.json) registers its pinned
+native public API, raw temperature, and original released score-level setting. This measurement
+and native eager timings for Kev/Decider are bounded by the existing Pod deadline. API probability
+rounding is recorded, and missing or timed-out evaluations are not treated as completed scores.
+These eager timings do not stand in for the competitors' optimized serving implementations.
+
+A final [batch-size registration](../../experiments/small_model/batch64_registration.json) tests
+64 decisions per Qwen forward instead of 16. The 50-question protocol otherwise requires four
+sequential forwards despite unused GPU memory. This keeps the original unmerged weights and cache
+setting, validates all teacher-validation probabilities, and remains within the same Pod deadline.
+Any speed benefit is specific to measured cloud throughput until laptop measurements establish it.
+
+Evaluation now writes progress metadata after each completed task. This preserves partial work
+without admitting it to the completed-evaluation table. Source snapshots and amendments accompany
+the exported measurements.
+
+Laptop timing revealed that Windows labels dedicated GPU memory with lowercase text; the earlier
+case-sensitive check could miss competing processes. The check now handles both Windows and Linux
+labels, and missing thermal telemetry cannot report a clean run. One warm GPU attempt was stopped
+before timing. CPU timing runs first on retry; GPU cooling is bounded, with the original temperature
+requirement preserved. The machine-wide compute lock remains mandatory.
+
+Two read-only audits refine the next training hypothesis. The [input-length audit](encoder_input_audit.json)
+found no held-out instruction, option, or state clipping under the encoder's actual evaluation limits.
+The [state-shape audit](state_structure_audit.json) found zero nested states among all 5,998 training
+examples, versus nested dictionaries/lists in all 400 typed-decision test states. This identifies
+a coverage gap worth testing with newly authored structured training states; it does not prove
+that nesting causes the accuracy gap. Increasing context length would not address a measured
+truncation issue in these suites, because none was found.

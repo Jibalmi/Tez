@@ -1,0 +1,156 @@
+{
+ "arm": "a-base-12ep",
+ "backbone": "/workspace/hf-cache/hub/models--jhu-clsp--mmBERT-base/snapshots/c5955035435e2bf121cde7f3c8863ef52ff35d82",
+ "data": "30k",
+ "params": 308120833,
+ "epochs_run": 12,
+ "steps": 3348,
+ "segments": 1,
+ "train_seconds": 572.6,
+ "train_tokens": 40871945,
+ "train_tok_per_s": 71376.2,
+ "train_tok_per_s_excluding_thermal_pauses": 71376.2,
+ "thermal_paused_s": 0.0,
+ "max_gpu_c": 49,
+ "lr": 3e-05,
+ "head_lr": 0.001,
+ "budget_tokens": 16384,
+ "max_len": 2048,
+ "log": [
+  {
+   "epoch": 0,
+   "step": 278,
+   "val_agreement": 0.7014,
+   "val_kl": 0.2372,
+   "seconds": 46.5
+  },
+  {
+   "epoch": 1,
+   "step": 557,
+   "val_agreement": 0.7381,
+   "val_kl": 0.1854,
+   "seconds": 94.6
+  },
+  {
+   "epoch": 2,
+   "step": 834,
+   "val_agreement": 0.7568,
+   "val_kl": 0.165,
+   "seconds": 143.4
+  },
+  {
+   "epoch": 3,
+   "step": 1111,
+   "val_agreement": 0.7669,
+   "val_kl": 0.1685,
+   "seconds": 190.7
+  },
+  {
+   "epoch": 4,
+   "step": 1387,
+   "val_agreement": 0.7799,
+   "val_kl": 0.1646,
+   "seconds": 234.7
+  },
+  {
+   "epoch": 5,
+   "step": 1666,
+   "val_agreement": 0.7791,
+   "val_kl": 0.1595,
+   "seconds": 281.3
+  },
+  {
+   "epoch": 6,
+   "step": 1947,
+   "val_agreement": 0.7791,
+   "val_kl": 0.1552,
+   "seconds": 328.2
+  },
+  {
+   "epoch": 7,
+   "step": 2228,
+   "val_agreement": 0.7777,
+   "val_kl": 0.1528,
+   "seconds": 375.4
+  },
+  {
+   "epoch": 8,
+   "step": 2508,
+   "val_agreement": 0.7906,
+   "val_kl": 0.1481,
+   "seconds": 429.2
+  },
+  {
+   "epoch": 9,
+   "step": 2789,
+   "val_agreement": 0.7899,
+   "val_kl": 0.1438,
+   "seconds": 477.2
+  },
+  {
+   "epoch": 10,
+   "step": 3066,
+   "val_agreement": 0.7957,
+   "val_kl": 0.1452,
+   "seconds": 525.3
+  },
+  {
+   "epoch": 11,
+   "step": 3348,
+   "val_agreement": 0.7928,
+   "val_kl": 0.1446,
+   "seconds": 572.6
+  }
+ ],
+ "score_loss_order": "canonical_levels",
+ "seed": 13,
+ "selected_by": "minimum validation KL",
+ "selected_epoch": 10,
+ "val_agreement_with_teacher": 0.7899,
+ "val_kl": 0.1438,
+ "temperatures": {
+  "noul": 0.5056,
+  "choice": 0.6289,
+  "score": 0.5639,
+  "choice_many": 1.6792
+ },
+ "train_summary": {
+  "states": 5998,
+  "decisions": 29990,
+  "sources": {
+   "fineweb": 3019,
+   "aya": 499,
+   "fineweb2": 2000,
+   "clinc": 145,
+   "gmmlu": 165,
+   "csqa": 170
+  },
+  "types": {
+   "choice": 11613,
+   "noul": 10428,
+   "score": 7949
+  },
+  "gold_decisions": 480,
+  "teacher_order_agreement": 0.9437812604201401
+ },
+ "val_summary": {
+  "states": 278,
+  "decisions": 1390,
+  "sources": {
+   "fineweb2": 100,
+   "fineweb": 131,
+   "aya": 26,
+   "csqa": 5,
+   "clinc": 6,
+   "gmmlu": 10
+  },
+  "types": {
+   "score": 373,
+   "noul": 491,
+   "choice": 526
+  },
+  "gold_decisions": 21,
+  "teacher_order_agreement": 0.9388489208633094
+ },
+ "peak_vram_gb": 15.16
+}

@@ -1,0 +1,15 @@
+{
+ "states": 278,
+ "decisions": 1390,
+ "weights_sha256": {
+  "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+ },
+ "registration_sha256": "1165fe33343a7bc978542710a0ea757d01f0b94fc752b1bb05b183da49f95a27",
+ "rows_sha256": "3eef2df22f6e1db583df458cd5708e67d9938690f18cbd8ecf94a9bdd907c34f",
+ "original_batch_size": 16,
+ "scope": "teacher-validation split only",
+ "argmax_agreement": 0.9942446043165467,
+ "max_probability_delta": 0.04098143863622067,
+ "mean_total_variation": 0.00500332692834941,
+ "passed": false
+}

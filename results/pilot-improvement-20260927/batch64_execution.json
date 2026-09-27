@@ -1,0 +1,12 @@
+{
+ "started_utc": "2026-09-27T00:51:36.148228+00:00",
+ "status": "parity_failed",
+ "stages": [
+  {
+   "name": "batch64_parity",
+   "returncode": 2,
+   "seconds": 88.49539784202352
+  }
+ ],
+ "finished_utc": "2026-09-27T00:54:04.691195+00:00"
+}

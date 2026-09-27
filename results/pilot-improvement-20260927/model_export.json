@@ -1,0 +1,15 @@
+{
+  "arm": "a-base-12ep",
+  "path": "/workspace/improvement-exports/a-base-12ep.tar.gz",
+  "bytes": 1152187370,
+  "sha256": "39fdb8f1bdeb01bec0f66b936964e400edfcf8912453d827b521e76708f5d5bf",
+  "files": {
+    "runs/student-data/models/a-base-12ep/encoder/config.json": "0cf300f2c1b3e3edb4cb2898b3a95520c4feb7c43d6f5440720e72826be5ffaa",
+    "runs/student-data/models/a-base-12ep/encoder/model.safetensors": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+    "runs/student-data/models/a-base-12ep/encoder/tokenizer.json": "609d8f4c067cd3950f88594c5a802616cea245823836ef5848ee4fc40aab5b6f",
+    "runs/student-data/models/a-base-12ep/encoder/tokenizer_config.json": "02055b886266b1a475bc324da83e273fe96e4974002f9d970f26e94aa73e5885",
+    "runs/student-data/models/a-base-12ep/head.pt": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad",
+    "runs/student-data/models/a-base-12ep/student.json": "9211e30a6eb0272ed5832c543395965a241062c38ea8c24fe7bdc492bf420d54"
+  },
+  "download_and_all_file_hashes_verified": true
+}

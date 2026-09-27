@@ -1,0 +1,11 @@
+{
+  "candidate": "c-qwen08-cacheoff",
+  "change": "Disable unused inference cache while retaining the original unmerged LoRA weights",
+  "reason": "Merged bf16 weights failed the original probability parity thresholds",
+  "validation": "All 1390 original teacher-validation decisions, no test labels",
+  "argmax_agreement_min": 0.99,
+  "max_probability_delta_max": 0.04,
+  "mean_total_variation_max": 0.005,
+  "promotion": "Only if all parity thresholds pass and measured latency improves",
+  "budget": "Existing Pod and stop deadline only; no added spending authorization"
+}

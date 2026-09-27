@@ -1,0 +1,15 @@
+{
+ "states": 278,
+ "decisions": 1390,
+ "weights_sha256": {
+  "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+ },
+ "registration_sha256": "26cb42083c022455b79ca4bdf428764b2d0395f30cc243ffed660abad2d15e8a",
+ "rows_sha256": "27951a9386d9d8fdd88e4dfafe151b1c817e76a7b3f5d94349715d385929fd7a",
+ "original_cache_setting": true,
+ "scope": "teacher-validation split only",
+ "argmax_agreement": 1.0,
+ "max_probability_delta": 0.0,
+ "mean_total_variation": 0.0,
+ "passed": true
+}

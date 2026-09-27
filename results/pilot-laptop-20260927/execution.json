@@ -1,0 +1,33 @@
+{
+  "started_utc": "2026-09-27T00:39:46.758993+00:00",
+  "status": "partial_failure",
+  "stages": [
+    {
+      "arm": "a-small-30k",
+      "device": "cpu",
+      "returncode": 0,
+      "seconds": 83.06060549999529
+    },
+    {
+      "arm": "a-base-30k",
+      "device": "cuda",
+      "returncode": 1,
+      "seconds": 110.17379499999515
+    },
+    {
+      "arm": "a-small-30k",
+      "device": "cuda",
+      "returncode": 1,
+      "seconds": 107.0108673000068
+    },
+    {
+      "arm": "c-qwen08-30k",
+      "device": "cuda",
+      "returncode": 1,
+      "seconds": 108.42966989999695
+    }
+  ],
+  "weights_source": "runs/student-artifacts-h200-20260927/runs/student-data/models",
+  "note": "Separate laptop measurements; do not substitute H200 latency into this record.",
+  "finished_utc": "2026-09-27T00:46:35.436338+00:00"
+}
