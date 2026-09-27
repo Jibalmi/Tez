@@ -126,6 +126,9 @@ def main():
               "The G1 typed target remains 56.3%, soft accuracy 46%, and MASSIVE 70%. Passing these alone would not pass G1.",
               "No valid target-laptop latency is claimed. The unchanged thermal governor was used for quality work.",
               "No model is promoted to the runtime by this report. Fresh confirmation cannot replace the original gates.",
+              "The inherited public scorer also computes two-fold evaluation-label temperature diagnostics (`ece_refit`, `nll_refit`).",
+              "Those values are excluded from comparisons and selection; all primary predictions remain T=1.",
+              "This qualifies the driver's overly broad 'no calibration fitting' scope text: no fit changes the measured primary model.",
               "", "One seed, 150 optimizer steps per arm; no convergence claim. The intervention changes content and exact-label supervision together.",
               "The replay model selected step zero. Its saved head archive has a different file hash; prediction parity is measured in summary.json.",
               "All cloud Pods remain terminated; this round used the laptop and added no RunPod charge.", ""]

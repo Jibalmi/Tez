@@ -1,0 +1,61 @@
+{
+  "status": "complete",
+  "arm": "a-base-rules150",
+  "started_utc": "2026-09-27T02:01:12.292564+00:00",
+  "confirmation_sha256": "ba22078cd8101275ae65acd6517a23eea87abe20969b0959299fdeb8ca1e272c",
+  "source_sha256": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+  "rows": 1800,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "triton": null,
+    "fla-core": null,
+    "causal-conv1d": null,
+    "tilelang": null
+  },
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "source_files": {
+    "eval_reasoning_confirmation.py": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5"
+  },
+  "weights": {
+    "encoder": "b657d8bb8d81b71ffee2256a776286d057582f5f9b3778469fe37dfe1661302a",
+    "head": "6b3074cc07529d0087f3adca94a1a3fcb06fbb2b8c71930a796169b4fcd11fb5"
+  },
+  "model_info": {
+    "arm": "a-base-rules150",
+    "backbone": "runs/improvement-artifacts-h200-20260927/runs/student-data/models/a-base-12ep",
+    "steps": 150,
+    "selected_step": 150,
+    "temperatures": {},
+    "seed": 13,
+    "selection": "Include the unchanged step-zero model. Among checkpoints with original validation KL <= baseline + 0.02 and original teacher agreement >= baseline - 0.01, select the smallest weighted validation KL. New-data weight is 5400 / (29990 + 5400); the rest is original validation. No public, diagnostic or confirmation labels select a checkpoint.",
+    "supervision": "Original training split plus all 1800 filtered authored states, 5400 decisions. Hard exact targets are not fabricated teacher outputs.",
+    "base_weights": {
+      "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+      "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+    },
+    "training_specification_sha256": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313"
+  },
+  "token_audit": {
+    "max_tokens": 318,
+    "context_limit": 8192,
+    "clipped_question_parts": 0
+  },
+  "rows_sha256": "c868ac9d2d0e6137c784f6ca8124e05d20f64827b535ce8c36014b5173facf23",
+  "finished_utc": "2026-09-27T02:01:31.408648+00:00",
+  "elapsed_seconds": 19.052895599990734,
+  "thermal_governor": {
+    "checks": 46,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 84
+  }
+}

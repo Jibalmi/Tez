@@ -1,0 +1,6 @@
+{
+  "field_corrected": "evaluation_execution.json scope: No calibration fitting",
+  "correction": "No calibration fitting changes the primary T=1 predictions, reported competitor comparisons, or checkpoint selection. The inherited bench_h2h.summarise helper nevertheless computes two-fold OOF temperature diagnostic fields ece_refit and nll_refit on public evaluation labels. Those fields are excluded from all primary comparisons and are not held-out calibration results.",
+  "evidence": "executed_source/evaluation_driver/bench_h2h.py summarise and eval_arms.py score_task",
+  "impact": "No change to saved probability vectors, selected checkpoints, raw ECE, or accuracy. Preserve executed sources and original receipt; correct interpretation in report."
+}

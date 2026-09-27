@@ -1,0 +1,102 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:00:19.202409+00:00",
+  "stages": [
+    {
+      "phase": "confirmation",
+      "arm": "a-base-12ep",
+      "started_utc": "2026-09-27T02:00:20.305775+00:00",
+      "weights": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+      },
+      "timeout_seconds": 390,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:00:44.690000+00:00"
+    },
+    {
+      "phase": "confirmation",
+      "arm": "a-base-replay150",
+      "started_utc": "2026-09-27T02:00:45.707182+00:00",
+      "weights": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "66942edf47256f1be4e8c4d99a7c2f210515177ffddba25544beaf00bbc0530d"
+      },
+      "timeout_seconds": 390,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:01:08.560732+00:00"
+    },
+    {
+      "phase": "confirmation",
+      "arm": "a-base-rules150",
+      "started_utc": "2026-09-27T02:01:09.499295+00:00",
+      "weights": {
+        "encoder": "b657d8bb8d81b71ffee2256a776286d057582f5f9b3778469fe37dfe1661302a",
+        "head": "6b3074cc07529d0087f3adca94a1a3fcb06fbb2b8c71930a796169b4fcd11fb5"
+      },
+      "timeout_seconds": 390,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:01:32.767650+00:00"
+    },
+    {
+      "phase": "public",
+      "arm": "a-base-12ep",
+      "started_utc": "2026-09-27T02:01:33.620583+00:00",
+      "weights": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+      },
+      "timeout_seconds": 360,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:02:47.929450+00:00"
+    },
+    {
+      "phase": "public",
+      "arm": "a-base-replay150",
+      "started_utc": "2026-09-27T02:02:48.987315+00:00",
+      "weights": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "66942edf47256f1be4e8c4d99a7c2f210515177ffddba25544beaf00bbc0530d"
+      },
+      "timeout_seconds": 360,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:04:27.896730+00:00"
+    },
+    {
+      "phase": "public",
+      "arm": "a-base-rules150",
+      "started_utc": "2026-09-27T02:04:29.026032+00:00",
+      "weights": {
+        "encoder": "b657d8bb8d81b71ffee2256a776286d057582f5f9b3778469fe37dfe1661302a",
+        "head": "6b3074cc07529d0087f3adca94a1a3fcb06fbb2b8c71930a796169b4fcd11fb5"
+      },
+      "timeout_seconds": 360,
+      "status": "complete",
+      "returncode": 0,
+      "finished_utc": "2026-09-27T02:06:29.364304+00:00"
+    }
+  ],
+  "suite_sha256": "fea63e7530b2166d51b2b6b8f4adfd8994c75db48fcbaf6cca13d339f959def5",
+  "source_hashes": {
+    "run_reasoning_evaluation.py": "6ddba7764244a11e849696825d28a4eb2f60bc5fd79aa3b559ea1744646ac8ef",
+    "eval_reasoning_confirmation.py": "13de1d022cdcb8fc6497b9b37948852563a5a45967f7bb301db0970e323bfd46",
+    "train_reasoning_round2.py": "4d44db8cf859fdee3e2508e0a644c52693bd953fd7f3949799cb8cc1f928cb57",
+    "reasoning_round2.json": "d9fab92e05617862aca06110bfe215949a3a96349da73ab4e6cfb7f19373e313",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "bench_h2h.py": "887e4460169fdb790cf6a8ef6034fedefb581d4f9eb7657da76d646041a75a98",
+    "semif_evaluate.py": "99d78df9d59b28ea2f0e58a2c6bab1eddce9e4835aad137c0118e40ac6802beb"
+  },
+  "scope": "Quality comparison; no valid latency claim. Frozen selection; no calibration fitting.",
+  "finished_utc": "2026-09-27T02:06:29.377689+00:00"
+}

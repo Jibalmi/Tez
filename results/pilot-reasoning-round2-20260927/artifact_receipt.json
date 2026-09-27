@@ -1,0 +1,15 @@
+{
+  "created_utc": "2026-09-27T02:07:41.265165+00:00",
+  "sha256": "66ffce4687649e2447409e6860bf2389808f3a679b40be381f6285749d7ae81b",
+  "bytes": 3577073,
+  "files_verified": 152,
+  "public_rows_validated": 18453,
+  "confirmation_rows_validated": 5400,
+  "all_executed_sources_verified": true,
+  "all_archive_members_verified": true,
+  "excludes": [
+    "Training examples",
+    "Model weights",
+    "Feature caches"
+  ]
+}
