@@ -1,0 +1,9 @@
+{
+  "status": "failed_preserved",
+  "archived_utc": "2026-09-27T13:32:05.963415+00:00",
+  "source_files_verified": 26,
+  "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "error_type": "ThermalCooldownTimeout",
+  "error": "GPU still at 77 C after 60.0 s cooling (target 76 C)",
+  "scope": "Failure evidence only. No successful compatibility, quality, speed or release claim."
+}
