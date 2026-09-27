@@ -1,0 +1,177 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:47:05.050709+00:00",
+  "model": "fastino/GLiNER2.5-multi-Decide",
+  "revision": "6bc1d43d201b0691e733626389af8c57eea3ea68",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "source_sha256": "a7a1f8ac978494529adb4ea7a64007cb7bdf1bd761f3f4ab198cb1b8a115b90c",
+  "cases": [
+    {
+      "text": "{\"message\":\"Please replace my damaged headphones (order 17).\"}",
+      "instructions": "Which team should handle this request (choose one)?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"Meine Kopfhörer sind beschädigt. Bitte senden Sie einen Ersatz.\"}",
+      "instructions": "Which team should handle this request?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"The door is locked and the key is missing.\"}",
+      "instructions": "Is the door unlocked?",
+      "options": {
+        "true": "yes",
+        "false": "no"
+      }
+    },
+    {
+      "text": "{\"message\":\"The service was acceptable; neither excellent nor awful.\"}",
+      "instructions": "Rate the expressed satisfaction.",
+      "options": {
+        "0": "Very dissatisfied",
+        "1": "Dissatisfied",
+        "2": "Neutral (mixed)",
+        "3": "Satisfied",
+        "4": "Very satisfied"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "case": 0,
+      "labels": [
+        "support",
+        "sales",
+        "billing"
+      ],
+      "logits": [
+        -0.06208574399352074,
+        -1.7756900787353516,
+        -1.9955403804779053
+      ],
+      "probabilities": [
+        0.7547951981129609,
+        0.13602546582654582,
+        0.1091793360604933
+      ],
+      "native": {
+        "label": "support",
+        "confidence": 0.7547951936721802
+      },
+      "encoded_shape": [
+        1,
+        79
+      ]
+    },
+    {
+      "case": 1,
+      "labels": [
+        "support",
+        "sales",
+        "billing"
+      ],
+      "logits": [
+        0.4490049183368683,
+        -1.994206190109253,
+        -1.853895664215088
+      ],
+      "probabilities": [
+        0.8425665472888781,
+        0.0732033758842399,
+        0.0842300768268821
+      ],
+      "native": {
+        "label": "support",
+        "confidence": 0.8425665497779846
+      },
+      "encoded_shape": [
+        1,
+        82
+      ]
+    },
+    {
+      "case": 2,
+      "labels": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        0.1213693767786026,
+        -0.33267271518707275
+      ],
+      "probabilities": [
+        0.6115998466235348,
+        0.3884001533764651
+      ],
+      "native": {
+        "label": "true",
+        "confidence": 0.611599862575531
+      },
+      "encoded_shape": [
+        1,
+        54
+      ]
+    },
+    {
+      "case": 3,
+      "labels": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "logits": [
+        -1.2172634601593018,
+        -1.6524323225021362,
+        -1.3587511777877808,
+        -1.4079194068908691,
+        -2.1680567264556885
+      ],
+      "probabilities": [
+        0.26823513101960134,
+        0.17358980752139322,
+        0.2328457536357466,
+        0.22167403758088694,
+        0.10365527024237184
+      ],
+      "native": {
+        "label": "0",
+        "confidence": 0.26823514699935913
+      },
+      "encoded_shape": [
+        1,
+        84
+      ]
+    }
+  ],
+  "scope": "Interface compatibility only; no accuracy or latency claims",
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "gliner2": "2.0.0",
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "architecture": "boundary",
+  "dtype": "torch.float32",
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "cases_verified": 4,
+  "passed": true,
+  "finished_utc": "2026-09-27T02:47:34.546434+00:00",
+  "elapsed_seconds": 29.48591309999756,
+  "thermal_governor": {
+    "checks": 5,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 79
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "status": "failed",
+  "started_utc": "2026-09-27T02:46:43.652414+00:00",
+  "model": "fastino/GLiNER2.5-Decide",
+  "revision": "7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "source_sha256": "a7a1f8ac978494529adb4ea7a64007cb7bdf1bd761f3f4ab198cb1b8a115b90c",
+  "cases": [
+    {
+      "text": "{\"message\":\"Please replace my damaged headphones (order 17).\"}",
+      "instructions": "Which team should handle this request (choose one)?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"Meine Kopfhörer sind beschädigt. Bitte senden Sie einen Ersatz.\"}",
+      "instructions": "Which team should handle this request?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"The door is locked and the key is missing.\"}",
+      "instructions": "Is the door unlocked?",
+      "options": {
+        "true": "yes",
+        "false": "no"
+      }
+    },
+    {
+      "text": "{\"message\":\"The service was acceptable; neither excellent nor awful.\"}",
+      "instructions": "Rate the expressed satisfaction.",
+      "options": {
+        "0": "Very dissatisfied",
+        "1": "Dissatisfied",
+        "2": "Neutral (mixed)",
+        "3": "Satisfied",
+        "4": "Very satisfied"
+      }
+    }
+  ],
+  "rows": [],
+  "scope": "Interface compatibility only; no accuracy or latency claims",
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "gliner2": "2.0.0",
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "error_type": "UnicodeEncodeError",
+  "error": "'charmap' codec can't encode character '\\U0001f9e0' in position 0: character maps to <undefined>",
+  "finished_utc": "2026-09-27T02:46:54.777638+00:00",
+  "elapsed_seconds": 11.115581100006239,
+  "thermal_governor": {
+    "checks": 1,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 78
+  }
+}

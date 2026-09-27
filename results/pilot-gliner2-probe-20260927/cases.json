@@ -1,0 +1,39 @@
+[
+  {
+    "text": "{\"message\":\"Please replace my damaged headphones (order 17).\"}",
+    "instructions": "Which team should handle this request (choose one)?",
+    "options": {
+      "support": "Repairs and replacements",
+      "sales": "New purchases",
+      "billing": "Invoices and payments"
+    }
+  },
+  {
+    "text": "{\"message\":\"Meine Kopfhörer sind beschädigt. Bitte senden Sie einen Ersatz.\"}",
+    "instructions": "Which team should handle this request?",
+    "options": {
+      "support": "Repairs and replacements",
+      "sales": "New purchases",
+      "billing": "Invoices and payments"
+    }
+  },
+  {
+    "text": "{\"message\":\"The door is locked and the key is missing.\"}",
+    "instructions": "Is the door unlocked?",
+    "options": {
+      "true": "yes",
+      "false": "no"
+    }
+  },
+  {
+    "text": "{\"message\":\"The service was acceptable; neither excellent nor awful.\"}",
+    "instructions": "Rate the expressed satisfaction.",
+    "options": {
+      "0": "Very dissatisfied",
+      "1": "Dissatisfied",
+      "2": "Neutral (mixed)",
+      "3": "Satisfied",
+      "4": "Very satisfied"
+    }
+  }
+]

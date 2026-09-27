@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "results/pilot-gliner2-probe-20260927"
 PREPARATION = ROOT / "results/pilot-gliner2-discovery-20260927/preparation_attempt2.json"
 MODELS = ("fastino/GLiNER2.5-Decide", "fastino/GLiNER2.5-multi-Decide")
+ATTEMPT = 1
 CASES = [
     {"text": '{"message":"Please replace my damaged headphones (order 17)."}',
      "instructions": "Which team should handle this request (choose one)?",
@@ -124,12 +125,17 @@ def driver():
     env = dict(os.environ)
     env["PYTHONPATH"] = str(ROOT / prep["overlay"]) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     env.update(HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", PYTHONDONTWRITEBYTECODE="1", USE_TF="0")
+    if ATTEMPT == 2:
+        env.update(PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
     receipt = {"status": "running", "started_utc": datetime.now(timezone.utc).isoformat(),
                "scope": "Fixed non-benchmark interface probe only", "model_returncodes": {}, "per_worker_timeout_seconds": 180}
     write_json(path, receipt)
-    for name in MODELS:
+    selected = MODELS[:1] if ATTEMPT == 2 else MODELS
+    receipt["models"] = list(selected)
+    receipt["attempt"] = ATTEMPT
+    for name in selected:
         with (DIRECTORY / (name.split("/")[-1] + ".log")).open("x", encoding="utf-8") as log:
-            proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--worker", name], cwd=ROOT,
+            proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--worker", name, "--attempt", str(ATTEMPT)], cwd=ROOT,
                                     env=env, stdout=log, stderr=subprocess.STDOUT)
             try:
                 code = proc.wait(timeout=180)
@@ -154,7 +160,11 @@ def driver():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--worker", choices=MODELS)
+    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
+    ATTEMPT = args.attempt
+    if ATTEMPT == 2:
+        DIRECTORY = ROOT / "results/pilot-gliner2-probe-attempt2-20260927"
     if "RUN_HEAVY_THREADS" not in os.environ:
         raise RuntimeError("Use C:/temp/run_heavy.py")
     raise SystemExit(worker(args.worker) if args.worker else driver())

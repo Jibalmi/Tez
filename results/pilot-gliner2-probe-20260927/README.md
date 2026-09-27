@@ -1,5 +1,11 @@
 # GLiNER native probability interface probe
 
+The multilingual checkpoint completed all four interface checks in FP32. The English checkpoint
+failed while printing its configuration: the library emits an emoji that Windows' default
+CP1252 output encoding cannot represent. No English probability was produced. Both outcomes
+are retained; a [separate English retry](../pilot-gliner2-probe-attempt2-20260927/README.md) selects
+UTF-8 for the child process's text output. No weight or inference change is involved.
+
 Four fixed, newly written inputs check English and multilingual classification, a yes/no question,
 and an ordinal scale. Parentheses in instructions/descriptions exercise an input that the separate
 constrained-classification facade would reject. There are no benchmark cases, gold labels,
