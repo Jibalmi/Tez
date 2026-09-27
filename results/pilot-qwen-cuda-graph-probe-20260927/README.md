@@ -1,5 +1,13 @@
 # Qwen CUDA graph compatibility probe
 
+The first execution failed before inference with `IncompleteSnapshotError`: the pinned
+cached snapshot lacked `.gitattributes`, `LICENSE` and `README.md`. It produced no probability
+rows and made no thermal/GPU inference calls. This does not establish graph incompatibility.
+The failure, log and executed source remain here. The separate
+[metadata repair](../pilot-qwen-cache-metadata-20260927/repair.json) verifies the three downloaded
+Git objects, an intact offline snapshot and all ten original files unchanged. A retry requires
+its own output directory and registration; original probability limits remain unchanged.
+
 The [registered probe](../../experiments/small_model/qwen_cuda_graph_registration.json) tests
 four existing non-benchmark interface cases in original, reversed and restored batch order.
 It retains the frozen base, unmerged adapter and attention kernels. It uses the previously

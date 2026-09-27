@@ -1,0 +1,9 @@
+{
+  "status": "failed_preserved",
+  "archived_utc": "2026-09-27T10:08:19.506219+00:00",
+  "source_files_verified": 15,
+  "registration_sha256": "bbce1994f47d4c881c9f52c791d9f563109278343f3a1ee691eb6d172443645e",
+  "error_type": "IncompleteSnapshotError",
+  "error": "The cached snapshot for 'Qwen/Qwen3.5-0.8B' (revision '2fc06364715b967f1860aea9cf38778875588b17', commit 2fc06364715b967f1860aea9cf38778875588b17) is incomplete: 3 file(s) are missing (.gitattributes, LICENSE, README.md). Outgoing traffic is disabled ('local_files_only=True'). Re-run the download with network access to complete the snapshot.",
+  "scope": "Failure evidence only. No successful compatibility, quality, speed or release claim."
+}

@@ -1,0 +1,33 @@
+{
+  "status": "failed",
+  "started_utc": "2026-09-27T10:05:47.665748+00:00",
+  "registration_sha256": "bbce1994f47d4c881c9f52c791d9f563109278343f3a1ee691eb6d172443645e",
+  "source_files": {
+    "experiments/small_model/restricted_qwen.py": "f3af23a8e3fa6b20396d433033d6c51f6bf9da07e1019883c877469c44a81021",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "experiments/small_model/train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "experiments/small_model/competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "experiments/small_model/student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "experiments/small_model/dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "experiments/small_model/train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "experiments/small_model/qwen_cuda_graph_probe.py": "120901b86a86afe0a1eb03bc2365b36d77fc6531b96f98ae71a5289939081f13",
+    ".venv-pilot/Lib/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    ".venv-pilot/Lib/site-packages/transformers/masking_utils.py": "50a737f63d8c778a5597fa34ac139049af921f44958205e3e1c29fe2bae77254"
+  },
+  "rows": [],
+  "error_type": "IncompleteSnapshotError",
+  "error": "The cached snapshot for 'Qwen/Qwen3.5-0.8B' (revision '2fc06364715b967f1860aea9cf38778875588b17', commit 2fc06364715b967f1860aea9cf38778875588b17) is incomplete: 3 file(s) are missing (.gitattributes, LICENSE, README.md). Outgoing traffic is disabled ('local_files_only=True'). Re-run the download with network access to complete the snapshot.",
+  "thermal_governor": {
+    "checks": 0,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 0
+  },
+  "finished_utc": "2026-09-27T10:05:53.046781+00:00",
+  "elapsed_seconds": 5.379592399999638
+}
