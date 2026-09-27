@@ -93,8 +93,12 @@ cannot establish full parity. The separately registered
 [native-prefix batch-16 candidate](../pilot-qwen-prefix-validation-20260927/batch-16/RESULTS.md)
 now passes all 1,390 validation decisions: argmax agreement 99.7122%, maximum probability change
 0.03446219, and mean total variation 0.00404363. Its captured and uncaptured outputs match exactly.
-The single-question arm is separately queued with a longer predeclared resource limit; speed
-and release eligibility still require their own measurements.
+The [single-question arm](../pilot-qwen-prefix-single-20260927/README.md) completed all 1,390
+decisions under its longer predeclared time allowance, but failed mean total variation:
+0.00664581 versus the unchanged 0.005 limit. Its captured and identical uncaptured outputs
+also match exactly. The proposed request cache cannot proceed on this evidence; a native
+full-head batch-one control will isolate batch-size sensitivity from the remaining changes.
+Speed and release eligibility still require their own measurements.
 None of these inference experiments establishes a measured speedup. Larger Decider releases may be useful quality references,
 but have not been measured here and would be a different size/cost class. Published JevBench
 or DecisionIndex scores use different protocols and cannot be inserted into this table.

@@ -17,8 +17,10 @@ Before any prefix batch-one inference, its time allowance was
 20 minutes hard. The earlier left-padding batch-one trial exhausted 12 minutes with 42 decisions
 still unmeasured. The new resource plan reuses this frozen worker, input plan and probability
 thresholds, changes no existing result, and starts a complete fresh validation. It replaces only
-the unexecuted batch-one resource plan from the parent registration. The single-question arm is
-queued; the original prefix batch-one directory is not launched.
+the unexecuted batch-one resource plan from the parent registration. The single-question arm
+completed all 1,390 decisions but failed its unchanged total-variation limit (0.00664581 versus
+0.005), despite exact captured/uncaptured agreement. Its complete evidence is retained under
+the separate registration. The original prefix batch-one directory was not launched.
 
 Each native batch is formed by the original prompt-character-length sort, including its short final
 batch. Its left-padded input IDs, masks and real-token positions remain unchanged. Extra masked tokens

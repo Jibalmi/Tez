@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T12:16:53.576559+00:00",
+  "batch_size": 1,
+  "registration_sha256": "ee8188fb6249bb8a8ac3c704c54057a7dfc643976ad48b9049c86bf7730acfbb",
+  "timeout_seconds": 1200,
+  "returncode": 2,
+  "finished_utc": "2026-09-27T12:33:41.902678+00:00"
+}

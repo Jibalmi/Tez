@@ -7,7 +7,8 @@ Current improvement work: [Qwen continuation](../pilot-qwen-continuation-2026092
 has reached verified step 75. Its step-50 validation regressed; steps 100 and 150 remain required
 before the fixed checkpoint selection. The original checkpoint remains eligible.
 The [native-prefix graph candidate](../pilot-qwen-prefix-validation-20260927/README.md) passes
-all 1,390 batch-16 validation decisions; its separately registered single-question check is running.
+all 1,390 batch-16 validation decisions; its separately registered single-question check completed
+but failed the unchanged total-variation limit. The proposed request cache remains unexecuted.
 Earlier [graph failures](../pilot-qwen-graph-validation-20260927/README.md) remain archived.
 The [GPU telemetry check](../pilot-windows-gpu-telemetry-20260927/README.md) confirms that current
 desktop GPU allocations exceed the unchanged clean-timing limit. No new quality or speed gain

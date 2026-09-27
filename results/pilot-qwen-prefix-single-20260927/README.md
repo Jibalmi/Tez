@@ -26,10 +26,24 @@ and mean total variation at most 0.005. Captured versus identical uncaptured max
 must be at most 0.00001. The reference comparison includes the effect of changing its batch size.
 No temperature, reference, threshold or input is chosen using a single-question result.
 
-The registered job is queued under the shared compute lock. After its actual session exits,
-run the existing independent verifier on `batch-01`; a passing result is still not a speed,
-public-quality, export or runtime-promotion claim. Partial or failing evidence will be retained.
+The registered job completed all 1,390 decisions and its [independent verification](batch-01/verification.json)
+confirms a **failure** of the unchanged mean-total-variation limit: 0.006645812989476119 versus
+0.005. Argmax agreement is 0.9942446043165467 and maximum probability difference is
+0.031232999811175166. Graph and identical uncaptured outputs match exactly on every decision.
+The [1,386,691-byte archive](batch-01/artifact_receipt.json) contains 45 verified files, including
+all predictions, inputs, execution receipts and frozen sources. No timing or promotion follows.
+
+Five captures and all 1,390 real single-question replays completed under the longer resource
+plan. The worker recorded 1,006.4496441 operational seconds, including 299 thermal pauses
+totaling 483.5501875 seconds. These are execution accounting, not latency. The failure combines
+native batch-size differences versus the batch-16 reference with the surrounding graph-input
+changes. Exact captured/uncaptured agreement does not isolate those other causes. A separate
+native full-head batch-one control is needed before selecting another inference change.
+
+The proposed multi-graph request cache remains unregistered and unexecuted because it requires
+both full-validation arms to pass. Its CPU preflight does not override this failed requirement.
 
 ```powershell
+# Already completed; the verifier refuses to overwrite its immutable evidence archive.
 .venv-pilot/Scripts/python.exe experiments/small_model/verify_qwen_prefix_validation.py results/pilot-qwen-prefix-single-20260927/batch-01
 ```

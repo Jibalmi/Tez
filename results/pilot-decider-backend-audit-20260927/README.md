@@ -27,7 +27,7 @@ optimized competitor's probabilities verified before timing. HTTP and in-process
 must be distinguished. Upstream CUDA tests have not been run here and are not our evidence.
 
 The [35,208-byte evidence archive](artifact_receipt.json) retains the audit, current pilot
-adapter, seven relevant upstream files and their license. All nine members were reread and
+adapter and seven upstream files, including the license. All nine members were reread and
 checked against the hash/size manifest. The local checkout was read only; neither it nor the
 frozen pilot adapter was modified. Attempts to retrieve these exact upstream files through
 the web reader returned cache misses, so this audit relies on the inspected local checkout.

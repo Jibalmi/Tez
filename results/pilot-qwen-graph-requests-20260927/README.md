@@ -2,7 +2,10 @@
 
 Implementation and nine focused CPU tests are ready. **This new cache has not run on the GPU,
 and its protocol is not registered yet.** Registration requires independently verified passes
-for both full native-prefix graph arms. Batch 16 has passed; the single-question arm is running.
+for both full native-prefix graph arms. Batch 16 passed; the completed
+[single-question arm failed](../pilot-qwen-prefix-single-20260927/README.md) its unchanged
+mean-total-variation limit. The proposed cache therefore remains unregistered and unexecuted.
+The input audit and implementation are retained without weakening that requirement.
 
 The proposed check covers the complete existing fresh-state timing workload: 1, 5, 10 and
 50 questions, ten planned warmup calls per size, 100 subsequent calls at each smaller size
