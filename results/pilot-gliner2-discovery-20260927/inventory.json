@@ -1,0 +1,151 @@
+{
+  "checked_utc": "2026-09-27T02:32:05.067542+00:00",
+  "scope": "Primary-source discovery only; no local model inference or benchmark scores.",
+  "models": {
+    "fastino/GLiNER2.5-Decide": {
+      "metadata_url": "https://huggingface.co/api/models/fastino/GLiNER2.5-Decide",
+      "revision": "7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6",
+      "last_modified": "2026-09-24T22:33:51.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en"
+      ],
+      "base_model_declared": "fastino/gliner2-large-v1",
+      "parameters": {
+        "parameters": {
+          "F32": 486444053
+        },
+        "total": 486444053
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "GLiNER-2.5-Decision-HF-Banner.png",
+        "README.md",
+        "SKILL.md",
+        "config.json",
+        "encoder_config/config.json",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "card_url": "https://huggingface.co/fastino/GLiNER2.5-Decide/resolve/7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6/README.md",
+      "card_sha256": "dfcbd7c87a74b78d0250acf166a47c8ece8a51ba22dc1e14a622c52c76f9b569",
+      "local_card": "runs/research/gliner2-discovery/GLiNER2.5-Decide.md"
+    },
+    "fastino/GLiNER2.5-multi-Decide": {
+      "metadata_url": "https://huggingface.co/api/models/fastino/GLiNER2.5-multi-Decide",
+      "revision": "6bc1d43d201b0691e733626389af8c57eea3ea68",
+      "last_modified": "2026-09-24T22:33:53.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "multilingual",
+        "en"
+      ],
+      "base_model_declared": "fastino/gliner2.5-multi-v1",
+      "parameters": {
+        "parameters": {
+          "F32": 287355159
+        },
+        "total": 287355159
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "GLiNER-2.5-Decision-HF-Banner.png",
+        "README.md",
+        "SKILL.md",
+        "config.json",
+        "encoder_config/config.json",
+        "model.safetensors",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "card_url": "https://huggingface.co/fastino/GLiNER2.5-multi-Decide/resolve/6bc1d43d201b0691e733626389af8c57eea3ea68/README.md",
+      "card_sha256": "ea744c85fcc4b53a3457cac58798851e19d7d8202998652a528f3693ceee887c",
+      "local_card": "runs/research/gliner2-discovery/GLiNER2.5-multi-Decide.md"
+    },
+    "fastino/GLiNER2.5-Decide-1B": {
+      "metadata_url": "https://huggingface.co/api/models/fastino/GLiNER2.5-Decide-1B",
+      "revision": "52c94d3b698bf6d2619df9d898bdc1523ea3f1ca",
+      "last_modified": "2026-09-24T22:33:54.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en"
+      ],
+      "base_model_declared": "fastino/gliner2-xl-0111",
+      "parameters": {
+        "parameters": {
+          "F32": 1188796693
+        },
+        "total": 1188796693
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "GLiNER-2.5-Decision-HF-Banner.png",
+        "README.md",
+        "config.json",
+        "encoder_config/config.json",
+        "model.safetensors",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "card_url": "https://huggingface.co/fastino/GLiNER2.5-Decide-1B/resolve/52c94d3b698bf6d2619df9d898bdc1523ea3f1ca/README.md",
+      "card_sha256": "7682fbb6d10afe9b77bfbe1d7d0be75f9469be444c70ecd95dc0e08ebc59f712",
+      "local_card": "runs/research/gliner2-discovery/GLiNER2.5-Decide-1B.md"
+    }
+  },
+  "package": {
+    "metadata_url": "https://pypi.org/pypi/gliner2/json",
+    "version": "2.0.0",
+    "requires_python": ">=3.10",
+    "requires_dist": [
+      "pydantic<3,>=2.0",
+      "requests<3,>=2.28",
+      "tqdm<5,>=4.64",
+      "urllib3<3,>=1.26",
+      "numpy<3,>=1.24; extra == \"local\"",
+      "peft<1,>=0.10; extra == \"local\"",
+      "safetensors<1,>=0.4; extra == \"local\"",
+      "torch<3,>=2.1; extra == \"local\"",
+      "transformers<5,>=4.38; extra == \"local\"",
+      "numpy<3,>=1.24; extra == \"train\"",
+      "peft<1,>=0.10; extra == \"train\"",
+      "PyYAML<7,>=6; extra == \"train\"",
+      "safetensors<1,>=0.4; extra == \"train\"",
+      "torch<3,>=2.1; extra == \"train\"",
+      "transformers<5,>=4.38; extra == \"train\"",
+      "packaging<27,>=24.2; extra == \"test\"",
+      "pytest<9,>=8; extra == \"test\"",
+      "pytest-cov<8,>=5; extra == \"test\"",
+      "tomli<3,>=2; python_version < \"3.11\" and extra == \"test\"",
+      "build<2,>=1; extra == \"dev\"",
+      "mypy<2,>=1.10; extra == \"dev\"",
+      "numpy<3,>=1.24; extra == \"dev\"",
+      "packaging<27,>=24.2; extra == \"dev\"",
+      "peft<1,>=0.10; extra == \"dev\"",
+      "pytest<9,>=8; extra == \"dev\"",
+      "pytest-cov<8,>=5; extra == \"dev\"",
+      "PyYAML<7,>=6; extra == \"dev\"",
+      "ruff<1,>=0.6; extra == \"dev\"",
+      "safetensors<1,>=0.4; extra == \"dev\"",
+      "scipy<2,>=1.10; extra == \"dev\"",
+      "torch<3,>=2.1; extra == \"dev\"",
+      "tomli<3,>=2; python_version < \"3.11\" and extra == \"dev\"",
+      "transformers<5,>=4.38; extra == \"dev\"",
+      "twine<7,>=5; extra == \"dev\"",
+      "types-PyYAML<7,>=6; extra == \"dev\"",
+      "types-requests<3,>=2.28; extra == \"dev\"",
+      "datasets<5,>=3.0; extra == \"benchmark\"",
+      "numpy<3,>=1.24; extra == \"benchmark\"",
+      "peft<1,>=0.10; extra == \"benchmark\"",
+      "safetensors<1,>=0.4; extra == \"benchmark\"",
+      "scikit-learn<2,>=1.3; extra == \"benchmark\"",
+      "scipy<2,>=1.10; extra == \"benchmark\"",
+      "torch<3,>=2.1; extra == \"benchmark\"",
+      "transformers<5,>=4.38; extra == \"benchmark\""
+    ]
+  }
+}

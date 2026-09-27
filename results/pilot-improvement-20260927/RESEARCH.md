@@ -31,12 +31,16 @@ benchmark contamination. Parameter counts of adapter-only repositories exclude t
 | Alternative | Why it belongs in the comparison | Evidence status |
 |---|---|---|
 | [Laya family](https://github.com/NandhaKishorM/laya) | Same typed-decision interface; English, multilingual, and specialized checkpoints | Existing matched accuracy rows; current revision inventory; laptop speed comparison pending |
-| [Kev-0.8B](https://huggingface.co/jaredpalmer/kev-0.8b) | Direct size-class competitor with a pointer head and typed probability outputs | Current released revision selected for a native-library matched evaluation; publisher's results use different suites |
-| [Decider-0.8B](https://huggingface.co/Mapika/decider-0.8b) | Same size class with a trained letter readout and native typed API | Publisher reports a much larger training mixture; matched evaluation not yet run |
-| [GLiClass Multilang Mini](https://huggingface.co/knowledgator/gliclass-multilang-mini) | Newer multilingual classifier supporting task prompts and label descriptions | Registered for matched evaluation; the older x-base result cannot stand in for it |
-| [GLiClass Instruct Base](https://huggingface.co/knowledgator/gliclass-instruct-base-v1.0) and [Edge](https://huggingface.co/knowledgator/gliclass-instruct-edge-v1.0) | Smaller alternatives with instruction-guided classification | Registered for matched evaluation; generic label classification mapped explicitly to each typed question |
+| [Kev-0.8B](https://huggingface.co/jaredpalmer/kev-0.8b) | Direct size-class competitor with a pointer head and typed probability outputs | Matched native-library evaluation and H200 eager timings complete; publisher's results use different suites |
+| [Decider-0.8B](https://huggingface.co/Mapika/decider-0.8b) | Same size class with a trained letter readout and native typed API | Matched public and fresh-rule evaluations complete; training exposure is qualified in the later audit |
+| [GLiClass Multilang Mini](https://huggingface.co/knowledgator/gliclass-multilang-mini) | Newer multilingual classifier supporting task prompts and label descriptions | Matched evaluation complete; separately measured from the older x-base checkpoint |
+| [GLiClass Instruct Base](https://huggingface.co/knowledgator/gliclass-instruct-base-v1.0) and [Edge](https://huggingface.co/knowledgator/gliclass-instruct-edge-v1.0) | Smaller alternatives with instruction-guided classification | Matched evaluation complete; generic label classification mapped explicitly to each typed question |
 | [Dev-0.4B](https://huggingface.co/mpnikhil/dev-0.4b) | English encoder with dynamic choices, yes/no, and scores | Current metadata checked; previous repository investigation found reproducibility concerns; no new matched score claimed |
-| [Unmodified Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | Determines whether our LoRA improves on its actual starting checkpoint | Registered with exactly the same Tez letter prompt and evaluation rows |
+| [Unmodified Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B) | Determines whether our LoRA improves on its actual starting checkpoint | Matched evaluation complete with exactly the same Tez letter prompt and evaluation rows |
+
+A later [discovery audit](../pilot-gliner2-discovery-20260927/README.md) adds GLiNER2.5-Decide to
+the candidates for measurement and distinguishes the LocalJev bridge and Ollaya runtime from
+trained checkpoint alternatives. No unmeasured candidate is assigned a score or rank.
 
 [JevBench](https://github.com/fstandhartinger/jevbench) is a useful external check and discovery source.
 Its composite rankings are not directly comparable with typed-decision accuracy or these latency

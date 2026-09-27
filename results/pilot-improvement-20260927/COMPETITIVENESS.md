@@ -43,10 +43,13 @@ hardware; optimized competitor servers were not tested. H200 results cannot sati
 latency gate. Valid laptop timings remain outstanding because the prior attempts did not meet
 the registered cooling requirements.
 
-The first typed-accuracy gate is 56.3%, above both 0.8B systems. Our Qwen student also remains
-below the 70% multilingual intent gate. The encoder continuation improved the authored rules
-but did not improve public typed accuracy. No candidate is promoted from these results.
-The full [predeclared gates](../../docs/plans/tez-small-model.md) remain unchanged.
+The encoder's first quality gates include 56.3% typed accuracy and 70% multilingual intent.
+The plan separately allows Qwen (arm C) to advance if it exceeds the encoder by at least five
+points of teacher-accuracy retention and meets the latency requirement. Its measured quality
+lead supports that alternative route, but valid laptop latency remains unverified. The encoder
+continuation improved the authored rules but did not improve public typed accuracy. No candidate
+is promoted from these results. The full [predeclared gates](../../docs/plans/tez-small-model.md),
+including the later clean-student quality requirements, remain unchanged.
 
 ## Comparison boundaries and next work
 
