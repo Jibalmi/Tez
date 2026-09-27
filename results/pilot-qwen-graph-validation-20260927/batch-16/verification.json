@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "passed": false,
+  "batch_size": 16,
+  "full_reference_parity": {
+    "argmax_agreement": 0.99568345323741,
+    "max_probability_delta": 0.03596536359486047,
+    "mean_total_variation": 0.006238215682194927,
+    "decisions_validated": 1390,
+    "passed": false
+  },
+  "graph_uncaptured_parity": {
+    "argmax_agreement": 1.0,
+    "max_probability_delta": 0.0,
+    "mean_total_variation": 0.0,
+    "decisions_validated": 1390,
+    "passed": true
+  },
+  "real_predictions_per_arm": 1390,
+  "captures_verified": 5,
+  "replays_verified": 89,
+  "registration_sha256": "ee08a198b79dc81ce7b6e9b63ee7fa9ad382a320eca897118517eaaffef1c9ee",
+  "analysis_source_sha256": "90ec21a332e0e23ce70f5333b375c1719d8c7a3ccdf42ca3fd2d2d505e30d60e",
+  "scope": "Saved-row arithmetic, input membership, capture/replay receipts and source provenance verified. Not a numerical GPU rerun, latency result or runtime promotion."
+}

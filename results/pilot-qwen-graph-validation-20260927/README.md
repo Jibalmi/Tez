@@ -2,8 +2,23 @@
 
 The [registered experiment](../../experiments/small_model/qwen_graph_validation_registration.json)
 extends the successful [four-case compatibility check](../pilot-qwen-cuda-graph-attempt2-20260927/RESULTS.md)
-to all original teacher-validation inputs. GPU results are pending. The batch-16 arm is queued
-under the shared laptop compute lock; registration alone establishes no probability or speed result.
+to all original teacher-validation inputs. The [batch-16 result](batch-16/RESULTS.md) is complete
+and independently verified: it fails the unchanged mean-total-variation limit. The batch-one arm
+is queued separately under the shared laptop compute lock. No speed result is established.
+
+Across all 1,390 decisions, batch 16 has 99.5683% reference argmax agreement and maximum probability
+change 0.03596536, both within their limits. Mean total variation is 0.00623822, exceeding 0.005.
+The graph and the identical uncaptured path produce exactly equal saved probabilities on every
+decision. Thus the observed discrepancy already exists outside graph capture; this experiment
+does not isolate which combination of padding, regrouping or other surrounding inference changes
+caused it. Five captures and 89 replays were verified. The complete failure is retained in the
+[1,324,962-byte evidence archive](batch-16/artifact_receipt.json), with 37 verified files.
+
+The failed arm will not advance to timing. The next candidate should retain the original batch
+composition and real-token positions, add trailing padding only after each native batch, and read
+the last real token rather than the padded end. That requires a separate tested implementation
+and registration; it is not a demonstrated repair. Probability limits remain unchanged. The
+existing batch-one arm continues with its original frozen source and protocol.
 
 The one-thread [input preflight](preflight.json) verified all 278 states and 1,390 decisions
 against the frozen reference membership, with complete prompts up to 1,607 tokens. The candidate
