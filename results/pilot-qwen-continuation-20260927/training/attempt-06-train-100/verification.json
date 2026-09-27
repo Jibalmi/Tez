@@ -1,0 +1,34 @@
+{
+  "status": "complete",
+  "verified_utc": "2026-09-27T12:15:32.054560+00:00",
+  "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "verifier_sha256": "06e1d8b25dcc4c0ad078e42a532757e36c65713f5fc0a001ebb112d6e7db5bc0",
+  "analysis_registration_sha256": "5f465e963cdf206ac2e19041bb33b41113a1f22b1defe4e167ee620a3643ed48",
+  "operation": "train",
+  "completed_step": 75,
+  "checkpoints": [
+    {
+      "step": 60,
+      "adapter_tensors": 372,
+      "changed_from_original": 372,
+      "tokens": 272756,
+      "sha256": "7eca6dd7cfd8b2b3ab25a2cbaa2af7d5f0c72fc87c2999dd42749ff673221ffc"
+    },
+    {
+      "step": 70,
+      "adapter_tensors": 372,
+      "changed_from_original": 372,
+      "tokens": 327785,
+      "sha256": "611a4f56e33f30e65e5dab2498bef3eca0ec829d0d95510fb856a5a0cb7c1f15"
+    },
+    {
+      "step": 75,
+      "adapter_tensors": 372,
+      "changed_from_original": 372,
+      "tokens": 346292,
+      "sha256": "ea2dcbcc77098465264b0f4f01217a8c1af504ea9a3248d83e6815a2007746ea"
+    }
+  ],
+  "updates_verified": 25,
+  "scope": "One-thread CPU integrity and arithmetic checks, including saved adapter/optimizer values. No GPU numerical replay, throughput or new quality result; original release gates remain unchanged."
+}
