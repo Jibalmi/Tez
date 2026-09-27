@@ -8,3 +8,7 @@ four non-benchmark interface inputs, with the same checkpoint, FP32 precision an
 The multilingual checkpoint's completed first-attempt checks remain valid and are not rerun.
 This driver selects only English, under the shared compute lock, four threads, unchanged thermal
 rules and a three-minute worker deadline. No accuracy, latency or cloud-spending claim follows.
+
+The retry completed all four checks successfully. See the [native output receipt](GLiNER2.5-Decide.json)
+for logits, complete probabilities, encoded shapes, checkpoint revision and source hashes.
+The UTF-8 correction was sufficient; model precision and case contents were unchanged.

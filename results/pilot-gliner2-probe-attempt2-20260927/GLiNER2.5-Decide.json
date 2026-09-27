@@ -1,0 +1,177 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:57:23.774336+00:00",
+  "model": "fastino/GLiNER2.5-Decide",
+  "revision": "7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "source_sha256": "267257c4f50b7ab97cde5848882cbf76b9c8e1e1a7e632970dc13ed22d8734d1",
+  "cases": [
+    {
+      "text": "{\"message\":\"Please replace my damaged headphones (order 17).\"}",
+      "instructions": "Which team should handle this request (choose one)?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"Meine Kopfhörer sind beschädigt. Bitte senden Sie einen Ersatz.\"}",
+      "instructions": "Which team should handle this request?",
+      "options": {
+        "support": "Repairs and replacements",
+        "sales": "New purchases",
+        "billing": "Invoices and payments"
+      }
+    },
+    {
+      "text": "{\"message\":\"The door is locked and the key is missing.\"}",
+      "instructions": "Is the door unlocked?",
+      "options": {
+        "true": "yes",
+        "false": "no"
+      }
+    },
+    {
+      "text": "{\"message\":\"The service was acceptable; neither excellent nor awful.\"}",
+      "instructions": "Rate the expressed satisfaction.",
+      "options": {
+        "0": "Very dissatisfied",
+        "1": "Dissatisfied",
+        "2": "Neutral (mixed)",
+        "3": "Satisfied",
+        "4": "Very satisfied"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "case": 0,
+      "labels": [
+        "support",
+        "sales",
+        "billing"
+      ],
+      "logits": [
+        0.6055241823196411,
+        -0.604176938533783,
+        -1.4761818647384644
+      ],
+      "probabilities": [
+        0.7027388739190987,
+        0.20961746127873265,
+        0.08764366480216865
+      ],
+      "native": {
+        "label": "support",
+        "confidence": 0.702738881111145
+      },
+      "encoded_shape": [
+        1,
+        61
+      ]
+    },
+    {
+      "case": 1,
+      "labels": [
+        "support",
+        "sales",
+        "billing"
+      ],
+      "logits": [
+        0.6270120739936829,
+        -0.6162207126617432,
+        -1.1255544424057007
+      ],
+      "probabilities": [
+        0.6840980633155461,
+        0.19732823073334896,
+        0.11857370595110495
+      ],
+      "native": {
+        "label": "support",
+        "confidence": 0.6840980648994446
+      },
+      "encoded_shape": [
+        1,
+        67
+      ]
+    },
+    {
+      "case": 2,
+      "labels": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        -0.3392820358276367,
+        0.4844270646572113
+      ],
+      "probabilities": [
+        0.3049768885333643,
+        0.6950231114666358
+      ],
+      "native": {
+        "label": "false",
+        "confidence": 0.6950231194496155
+      },
+      "encoded_shape": [
+        1,
+        45
+      ]
+    },
+    {
+      "case": 3,
+      "labels": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "logits": [
+        -3.5701074600219727,
+        -3.0445046424865723,
+        1.1005432605743408,
+        -1.8791853189468384,
+        -3.822782516479492
+      ],
+      "probabilities": [
+        0.008646040860162227,
+        0.014624589577880489,
+        0.9231135343496085,
+        0.04690028035781661,
+        0.0067155548545321745
+      ],
+      "native": {
+        "label": "2",
+        "confidence": 0.9231135845184326
+      },
+      "encoded_shape": [
+        1,
+        68
+      ]
+    }
+  ],
+  "scope": "Interface compatibility only; no accuracy or latency claims",
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "gliner2": "2.0.0",
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "architecture": "span",
+  "dtype": "torch.float32",
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "cases_verified": 4,
+  "passed": true,
+  "finished_utc": "2026-09-27T02:57:38.716739+00:00",
+  "elapsed_seconds": 14.933396699998411,
+  "thermal_governor": {
+    "checks": 5,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 81
+  }
+}

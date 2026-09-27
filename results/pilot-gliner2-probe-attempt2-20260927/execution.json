@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:57:16.468099+00:00",
+  "scope": "Fixed non-benchmark interface probe only",
+  "model_returncodes": {
+    "fastino/GLiNER2.5-Decide": 0
+  },
+  "per_worker_timeout_seconds": 180,
+  "models": [
+    "fastino/GLiNER2.5-Decide"
+  ],
+  "attempt": 2,
+  "finished_utc": "2026-09-27T02:57:40.395522+00:00"
+}
