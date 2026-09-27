@@ -19,6 +19,7 @@ from structure_probe import digest, write_json
 ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "results/pilot-gliner2-eval-20260927"
 REGISTRATION = Path(__file__).with_name("gliner2_registration.json")
+ATTEMPT = 1
 
 
 def raw_metrics(rows):
@@ -196,7 +197,7 @@ def driver(arm):
                "registration_sha256": digest(REGISTRATION), "timeout_seconds": spec["worker_timeout_seconds"]}
     write_json(path, receipt)
     with (DIRECTORY / f"{arm}.log").open("x", encoding="utf-8") as log:
-        proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--arm", arm, "--worker"], cwd=ROOT,
+        proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--arm", arm, "--worker", "--attempt", str(ATTEMPT)], cwd=ROOT,
                                 env=env, stdout=log, stderr=subprocess.STDOUT)
         try:
             code = proc.wait(timeout=spec["worker_timeout_seconds"])
@@ -219,7 +220,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arm", choices=("english", "multilingual"), required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
+    ATTEMPT = args.attempt
+    if ATTEMPT == 2:
+        DIRECTORY = ROOT / "results/pilot-gliner2-eval-attempt2-20260927"
+        REGISTRATION = Path(__file__).with_name("gliner2_registration_attempt2.json")
     if "RUN_HEAVY_THREADS" not in os.environ:
         raise RuntimeError("Use C:/temp/run_heavy.py")
     if args.worker:

@@ -1,0 +1,43 @@
+{
+  "status": "failed",
+  "arm": "english",
+  "started_utc": "2026-09-27T03:04:45.835500+00:00",
+  "registration_sha256": "87356dde903090704f2ce181374d30b808e042fd4141eea0fd2ac108929e91dd",
+  "source_files": {
+    "experiments/small_model/eval_gliner2.py": "60bdb5cfeca25da1266c87989cb9c5aafae52be2fc36084ff8f1157685979041",
+    "experiments/small_model/gliner2_adapter.py": "af513b510a6f2d39d1d5a036c4c4993ec83b6e5f57a7463b33f3b21738bc599f",
+    "experiments/small_model/common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "experiments/small_model/structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+    "tez/prompt.py": "5d5e4a259f8b68ec1e45f85a5c34b458def974762648bf9cfa7c14890790249d",
+    "tez/schema.py": "614edeff3e99882a9e4bebef6d41d8c006dbbd08e763a392acb33df49428a9fe",
+    "tez/errors.py": "9f72abf25a68bbd4542b221bb214a9e68ac47be22648ae0b02147e8a11078c58",
+    "data/semif/evaluate.py": "99d78df9d59b28ea2f0e58a2c6bab1eddce9e4835aad137c0118e40ac6802beb",
+    "data/semif/authored144.jsonl": "356f9728ef7280bebb792ac2ed0f49466cc4ec318a11f3ebd237d91f0a05815e",
+    "data/semif/perturbations108.jsonl": "91559297efc30dde4daa9ae174ecfc3aa2886e7774b587587dceeff574fb5bad"
+  },
+  "tasks": {},
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "4.57.6",
+    "gliner2": "2.0.0",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "model": "fastino/GLiNER2.5-Decide",
+  "revision": "7ee5da4c2415e32259bcdc0b1a7367c32ce8d6f6",
+  "weights": "40a5a23ff860dc3dff426cecd1048cacdd29c648c96db209dad818e9686dc997",
+  "preparation_sha256": "5051d57d0545de0fbc50ec9c45c8583d91e0a1ac060e0e75b628c21239800751",
+  "probe_sha256": "5b22a2cf8a66c540b836d6b8b75b65bceb1c53844306463d27d2365c3ca8d1f7",
+  "error_type": "ValueError",
+  "error": "Native preprocessing changed input membership or text",
+  "finished_utc": "2026-09-27T03:05:03.721096+00:00",
+  "elapsed_seconds": 17.840440900006797,
+  "thermal_governor": {
+    "checks": 2,
+    "pauses": 0,
+    "paused_s": 0.0,
+    "max_c": 77
+  }
+}

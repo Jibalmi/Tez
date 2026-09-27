@@ -1,4 +1,5 @@
 """Validate complete GLiNER runs and compare their frozen predictions with Qwen and Decider."""
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import importlib.util
@@ -135,7 +136,7 @@ def main():
                      f"{scores[name]['semif_perturbations108']['semif_mean_family_balanced_accuracy']:.4f} |")
     lines += ["", "Job elapsed time includes loading, input audits and thermal pauses; it is not a latency result.",
               "No gates were relaxed and no runtime was changed. Competitor training membership is unknown.",
-              "[Full measurements and hashes](comparison.json), [frozen protocol](../../experiments/small_model/gliner2_registration.json),",
+              f"[Full measurements and hashes](comparison.json), [frozen protocol](../../experiments/small_model/{REGISTRATION.name}),",
               "[broader comparison and release requirements](../pilot-improvement-20260927/COMPETITIVENESS.md).", ""]
     (DIRECTORY / "RESULTS.md").write_text("\n".join(lines), encoding="utf-8")
     excluded = {archive.name, "artifact_manifest.json", "artifact_receipt.json"}
@@ -168,4 +169,10 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
+    args = parser.parse_args()
+    if args.attempt == 2:
+        DIRECTORY = ROOT / "results/pilot-gliner2-eval-attempt2-20260927"
+        REGISTRATION = Path(__file__).with_name("gliner2_registration_attempt2.json")
     main()

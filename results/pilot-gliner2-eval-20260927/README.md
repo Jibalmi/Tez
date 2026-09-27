@@ -16,3 +16,10 @@ This extends the [matched comparison](../pilot-improvement-20260927/COMPETITIVEN
 unknown competitor training exposure. The public tasks have already been observed in this
 project, so they are exploratory regression checks, not new held-out confirmation. No cloud
 resources or runtime changes are part of this experiment.
+
+Both first attempts stopped during the non-benchmark smoke check, before any public prediction.
+The guard required byte-identical native text, but GLiNER's pinned `_collate_batch` appends a
+period when a text does not end in `.`, `!` or `?`. The original contents remain intact. This
+is an audit compatibility failure, not a measured model quality failure. Receipts, logs and
+executed sources are preserved. A separately registered retry will permit only that exact
+native punctuation normalization and will continue to reject dropped words and altered labels.

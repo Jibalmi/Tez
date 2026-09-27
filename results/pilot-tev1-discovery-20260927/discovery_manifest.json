@@ -1,0 +1,70 @@
+{
+  "Tev1-0.8B-experimental.chat_template.jinja": {
+    "sha256": "d78de6bee4c952ca3145eb161921560a6ede7b59a34e7e4be815f3c5386b4364",
+    "bytes": 7650
+  },
+  "Tev1-0.8B-experimental.config.json": {
+    "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+    "bytes": 2907
+  },
+  "Tev1-0.8B-experimental.metadata.json": {
+    "sha256": "a7cc1923c89871f9cfa9ba684f1b672f860286fab97a1a6db3b6a11cd209aaa4",
+    "bytes": 10942
+  },
+  "Tev1-0.8B-experimental.model.safetensors.index.json": {
+    "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+    "bytes": 50900
+  },
+  "Tev1-0.8B-experimental.README.md": {
+    "sha256": "be9b34191b3c4d419259d95743951069b1afe521664eda428d0c816296b4fcee",
+    "bytes": 2069
+  },
+  "Tev1-0.8B-experimental.tokenizer_config.json": {
+    "sha256": "4ed764fafae09ed7390f85ab1ddc28baa34a4805b4119048ba8d922abaaebcaf",
+    "bytes": 7117
+  },
+  "Tev1-4B-experimental.chat_template.jinja": {
+    "sha256": "2424952d53b6b63c3aee1d9a7aad3c32b7def9fee6c27b5def9dea86f607dc7a",
+    "bytes": 7651
+  },
+  "Tev1-4B-experimental.config.json": {
+    "sha256": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670",
+    "bytes": 3161
+  },
+  "Tev1-4B-experimental.metadata.json": {
+    "sha256": "e577b97df64446f2c60aa88e0d520b9329d897113242439a73f3171d8fdc2b1d",
+    "bytes": 11188
+  },
+  "Tev1-4B-experimental.model.safetensors.index.json": {
+    "sha256": "cf3f798ee02ba45f9622aa8892a47369ab667d0afbf154ee7c2212de42e6302d",
+    "bytes": 76196
+  },
+  "Tev1-4B-experimental.README.md": {
+    "sha256": "3984b6b90801471bdf1ad802852605c835720533d80fbb60c42cd5245527ee40",
+    "bytes": 3427
+  },
+  "Tev1-4B-experimental.tokenizer_config.json": {
+    "sha256": "4ed764fafae09ed7390f85ab1ddc28baa34a4805b4119048ba8d922abaaebcaf",
+    "bytes": 7117
+  },
+  "source/DATA_SOURCES.md": {
+    "sha256": "0d96ddce36f0373900f1079abd7895accfd5b7da5915a7796299a1fa5b4d0fb5",
+    "bytes": 1736
+  },
+  "source/LICENSE": {
+    "sha256": "78c317bb617d8048bdc3504d92fb728839940c1f30f76fb368d845b657299337",
+    "bytes": 1078
+  },
+  "source/README.md": {
+    "sha256": "a3086356491091f07479044e406af6d10d280572dd722c4bb8139f2834ddf715",
+    "bytes": 4332
+  },
+  "source/sources.lock.json": {
+    "sha256": "ee57fc1250aa4fd82349462c4b6370f344c87230d7de0a233fa671776a8f665a",
+    "bytes": 1487
+  },
+  "source/examples/decide.py": {
+    "sha256": "d0bfb6add3a9b87475737568613c40f48c8f0bc927574351ce558da87db640bb",
+    "bytes": 4141
+  }
+}

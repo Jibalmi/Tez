@@ -1,0 +1,73 @@
+{
+  "status": "staged",
+  "started_utc": "2026-09-27T03:07:06.031384+00:00",
+  "repository": "togethercomputer/Tev1-0.8B-experimental",
+  "revision": "6bb2dff14b38fea90ddb14d870166ccaf77374e9",
+  "inventory_sha256": "6101af29bbd4cea5b8766901edbf1aa28d6595581e9d68f8e4f20a1b076c8db8",
+  "source_sha256": "42fc40d4eb0a719cd13b2d817a80901258c58ce9578f55c685c02a15c2fe5a57",
+  "directory": "runs/pilot-tev1-preparation-20260927/model",
+  "files": {
+    "README.md": {
+      "sha256": "be9b34191b3c4d419259d95743951069b1afe521664eda428d0c816296b4fcee",
+      "bytes": 2069
+    },
+    "chat_template.jinja": {
+      "sha256": "d78de6bee4c952ca3145eb161921560a6ede7b59a34e7e4be815f3c5386b4364",
+      "bytes": 7650
+    },
+    "config.json": {
+      "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+      "bytes": 2907
+    },
+    "merges.txt": {
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "bytes": 3353259
+    },
+    "model.safetensors-00001-of-00001.safetensors": {
+      "sha256": "197de1eb141b93984a15e2def8a840726c5dd1349ea4e1b73b8e53abb9257408",
+      "bytes": 1746942600
+    },
+    "model.safetensors.index.json": {
+      "sha256": "d8a08838a613b025eb7952ed9db11696213e57e76a375661ef5c12f9dd5dcf4e",
+      "bytes": 50900
+    },
+    "preprocessor_config.json": {
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+      "bytes": 390
+    },
+    "tokenizer.json": {
+      "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "bytes": 12807982
+    },
+    "tokenizer_config.json": {
+      "sha256": "4ed764fafae09ed7390f85ab1ddc28baa34a4805b4119048ba8d922abaaebcaf",
+      "bytes": 7117
+    },
+    "video_preprocessor_config.json": {
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+      "bytes": 385
+    },
+    "vocab.json": {
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+      "bytes": 6722759
+    }
+  },
+  "baseline_environment": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "tokenizers": "0.23.2",
+    "huggingface-hub": "1.33.0"
+  },
+  "scope": "Public checkpoint staging only. No inference, package installation, redistribution or paid API call.",
+  "baseline_unchanged": true,
+  "baseline_environment_after": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "tokenizers": "0.23.2",
+    "huggingface-hub": "1.33.0"
+  },
+  "finished_utc": "2026-09-27T03:07:31.505861+00:00",
+  "elapsed_seconds": 25.481649299996207
+}

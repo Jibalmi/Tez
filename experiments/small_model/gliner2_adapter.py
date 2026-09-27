@@ -21,10 +21,12 @@ def native_probabilities(logits, labels, answer):
 
 def audit_native_batch(batch, inputs, word_splitter):
     """Reject lost input words, changed label order, omitted instructions and descriptions."""
-    if len(batch.original_texts) != len(inputs) or batch.original_texts != [case["text"] for case in inputs]:
+    # Pinned GLiNER Processor._collate_batch adds a final period before word splitting.
+    texts = [case["text"] if case["text"].endswith((".", "!", "?")) else case["text"] + "." for case in inputs]
+    if len(batch.original_texts) != len(inputs) or batch.original_texts != texts:
         raise ValueError("Native preprocessing changed input membership or text")
     for index, case in enumerate(inputs):
-        words = [word for word, _, _ in word_splitter(case["text"], lower=True)]
+        words = [word for word, _, _ in word_splitter(texts[index], lower=True)]
         if batch.text_tokens[index] != words:
             raise ValueError("Native preprocessing dropped or changed text words")
         schemas = batch.schema_tokens_list[index]
@@ -61,6 +63,7 @@ class NativeGLiner:
         def collate(rows, **kwargs):
             if kwargs.get("max_len") is not None:
                 raise ValueError("Input truncation is disabled")
+            kwargs["error_policy"] = "raise"
             batch = original_collate(rows, **kwargs)
             audit_native_batch(batch, self._inputs, processor.word_splitter)
             self.audit["records_checked"] += len(rows)
