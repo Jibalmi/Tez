@@ -1,0 +1,34 @@
+{
+  "round": "exploratory-followup-20260927",
+  "budget": {
+    "combined_authorized_usd": 10,
+    "prior_estimated_spend_usd": 6.248800090730247,
+    "new_pod_max_gpu_usd_per_hour": 4.60,
+    "new_pod_max_minutes": 40,
+    "compute_deadline_minutes_after_setup": 30,
+    "reserve_note": "Leave the remainder for setup, exports, running storage, and cost uncertainty."
+  },
+  "encoder": {
+    "arm": "a-base-12ep",
+    "backbone": "jhu-clsp/mmBERT-base",
+    "revision": "c5955035435e2bf121cde7f3c8863ef52ff35d82",
+    "data": "unchanged cloud teacher, original state train/validation split",
+    "epochs": 12,
+    "lr": 0.00003,
+    "head_lr": 0.001,
+    "seed": 13,
+    "selection": "lowest teacher-validation KL across epochs; no test-based checkpoint selection",
+    "hypothesis": "The three-epoch validation curve was still improving; longer training may improve transfer."
+  },
+  "qwen_speed": {
+    "candidate": "merge LoRA and disable unused inference KV cache",
+    "validation": "all 1390 teacher-validation decisions",
+    "argmax_agreement_min": 0.99,
+    "max_probability_delta_max": 0.04,
+    "mean_total_variation_max": 0.005,
+    "promote_only_if": "parity passes and measured latency improves"
+  },
+  "comparators": ["qwen08-frozen", "kev08-native", "gliclass-multilang-mini", "gliclass-instruct-base-v1.0", "gliclass-instruct-edge-v1.0"],
+  "measurement_policy": "Fixed original 6151 decisions with model-native rendering and explicit option mapping; T=1 primary, shipped calibration secondary where available. Record all failures and every model/source hash.",
+  "interpretation": "Original public test results have now informed research directions. Follow-up gains are exploratory and require a fresh independent confirmation before a generalization or release claim. Competitor training contamination is assessed separately; unknown is not held out."
+}

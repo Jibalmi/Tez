@@ -99,14 +99,11 @@ def main() -> None:
     before = snapshot() if dev == "cuda" else None
     cpu0 = psutil.cpu_percent(interval=1.0)
     t_load = time.perf_counter()
-    if args.arm.startswith("c-"):
-        from eval_arms import PredictC
-        pred = PredictC(args.arm, device=dev)
-    else:
-        from eval_arms import PredictA
-        pred = PredictA(args.arm, device=dev)
-        if dev == "cpu":
-            pred.model.float()
+    from competitor_models import predictor
+    from eval_arms import PredictA
+    pred = predictor(args.arm, device=dev)
+    if dev == "cpu" and isinstance(pred, PredictA):
+        pred.model.float()
     load_s = time.perf_counter() - t_load
 
     def cases(i, n):
@@ -122,7 +119,7 @@ def main() -> None:
         if dev == "cuda":
             torch.cuda.synchronize()
         t = time.perf_counter()
-        if dev == "cpu" and not args.arm.startswith("c-"):
+        if dev == "cpu" and isinstance(pred, PredictA):
             res = cpu_groups(pred, [cs])
         else:
             res = pred.groups([cs])
@@ -162,7 +159,8 @@ def main() -> None:
     throttled = None
     if dev == "cuda":
         throttled = any(t.get("temp_c", 0) > 70 or t.get("sw_thermal") or t.get("hw_thermal") for t in thermals)
-    res = {"arm": args.arm, "device": dev, "gpu_name": torch.cuda.get_device_name(0) if dev == "cuda" else None,
+    res = {"arm": args.arm, "device": dev, "weights_sha256": pred.weights, "model_info": pred.info,
+           "gpu_name": torch.cuda.get_device_name(0) if dev == "cuda" else None,
            "thermal": thermals, "throttled": throttled, "threads": args.threads if dev == "cpu" else None,
            "dtype": "bf16 autocast" if dev == "cuda" else "fp32", "load_s": round(load_s, 2),
            "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 3) if dev == "cuda" else None,

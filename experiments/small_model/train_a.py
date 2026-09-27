@@ -175,6 +175,7 @@ def main() -> int:
     ap.add_argument("--budget", type=int, default=16384, help="padded tokens per batch")
     ap.add_argument("--max-len", type=int, default=2048)
     ap.add_argument("--seed", type=int, default=13)
+    ap.add_argument("--select-best-val", action="store_true", help="save the epoch with minimum teacher-validation KL")
     ap.add_argument("--minutes", type=float, default=50, help="segment length: checkpoint and exit 3 past this")
     ap.add_argument("--device", default="cuda", help="cuda (the pilot) or cpu (smoke tests)")
     args = ap.parse_args()
@@ -189,6 +190,7 @@ def main() -> int:
     out = RUNS / "models" / args.arm
     out.mkdir(parents=True, exist_ok=True)
     ckpt_path = out / "ckpt.pt"
+    best_path = out / "best_val.pt"
 
     model = Student(args.backbone).to(dev)
     model.train()
@@ -264,6 +266,11 @@ def main() -> int:
         st["log"].append({"epoch": st["ep"], "step": st["step"], "val_agreement": round(agree, 4),
                           "val_kl": round(kl, 4), "seconds": round(prior_seconds + time.time() - t0, 1)})
         print(f"== epoch {st['ep']}: val agreement {agree:.4f} KL {kl:.4f}", flush=True)
+        if args.select_best_val and kl < st.get("best_val_kl", float("inf")):
+            st["best_val_kl"], st["best_val_epoch"] = kl, st["ep"] + 1
+            temporary = best_path.with_suffix(".pt.tmp")
+            torch.save(model.state_dict(), temporary)
+            temporary.replace(best_path)
         st["ep"] += 1
         st["b"] = 0
     st["train_s"] = prior_seconds + time.time() - t0
@@ -273,6 +280,8 @@ def main() -> int:
         checkpoint()
         print(f"segment ended at epoch {st['ep']} batch {st['b']}: checkpoint saved", flush=True)
         return 3
+    if args.select_best_val:
+        model.load_state_dict(torch.load(best_path, map_location=dev, weights_only=True))
     agree, kl, recs = evaluate_val(model, val, enc, dev, args.budget, guard=guard)
     temps = fit_type_temps(recs)
     model.enc.save_pretrained(out / "encoder")
@@ -286,6 +295,8 @@ def main() -> int:
             "thermal_paused_s": round(st["paused_s"], 1), "max_gpu_c": st["max_gpu_c"], "lr": args.lr,
             "head_lr": args.head_lr, "budget_tokens": args.budget, "max_len": args.max_len, "log": st["log"],
             "score_loss_order": "canonical_levels", "seed": args.seed,
+            "selected_by": "minimum validation KL" if args.select_best_val else "final epoch",
+            "selected_epoch": st.get("best_val_epoch", st["ep"]),
             "val_agreement_with_teacher": round(agree, 4), "val_kl": round(kl, 4), "temperatures": temps,
             "train_summary": summary(train), "val_summary": summary(val),
             "peak_vram_gb": round(torch.cuda.max_memory_allocated() / 2 ** 30, 2) if dev.type == "cuda" else None}

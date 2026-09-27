@@ -19,6 +19,7 @@ import argparse
 import json
 import math
 import os
+from pathlib import Path
 import time
 from collections import defaultdict
 
@@ -114,7 +115,7 @@ class PredictA:
 
 
 class PredictC:
-    def __init__(self, arm: str, device: str = "cuda"):
+    def __init__(self, arm: str, device: str = "cuda", merge: bool = False):
         from peft import PeftModel
         from train_c import load_base
         d = RUNS / "models" / arm
@@ -123,6 +124,10 @@ class PredictC:
         self.tok = tok
         self.tok.padding_side = "left"
         self.model = PeftModel.from_pretrained(base, d / "adapter").to(device).eval()
+        if merge:
+            self.model = self.model.merge_and_unload(safe_merge=True).eval()
+            self.model.config.use_cache = False
+        self.info = {**self.info, "lora_merged": merge, "cache_disabled": merge}
         self.device = device
         self.weights = {"adapter": file_sha256(d / "adapter" / "adapter_model.safetensors")}
 
@@ -157,12 +162,13 @@ class PredictGLiClass:
         from gliclass import GLiClassModel, ZeroShotClassificationPipeline
         from huggingface_hub import snapshot_download
         from transformers import AutoTokenizer
-        path = snapshot_download("knowledgator/gliclass-x-base")
+        from competitor_models import model_revision
+        path = snapshot_download("knowledgator/" + arm, revision=model_revision("knowledgator/" + arm))
         model = GLiClassModel.from_pretrained(path)
-        tok = AutoTokenizer.from_pretrained(path, add_prefix_space=True)
+        tok = AutoTokenizer.from_pretrained(path, **({"add_prefix_space": True} if arm == "gliclass-x-base" else {}))
         self.pipe = ZeroShotClassificationPipeline(model, tok, classification_type="single-label", device=f"{device}:0",
                                                    progress_bar=False).pipe
-        self.info = {"temperatures": {}}
+        self.info = {"temperatures": {}, "model": "knowledgator/" + arm, "revision": Path(path).name}
         self.weights = {"model": file_sha256(f"{path}/model.safetensors")}
 
     @torch.no_grad()
@@ -303,17 +309,13 @@ def main() -> None:
     ap.add_argument("--tasks", default="all")
     args = ap.parse_args()
     t0 = time.time()
-    if args.arm.startswith("c-"):
-        pred = PredictC(args.arm)
-    elif args.arm.startswith("gliclass"):
-        pred = PredictGLiClass(args.arm)
-    else:
-        pred = PredictA(args.arm)
+    from competitor_models import predictor
+    pred = predictor(args.arm)
     temps = pred.info.get("temperatures", {})
     S = suites()
     if args.tasks != "all":
         S = {k: v for k, v in S.items() if k in args.tasks.split(",")}
-    out = {"arm": args.arm, "weights_sha256": pred.weights, "temperatures": temps, "tasks": {}}
+    out = {"arm": args.arm, "weights_sha256": pred.weights, "temperatures": temps, "model_info": pred.info, "tasks": {}}
     for task, cases in S.items():
         t1 = time.time()
         if task == "typed_decisions":

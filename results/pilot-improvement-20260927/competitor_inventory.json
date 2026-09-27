@@ -1,0 +1,468 @@
+{
+  "checked_utc": "2026-09-27T00:12:23.156025+00:00",
+  "scope": "Upstream metadata only. Published claims are not measurements on Tez's suites.",
+  "models": {
+    "convaiinnovations/laya": {
+      "source_url": "https://huggingface.co/api/models/convaiinnovations/laya",
+      "model_card": "https://huggingface.co/convaiinnovations/laya",
+      "revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+      "last_modified": "2026-09-24T05:39:22.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": null,
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 3,
+          "F16": 421293827
+        },
+        "total": 421293830
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "assets/laya_benchmark.png",
+        "assets/laya_benchmark_common.png",
+        "assets/laya_vs_jev.png",
+        "assets/laya_vs_jev_full.png",
+        "assets/logo-lockup-dark.png",
+        "assets/logo-lockup-dark.svg",
+        "assets/logo-lockup.png",
+        "assets/logo-lockup.svg",
+        "assets/logo-mark-ink.png",
+        "assets/logo-mark-ink.svg",
+        "assets/logo-mark-mono.svg",
+        "assets/logo-mark.png",
+        "assets/logo-mark.svg",
+        "email_utils.py",
+        "encoder/config.json",
+        "eval/benchmark_comparison.png",
+        "eval/reliability_eval_in.png",
+        "eval/reliability_eval_zs.png",
+        "eval/results.json",
+        "eval/results.md",
+        "model.safetensors",
+        "multilingual/encoder/config.json",
+        "multilingual/model.safetensors",
+        "multilingual/rl_agent_config.json",
+        "multilingual/tokenizer/tokenizer.json",
+        "multilingual/tokenizer/tokenizer_config.json",
+        "rl_agent_api.py",
+        "rl_agent_config.json",
+        "rl_common.py",
+        "tokenizer/tokenizer.json",
+        "tokenizer/tokenizer_config.json",
+        "typed-decisions/encoder/config.json",
+        "typed-decisions/model.safetensors",
+        "typed-decisions/rl_agent_config.json",
+        "typed-decisions/tokenizer/tokenizer.json",
+        "typed-decisions/tokenizer/tokenizer_config.json"
+      ]
+    },
+    "convaiinnovations/laya-multilingual": {
+      "source_url": "https://huggingface.co/api/models/convaiinnovations/laya-multilingual",
+      "model_card": "https://huggingface.co/convaiinnovations/laya-multilingual",
+      "revision": "e4e9ddf21a7b1903b7acffd8814ad4307bf63a67",
+      "last_modified": "2026-09-24T05:39:24.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "multilingual",
+        "en",
+        "de",
+        "fr",
+        "es",
+        "pt",
+        "it",
+        "nl",
+        "sv",
+        "da",
+        "nb",
+        "ru",
+        "pl",
+        "tr",
+        "ar",
+        "he",
+        "fa",
+        "ur",
+        "hi",
+        "bn",
+        "ta",
+        "te",
+        "kn",
+        "ml",
+        "th",
+        "vi",
+        "id",
+        "ms",
+        "tl",
+        "ja",
+        "ko",
+        "zh",
+        "el",
+        "hu",
+        "fi",
+        "ro",
+        "sq",
+        "sl",
+        "sw",
+        "af",
+        "cy",
+        "am",
+        "hy",
+        "ka",
+        "km",
+        "my",
+        "mn",
+        "lv",
+        "is",
+        "az",
+        "jv"
+      ],
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 3,
+          "F16": 321908995
+        },
+        "total": 321908998
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "encoder/config.json",
+        "model.safetensors",
+        "rl_agent_config.json",
+        "tokenizer/tokenizer.json",
+        "tokenizer/tokenizer_config.json"
+      ]
+    },
+    "convaiinnovations/laya-typed-decisions": {
+      "source_url": "https://huggingface.co/api/models/convaiinnovations/laya-typed-decisions",
+      "model_card": "https://huggingface.co/convaiinnovations/laya-typed-decisions",
+      "revision": "1a793eb568e6718f15941d08f85432581df534e3",
+      "last_modified": "2026-09-24T04:08:17.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en"
+      ],
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F16": 421293830
+        },
+        "total": 421293830
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "encoder/config.json",
+        "model.safetensors",
+        "rl_agent_config.json",
+        "tokenizer/tokenizer.json",
+        "tokenizer/tokenizer_config.json"
+      ]
+    },
+    "mpnikhil/dev-0.4b": {
+      "source_url": "https://huggingface.co/api/models/mpnikhil/dev-0.4b",
+      "model_card": "https://huggingface.co/mpnikhil/dev-0.4b",
+      "revision": "78f7121608a2ca44dc598bba4d74e4070567fd50",
+      "last_modified": "2026-09-22T00:00:22.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en"
+      ],
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 396880897
+        },
+        "total": 396880897
+      },
+      "training_datasets_declared": [
+        "PolyAI/banking77",
+        "google/boolq",
+        "code_search_net",
+        "yelp_review_full"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "assets/benchmark_scorecard.png",
+        "assets/causal_vs_bidirectional.jpg",
+        "assets/dev_hero_banner.jpg",
+        "assets/dynamic_choice_readout.png",
+        "config.json",
+        "encoder/config.json",
+        "model.safetensors",
+        "run.json",
+        "tokenizer/special_tokens_map.json",
+        "tokenizer/tokenizer.json",
+        "tokenizer/tokenizer_config.json"
+      ]
+    },
+    "jaredpalmer/kev-0.8b": {
+      "source_url": "https://huggingface.co/api/models/jaredpalmer/kev-0.8b",
+      "model_card": "https://huggingface.co/jaredpalmer/kev-0.8b",
+      "revision": "9a45d25eb2ab761841196625383fa1dff0e56c1e",
+      "last_modified": "2026-09-24T14:37:02.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": "en",
+      "base_model_declared": "Qwen/Qwen3.5-0.8B-Base",
+      "parameters": null,
+      "training_datasets_declared": [
+        "legacy-datasets/banking77",
+        "google/boolq",
+        "fancyzhx/ag_news",
+        "nyu-mll/multi_nli",
+        "SetFit/sst5",
+        "Yelp/yelp_review_full",
+        "CogComp/trec",
+        "fancyzhx/dbpedia_14",
+        "SetFit/amazon_reviews_multi_en",
+        "stanfordnlp/imdb"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "adapter_config.json",
+        "adapter_model.safetensors",
+        "head.pt",
+        "provenance.json",
+        "result.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "train.log",
+        "training_config.json",
+        "training_metrics.json"
+      ]
+    },
+    "Mapika/decider-0.8b": {
+      "source_url": "https://huggingface.co/api/models/Mapika/decider-0.8b",
+      "model_card": "https://huggingface.co/Mapika/decider-0.8b",
+      "revision": "a0a01d6f8135298f400a8c856b355793012ae971",
+      "last_modified": "2026-09-22T14:56:19.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en"
+      ],
+      "base_model_declared": "Qwen/Qwen3.5-0.8B-Base",
+      "parameters": {
+        "parameters": {
+          "BF16": 752393024
+        },
+        "total": 752393024
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "chat_template.jinja",
+        "config.json",
+        "decider/__init__.py",
+        "decider/engine.py",
+        "decider/fp8.py",
+        "decider/infer.py",
+        "decider/metrics.py",
+        "decider/model.py",
+        "decider/prompt.py",
+        "decider/schema_engine.py",
+        "decider/serve.py",
+        "decider/systemone.py",
+        "decider_config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    },
+    "knowledgator/gliclass-x-base": {
+      "source_url": "https://huggingface.co/api/models/knowledgator/gliclass-x-base",
+      "model_card": "https://huggingface.co/knowledgator/gliclass-x-base",
+      "revision": "4599a431a1b25b4eb076b46ae97c9ba61f82f416",
+      "last_modified": "2025-08-12T14:25:23.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": null,
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 279892992
+        },
+        "total": 279892992
+      },
+      "training_datasets_declared": [
+        "knowledgator/gliclass-v2.0"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "added_tokens.json",
+        "config.json",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "spm.model",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    },
+    "knowledgator/gliclass-multilang-mini": {
+      "source_url": "https://huggingface.co/api/models/knowledgator/gliclass-multilang-mini",
+      "model_card": "https://huggingface.co/knowledgator/gliclass-multilang-mini",
+      "revision": "0bd888b6c3ef9fca5f0a9d407bddfbbc7623486b",
+      "last_modified": "2026-04-30T15:52:36.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": [
+        "en",
+        "sv",
+        "cs",
+        "pl",
+        "lt",
+        "et",
+        "lv",
+        "es",
+        "fi",
+        "de",
+        "fr",
+        "ro",
+        "it",
+        "pt",
+        "nl",
+        "uk",
+        "hi",
+        "zh",
+        "ar",
+        "he"
+      ],
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "BF16": 283736833
+        },
+        "total": 283736833
+      },
+      "training_datasets_declared": [
+        "BioMike/formal-logic-reasoning-gliclass-2k",
+        "knowledgator/gliclass-v3-logic-dataset",
+        "tau/commonsense_qa"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "added_tokens.json",
+        "config.json",
+        "gliclass_multilang.png",
+        "model.safetensors",
+        "model_comparison_en.png",
+        "model_comparison_multi.png",
+        "special_tokens_map.json",
+        "spm.model",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    },
+    "knowledgator/gliclass-instruct-base-v1.0": {
+      "source_url": "https://huggingface.co/api/models/knowledgator/gliclass-instruct-base-v1.0",
+      "model_card": "https://huggingface.co/knowledgator/gliclass-instruct-base-v1.0",
+      "revision": "4f6a108b08a5537f395521d19b5073e197923dd3",
+      "last_modified": "2026-05-21T09:47:22.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": null,
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 186548993
+        },
+        "total": 186548993
+      },
+      "training_datasets_declared": [
+        "BioMike/formal-logic-reasoning-gliclass-2k",
+        "knowledgator/gliclass-v3-logic-dataset",
+        "tau/commonsense_qa"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "added_tokens.json",
+        "backends/ggml/ggml-classes_projector-fp32.bin",
+        "backends/ggml/ggml-encoder_model-fp32.bin",
+        "backends/ggml/ggml-scorer-fp32.bin",
+        "backends/ggml/ggml-text_projector-fp32.bin",
+        "config.json",
+        "instruct.png",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "spm.model",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "trainer_state.json"
+      ]
+    },
+    "knowledgator/gliclass-instruct-edge-v1.0": {
+      "source_url": "https://huggingface.co/api/models/knowledgator/gliclass-instruct-edge-v1.0",
+      "model_card": "https://huggingface.co/knowledgator/gliclass-instruct-edge-v1.0",
+      "revision": "727be8a417f6a7718e591b025e07054c146d8139",
+      "last_modified": "2026-02-17T12:59:00.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": null,
+      "base_model_declared": null,
+      "parameters": {
+        "parameters": {
+          "F32": 32706689
+        },
+        "total": 32706689
+      },
+      "training_datasets_declared": [
+        "BioMike/formal-logic-reasoning-gliclass-2k",
+        "knowledgator/gliclass-v3-logic-dataset",
+        "tau/commonsense_qa"
+      ],
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "added_tokens.json",
+        "config.json",
+        "instruct.png",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "spm.model",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    },
+    "Qwen/Qwen3.5-0.8B": {
+      "source_url": "https://huggingface.co/api/models/Qwen/Qwen3.5-0.8B",
+      "model_card": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "last_modified": "2026-03-02T11:26:58.000Z",
+      "license_declared": "apache-2.0",
+      "languages_declared": null,
+      "base_model_declared": [
+        "Qwen/Qwen3.5-0.8B-Base"
+      ],
+      "parameters": {
+        "parameters": {
+          "F32": 2592,
+          "BF16": 873436192
+        },
+        "total": 873438784
+      },
+      "training_datasets_declared": null,
+      "files": [
+        ".gitattributes",
+        "LICENSE",
+        "README.md",
+        "chat_template.jinja",
+        "config.json",
+        "merges.txt",
+        "model.safetensors-00001-of-00001.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "video_preprocessor_config.json",
+        "vocab.json"
+      ]
+    }
+  }
+}

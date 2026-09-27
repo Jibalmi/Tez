@@ -42,8 +42,10 @@ def kernel_packages():
 
 def load_base(dtype=torch.bfloat16, device="cuda"):
     from transformers import AutoModelForCausalLM, AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(BASE)
-    model = AutoModelForCausalLM.from_pretrained(BASE, dtype=dtype).to(device)
+    from competitor_models import model_revision
+    revision = model_revision(BASE)
+    tok = AutoTokenizer.from_pretrained(BASE, revision=revision)
+    model = AutoModelForCausalLM.from_pretrained(BASE, revision=revision, dtype=dtype).to(device)
     letter_ids = []
     for L in LETTERS:
         t = tok(L, add_special_tokens=False)["input_ids"]
