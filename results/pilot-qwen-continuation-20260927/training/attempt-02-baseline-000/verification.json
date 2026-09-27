@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "verified_utc": "2026-09-27T10:36:29.047311+00:00",
+  "registration_sha256": "022697b2df18bec7d6675d16b0a0e45c3fb5487c9fb0623df1cf9210b5beb2da",
+  "verifier_sha256": "06e1d8b25dcc4c0ad078e42a532757e36c65713f5fc0a001ebb112d6e7db5bc0",
+  "analysis_registration_sha256": "5f465e963cdf206ac2e19041bb33b41113a1f22b1defe4e167ee620a3643ed48",
+  "operation": "baseline",
+  "completed_step": 0,
+  "checkpoints": [
+    {
+      "step": 0,
+      "adapter_tensors": 372,
+      "changed_from_original": 0,
+      "tokens": 0,
+      "sha256": "0b7f750f846fc2e2886b9ed3921635e6e72297a62b351bb853b3d4cd27bf4b10"
+    }
+  ],
+  "validation": {
+    "n": 1390,
+    "mean_kl": 0.1401374435902039,
+    "teacher_agreement": 0.7899280575539568
+  },
+  "baseline_parity": {
+    "argmax_agreement": 1.0,
+    "max_probability_delta": 4.440892098500626e-16,
+    "mean_total_variation": 1.741178476411106e-17,
+    "decisions_validated": 1390,
+    "passed": true
+  },
+  "scope": "One-thread CPU integrity and arithmetic checks, including saved adapter/optimizer values. No GPU numerical replay, throughput or new quality result; original release gates remain unchanged."
+}

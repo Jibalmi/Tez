@@ -21,9 +21,10 @@ discarded; the probe cannot serve as a candidate or a training throughput measur
 
 The [registered continuation](training/README.md) retains the unchanged checkpoint as step zero
 and selects only from original validation data. Its optimizer, checkpoint selection, input
-reconstruction and resumable driver are implemented. The next operation is complete step-zero
-validation, including comparison with the frozen inference probabilities, before any training.
-No training improvement or release gate is claimed from this preparation.
+reconstruction and resumable driver are implemented. Complete step-zero validation is now
+[independently verified](training/attempt-02-baseline-000/verification.json): all 1,390 predictions
+match the frozen reference, and all 372 saved adapter tensors equal the originals. The first
+bounded training segment is queued. No training improvement or release gate is claimed yet.
 
 A [checkpoint helper](../../experiments/small_model/qwen_checkpoint.py) supports
 that driver. It saves only named trainable LoRA tensors, optimizer state, progress and

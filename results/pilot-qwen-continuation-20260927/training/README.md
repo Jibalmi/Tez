@@ -1,5 +1,12 @@
 # Registered Qwen continuation
 
+Step-zero validation is [complete and independently verified](attempt-02-baseline-000/verification.json).
+All 1,390 argmax predictions match the frozen reference; maximum probability difference is
+4.44e-16. Teacher agreement is 78.9928% and mean KL is 0.14013744. All 372 saved adapter tensors
+equal the original checkpoint, and the optimizer has no prior update state. The evidence archive
+retains raw held-out predictions and inputs. The first bounded training segment is queued;
+no trained-candidate quality result is available yet.
+
 The [frozen protocol](../../../experiments/small_model/qwen_continuation_registration.json)
 tests 150 updates from the original adapter, using the already prepared 2,400 original training
 decisions. A new AdamW optimizer uses constant learning rate 0.00005, zero weight decay and
