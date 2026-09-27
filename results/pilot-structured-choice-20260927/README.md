@@ -34,3 +34,8 @@ centroid inference. Training examples and feature caches are excluded from the e
 
 No training or model evaluation has used these candidates. The confirmation set is reserved
 for after a subsequent registered training run and validation-only checkpoint selection.
+
+The separate [Qwen tokenizer audit](../pilot-structured-choice-qwen-preflight-20260927/README.md)
+now checks all filtered training and validation inputs in primary and reversed option order,
+including exact-label mapping. None exceeds 324 tokens, and none is truncated at 2,048.
+It does not open the confirmation file, train a model, or alter the current continuation.
