@@ -32,6 +32,12 @@ from 0.14013744 to 0.14770741. This checkpoint does not improve the registered m
 bounded training segment is queued toward step 100; the original checkpoint remains eligible
 when all four validations are available. No release gate is claimed.
 
+The [descriptive validation breakdown](validation_diagnostics/step-050/README.md) shows worse
+teacher agreement and KL across choice, yes/no and score questions. Mean confidence declines
+slightly. Only 21 validation decisions have original gold labels, so these teacher-distribution
+metrics cannot establish broad human-label accuracy. The diagnosis changes no training or
+selection setting.
+
 The next [public comparison is registered](public_evaluation.md): a fresh unchanged-model control
 and the frozen selected checkpoint on the same laptop/backend, all original public decisions
 and reversed-option checks, with archived historical Decider and Tev1 results as context.

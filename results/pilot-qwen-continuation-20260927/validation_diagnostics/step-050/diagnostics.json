@@ -1,0 +1,194 @@
+{
+  "status": "complete",
+  "analyzed_utc": "2026-09-27T11:54:51.488924+00:00",
+  "inputs": {
+    "baseline": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-02-baseline-000",
+      "step": 0,
+      "archive": {
+        "sha256": "8f7d49a970bfbf5df3bf3d92ad920e30cdc1c10f96df8bba1f7aafbd77ce2747",
+        "bytes": 889697,
+        "files_verified": 44
+      },
+      "rows_sha256": "1cd503c102c3b5219214b2cb80294ba5c79439774dc29b7926b8438c0ed0093f"
+    },
+    "candidate": {
+      "directory": "results/pilot-qwen-continuation-20260927/training/attempt-05-validate-050",
+      "step": 50,
+      "archive": {
+        "sha256": "a966d9388ab2b590beb5c8003401742a1257b5df88a85d5a44f6688b906c2372",
+        "bytes": 889021,
+        "files_verified": 44
+      },
+      "rows_sha256": "537f4614af48d8124e6a756739b068be40c4f8050912611e9d3bdef0f3b36223"
+    }
+  },
+  "groups": {
+    "all": {
+      "baseline": {
+        "n": 1390,
+        "teacher_agreement": 0.7899280575539568,
+        "mean_kl": 0.1401374435902039,
+        "mean_max_probability": 0.669649604496865,
+        "mean_entropy": 0.8682345686777039,
+        "gold_count": 21,
+        "gold_accuracy": 0.6666666666666666
+      },
+      "candidate": {
+        "n": 1390,
+        "teacher_agreement": 0.781294964028777,
+        "mean_kl": 0.14770740977013652,
+        "mean_max_probability": 0.6673539985043573,
+        "mean_entropy": 0.8809873963776174,
+        "gold_count": 21,
+        "gold_accuracy": 0.6190476190476191
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": -0.008633093525179825,
+        "mean_kl": 0.007569966179932636,
+        "mean_max_probability": -0.0022956059925076655,
+        "mean_entropy": 0.012752827699913483
+      }
+    },
+    "choice": {
+      "baseline": {
+        "n": 526,
+        "teacher_agreement": 0.7604562737642585,
+        "mean_kl": 0.2182621119688846,
+        "mean_max_probability": 0.6529472117452655,
+        "mean_entropy": 1.0012440709242463,
+        "gold_count": 21,
+        "gold_accuracy": 0.6666666666666666
+      },
+      "candidate": {
+        "n": 526,
+        "teacher_agreement": 0.752851711026616,
+        "mean_kl": 0.22682443292265372,
+        "mean_max_probability": 0.6509059079332545,
+        "mean_entropy": 1.020590396323647,
+        "gold_count": 21,
+        "gold_accuracy": 0.6190476190476191
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": -0.0076045627376425395,
+        "mean_kl": 0.008562320953769131,
+        "mean_max_probability": -0.002041303812010953,
+        "mean_entropy": 0.01934632539940062
+      }
+    },
+    "noul": {
+      "baseline": {
+        "n": 491,
+        "teacher_agreement": 0.9307535641547862,
+        "mean_kl": 0.04712935617175918,
+        "mean_max_probability": 0.8137028795512832,
+        "mean_entropy": 0.44270646199239483,
+        "gold_count": 0,
+        "gold_accuracy": null
+      },
+      "candidate": {
+        "n": 491,
+        "teacher_agreement": 0.9185336048879837,
+        "mean_kl": 0.04891334958710206,
+        "mean_max_probability": 0.8150957045098044,
+        "mean_entropy": 0.4412829318394637,
+        "gold_count": 0,
+        "gold_accuracy": null
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": -0.012219959266802416,
+        "mean_kl": 0.0017839934153428827,
+        "mean_max_probability": 0.0013928249585212216,
+        "mean_entropy": -0.0014235301529311184
+      }
+    },
+    "score": {
+      "baseline": {
+        "n": 373,
+        "teacher_agreement": 0.646112600536193,
+        "mean_kl": 0.15239855714320744,
+        "mean_max_probability": 0.5035780241634117,
+        "mean_entropy": 1.2408117863742332,
+        "gold_count": 0,
+        "gold_accuracy": null
+      },
+      "candidate": {
+        "n": 373,
+        "teacher_agreement": 0.6407506702412868,
+        "mean_kl": 0.16618550460028628,
+        "mean_max_probability": 0.4960685239513425,
+        "mean_entropy": 1.2629276487010008,
+        "gold_count": 0,
+        "gold_accuracy": null
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": -0.00536193029490617,
+        "mean_kl": 0.01378694745707884,
+        "mean_max_probability": -0.007509500212069198,
+        "mean_entropy": 0.022115862326767655
+      }
+    },
+    "choice_le10": {
+      "baseline": {
+        "n": 520,
+        "teacher_agreement": 0.7615384615384615,
+        "mean_kl": 0.2072654242381397,
+        "mean_max_probability": 0.6502333222457863,
+        "mean_entropy": 1.007623927774759,
+        "gold_count": 15,
+        "gold_accuracy": 0.6
+      },
+      "candidate": {
+        "n": 520,
+        "teacher_agreement": 0.7538461538461538,
+        "mean_kl": 0.21772321291622265,
+        "mean_max_probability": 0.6482144248373343,
+        "mean_entropy": 1.0267539345971841,
+        "gold_count": 15,
+        "gold_accuracy": 0.5333333333333333
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": -0.007692307692307665,
+        "mean_kl": 0.010457788678082947,
+        "mean_max_probability": -0.0020188974084520694,
+        "mean_entropy": 0.01913000682242516
+      }
+    },
+    "choice_gt10": {
+      "baseline": {
+        "n": 6,
+        "teacher_agreement": 0.6666666666666666,
+        "mean_kl": 1.1713083819667753,
+        "mean_max_probability": 0.888150968366788,
+        "mean_entropy": 0.4483231438798277,
+        "gold_count": 6,
+        "gold_accuracy": 0.8333333333333334
+      },
+      "candidate": {
+        "n": 6,
+        "teacher_agreement": 0.6666666666666666,
+        "mean_kl": 1.0155968334800127,
+        "mean_max_probability": 0.8841677762463501,
+        "mean_entropy": 0.4864170792837595,
+        "gold_count": 6,
+        "gold_accuracy": 0.8333333333333334
+      },
+      "candidate_minus_baseline": {
+        "teacher_agreement": 0.0,
+        "mean_kl": -0.1557115484867626,
+        "mean_max_probability": -0.003983192120437851,
+        "mean_entropy": 0.0380939354039318
+      }
+    }
+  },
+  "cpu_threads": 1,
+  "gpu_model_loaded": false,
+  "scope": "Post-hoc descriptive analysis of original validation only. No causal attribution, significance claim, public scores, data reweighting, training change or checkpoint choice. The frozen four-checkpoint selector and all release gates remain unchanged.",
+  "source_hashes": {
+    "qwen_validation_diagnostics.py": "057e8039258c0069e3f5a6939b6fe67d21270d0638700e02d55107292a73dd00",
+    "export_qwen_continuation.py": "6fdb17377ba606a8b0a047d1241d34162da1d15223684668f6eaad3130681f92",
+    "report_qwen_public.py": "36ffcbe337829d5a5b7fc4a90868d90c50de1dd177f88821bf0f9e32ecf6e577",
+    "qwen_public_evaluation.py": "c498dd5364194f420026167af646f8845b84cba67283a93813eab72148863279",
+    "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5"
+  }
+}
