@@ -141,6 +141,39 @@ def launch(args, key: str) -> None:
     print(json.dumps(receipt, indent=2))
 
 
+def extend(args, key: str) -> None:
+    """Move the provider stop of an owned Pod, within an explicit ceiling on projected total GPU cost."""
+    import psutil
+    receipt = json.loads(args.receipt.read_text(encoding="utf-8"))
+    target = pod_id(receipt["pod_id"])
+    if not 0 < args.minutes <= 60:
+        raise ValueError("Extend by 1..60 minutes at a time")
+    created = datetime.fromisoformat(receipt["created_utc"]).timestamp()
+    new_stop = max(receipt["stop_at_unix"], time.time()) + args.minutes * 60
+    projected = (new_stop - created) / 3600 * receipt["actual_cost_per_hr"]
+    if projected > args.max_total_usd:
+        raise ValueError(f"Projected GPU cost ${projected:.2f} exceeds the ceiling ${args.max_total_usd:.2f}")
+    old = receipt.get("watcher_pid")
+    if old and psutil.pid_exists(old):
+        psutil.Process(old).kill()
+    receipt["stop_at_unix"] = new_stop
+    receipt.setdefault("extensions", []).append({"at_utc": datetime.now(timezone.utc).isoformat(), "minutes": args.minutes,
+                                                 "projected_gpu_usd": round(projected, 2)})
+    save(args.receipt, receipt)
+    command = [sys.executable, str(Path(__file__).resolve())]
+    if args.key_file:
+        command += ["--key-file", str(args.key_file.resolve())]
+    command += ["watch", "--receipt", str(args.receipt.resolve())]
+    flags = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
+    with args.receipt.with_suffix(".watch.log").open("a", encoding="utf-8") as log:
+        process = subprocess.Popen(command, stdout=log, stderr=log, stdin=subprocess.DEVNULL, creationflags=flags,
+                                   start_new_session=os.name != "nt")
+    receipt["watcher_pid"] = process.pid
+    save(args.receipt, receipt)
+    print(json.dumps({"pod_id": target, "stop_in_minutes": round((new_stop - time.time()) / 60, 1),
+                      "projected_gpu_usd": round(projected, 2), "watcher_pid": process.pid}))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--key-file", type=Path)
@@ -154,6 +187,10 @@ def main() -> None:
     allocate.add_argument("--name", default="tez-pilot-12b-speed-trial")
     allocate.add_argument("--cuda-versions", nargs="*", default=None,
                           help="host CUDA driver versions to accept, e.g. 13.0 for cu130 wheels")
+    grow = subs.add_parser("extend")
+    grow.add_argument("--receipt", type=Path, required=True)
+    grow.add_argument("--minutes", type=float, required=True)
+    grow.add_argument("--max-total-usd", type=float, required=True)
     for name in ("watch", "status", "stop"):
         command = subs.add_parser(name)
         command.add_argument("--receipt", type=Path, required=True)
@@ -164,6 +201,8 @@ def main() -> None:
         print(json.dumps(gpu_catalog(key), indent=2))
     elif args.command == "launch":
         launch(args, key)
+    elif args.command == "extend":
+        extend(args, key)
     elif args.command == "watch":
         watch(key, args.receipt)
     else:
