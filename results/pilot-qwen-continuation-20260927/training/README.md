@@ -96,3 +96,28 @@ attempt nine completed it from the same checkpoint.
 The registered schedule and selection rule continue unchanged; this intermediate regression
 is retained. The [descriptive diagnostics](../validation_diagnostics/step-050/diagnostics.json)
 break down the regression by question type without changing training or checkpoint selection.
+
+## Recorded deviation: steps 101-150 trained on a RunPod GPU
+
+The registration's resources name the shared laptop and no cloud resources. On 2026-09-27 the
+laptop was heat-soaked by other shared work and two registered operations stopped on the worker's
+own thermal guard ([attempt 8](attempt-08-validate-100/README.md), [attempt 10](attempt-10-train-150/README.md)).
+The owner then authorized the existing RunPod account for this work. The two remaining training
+segments (steps 101-125 and 126-150, from the verified, validated step-100 checkpoint) therefore
+run on one rented GPU, recorded here before launch.
+
+Unchanged: the registration file and its hash, sources, data, schedule, optimizer, checkpoint chain,
+segment bounds, attempt budget, thermal pacing, selection rule and probability limits. The Pod uses
+the laptop's Python line and pinned packages (torch 2.10.0+cu130, transformers 5.17.0, peft 0.21.0,
+tokenizers 0.23.2, huggingface-hub 1.33.0), without the optional FLA or causal-conv1d kernels; it
+checks every bundled file against a laptop manifest, requires the three registered library files
+to be byte-identical to its own install, and verifies the pinned base-weight hash before any
+update ([bootstrap](../../../experiments/small_model/continuation_pod_bootstrap.sh),
+[bundle](../../../experiments/small_model/continuation_pod_bundle.py)).
+
+Different: the GPU model. Steps 101-150 follow a different floating-point path than laptop training
+would have; no laptop trajectory exists for those steps to compare against. The step-150 validation
+runs on the laptop, like steps 0, 50 and 100, so every validation that feeds the registered selector
+comes from the same hardware and software. The rented GPU is used for training only, with a
+bounded allocation and an automatic provider stop; the checkpoints return to the ignored `runs/`
+tree and are verified locally by the unchanged CPU verifier.

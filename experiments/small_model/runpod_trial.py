@@ -95,11 +95,13 @@ def launch(args, key: str) -> None:
     public_key = args.public_key.read_text(encoding="utf-8").strip()
     if not public_key.startswith("ssh-ed25519 ") or "\n" in public_key:
         raise ValueError("Supply one dedicated ed25519 SSH public key")
-    body = {"name": "tez-pilot-12b-speed-trial", "cloudType": "SECURE", "computeType": "GPU",
+    body = {"name": getattr(args, "name", "tez-pilot-12b-speed-trial"), "cloudType": "SECURE", "computeType": "GPU",
             "gpuCount": 1, "gpuTypeIds": [gpu["id"]], "imageName": IMAGE, "interruptible": False,
             "containerDiskInGb": 20, "volumeInGb": 60, "volumeMountPath": "/workspace",
             "ports": ["22/tcp"], "supportPublicIp": True, "env": {"PUBLIC_KEY": public_key}, "minRAMPerGPU": 64,
             "minVCPUPerGPU": 8}
+    if getattr(args, "cuda_versions", None):
+        body["allowedCudaVersions"] = args.cuda_versions
     receipt = {"status": "requesting", "created_utc": datetime.now(timezone.utc).isoformat(),
                "gpu_quote": gpu, "max_gpu_hourly_usd": args.max_hourly_usd, "minutes": args.minutes,
                "stop_at_unix": time.time() + args.minutes * 60,
@@ -149,6 +151,9 @@ def main() -> None:
     allocate.add_argument("--max-hourly-usd", type=float, required=True)
     allocate.add_argument("--minutes", type=float, required=True)
     allocate.add_argument("--public-key", type=Path, required=True)
+    allocate.add_argument("--name", default="tez-pilot-12b-speed-trial")
+    allocate.add_argument("--cuda-versions", nargs="*", default=None,
+                          help="host CUDA driver versions to accept, e.g. 13.0 for cu130 wheels")
     for name in ("watch", "status", "stop"):
         command = subs.add_parser(name)
         command.add_argument("--receipt", type=Path, required=True)
