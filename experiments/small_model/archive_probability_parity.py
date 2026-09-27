@@ -14,8 +14,11 @@ from structure_probe import digest, write_json
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def main(experiment):
-    directory = ROOT / f"results/pilot-{'restricted' if experiment == 'restricted' else 'fla'}-qwen-20260927"
+def main(experiment, attempt=1):
+    if attempt != 1 and experiment != "fla":
+        raise ValueError("Only the FLA experiment has a second attempt")
+    suffix = "-attempt2" if attempt == 2 else ""
+    directory = ROOT / f"results/pilot-{'restricted' if experiment == 'restricted' else 'fla'}-qwen{suffix}-20260927"
     archive = directory / "measurement-artifacts.tar.gz"
     if archive.exists():
         raise ValueError("Preserve the completed archive")
@@ -121,4 +124,6 @@ def main(experiment):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--experiment", choices=("restricted", "fla"), required=True)
-    main(parser.parse_args().experiment)
+    parser.add_argument("--attempt", type=int, choices=(1, 2), default=1)
+    args = parser.parse_args()
+    main(args.experiment, args.attempt)

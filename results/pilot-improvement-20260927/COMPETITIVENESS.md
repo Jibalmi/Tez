@@ -70,8 +70,9 @@ See the [training-exposure audit](../pilot-reasoning-round2-20260927/EXPOSURE.md
 Focus further work on the Qwen/Decider family: preserve complete probability outputs, verify
 inference changes against the frozen validation reference, then measure speed under the original
 laptop protocol. The [restricted output projection](../pilot-restricted-qwen-20260927/README.md)
-and [isolated attention-kernel preparation](../pilot-windows-kernels-20260927/README.md) are
-experiments, not claimed speedups. Larger Decider releases may be useful quality references,
+passed its validation probability check. The [FLA kernel retry](../pilot-fla-qwen-attempt2-20260927/RESULTS.md)
+completed but failed the unchanged maximum-probability and mean-total-variation limits. Keep
+the original attention kernels. Neither experiment establishes a measured speedup. Larger Decider releases may be useful quality references,
 but have not been measured here and would be a different size/cost class. Published JevBench
 or DecisionIndex scores use different protocols and cannot be inserted into this table.
 

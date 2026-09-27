@@ -1,0 +1,190 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-27T02:52:58.880958+00:00",
+  "registration_sha256": "7d00399f0f1739217093c0f31b889f67c0553051e76939260e36e8f1cf938b30",
+  "sources": {
+    "windows_kernel_parity.py": "a10e994ad4f28946e9924dc87b5f027465e6b34e2cad50dcbaf77a037c82b37d",
+    "windows_kernel_registration_attempt2.json": "7d00399f0f1739217093c0f31b889f67c0553051e76939260e36e8f1cf938b30",
+    "parity_evidence.py": "70eb535f41b28dc94a8d3ec8a459621e17dccae4d4f1a77fca4748437f2c02b5",
+    "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+    "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+    "dataset.py": "b06b66571133a85911ba811acda48fcfe1ed77397d23dc53a551f34b85477833",
+    "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+    "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+    "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+    "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+    "dependency_peft_model.py": "6c455a0709a96fbfd51434b922b4db383edbc342b6a33188439efaf9e39974f7",
+    "dependency_modeling_qwen3_5.py": "762feb6c7426a7f15b5bf830df54c07438bf9e7c27b8cdb23179045920412c3b",
+    "dependency_hub_kernels.py": "c1eafefe0cbdf7f0deaa21b1ef6cb6d7c6082b3f486651d069ff38fcf3e53c95"
+  },
+  "dispatch": {
+    "torch_chunk_gated_delta_rule": {
+      "implementation": "fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule",
+      "source": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\.venv-pilot\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py",
+      "source_sha256": "1290b074b160198828ebe6836ef58c21277b2f8919ac5e9ea3c47e218e76516a",
+      "calls": 1566,
+      "first_tensors": [
+        {
+          "shape": [
+            16,
+            151,
+            16,
+            128
+          ],
+          "device": "cuda:0",
+          "dtype": "torch.bfloat16"
+        },
+        {
+          "shape": [
+            16,
+            151,
+            16,
+            128
+          ],
+          "device": "cuda:0",
+          "dtype": "torch.bfloat16"
+        },
+        {
+          "shape": [
+            16,
+            151,
+            16,
+            128
+          ],
+          "device": "cuda:0",
+          "dtype": "torch.bfloat16"
+        },
+        {
+          "shape": [
+            16,
+            151,
+            16
+          ],
+          "device": "cuda:0",
+          "dtype": "torch.float32"
+        },
+        {
+          "shape": [
+            16,
+            151,
+            16
+          ],
+          "device": "cuda:0",
+          "dtype": "torch.bfloat16"
+        }
+      ]
+    },
+    "torch_recurrent_gated_delta_rule": {
+      "implementation": "fla.ops.gated_delta_rule.fused_recurrent.fused_recurrent_gated_delta_rule",
+      "source": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\runs\\pilot-windows-kernels-20260927\\site-packages\\fla\\ops\\gated_delta_rule\\fused_recurrent.py",
+      "source_sha256": "9c15dc68d37a150da5317431a51fe7def362264ac92770e32261c8557cd5889b",
+      "calls": 0
+    }
+  },
+  "overlay_files_verified": 589,
+  "toolchain": {
+    "compiler": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\runs\\pilot-windows-kernels-20260927\\site-packages\\triton\\runtime\\tcc\\tcc.exe",
+    "compiler_sha256": "78dc86cfd8dfb47251a6f7c905a74d61547505c522edbb429c953665d4acb447",
+    "cuda_directory": "C:\\Users\\migue\\OneDrive\\Desktop\\Personal\\AILABS\\Tez-pilot\\runs\\pilot-windows-kernels-20260927\\site-packages\\triton\\backends\\nvidia"
+  },
+  "packages": {
+    "torch": "2.10.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "triton-windows": "3.6.0.post26",
+    "fla-core": "0.5.2",
+    "einops": "0.8.2"
+  },
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "threads": 4,
+  "teacher_files_verified": 35,
+  "validation_inputs_sha256": "616274d8175cd0fb28e39244938a413dea0eaa172ec5b63971dd741c3cd6f4ec",
+  "weights": {
+    "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+  },
+  "base_weights": {
+    "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+  },
+  "model_info": {
+    "arm": "c-qwen08-30k",
+    "backbone": "Qwen/Qwen3.5-0.8B",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "targets": "all-linear"
+    },
+    "epochs": 1,
+    "steps": 1875,
+    "total_steps_planned": 1875,
+    "fraction_of_planned_steps": 1.0,
+    "segments": 1,
+    "stopped_early": false,
+    "train_seconds": 902.7,
+    "decisions_per_s": 33.23,
+    "train_tok_per_s": 9102.9,
+    "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+    "thermal_paused_s": 0.0,
+    "max_gpu_c": 47,
+    "lr": 0.0002,
+    "batch": 16,
+    "val_agreement_with_teacher": 0.7835,
+    "temperatures": {
+      "score": 0.5955,
+      "noul": 0.4788,
+      "choice": 0.6642,
+      "choice_many": 1.1461
+    },
+    "kernels": {
+      "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+      "packages": {
+        "torch": "2.8.0+cu128",
+        "transformers": "5.17.0",
+        "fla-core": "0.5.2",
+        "causal-conv1d": "1.7.0"
+      }
+    },
+    "train_summary": {
+      "states": 5998,
+      "decisions": 29990,
+      "sources": {
+        "fineweb": 3019,
+        "aya": 499,
+        "fineweb2": 2000,
+        "clinc": 145,
+        "gmmlu": 165,
+        "csqa": 170
+      },
+      "types": {
+        "choice": 11613,
+        "noul": 10428,
+        "score": 7949
+      },
+      "gold_decisions": 480,
+      "teacher_order_agreement": 0.9437812604201401
+    },
+    "peak_vram_gb": 6.39,
+    "lora_merged": false,
+    "cache_disabled": false
+  },
+  "token_audit": {
+    "max_tokens": 1607,
+    "context_limit": 4096
+  },
+  "states": 278,
+  "decisions": 1390,
+  "argmax_agreement": 0.9949640287769784,
+  "max_probability_delta": 0.04101619914927512,
+  "mean_total_variation": 0.006391714062618302,
+  "decisions_validated": 1390,
+  "passed": false,
+  "candidate_rows_sha256": "8f3ae67d987b0a30e6c20ea3e7518af40835b5210e7f4d0a1c75616c1c2088a2",
+  "promotion": "Not promoted; valid improved target-laptop latency is separately required",
+  "finished_utc": "2026-09-27T02:56:20.879946+00:00",
+  "elapsed_seconds": 201.99674539999978,
+  "thermal_governor": {
+    "checks": 65,
+    "pauses": 23,
+    "paused_s": 24.473427899953094,
+    "max_c": 87
+  }
+}
