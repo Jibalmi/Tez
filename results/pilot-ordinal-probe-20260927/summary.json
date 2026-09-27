@@ -1,0 +1,622 @@
+{
+  "registration": {
+    "round": "ordinal-cue-diagnostic-after-structure-probe-20260927",
+    "status": "prepared_before_inference",
+    "scope": "Secondary diagnostic after observing constant middle-band predictions; not fresh certification or a promotion gate.",
+    "purpose": "Separate score-type cues and answer-position preferences from failure to apply numeric rules before investing in further training.",
+    "source_cases": "results/pilot-structure-probe-20260927/cases.json",
+    "source_cases_sha256": "e353f5a5f86e850589c428918554e3979c545500071aefb0b07025fbe8706a32",
+    "models": [
+      "a-base-12ep",
+      "c-qwen08-30k"
+    ],
+    "model_policy": "Same frozen registered weight hashes and original predictor settings. No training, calibration, instruction editing or model selection.",
+    "states": "All 144 records, nested representation only",
+    "questions": "Only the ordinal band question, one question per group in every condition. Recompute the unmodified baseline in this same single-question protocol; do not attribute a difference from the earlier packed encoder run to type or order.",
+    "conditions": {
+      "question_type": [
+        "score",
+        "choice"
+      ],
+      "semantic_option_order": [
+        [
+          "0",
+          "1",
+          "2"
+        ],
+        [
+          "1",
+          "2",
+          "0"
+        ],
+        [
+          "2",
+          "0",
+          "1"
+        ]
+      ]
+    },
+    "invariants": "Preserve each state, instruction, option key/description pair, and semantic gold label. Only declared question type and option presentation order vary; remap gold and probabilities to canonical semantic keys.",
+    "execution": "Fixed round-robin conditions per state; deterministic state order from the registered source. Record model/source hashes, every normalized probability vector and all failures.",
+    "primary": "Accuracy and semantic prediction distribution per condition; paired within-state differences from score/original-order condition.",
+    "secondary": "Semantic prediction invariance across cyclic option orders within each question type.",
+    "uncertainty": "Exploratory paired state bootstrap, 2000 resamples, seed 13; no multiplicity-adjusted claim.",
+    "limits": "Repeated synthetic rules in four English settings. This diagnostic cannot be a training or checkpoint-selection set. Any implementation change still needs separate representative validation and fresh confirmation.",
+    "compute": "Laptop only through C:/temp/run_heavy.py, at most 12 minutes including load and thermal pauses, unchanged thermal governor, no valid latency claim. No new RunPod resources or spending. Preserve and stop on a thermal failure.",
+    "prepared_utc": "2026-09-27T01:25:14.665035+00:00",
+    "input_sha256": "9b4d11be12539b08796e419f66fde1b895e13d7802fa283581720512dc803ec3",
+    "original_registration_sha256": "7460509732648859bcc37cfc7b000e8e9748d05d270f02968b3059f62c122e8d",
+    "preparation_source_sha256": "0aff17533b0d26c540ec04cdb43e9671a8d20db4948270ddd1a325f19d0906e6",
+    "weights_sha256": {
+      "a-base-12ep": {
+        "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+        "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+      },
+      "c-qwen08-30k": {
+        "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+      }
+    },
+    "groups_per_chunk": 48,
+    "decisions_per_model": 864
+  },
+  "models": {
+    "a-base-12ep": {
+      "rows_validated": 864,
+      "conditions": {
+        "score-012": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "1": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "score-120": {
+          "n": 144,
+          "accuracy": 0.4305555555555556,
+          "predicted_semantic_labels": {
+            "1": 106,
+            "0": 38
+          },
+          "predicted_positions": {
+            "0": 106,
+            "2": 38
+          },
+          "delta_from_score012_points": 9.722222222222223,
+          "paired_state_ci95_points": [
+            2.7777777777777777,
+            15.972222222222221
+          ]
+        },
+        "score-201": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "2": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "choice-012": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "1": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "choice-120": {
+          "n": 144,
+          "accuracy": 0.4097222222222222,
+          "predicted_semantic_labels": {
+            "1": 100,
+            "0": 44
+          },
+          "predicted_positions": {
+            "0": 100,
+            "2": 44
+          },
+          "delta_from_score012_points": 7.638888888888889,
+          "paired_state_ci95_points": [
+            0.0,
+            15.277777777777779
+          ]
+        },
+        "choice-201": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "2": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "semantic_order_invariance": {
+        "score": 0.7361111111111112,
+        "choice": 0.6944444444444444
+      },
+      "receipt": {
+        "status": "complete",
+        "arm": "a-base-12ep",
+        "started_utc": "2026-09-27T01:25:50.144392+00:00",
+        "input_sha256": "9b4d11be12539b08796e419f66fde1b895e13d7802fa283581720512dc803ec3",
+        "registration_sha256": "6831ea99a0ed14eff7fc8d01072b21f37a4bead89581373a62737f92b6f0bb67",
+        "source_hashes": {
+          "ordinal_probe.py": "0aff17533b0d26c540ec04cdb43e9671a8d20db4948270ddd1a325f19d0906e6",
+          "run_ordinal_probe.py": "a271a8de14bd3761d914e3fd9c6b05e88136c43f988b9450022cdfa9810da2e7",
+          "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+          "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+          "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+          "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+          "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+          "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+          "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+          "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+        },
+        "packages": {
+          "torch": "2.10.0+cu130",
+          "transformers": "5.17.0",
+          "triton": null,
+          "fla-core": null,
+          "causal-conv1d": null,
+          "tilelang": null
+        },
+        "threads": 4,
+        "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "thermal_start": {
+          "temp_c": 76,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1560,
+          "util_pct": 9,
+          "mem_mb": 1812
+        },
+        "rows": 864,
+        "scope": "Diagnostic inference only, no valid latency claim",
+        "weights": {
+          "encoder": "3b3df2cfa30876e9766e61007b8b10f8f23117fbccb8a743817cce0898ca305b",
+          "head": "c8c4303cf7ecdcaf9a783455b9882e04a515807be90b366991ae6ed02a6023ad"
+        },
+        "model_info": {
+          "arm": "a-base-12ep",
+          "backbone": "/workspace/hf-cache/hub/models--jhu-clsp--mmBERT-base/snapshots/c5955035435e2bf121cde7f3c8863ef52ff35d82",
+          "data": "30k",
+          "params": 308120833,
+          "epochs_run": 12,
+          "steps": 3348,
+          "segments": 1,
+          "train_seconds": 572.6,
+          "train_tokens": 40871945,
+          "train_tok_per_s": 71376.2,
+          "train_tok_per_s_excluding_thermal_pauses": 71376.2,
+          "thermal_paused_s": 0.0,
+          "max_gpu_c": 49,
+          "lr": 3e-05,
+          "head_lr": 0.001,
+          "budget_tokens": 16384,
+          "max_len": 2048,
+          "log": [
+            {
+              "epoch": 0,
+              "step": 278,
+              "val_agreement": 0.7014,
+              "val_kl": 0.2372,
+              "seconds": 46.5
+            },
+            {
+              "epoch": 1,
+              "step": 557,
+              "val_agreement": 0.7381,
+              "val_kl": 0.1854,
+              "seconds": 94.6
+            },
+            {
+              "epoch": 2,
+              "step": 834,
+              "val_agreement": 0.7568,
+              "val_kl": 0.165,
+              "seconds": 143.4
+            },
+            {
+              "epoch": 3,
+              "step": 1111,
+              "val_agreement": 0.7669,
+              "val_kl": 0.1685,
+              "seconds": 190.7
+            },
+            {
+              "epoch": 4,
+              "step": 1387,
+              "val_agreement": 0.7799,
+              "val_kl": 0.1646,
+              "seconds": 234.7
+            },
+            {
+              "epoch": 5,
+              "step": 1666,
+              "val_agreement": 0.7791,
+              "val_kl": 0.1595,
+              "seconds": 281.3
+            },
+            {
+              "epoch": 6,
+              "step": 1947,
+              "val_agreement": 0.7791,
+              "val_kl": 0.1552,
+              "seconds": 328.2
+            },
+            {
+              "epoch": 7,
+              "step": 2228,
+              "val_agreement": 0.7777,
+              "val_kl": 0.1528,
+              "seconds": 375.4
+            },
+            {
+              "epoch": 8,
+              "step": 2508,
+              "val_agreement": 0.7906,
+              "val_kl": 0.1481,
+              "seconds": 429.2
+            },
+            {
+              "epoch": 9,
+              "step": 2789,
+              "val_agreement": 0.7899,
+              "val_kl": 0.1438,
+              "seconds": 477.2
+            },
+            {
+              "epoch": 10,
+              "step": 3066,
+              "val_agreement": 0.7957,
+              "val_kl": 0.1452,
+              "seconds": 525.3
+            },
+            {
+              "epoch": 11,
+              "step": 3348,
+              "val_agreement": 0.7928,
+              "val_kl": 0.1446,
+              "seconds": 572.6
+            }
+          ],
+          "score_loss_order": "canonical_levels",
+          "seed": 13,
+          "selected_by": "minimum validation KL",
+          "selected_epoch": 10,
+          "val_agreement_with_teacher": 0.7899,
+          "val_kl": 0.1438,
+          "temperatures": {
+            "noul": 0.5056,
+            "choice": 0.6289,
+            "score": 0.5639,
+            "choice_many": 1.6792
+          },
+          "train_summary": {
+            "states": 5998,
+            "decisions": 29990,
+            "sources": {
+              "fineweb": 3019,
+              "aya": 499,
+              "fineweb2": 2000,
+              "clinc": 145,
+              "gmmlu": 165,
+              "csqa": 170
+            },
+            "types": {
+              "choice": 11613,
+              "noul": 10428,
+              "score": 7949
+            },
+            "gold_decisions": 480,
+            "teacher_order_agreement": 0.9437812604201401
+          },
+          "val_summary": {
+            "states": 278,
+            "decisions": 1390,
+            "sources": {
+              "fineweb2": 100,
+              "fineweb": 131,
+              "aya": 26,
+              "csqa": 5,
+              "clinc": 6,
+              "gmmlu": 10
+            },
+            "types": {
+              "score": 373,
+              "noul": 491,
+              "choice": 526
+            },
+            "gold_decisions": 21,
+            "teacher_order_agreement": 0.9388489208633094
+          },
+          "peak_vram_gb": 15.16
+        },
+        "token_audit": {
+          "max_tokens": 137,
+          "context_limit": 8192,
+          "clipped_parts": 0
+        },
+        "rows_sha256": "c23fcc2d128ebbe42078b448306d3ebf850fb0b33b09cfbe6cca792db234a690",
+        "finished_utc": "2026-09-27T01:26:04.424233+00:00",
+        "elapsed_seconds": 14.190877999993972,
+        "thermal_end": {
+          "temp_c": 83,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 2047,
+          "util_pct": 45,
+          "mem_mb": 3682
+        },
+        "thermal_governor": {
+          "checks": 19,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 83
+        }
+      }
+    },
+    "c-qwen08-30k": {
+      "rows_validated": 864,
+      "conditions": {
+        "score-012": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "1": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "score-120": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "0": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "score-201": {
+          "n": 144,
+          "accuracy": 0.3402777777777778,
+          "predicted_semantic_labels": {
+            "1": 138,
+            "2": 6
+          },
+          "predicted_positions": {
+            "2": 138,
+            "0": 6
+          },
+          "delta_from_score012_points": 0.6944444444444444,
+          "paired_state_ci95_points": [
+            -1.3888888888888888,
+            3.4722222222222223
+          ]
+        },
+        "choice-012": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "1": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "choice-120": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 144
+          },
+          "predicted_positions": {
+            "0": 144
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            0.0,
+            0.0
+          ]
+        },
+        "choice-201": {
+          "n": 144,
+          "accuracy": 0.3333333333333333,
+          "predicted_semantic_labels": {
+            "1": 128,
+            "2": 16
+          },
+          "predicted_positions": {
+            "2": 128,
+            "0": 16
+          },
+          "delta_from_score012_points": 0.0,
+          "paired_state_ci95_points": [
+            -4.166666666666666,
+            4.166666666666666
+          ]
+        }
+      },
+      "semantic_order_invariance": {
+        "score": 0.9583333333333334,
+        "choice": 0.8888888888888888
+      },
+      "receipt": {
+        "status": "complete",
+        "arm": "c-qwen08-30k",
+        "started_utc": "2026-09-27T01:26:08.791137+00:00",
+        "input_sha256": "9b4d11be12539b08796e419f66fde1b895e13d7802fa283581720512dc803ec3",
+        "registration_sha256": "6831ea99a0ed14eff7fc8d01072b21f37a4bead89581373a62737f92b6f0bb67",
+        "source_hashes": {
+          "ordinal_probe.py": "0aff17533b0d26c540ec04cdb43e9671a8d20db4948270ddd1a325f19d0906e6",
+          "run_ordinal_probe.py": "a271a8de14bd3761d914e3fd9c6b05e88136c43f988b9450022cdfa9810da2e7",
+          "structure_probe.py": "7d9d7ec9aaefb9c66d25c7a991788788a37c2753827119637ff2690d6be7a6c5",
+          "eval_arms.py": "b9087a565d201689bf2b948c14f5a4a8075f9934cbdc7fce3076afcfa5aeb99e",
+          "competitor_models.py": "0e49be57be3b853301b692b7e8d2887e0006e13a5654594c10a6f86372ad0847",
+          "common.py": "da922f33a87c47d963c7a99e71176bcd676779bed5234d0fe49aa2800c22addb",
+          "student.py": "961e918aef34822d44b12602b6bd7e314065c4f6d26a32e4b0e44edec5e44ac1",
+          "train_a.py": "08c278c4440e0f7dafc43cc99dfa552c6362f6fbcfa26ffbbd0ca9c594f90335",
+          "train_c.py": "544376a531c22b0b25fd069f0d9f25699ce159791ede38a13f568877f7fddbb7",
+          "latency.py": "73d6be98ebf1b9313abc31be45182588c3af1c4358455db03a69e0e3209d3d54"
+        },
+        "packages": {
+          "torch": "2.10.0+cu130",
+          "transformers": "5.17.0",
+          "triton": null,
+          "fla-core": null,
+          "causal-conv1d": null,
+          "tilelang": null
+        },
+        "threads": 4,
+        "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+        "thermal_start": {
+          "temp_c": 78,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1627,
+          "util_pct": 11,
+          "mem_mb": 1812
+        },
+        "rows": 864,
+        "scope": "Diagnostic inference only, no valid latency claim",
+        "weights": {
+          "adapter": "fee3b3fec20902f247bf7758ad697ae4ea75aa40d862c060f9aafecb613ed482"
+        },
+        "model_info": {
+          "arm": "c-qwen08-30k",
+          "backbone": "Qwen/Qwen3.5-0.8B",
+          "lora": {
+            "r": 16,
+            "alpha": 32,
+            "targets": "all-linear"
+          },
+          "epochs": 1,
+          "steps": 1875,
+          "total_steps_planned": 1875,
+          "fraction_of_planned_steps": 1.0,
+          "segments": 1,
+          "stopped_early": false,
+          "train_seconds": 902.7,
+          "decisions_per_s": 33.23,
+          "train_tok_per_s": 9102.9,
+          "train_tok_per_s_excluding_thermal_pauses": 9102.9,
+          "thermal_paused_s": 0.0,
+          "max_gpu_c": 47,
+          "lr": 0.0002,
+          "batch": 16,
+          "val_agreement_with_teacher": 0.7835,
+          "temperatures": {
+            "score": 0.5955,
+            "noul": 0.4788,
+            "choice": 0.6642,
+            "choice_many": 1.1461
+          },
+          "kernels": {
+            "selection": "Transformers optional-package dispatch; fallback warnings are in the run log",
+            "packages": {
+              "torch": "2.8.0+cu128",
+              "transformers": "5.17.0",
+              "fla-core": "0.5.2",
+              "causal-conv1d": "1.7.0"
+            }
+          },
+          "train_summary": {
+            "states": 5998,
+            "decisions": 29990,
+            "sources": {
+              "fineweb": 3019,
+              "aya": 499,
+              "fineweb2": 2000,
+              "clinc": 145,
+              "gmmlu": 165,
+              "csqa": 170
+            },
+            "types": {
+              "choice": 11613,
+              "noul": 10428,
+              "score": 7949
+            },
+            "gold_decisions": 480,
+            "teacher_order_agreement": 0.9437812604201401
+          },
+          "peak_vram_gb": 6.39,
+          "lora_merged": false,
+          "cache_disabled": false
+        },
+        "base": {
+          "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+          "weights": {
+            "model.safetensors-00001-of-00001.safetensors": "04b1c301231dd422b8860db31311ab2721511346a32cb1e079c4c4e5f1fe4696"
+          }
+        },
+        "token_audit": {
+          "max_tokens": 186,
+          "context_limit": 4096,
+          "clipped_parts": 0
+        },
+        "rows_sha256": "53cd0c8571c8999464ba2bd93bee283c86db39b98e551b0567902f9c672abe1e",
+        "finished_utc": "2026-09-27T01:26:39.405910+00:00",
+        "elapsed_seconds": 30.527828999998746,
+        "thermal_end": {
+          "temp_c": 84,
+          "sw_thermal": false,
+          "hw_thermal": false,
+          "sm_mhz": 1890,
+          "util_pct": 98,
+          "mem_mb": 4469
+        },
+        "thermal_governor": {
+          "checks": 20,
+          "pauses": 0,
+          "paused_s": 0.0,
+          "max_c": 84
+        }
+      }
+    }
+  }
+}
