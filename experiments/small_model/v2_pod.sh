@@ -124,7 +124,19 @@ package() {
   sha256sum /workspace/v2-return.tar
 }
 
+all() {   # every GPU stage in order, skipping finished ones, stopping at the first failure
+  [ -f /workspace/schemas.done ] || schemas
+  [ -f /workspace/teacher.done ] || teacher
+  for w in 0 1; do grep -qE "Traceback" /workspace/teacher-w$w.log && { echo "teacher worker $w failed" >&2; exit 1; }; done
+  [ -f /workspace/data.done ] || data
+  [ -f /workspace/train.done ] || train
+  [ -f /workspace/eval.done ] || evaluate
+  package
+  touch /workspace/all.done
+}
+
 case "${1:-}" in
   setup) setup ;; schemas) schemas ;; teacher) teacher ;; data) data ;; train) train ;; eval) evaluate ;; package) package ;;
-  *) echo "usage: $0 setup|schemas|teacher|data|train|eval|package" >&2; exit 2 ;;
+  all) all ;;
+  *) echo "usage: $0 setup|schemas|teacher|data|train|eval|package|all" >&2; exit 2 ;;
 esac
