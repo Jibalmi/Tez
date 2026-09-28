@@ -1,0 +1,13 @@
+{
+ "tokens": 0,
+ "seconds": 0.0,
+ "tok_per_s_aggregate": 0.0,
+ "parallel_slots": 8,
+ "clusters": 0,
+ "thermal": {
+  "checks": 0,
+  "pauses": 0,
+  "paused_s": 0.0,
+  "max_c": 0
+ }
+}
