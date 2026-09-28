@@ -28,6 +28,14 @@ def sha(path: Path) -> str:
 
 
 def main() -> None:
+    import argparse
+    global OUT, EXTRA
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", help="bundle directory (default: the v2 round's)")
+    ap.add_argument("--extra", nargs="*", help="ignored inputs to include instead of the v2 round's")
+    a = ap.parse_args()
+    OUT = ROOT / a.out if a.out else OUT
+    EXTRA = a.extra if a.extra is not None else EXTRA
     files = {}
     tracked = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, check=True).stdout.decode().split("\0")
     for name in filter(None, tracked):

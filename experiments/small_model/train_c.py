@@ -13,6 +13,7 @@ Writes runs/pilot/models/<arm>/ (LoRA adapter, temperatures) and results/pilot/t
 from __future__ import annotations
 
 import argparse
+import os
 from importlib.metadata import PackageNotFoundError, version
 import json
 import random
@@ -26,7 +27,7 @@ from common import RESULTS, RUNS, THERMAL, dump, thermal_guard_or_checkpoint
 from dataset import load_examples, summary
 from train_a import fit_type_temps
 
-BASE = "Qwen/Qwen3.5-0.8B"
+BASE = os.environ.get("TEZ_PILOT_QWEN_BASE", "Qwen/Qwen3.5-0.8B")   # the control arm; a larger Qwen3.5 by env
 LETTERS = [chr(65 + i) for i in range(26)]
 
 

@@ -15,6 +15,7 @@ REVISIONS = {
     "knowledgator/gliclass-instruct-base-v1.0": "4f6a108b08a5537f395521d19b5073e197923dd3",
     "knowledgator/gliclass-instruct-edge-v1.0": "727be8a417f6a7718e591b025e07054c146d8139",
     "Qwen/Qwen3.5-0.8B": "2fc06364715b967f1860aea9cf38778875588b17",
+    "Qwen/Qwen3.5-2B": "15852e8c16360a2fea060d615a32b45270f8a8fc",
     "jaredpalmer/kev-0.8b": "9a45d25eb2ab761841196625383fa1dff0e56c1e",
     "Mapika/decider-0.8b": "a0a01d6f8135298f400a8c856b355793012ae971",
 }
