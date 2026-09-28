@@ -15,6 +15,8 @@ RT=$ROOT/runs/cloud-runtime
 export HF_HOME=/workspace/hf-cache HF_HUB_DISABLE_IMPLICIT_TOKEN=1 HF_HUB_DISABLE_TELEMETRY=1
 export OMP_NUM_THREADS=6 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=6 RUN_HEAVY_THREADS=6 PYTHONUTF8=1
 export TEZ_PILOT_GGUF=$RT/models/047dae1d7894b9de8f08141e841544e007243290c02df8b39872991d1940c795.gguf
+# evaluation option sets computed where the Hub cache holds the evaluation datasets (schemas.py option-sets)
+[ -f "$V2/eval_option_sets.json" ] && export TEZ_PILOT_EVAL_OPTION_SETS=$V2/eval_option_sets.json
 venv() { source "$ROOT/runs/student-venv/bin/activate"; }
 libs() {
   export TEZ_PILOT_LLAMA_LIB; TEZ_PILOT_LLAMA_LIB=$(find "$RT/llama" -name libllama.so -print -quit)

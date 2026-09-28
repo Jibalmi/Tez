@@ -217,7 +217,15 @@ def write(server: str, parallel: int, limit: int = 0, minutes: float = 0) -> Non
 
 
 def eval_option_sets() -> list[set[str]]:
-    """Option label sets of every evaluation question (choice questions), normalised."""
+    """Option label sets of every evaluation question (choice questions), normalised.
+
+    TEZ_PILOT_EVAL_OPTION_SETS may name a JSON file written by `schemas.py option-sets` on a machine whose Hub cache
+    already holds the evaluation datasets (newer huggingface_hub releases reject their legacy repository ids)."""
+    import os
+    cached = os.environ.get("TEZ_PILOT_EVAL_OPTION_SETS")
+    if cached:
+        with open(cached, encoding="utf-8") as f:
+            return [set(x) for x in json.load(f)]
     import bench_h2h
     from datasets import load_dataset
     norm = lambda s: re.sub(r"[\s_\-:.]+", " ", str(s).casefold()).strip()  # noqa: E731
@@ -351,7 +359,8 @@ def assign(device: str = "cuda") -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["cluster", "write", "assign"])
+    ap.add_argument("step", choices=["cluster", "write", "assign", "option-sets"])
+    ap.add_argument("--out", help="option-sets: the JSON file to write")
     ap.add_argument("--server", default="http://127.0.0.1:8851")
     ap.add_argument("--parallel", type=int, default=6)
     ap.add_argument("--device", default="cuda", help="embedding device for assign (cosine dedupe)")
@@ -362,6 +371,11 @@ def main() -> None:
         cluster()
     elif args.step == "write":
         write(args.server, args.parallel, args.limit, args.minutes)
+    elif args.step == "option-sets":
+        sets = eval_option_sets()
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump([sorted(x) for x in sets], f, ensure_ascii=False)
+        print(f"{len(sets)} evaluation option sets -> {args.out}")
     else:
         assign(args.device)
 
