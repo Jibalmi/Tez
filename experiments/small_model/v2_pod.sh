@@ -35,7 +35,7 @@ EOF
   # the student environment exactly as cloud_student_bootstrap.sh builds it, plus the embedder for assignment
   python3 -m venv --system-site-packages runs/student-venv; venv
   python -m pip install -q 'transformers==5.17.0' 'peft==0.21.0' 'gliclass==0.1.20' sentencepiece scipy scikit-learn psutil \
-    requests PyYAML sentence-transformers datasketch
+    requests PyYAML sentence-transformers datasketch 'datasets==5.0.1' 'pyarrow==25.0.1' 'dill==0.4.1' \n    'multiprocess==0.70.19' 'xxhash==4.0.1'   # datasets: schemas.py assign loads the evaluation option sets
   MAX_JOBS=8 python -m pip install -q --no-build-isolation 'fla-core==0.5.2' 'causal-conv1d==1.7.0' 'tilelang==0.1.14'
   python -m pip freeze > /workspace/environment.txt
   touch /workspace/setup.done
