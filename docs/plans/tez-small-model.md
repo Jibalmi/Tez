@@ -14,6 +14,9 @@ is 12.45 ms for the base encoder and 60.40 ms for Qwen. These timings do not rep
 laptop measurements, which remain pending. No arm is promoted to M2. The recommendations and
 compute estimates below are the original plan, not conclusions from the completed pilot.
 
+**G1 decision, 2026-09-29:** not met by any arm; the encoder is at Laya's level and the Qwen3.5 student is the
+direction. Two further rounds (5× data; a 2B student) and the decision are in [tez-small-model-pilot.md](tez-small-model-pilot.md).
+
 Contents: Summary · 1 Targets · 2 Where the others stand · 3 Options · 4 The student · 5 Data · 6 Evaluation ·
 7 Serving · 8 Milestones, gates, pilot, budget · 9 Risks · 10 Sources checked
 
